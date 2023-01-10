@@ -1,40 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:pwd/view/router/main_router_delegate.dart';
-import 'package:pwd/view/router/main_router_state.dart';
-import 'package:pwd/view/router/common/page_information_parser.dart';
 
-import 'common/di/di_scope.dart';
-import 'view/di/di.dart';
+import 'package:pwd/common/tools/di_storage/di_storage.dart';
+import 'package:pwd/home/presentation/home_page.dart';
+import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
+import 'package:pwd/notes/data/datasource/datasource.dart';
+import 'package:pwd/notes/data/datasource/datasource_impl.dart';
+import 'package:pwd/notes/data/datasource/gateway_impl.dart';
+
+import 'notes/domain/gateway.dart';
 
 void main() {
-  final scope = DiScope.single();
+  final di = DiStorage.shared;
 
-  scope.installModules(
-    [
-      MainModule(),
-    ],
-  );
+  di.bind<Datasource>(() => DatasourceImpl());
+
+  di.bind<Gateway>(() => GatewayImpl(datasource: di.resolve()));
 
   runApp(const MyApp());
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
-
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  late final _routerDelegate = MainRouterDelegate(
-    state: MainRouterState(),
-    initialPathComponents: [''],
-    parentContextProvider: () => context,
-  );
-
-  late final _routeInformationParser = PageInformationParser(
-    delegate: _routerDelegate,
-  );
 
   @override
   Widget build(BuildContext context) {
@@ -44,10 +30,26 @@ class _MyAppState extends State<MyApp> {
         primarySwatch: Colors.blue,
       ),
       debugShowCheckedModeBanner: false,
-      home: Router(
-        routerDelegate: _routerDelegate,
-        routeInformationParser: _routeInformationParser,
+      home: BlockingLoadingIndicator(
+        child: const HomePage(),
       ),
     );
   }
 }
+
+// class _RouteInformationProvider extends RouteInformationProvider {
+//   @override
+//   void addListener(VoidCallback listener) {
+//     // TODO: implement addListener
+//   }
+
+//   @override
+//   void removeListener(VoidCallback listener) {
+//     // TODO: implement removeListener
+//   }
+
+//   @override
+//   // TODO: implement value
+//   RouteInformation get value => throw UnimplementedError();
+
+// }
