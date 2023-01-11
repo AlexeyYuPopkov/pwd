@@ -39,11 +39,15 @@ class SettingsPage extends StatelessWidget {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-    
                 const SizedBox(height: 32),
                 CupertinoButton(
                   child: const Text('Push'),
                   onPressed: () => _onPush(context),
+                ),
+                const SizedBox(height: 32),
+                CupertinoButton(
+                  child: const Text('Pull'),
+                  onPressed: () => _onPull(context),
                 ),
                 const SizedBox(height: 32),
                 CupertinoButton(
@@ -58,10 +62,12 @@ class SettingsPage extends StatelessWidget {
     );
   }
 
-
-
   void _onPush(BuildContext context) {
     context.read<SettingsPageBloc>().add(const SettingsPageEvent.push());
+  }
+
+  void _onPull(BuildContext context) {
+    context.read<SettingsPageBloc>().add(const SettingsPageEvent.pull());
   }
 
   void _onTest(BuildContext context) {

@@ -11,8 +11,8 @@ abstract class SettingsPageState extends Equatable {
   const factory SettingsPageState.unauth({required EditNotePageData data}) =
       UnauthState;
 
-  const factory SettingsPageState.auth({required EditNotePageData data}) =
-      AuthState;
+  const factory SettingsPageState.didSync({required EditNotePageData data}) =
+      DidSyncState;
 
   const factory SettingsPageState.loading({required EditNotePageData data}) =
       LoadingState;
@@ -27,8 +27,8 @@ class UnauthState extends SettingsPageState {
   const UnauthState({required EditNotePageData data}) : super(data: data);
 }
 
-class AuthState extends SettingsPageState {
-  const AuthState({required EditNotePageData data}) : super(data: data);
+class DidSyncState extends SettingsPageState {
+  const DidSyncState({required EditNotePageData data}) : super(data: data);
 }
 
 class LoadingState extends SettingsPageState {

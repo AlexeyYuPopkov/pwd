@@ -21,7 +21,7 @@ class _GitServiceApi implements GitServiceApi {
   String? baseUrl;
 
   @override
-  Future<dynamic> putDb({
+  Future<PutDbResponseData> putDb({
     required body,
     required token,
   }) async {
@@ -35,19 +35,48 @@ class _GitServiceApi implements GitServiceApi {
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
     _data.addAll(body.toJson());
-    final _result = await _dio.fetch(_setStreamType<dynamic>(Options(
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<PutDbResponseData>(Options(
       method: 'PUT',
       headers: _headers,
       extra: _extra,
     )
-        .compose(
-          _dio.options,
-          'repos/AlexeyYuPopkov/notes_storage/contents/note_data.db',
-          queryParameters: queryParameters,
-          data: _data,
-        )
-        .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = _result.data;
+            .compose(
+              _dio.options,
+              'repos/AlexeyYuPopkov/notes_storage/contents/notes.json',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = PutDbResponseData.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<GetDbResponseData> getDb({required token}) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{
+      r'Accept': 'application/json',
+      r'X-GitHub-Api-Version': '2022-11-28',
+      r'Authorization': token,
+    };
+    _headers.removeWhere((k, v) => v == null);
+    final _data = <String, dynamic>{};
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<GetDbResponseData>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              'repos/AlexeyYuPopkov/notes_storage/contents/notes.json',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = GetDbResponseData.fromJson(_result.data!);
     return value;
   }
 

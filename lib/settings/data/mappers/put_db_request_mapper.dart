@@ -22,4 +22,8 @@ class PutDbRequestMapper implements Mapper<PutDbRequestData, PutDbRequest> {
           email: data.committer.email,
         ),
       );
+
+        @override
+  PutDbRequestData dataFromMap(Map<String, dynamic> data) =>
+      PutDbRequestData.fromJson(data);
 }

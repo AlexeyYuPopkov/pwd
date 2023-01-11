@@ -1,16 +1,18 @@
-import 'package:pwd/notes/domain/database_path_provider.dart';
+import 'dart:async';
+import 'package:flutter/foundation.dart';
+import 'package:pwd/notes/data/model/note_item_data.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:collection/collection.dart';
+import 'package:pwd/notes/domain/database_path_provider.dart';
 import 'package:pwd/common/data_tools/mapper.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
 import 'package:pwd/notes/domain/notes_repository.dart';
-
 
 class SqlDatasourceImpl implements NotesRepository {
   final DatabasePathProvider databasePathProvider;
   Database? _db;
 
-  final Mapper<Map<String, Object?>, NoteItem> mapper;
+  final Mapper<NoteItemData, NoteItem> mapper;
 
   SqlDatasourceImpl({
     required this.databasePathProvider,
@@ -21,12 +23,22 @@ class SqlDatasourceImpl implements NotesRepository {
     if (_db is Database) {
       return _db as Database;
     } else {
-      _db = await createDb();
+      _db = await openDb();
       return _db as Database;
     }
   }
 
-  Future<Database> createDb() async => openDatabase(
+  @override
+  Future<void> updateDb({required String rawSql}) {
+    return db.then(
+      (db) async {
+        final result = await db.rawQuery(rawSql);
+        debugPrint(result.length.toString());
+      },
+    );
+  }
+
+  Future<Database> openDb() async => openDatabase(
         await _databasePath,
         version: 1,
         onCreate: (Database db, int version) async {
@@ -42,20 +54,20 @@ class SqlDatasourceImpl implements NotesRepository {
     return db.then(
       (db) => db.insert(
         CreateNotesTableIfAbsent.tableName,
-        mapper.toData(noteItem),
+        mapper.toData(noteItem).toJson(),
       ),
     );
   }
 
   @override
   Future<int> updatetNote(NoteItem noteItem) async {
-    if (noteItem.id.isEmpty) {
+    if (noteItem.id == null) {
       return insertNote(noteItem);
     } else {
       return db.then(
         (db) => db.update(
           CreateNotesTableIfAbsent.tableName,
-          mapper.toData(noteItem),
+          mapper.toData(noteItem).toJson(),
         ),
       );
     }
@@ -85,21 +97,57 @@ class SqlDatasourceImpl implements NotesRepository {
     if (first == null) {
       return null;
     } else {
-      return mapper.toDomain(first);
+      return mapper.toDomain(mapper.dataFromMap(first));
     }
   }
 
   @override
-  Future<List<NoteItem>> readNotes() async {
-    final results = await db.then(
-      (db) => db.query(
-        CreateNotesTableIfAbsent.tableName,
-      ),
-    );
+  Future<List<NoteItem>> readNotes() => exportNotes();
 
-    return [
-      for (final item in results) mapper.toDomain(item),
-    ];
+  @override
+  Future<List<NoteItemData>> exportNotes() async {
+    return db
+        .then(
+          (db) => db.query(
+            CreateNotesTableIfAbsent.tableName,
+          ),
+        )
+        .then(
+          (src) => [
+            for (final item in src) mapper.dataFromMap(item),
+          ],
+        );
+  }
+
+  @override
+  Future<void> importNotes(List<NoteItemData> notes) async {
+    // var queryes = <String>[];
+
+    const tableName = CreateNotesTableIfAbsent.tableName;
+
+    // for (final note in notes) {
+    //   queryes.add(
+    //     'INSERT INTO '
+    //     '$tableName (id, title, description, content, timestamp);',
+    //   );
+    // }
+
+    return db.then(
+      (db) {
+        return db.transaction((transaction) async {
+          for (final note in notes) {
+            final map = note.toJson();
+            await transaction.insert(
+              tableName,
+              map,
+              conflictAlgorithm: ConflictAlgorithm.replace,
+            );
+          }
+        });
+      },
+    ).catchError((e) {
+      print(e.toString());
+    });
   }
 
   @override

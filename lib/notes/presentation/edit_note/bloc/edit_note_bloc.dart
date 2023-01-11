@@ -7,14 +7,12 @@ part 'edit_note_state.dart';
 part 'edit_note_event.dart';
 
 class EditNoteBloc extends Bloc<EditNoteEvent, EditNoteState> {
-
   // StreamSubscription? dataStreamSubscription;
 
   EditNotePageData get data => state.data;
 
   EditNoteBloc({
     required NoteItem noteItem,
-
   }) : super(
           EditNoteState.common(
             data: EditNotePageData(noteItem: noteItem),
@@ -86,7 +84,7 @@ class EditNoteBloc extends Bloc<EditNoteEvent, EditNoteState> {
       title: event.title,
       description: event.description,
       content: event.content,
-      date: data.noteItem.date,
+      timestamp: data.noteItem.timestamp,
     );
     emit(
       EditNoteState.didSave(

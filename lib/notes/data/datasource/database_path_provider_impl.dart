@@ -14,7 +14,6 @@ class DatabasePathProviderImpl implements DatabasePathProvider {
   @override
   Future<String> get path async {
     var thePath = _path;
-
     if (thePath == null || thePath.isEmpty) {
       final thePath = await getDatabasesPath().then(
         (databasesPath) => [

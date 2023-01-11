@@ -82,12 +82,12 @@ class NotePage extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      item.id,
+                                      item.title,
                                       style:
                                           const TextStyle(color: Colors.black),
                                     ),
                                     Text(
-                                      item.title,
+                                      item.description,
                                       style:
                                           const TextStyle(color: Colors.black),
                                     ),

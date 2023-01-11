@@ -22,6 +22,7 @@ class SettingsPageBloc extends Bloc<SettingsPageEvent, SettingsPageState> {
 
   void _setupHandlers() {
     on<PushEvent>(_onPushEvent);
+    on<PullEvent>(_onPullEvent);
   }
 
   void _onPushEvent(
@@ -33,7 +34,22 @@ class SettingsPageBloc extends Bloc<SettingsPageEvent, SettingsPageState> {
 
       await syncDataUsecases.putDb();
 
-      emit(SettingsPageState.auth(data: data));
+      emit(SettingsPageState.didSync(data: data));
+    } catch (e) {
+      emit(SettingsPageState.error(data: data, error: e));
+    }
+  }
+
+  void _onPullEvent(
+    PullEvent event,
+    Emitter<SettingsPageState> emit,
+  ) async {
+    try {
+      emit(SettingsPageState.loading(data: data));
+
+      await syncDataUsecases.getDb();
+
+      emit(SettingsPageState.didSync(data: data));
     } catch (e) {
       emit(SettingsPageState.error(data: data, error: e));
     }

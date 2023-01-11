@@ -19,11 +19,13 @@ class SettingsDi extends DiModule {
         errorMapper: di.resolve(),
       ),
     );
-    
+
     di.bind<SyncDataUsecases>(
       () => SyncDataUsecases(
         dataStorageRepository: di.resolve(),
         databasePathProvider: di.resolve(),
+        notesRepository: di.resolve(),
+        notesProvider: di.resolve(),
       ),
     );
   }

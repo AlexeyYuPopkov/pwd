@@ -7,12 +7,11 @@ part of 'note_item_data.dart';
 // **************************************************************************
 
 NoteItemData _$NoteItemDataFromJson(Map<String, dynamic> json) => NoteItemData(
-      id: json['id'] as String,
+      id: json['id'] as int?,
       title: json['title'] as String? ?? '',
       description: json['description'] as String? ?? '',
       content: json['content'] as String? ?? '',
-      date:
-          json['date'] == null ? null : DateTime.parse(json['date'] as String),
+      timestamp: json['timestamp'] as int,
     );
 
 Map<String, dynamic> _$NoteItemDataToJson(NoteItemData instance) =>
@@ -21,5 +20,5 @@ Map<String, dynamic> _$NoteItemDataToJson(NoteItemData instance) =>
       'title': instance.title,
       'description': instance.description,
       'content': instance.content,
-      'date': instance.date?.toIso8601String(),
+      'timestamp': instance.timestamp,
     };

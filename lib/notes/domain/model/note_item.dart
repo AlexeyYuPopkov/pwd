@@ -1,18 +1,18 @@
 import 'package:equatable/equatable.dart';
 
 abstract class NoteItem extends Equatable {
-  final String id;
+  final int? id;
   final String title;
   final String description;
   final String content;
-  final DateTime? date;
+  final int timestamp;
 
   const NoteItem({
     required this.id,
     required this.title,
     required this.description,
     required this.content,
-    required this.date,
+    required this.timestamp,
   });
 
   @override
@@ -21,42 +21,42 @@ abstract class NoteItem extends Equatable {
         title,
         description,
         content,
-        date,
+        timestamp,
       ];
 
   factory NoteItem.newItem() = NewNoteItem;
 
   const factory NoteItem.updatedItem({
-    required String id,
+    required int? id,
     required String title,
     required String description,
     required String content,
-    required DateTime? date,
+    required int timestamp,
   }) = UpdatedNoteItem;
 
   NoteItem copyWith({
     String? title,
     String? description,
     String? content,
-    DateTime? date,
+    int? timestamp,
   }) =>
       NoteItem.updatedItem(
         id: id,
         title: title ?? this.title,
         description: description ?? this.description,
         content: content ?? this.content,
-        date: date ?? this.date,
+        timestamp: timestamp ?? this.timestamp,
       );
 }
 
 class NewNoteItem extends NoteItem {
   NewNoteItem()
       : super(
-          id: '',
+          id: null,
           title: '',
           description: '',
           content: '',
-          date: DateTime.now(),
+          timestamp: DateTime.now().timestamp,
         );
 }
 
@@ -66,6 +66,10 @@ class UpdatedNoteItem extends NoteItem {
     required super.title,
     required super.description,
     required super.content,
-    required super.date,
+    required super.timestamp,
   });
+}
+
+extension on DateTime {
+  int get timestamp => millisecondsSinceEpoch * 1000;
 }

@@ -1,4 +1,7 @@
 import 'package:dio/dio.dart' hide Headers;
+import 'package:pwd/settings/data/model/get_db_response_data.dart';
+import 'package:pwd/settings/data/model/put_db_response_data.dart';
+import 'package:retrofit/dio.dart';
 import 'package:retrofit/http.dart';
 import 'package:pwd/settings/data/model/put_db_request_data.dart';
 
@@ -10,16 +13,25 @@ abstract class GitServiceApi {
 
   static const owner = 'AlexeyYuPopkov';
   static const repo = 'notes_storage';
-  static const filename = 'note_data.db';
-  static const path = 'repos/$owner/$repo/contents/$filename';
+  static const filename = 'notes.json';
 
-  @PUT(path)
+  @PUT('repos/$owner/$repo/contents/$filename')
   @Headers({
     'Accept': 'application/vnd.github+json',
     'X-GitHub-Api-Version': '2022-11-28',
   })
-  Future<dynamic> putDb({
+  Future<PutDbResponseData> putDb({
     @Body() required PutDbRequestData body,
+    @Header('Authorization') required String token,
+  });
+
+  @GET('repos/$owner/$repo/contents/$filename')
+  @Headers({
+    'Accept': 'application/json',
+    'X-GitHub-Api-Version': '2022-11-28',
+  })
+  // @DioResponseType(ResponseType.bytes)
+  Future<GetDbResponseData> getDb({
     @Header('Authorization') required String token,
   });
 }
