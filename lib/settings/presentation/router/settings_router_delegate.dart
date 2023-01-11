@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:pwd/settings/presentation/settings_page.dart';
+import 'package:pwd/settings/presentation/settings_page/settings_page.dart';
 
 import 'package:pwd/common/presentation/fade_animation_page.dart';
+import 'package:pwd/settings/presentation/test_page.dart';
 
 class SettingsRouterPagePath {
   static const settings = 'settings';

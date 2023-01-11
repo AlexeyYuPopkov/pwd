@@ -5,9 +5,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pwd/common/common_sizes.dart';
 import 'package:pwd/common/presentation/common_highlighted_row.dart';
 import 'package:pwd/common/tools/di_storage/di_storage.dart';
-import 'package:pwd/notes/domain/gateway.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
 import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
+import 'package:pwd/notes/domain/notes_provider_impl.dart';
 import 'package:pwd/notes/presentation/edit_note/edit_note_page.dart';
 import 'package:pwd/notes/presentation/router/main_route_data.dart';
 
@@ -25,10 +25,9 @@ class NotePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) {
-        final gateway = DiStorage.shared.resolve<Gateway>();
+        final gateway = DiStorage.shared.resolve<NotesProvider>();
         return NotePageBloc(
           gateway: gateway,
-          noteStream: gateway.noteStream(),
         );
       },
       child: BlocConsumer<NotePageBloc, NotePageState>(
@@ -67,7 +66,7 @@ class NotePage extends StatelessWidget {
                           physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemBuilder: (context, index) {
-                            final item = state.data.note.notes[index];
+                            final item = state.data.notes[index];
                             return CommonHighlightedRow(
                               highlightedColor: Colors.grey.shade200,
                               onTap: () => _onEditButton(
@@ -88,7 +87,7 @@ class NotePage extends StatelessWidget {
                                           const TextStyle(color: Colors.black),
                                     ),
                                     Text(
-                                      item.title.text,
+                                      item.title,
                                       style:
                                           const TextStyle(color: Colors.black),
                                     ),
@@ -100,7 +99,7 @@ class NotePage extends StatelessWidget {
                           separatorBuilder: (context, index) => const SizedBox(
                             height: CommonSizes.indent,
                           ),
-                          itemCount: state.data.note.notes.length,
+                          itemCount: state.data.notes.length,
                         ),
                       ],
                     ),
@@ -124,10 +123,10 @@ class NotePage extends StatelessWidget {
         MainRouteData.onEdit(noteItem: noteItem),
       ).then(
         (result) {
-          if (result is EditNotePageResult) {
+          if (result is NoteItem) {
             context.read<NotePageBloc>().add(
                   NotePageEvent.shouldUpdateNote(
-                    noteItem: result.noteItem,
+                    noteItem: result,
                   ),
                 );
           }

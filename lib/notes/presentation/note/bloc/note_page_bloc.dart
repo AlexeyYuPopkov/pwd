@@ -2,24 +2,20 @@ import 'dart:async';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pwd/notes/domain/gateway.dart';
-import 'package:pwd/notes/domain/model/note.dart';
-import 'package:pwd/notes/domain/model/note_impl.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
-import 'package:uuid/uuid.dart';
+import 'package:pwd/notes/domain/notes_provider_impl.dart';
 
 part 'note_page_event.dart';
 part 'note_page_state.dart';
 
 class NotePageBloc extends Bloc<NotePageEvent, NotePageState> {
-  final Gateway gateway;
+  final NotesProvider gateway;
   StreamSubscription? subscription;
 
-  final Stream<Note> noteStream;
+  Stream<List<NoteItem>> get noteStream => gateway.noteStream;
 
   NotePageBloc({
     required this.gateway,
-    required this.noteStream,
   }) : super(
           NotePageState.common(
             data: NotePageData.initial(),
@@ -28,9 +24,9 @@ class NotePageBloc extends Bloc<NotePageEvent, NotePageState> {
     _setupHandlers();
 
     subscription = noteStream.listen(
-      (note) {
+      (notes) {
         add(
-          NotePageEvent.newData(note: note),
+          NotePageEvent.newData(notes: notes),
         );
       },
     );
@@ -53,7 +49,7 @@ class NotePageBloc extends Bloc<NotePageEvent, NotePageState> {
   ) async {
     emit(
       NotePageState.common(
-        data: state.data.copyWith(note: event.note),
+        data: state.data.copyWith(notes: event.notes),
       ),
     );
   }
@@ -63,22 +59,6 @@ class NotePageBloc extends Bloc<NotePageEvent, NotePageState> {
     Emitter<NotePageState> emit,
   ) async {
     emit(NotePageState.loadingState(data: state.data));
-
-    final oldValue = state.data.note;
-
-    final id = oldValue is EmptyNote ? const Uuid().v1() : oldValue.id;
-
-    var notes = [...oldValue.notes];
-
-    notes.removeWhere(
-      (e) => e.id == event.noteItem.id,
-    );
-
-    notes.add(
-      event.noteItem,
-    );
-
-    final noteImpl = NoteImpl(id: id, notes: notes);
-    await gateway.updateNote(noteImpl);
+    await gateway.updateNoteItem(event.noteItem);
   }
 }

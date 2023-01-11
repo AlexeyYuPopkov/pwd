@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
-
+import 'settings/presentation/di/settings_di.dart';
+import 'package:pwd/common/presentation/di/network_di.dart';
 import 'package:pwd/common/tools/di_storage/di_storage.dart';
 import 'package:pwd/home/presentation/home_page.dart';
 import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
-import 'package:pwd/notes/data/datasource/datasource.dart';
-import 'package:pwd/notes/data/datasource/datasource_impl.dart';
-import 'package:pwd/notes/data/datasource/gateway_impl.dart';
+import 'package:pwd/notes/presentation/di/notes_di.dart';
 
-import 'notes/domain/gateway.dart';
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
-void main() {
   final di = DiStorage.shared;
 
-  di.bind<Datasource>(() => DatasourceImpl());
-
-  di.bind<Gateway>(() => GatewayImpl(datasource: di.resolve()));
+  NotesDi().bind(di);
+  NetworkDiModule().bind(di);
+  SettingsDi().bind(di);
 
   runApp(const MyApp());
 }
@@ -36,20 +35,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-// class _RouteInformationProvider extends RouteInformationProvider {
-//   @override
-//   void addListener(VoidCallback listener) {
-//     // TODO: implement addListener
-//   }
-
-//   @override
-//   void removeListener(VoidCallback listener) {
-//     // TODO: implement removeListener
-//   }
-
-//   @override
-//   // TODO: implement value
-//   RouteInformation get value => throw UnimplementedError();
-
-// }

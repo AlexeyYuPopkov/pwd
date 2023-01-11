@@ -1,23 +1,20 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pwd/notes/domain/gateway.dart';
-import 'package:pwd/notes/domain/model/note.dart';
-import 'package:pwd/notes/domain/model/note_impl.dart';
+
 import 'package:pwd/notes/domain/model/note_item.dart';
-import 'package:uuid/uuid.dart';
 
 part 'edit_note_state.dart';
 part 'edit_note_event.dart';
 
 class EditNoteBloc extends Bloc<EditNoteEvent, EditNoteState> {
-  final Gateway gateway;
+
   // StreamSubscription? dataStreamSubscription;
 
   EditNotePageData get data => state.data;
 
   EditNoteBloc({
     required NoteItem noteItem,
-    required this.gateway,
+
   }) : super(
           EditNoteState.common(
             data: EditNotePageData(noteItem: noteItem),

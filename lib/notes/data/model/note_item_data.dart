@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
-import 'package:uuid/uuid.dart';
+
 
 import 'package:pwd/notes/domain/model/note_item.dart';
 
@@ -14,16 +14,16 @@ class NoteItemData implements NoteItem {
   final String id;
 
   @override
-  @JsonKey(name: 'title')
-  final NoteItemValueData title;
+  @JsonKey(name: 'title', defaultValue: '')
+  final String title;
 
   @override
-  @JsonKey(name: 'description')
-  final NoteItemValueData description;
+  @JsonKey(name: 'description', defaultValue: '')
+  final String description;
 
   @override
-  @JsonKey(name: 'content')
-  final NoteItemValueData content;
+  @JsonKey(name: 'content', defaultValue: '')
+  final String content;
 
   @override
   @JsonKey(name: 'date')
@@ -42,11 +42,11 @@ class NoteItemData implements NoteItem {
 
   Map<String, dynamic> toJson() => _$NoteItemDataToJson(this);
 
-  factory NoteItemData.empty() => NoteItemData(
-        id: const Uuid().v1().toString(),
-        title: NoteItemValueData.empty(),
-        description: NoteItemValueData.empty(),
-        content: NoteItemValueData.empty(),
+  factory NoteItemData.empty() => const NoteItemData(
+        id: '',
+        title: '',
+        description: '',
+        content: '',
       );
 
   @override
@@ -70,61 +70,9 @@ class NoteItemData implements NoteItem {
   }) =>
       NoteItemData(
         id: id,
-        title: NoteItemValueData(
-          style: this.title.style,
-          text: title ?? this.title.text,
-        ),
-        description: NoteItemValueData(
-          style: this.description.style,
-          text: description ?? this.description.text,
-        ),
-        content: NoteItemValueData(
-          style: this.content.style,
-          text: content ?? this.content.text,
-        ),
+        title: title ?? this.title,
+        description: description ?? this.description,
+        content: content ?? this.content,
         date: date ?? this.date,
-      );
-
-// @override
-//   NoteItemData copyWith({
-//     String? id,
-//     NoteItemValueData? title,
-//     NoteItemValueData? description,
-//     NoteItemValueData? content,
-//     DateTime? date,
-//   }) {
-//     return NoteItemData(
-//       id: id ?? this.id,
-//       title: title ?? this.title,
-//       description: description ?? this.description,
-//       content: content ?? this.content,
-//       date: date ?? this.date,
-//     );
-//   }
-}
-
-@immutable
-@JsonSerializable()
-class NoteItemValueData implements NoteItemValue {
-  @override
-  @JsonKey(name: 'text')
-  final String text;
-  @override
-  @JsonKey(name: 'style')
-  final NoteItemStyle style;
-
-  const NoteItemValueData({
-    required this.text,
-    required this.style,
-  });
-
-  factory NoteItemValueData.fromJson(Map<String, dynamic> json) =>
-      _$NoteItemValueDataFromJson(json);
-
-  Map<String, dynamic> toJson() => _$NoteItemValueDataToJson(this);
-
-  factory NoteItemValueData.empty() => const NoteItemValueData(
-        style: NoteItemStyle.body,
-        text: '',
       );
 }

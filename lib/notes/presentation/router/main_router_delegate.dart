@@ -59,7 +59,10 @@ class MainRouterDelegate extends RouterDelegate
           },
         ),
       ).then(
-        (_) => updateState(),
+        (result) {
+          updateState();
+          return result;
+        },
       );
     } else if (action is EditNotePageResult) {
       return context.navigator.pop(action.noteItem);

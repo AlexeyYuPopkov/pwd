@@ -38,20 +38,20 @@ class ErrorState extends NotePageState {
 
 // Data
 class NotePageData extends Equatable {
-  final Note note;
+  final List<NoteItem> notes;
 
-  const NotePageData._({required this.note});
+  const NotePageData._({required this.notes});
 
-  factory NotePageData.initial() => const NotePageData._(note: EmptyNote());
+  factory NotePageData.initial() => const NotePageData._(notes: []);
 
   @override
-  List<Object?> get props => [note];
+  List<Object?> get props => [notes];
 
   NotePageData copyWith({
-    Note? note,
+    List<NoteItem>? notes,
   }) {
     return NotePageData._(
-      note: note ?? this.note,
+      notes: notes ?? this.notes,
     );
   }
 }

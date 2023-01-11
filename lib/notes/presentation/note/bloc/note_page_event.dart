@@ -3,7 +3,7 @@ part of 'note_page_bloc.dart';
 abstract class NotePageEvent extends Equatable {
   const NotePageEvent();
 
-  const factory NotePageEvent.newData({required Note note}) = NewDataEvent;
+  const factory NotePageEvent.newData({required List<NoteItem> notes}) = NewDataEvent;
 
   const factory NotePageEvent.shouldUpdateNote({required NoteItem noteItem}) =
       ShouldUpdateNoteItemEvent;
@@ -17,8 +17,8 @@ abstract class NotePageEvent extends Equatable {
 }
 
 class NewDataEvent extends NotePageEvent {
-  final Note note;
-  const NewDataEvent({required this.note});
+  final List<NoteItem> notes;
+  const NewDataEvent({required this.notes});
 }
 
 class ShouldUpdateNoteItemEvent extends NotePageEvent {

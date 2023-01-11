@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:pwd/common/common_sizes.dart';
-import 'package:pwd/common/tools/di_storage/di_storage.dart';
 
-import 'package:pwd/notes/domain/gateway.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
 import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
 import 'package:pwd/notes/presentation/router/main_route_data.dart';
@@ -23,7 +21,7 @@ class EditNotePageResult extends MainRouteData {
 class EditNotePage extends StatelessWidget {
   final NoteItem noteItem;
 
-  final void Function(BuildContext, MainRouteData) onRoute;
+  final Future Function(BuildContext, MainRouteData) onRoute;
 
   const EditNotePage({
     Key? key,
@@ -41,7 +39,6 @@ class EditNotePage extends StatelessWidget {
         child: BlocProvider(
           create: (context) => EditNoteBloc(
             noteItem: noteItem,
-            gateway: DiStorage.shared.resolve<Gateway>(),
           ),
           child: BlocConsumer<EditNoteBloc, EditNoteState>(
             listener: _listener,
@@ -54,7 +51,7 @@ class EditNotePage extends StatelessWidget {
     );
   }
 
-  void _listener(BuildContext context, EditNoteState state) {
+  void _listener(BuildContext context, EditNoteState state) async {
     BlockingLoadingIndicator.of(context).isLoading = state is LoadingState;
 
     // Navigator.of(context).pop(
@@ -64,7 +61,7 @@ class EditNotePage extends StatelessWidget {
     // );
 
     if (state is DidSaveState) {
-      onRoute(
+      await onRoute(
         context,
         EditNotePageResult(
           noteItem: state.data.noteItem,
@@ -89,13 +86,13 @@ class _Form extends StatefulWidget {
 class _FormState extends State<_Form> {
   late final formKey = GlobalKey<FormState>();
   late final titleController = TextEditingController(
-    text: widget.noteItem.title.text,
+    text: widget.noteItem.title,
   );
   late final descriptionController = TextEditingController(
-    text: widget.noteItem.description.text,
+    text: widget.noteItem.description,
   );
   late final contentController = TextEditingController(
-    text: widget.noteItem.content.text,
+    text: widget.noteItem.content,
   );
 
   @override

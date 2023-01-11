@@ -1,6 +1,7 @@
 import 'di_storage_entry.dart';
 import 'life_time.dart';
 export 'life_time.dart';
+export 'di_module.dart';
 
 /// RU: [DiStorage] - класс для кеширования обьектов [T]
 ///
