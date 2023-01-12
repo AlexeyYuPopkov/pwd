@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:pwd/common/common_sizes.dart';
+import 'package:pwd/common/presentation/dialogs/show_error_dialog_mixin.dart';
 
 import 'package:pwd/notes/domain/model/note_item.dart';
 import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
@@ -18,7 +19,7 @@ class EditNotePageResult extends MainRouteData {
   });
 }
 
-class EditNotePage extends StatelessWidget {
+class EditNotePage extends StatelessWidget with ShowErrorDialogMixin {
   final NoteItem noteItem;
 
   final Future Function(BuildContext, MainRouteData) onRoute;
@@ -54,12 +55,6 @@ class EditNotePage extends StatelessWidget {
   void _listener(BuildContext context, EditNoteState state) async {
     BlockingLoadingIndicator.of(context).isLoading = state is LoadingState;
 
-    // Navigator.of(context).pop(
-    //   EditNotePageResult(
-    //     noteItem: state.data.noteItem,
-    //   ),
-    // );
-
     if (state is DidSaveState) {
       await onRoute(
         context,
@@ -67,6 +62,8 @@ class EditNotePage extends StatelessWidget {
           noteItem: state.data.noteItem,
         ),
       );
+    } else if (state is ErrorState) {
+      showError(context, state.error);
     }
   }
 }

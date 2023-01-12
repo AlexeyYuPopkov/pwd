@@ -10,12 +10,15 @@ class PutDbRequestData {
   final String message;
   @JsonKey(name: 'content')
   final String content;
+  @JsonKey(name: 'sha', defaultValue: null)
+  final String? sha;
   @JsonKey(name: 'committer')
   final CommitterData committer;
 
   const PutDbRequestData({
     required this.message,
     required this.content,
+    required this.sha,
     required this.committer,
   });
 

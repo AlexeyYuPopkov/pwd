@@ -2,9 +2,7 @@ import 'package:pwd/notes/data/model/note_item_data.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
 
 abstract class NotesRepository {
-  Future<int> insertNote(NoteItem noteItem);
-
-  Future<int> updatetNote(NoteItem noteItem);
+  Future<int> updateNote(NoteItem noteItem);
 
   Future<int> delete(int id);
 
@@ -18,5 +16,7 @@ abstract class NotesRepository {
 
   Future<List<NoteItemData>> exportNotes();
 
-  Future<void> importNotes(List<NoteItemData> notes);
+  Future<int> importNotes({
+    required List<NoteItemData> notes,
+  });
 }

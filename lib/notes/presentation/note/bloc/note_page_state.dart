@@ -8,16 +8,25 @@ abstract class NotePageState extends Equatable {
   @override
   List<Object?> get props => [data];
 
+  const factory NotePageState.notSynced({required NotePageData data}) =
+      NotSyncedState;
+
   const factory NotePageState.common({required NotePageData data}) =
       CommonState;
 
-  const factory NotePageState.loadingState({required NotePageData data}) =
+  const factory NotePageState.loading({required NotePageData data}) =
       LoadingState;
 
   const factory NotePageState.error({
     required NotePageData data,
     required Object error,
   }) = ErrorState;
+
+  bool get needsSync => this is NotSyncedState;
+}
+
+class NotSyncedState extends NotePageState {
+  const NotSyncedState({required NotePageData data}) : super(data: data);
 }
 
 class CommonState extends NotePageState {

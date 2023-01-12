@@ -3,14 +3,15 @@ part of 'note_page_bloc.dart';
 abstract class NotePageEvent extends Equatable {
   const NotePageEvent();
 
-  const factory NotePageEvent.newData({required List<NoteItem> notes}) = NewDataEvent;
+  const factory NotePageEvent.newData({required List<NoteItem> notes}) =
+      NewDataEvent;
 
   const factory NotePageEvent.shouldUpdateNote({required NoteItem noteItem}) =
       ShouldUpdateNoteItemEvent;
 
-  const factory NotePageEvent.login({
-    required void Function(String) onLaunchWebCallback,
-  }) = LoginEvent;
+  const factory NotePageEvent.refresh() = RefreshDataEvent;
+
+  const factory NotePageEvent.sync() = SyncEvent;
 
   @override
   List<Object?> get props => const [];
@@ -21,13 +22,15 @@ class NewDataEvent extends NotePageEvent {
   const NewDataEvent({required this.notes});
 }
 
+class RefreshDataEvent extends NotePageEvent {
+  const RefreshDataEvent();
+}
+
 class ShouldUpdateNoteItemEvent extends NotePageEvent {
   final NoteItem noteItem;
   const ShouldUpdateNoteItemEvent({required this.noteItem});
 }
 
-class LoginEvent extends NotePageEvent {
-  final void Function(String) onLaunchWebCallback;
-
-  const LoginEvent({required this.onLaunchWebCallback});
+class SyncEvent extends NotePageEvent {
+  const SyncEvent();
 }

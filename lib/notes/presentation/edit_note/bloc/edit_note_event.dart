@@ -3,8 +3,6 @@ part of 'edit_note_bloc.dart';
 abstract class EditNoteEvent extends Equatable {
   const EditNoteEvent();
 
-  const factory EditNoteEvent.initial() = InitialEvent;
-
   const factory EditNoteEvent.save({
     required String title,
     required String description,
@@ -13,10 +11,6 @@ abstract class EditNoteEvent extends Equatable {
 
   @override
   List<Object?> get props => const [];
-}
-
-class InitialEvent extends EditNoteEvent {
-  const InitialEvent();
 }
 
 class SaveEvent extends EditNoteEvent {

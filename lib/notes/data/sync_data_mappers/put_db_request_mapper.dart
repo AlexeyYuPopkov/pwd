@@ -1,12 +1,13 @@
 import 'package:pwd/common/data_tools/mapper.dart';
-import 'package:pwd/settings/data/model/put_db_request_data.dart';
-import 'package:pwd/settings/domain/models/put_db_request.dart';
+import 'package:pwd/notes/data/sync_models/put_db_request_data.dart';
+import 'package:pwd/notes/domain/sync_requests_parameters/put_db_request.dart';
 
 class PutDbRequestMapper implements Mapper<PutDbRequestData, PutDbRequest> {
   @override
   PutDbRequestData toData(PutDbRequest data) => PutDbRequestData(
         message: data.message,
         content: data.content,
+        sha: data.sha,
         committer: CommitterData(
           name: data.committer.name,
           email: data.committer.email,
@@ -17,13 +18,14 @@ class PutDbRequestMapper implements Mapper<PutDbRequestData, PutDbRequest> {
   PutDbRequest toDomain(PutDbRequestData data) => PutDbRequest(
         message: data.message,
         content: data.content,
+        sha: data.sha,
         committer: Committer(
           name: data.committer.name,
           email: data.committer.email,
         ),
       );
 
-        @override
+  @override
   PutDbRequestData dataFromMap(Map<String, dynamic> data) =>
       PutDbRequestData.fromJson(data);
 }

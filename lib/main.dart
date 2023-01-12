@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'settings/presentation/di/settings_di.dart';
+import 'notes/presentation/di/sync_di.dart';
 import 'package:pwd/common/presentation/di/network_di.dart';
 import 'package:pwd/common/tools/di_storage/di_storage.dart';
 import 'package:pwd/home/presentation/home_page.dart';
@@ -13,7 +13,7 @@ void main() async {
 
   NotesDi().bind(di);
   NetworkDiModule().bind(di);
-  SettingsDi().bind(di);
+  SyncDi().bind(di);
 
   runApp(const MyApp());
 }

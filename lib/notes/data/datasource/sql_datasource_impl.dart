@@ -50,27 +50,41 @@ class SqlDatasourceImpl implements NotesRepository {
   Future<String> get _databasePath => databasePathProvider.path;
 
   @override
-  Future<int> insertNote(NoteItem noteItem) async {
+  Future<int> updateNote(NoteItem noteItem) async {
     return db.then(
-      (db) => db.insert(
-        CreateNotesTableIfAbsent.tableName,
-        mapper.toData(noteItem).toJson(),
+      (db) => db.transaction(
+        (transaction) async {
+          int changes = 0;
+
+          final result = await transaction.query(
+            CreateNotesTableIfAbsent.tableName,
+            columns: ['id'],
+            where: 'id = ?',
+            whereArgs: [noteItem.id],
+          );
+
+          final existedId = result.firstOrNull?['id'];
+
+          if (existedId is int && existedId == noteItem.id) {
+            changes += await transaction.update(
+              CreateNotesTableIfAbsent.tableName,
+              where: 'id = ?',
+              whereArgs: [noteItem.id],
+              mapper.toData(noteItem).toJson(),
+              conflictAlgorithm: ConflictAlgorithm.replace,
+            );
+          } else {
+            changes += await transaction.insert(
+              CreateNotesTableIfAbsent.tableName,
+              mapper.toData(noteItem).toJson(),
+              conflictAlgorithm: ConflictAlgorithm.replace,
+            );
+          }
+
+          return changes;
+        },
       ),
     );
-  }
-
-  @override
-  Future<int> updatetNote(NoteItem noteItem) async {
-    if (noteItem.id == null) {
-      return insertNote(noteItem);
-    } else {
-      return db.then(
-        (db) => db.update(
-          CreateNotesTableIfAbsent.tableName,
-          mapper.toData(noteItem).toJson(),
-        ),
-      );
-    }
   }
 
   @override
@@ -120,34 +134,47 @@ class SqlDatasourceImpl implements NotesRepository {
   }
 
   @override
-  Future<void> importNotes(List<NoteItemData> notes) async {
-    // var queryes = <String>[];
-
+  Future<int> importNotes({
+    required List<NoteItemData> notes,
+  }) async {
     const tableName = CreateNotesTableIfAbsent.tableName;
 
-    // for (final note in notes) {
-    //   queryes.add(
-    //     'INSERT INTO '
-    //     '$tableName (id, title, description, content, timestamp);',
-    //   );
-    // }
-
     return db.then(
-      (db) {
-        return db.transaction((transaction) async {
+      (db) => db.transaction(
+        (transaction) async {
+          int changes = 0;
+
           for (final note in notes) {
             final map = note.toJson();
-            await transaction.insert(
+
+            final result = await transaction.query(
               tableName,
-              map,
-              conflictAlgorithm: ConflictAlgorithm.replace,
+              columns: ['id', 'timestamp'],
+              where: 'id = ?',
+              whereArgs: [note.id],
             );
+
+            final timestamp = result.firstOrNull?['timestamp'];
+
+            if (timestamp is int && timestamp < note.timestamp) {
+              changes += await transaction.update(
+                tableName,
+                map,
+                conflictAlgorithm: ConflictAlgorithm.replace,
+              );
+            } else {
+              changes += await transaction.insert(
+                tableName,
+                map,
+                conflictAlgorithm: ConflictAlgorithm.replace,
+              );
+            }
           }
-        });
-      },
-    ).catchError((e) {
-      print(e.toString());
-    });
+
+          return changes;
+        },
+      ),
+    );
   }
 
   @override

@@ -1,7 +1,6 @@
 import 'dart:convert';
 
-import 'package:dio/dio.dart'
-    show DioError, DioErrorType, ResponseType;
+import 'package:dio/dio.dart' show DioError, DioErrorType, ResponseType;
 import 'package:flutter/foundation.dart';
 import 'package:pwd/common/domain/errors/network_error.dart';
 import 'package:pwd/common/domain/errors/network_error_mapper.dart';

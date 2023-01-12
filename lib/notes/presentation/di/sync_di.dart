@@ -1,12 +1,13 @@
 import 'package:pwd/common/presentation/di/network_di.dart';
 import 'package:pwd/common/tools/di_storage/di_storage.dart';
-import 'package:pwd/settings/data/git_data_storage_impl.dart';
-import 'package:pwd/settings/data/mappers/put_db_request_mapper.dart';
-import 'package:pwd/settings/data/service/git_service_api.dart';
-import 'package:pwd/settings/domain/data_storage_repository.dart';
-import 'package:pwd/settings/domain/sync_data_usecases.dart';
+import 'package:pwd/notes/data/git_data_storage_impl.dart';
+import 'package:pwd/notes/data/sync_data_mappers/put_db_request_mapper.dart';
+import 'package:pwd/notes/data/sync_data_service/git_service_api.dart';
+import 'package:pwd/notes/domain/data_storage_repository.dart';
+import 'package:pwd/notes/domain/usecases/sync_data_usecase.dart';
 
-class SettingsDi extends DiModule {
+
+class SyncDi extends DiModule {
   @override
   void bind(DiStorage di) {
     di.bind<DataStorageRepository>(
@@ -20,10 +21,9 @@ class SettingsDi extends DiModule {
       ),
     );
 
-    di.bind<SyncDataUsecases>(
-      () => SyncDataUsecases(
+    di.bind<SyncDataUsecase>(
+      () => SyncDataUsecase(
         dataStorageRepository: di.resolve(),
-        databasePathProvider: di.resolve(),
         notesRepository: di.resolve(),
         notesProvider: di.resolve(),
       ),
