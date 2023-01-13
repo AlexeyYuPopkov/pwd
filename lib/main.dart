@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pwd/theme/theme_data.dart';
 import 'notes/presentation/di/sync_di.dart';
 import 'package:pwd/common/presentation/di/network_di.dart';
 import 'package:pwd/common/tools/di_storage/di_storage.dart';
@@ -25,9 +26,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: lightThemeData,
+      themeMode: ThemeMode.light,
       debugShowCheckedModeBanner: false,
       home: BlockingLoadingIndicator(
         child: const HomePage(),

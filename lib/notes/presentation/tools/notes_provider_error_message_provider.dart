@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pwd/common/presentation/dialogs/show_error_dialog_mixin.dart';
-import 'package:pwd/notes/domain/usecases/notes_provider_usecase.dart';
+import 'package:pwd/notes/data/notes_provider_repository_impl.dart';
 
 class NotesProviderErrorMessageProvider {
   const NotesProviderErrorMessageProvider();

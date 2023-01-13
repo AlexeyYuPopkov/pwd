@@ -6,7 +6,6 @@ import 'package:pwd/notes/data/sync_data_service/git_service_api.dart';
 import 'package:pwd/notes/domain/data_storage_repository.dart';
 import 'package:pwd/notes/domain/usecases/sync_data_usecase.dart';
 
-
 class SyncDi extends DiModule {
   @override
   void bind(DiStorage di) {

@@ -1,14 +1,12 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
-import 'package:pwd/common/domain/errors/app_error.dart';
 import 'package:pwd/notes/domain/data_storage_repository.dart';
-import 'package:pwd/notes/domain/sync_data_usecases_errors.dart';
+import 'package:pwd/notes/domain/notes_provider_repository.dart';
+import 'package:pwd/notes/domain/usecases/sync_data_usecases_errors.dart';
 import 'package:pwd/notes/domain/sync_requests_parameters/export_db_data.dart';
 import 'package:pwd/notes/domain/sync_requests_parameters/put_db_request.dart';
 import 'package:pwd/notes/domain/sync_requests_parameters/put_db_response.dart';
-import 'package:pwd/notes/domain/usecases/notes_provider_usecase.dart';
 import 'package:pwd/notes/domain/notes_repository.dart';
-
 
 class SyncDataUsecase {
   static const _commitMessage = 'Update notes';
@@ -18,7 +16,7 @@ class SyncDataUsecase {
   final DataStorageRepository dataStorageRepository;
 
   final NotesRepository notesRepository;
-  final NotesProviderUsecase notesProvider;
+  final NotesProviderRepository notesProvider;
 
   SyncDataUsecase({
     required this.dataStorageRepository,

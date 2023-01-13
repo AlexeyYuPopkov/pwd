@@ -8,7 +8,6 @@ import 'package:pwd/notes/domain/sync_requests_parameters/get_db_response.dart';
 import 'package:pwd/notes/domain/sync_requests_parameters/put_db_request.dart';
 import 'package:pwd/notes/domain/sync_requests_parameters/put_db_response.dart';
 
-
 class GitDataStorageImpl implements DataStorageRepository {
   static const _token = 'Bearer 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';
 

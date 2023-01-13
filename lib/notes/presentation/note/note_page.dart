@@ -3,14 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:pwd/common/common_sizes.dart';
+import 'package:pwd/common/presentation/app_bar_button.dart';
 import 'package:pwd/common/presentation/common_highlighted_row.dart';
 import 'package:pwd/common/presentation/dialogs/show_error_dialog_mixin.dart';
 import 'package:pwd/common/tools/di_storage/di_storage.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
 import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
-import 'package:pwd/notes/domain/usecases/notes_provider_usecase.dart';
+import 'package:pwd/notes/domain/notes_provider_repository.dart';
 import 'package:pwd/notes/presentation/router/main_route_data.dart';
 import 'package:pwd/notes/presentation/tools/notes_provider_error_message_provider.dart';
+import 'package:pwd/notes/presentation/tools/sync_data_error_message_provider.dart';
 
 import 'bloc/note_page_bloc.dart';
 
@@ -22,45 +24,55 @@ class NotePage extends StatelessWidget with ShowErrorDialogMixin {
     required this.onRoute,
   }) : super(key: key);
 
+  void _listener(BuildContext context, NotePageState state) {
+    BlockingLoadingIndicator.of(context).isLoading = state is LoadingState;
+
+    if (state is ErrorState) {
+      showError(
+        context,
+        state.error,
+        errorMessageProviders: [
+          const NotesProviderErrorMessageProvider(),
+          const SyncDataErrorMessageProvider(),
+        ],
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => NotePageBloc(
-        notesProviderUsecase: DiStorage.shared.resolve(),
+        notesProviderUsecase:
+            DiStorage.shared.resolve<NotesProviderRepository>(),
         syncDataUsecase: DiStorage.shared.resolve(),
       ),
       child: BlocConsumer<NotePageBloc, NotePageState>(
         listener: _listener,
+        buildWhen: (old, current) => old.needsSync != current.needsSync,
         builder: (context, state) {
           return Scaffold(
             appBar: AppBar(
               title: Text(context.pageTitle),
               actions: [
-                CupertinoButton(
-                  padding: EdgeInsets.zero,
+                AppBarButton(
+                  iconData: Icons.sync,
                   onPressed: state.needsSync ? () => _onSync(context) : null,
-                  child: const IconButton(
-                    icon: Icon(Icons.sync),
-                    onPressed: null,
-                  ),
                 ),
-                CupertinoButton(
-                  padding: EdgeInsets.zero,
+                AppBarButton(
+                  iconData: Icons.add,
                   onPressed: () => _onEditButton(
                     context,
                     noteItem: NoteItem.newItem(),
-                  ),
-                  child: const IconButton(
-                    icon: Icon(Icons.add),
-                    onPressed: null,
                   ),
                 ),
               ],
             ),
             body: SafeArea(
               child: BlocBuilder<NotePageBloc, NotePageState>(
+                buildWhen: (old, current) =>
+                    old.data.notes != current.data.notes,
                 builder: (context, state) {
-                  // debugPrint('rebuilding ...');
                   return RefreshIndicator(
                     onRefresh: () async => _onPullToRefresh(context),
                     child: ListView.separated(
@@ -107,21 +119,6 @@ class NotePage extends StatelessWidget with ShowErrorDialogMixin {
         },
       ),
     );
-  }
-
-  void _listener(BuildContext context, NotePageState state) {
-    BlockingLoadingIndicator.of(context).isLoading = state is LoadingState;
-
-    if (state is ErrorState) {
-      showError(
-        context,
-        state.error,
-        errorMessageProviders: [
-          const NotesProviderErrorMessageProvider(),
-          const NotesProviderErrorMessageProvider(),
-        ],
-      );
-    }
   }
 
   void _onSync(BuildContext context) =>

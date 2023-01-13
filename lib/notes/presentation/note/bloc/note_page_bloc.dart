@@ -3,14 +3,14 @@ import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
-import 'package:pwd/notes/domain/usecases/notes_provider_usecase.dart';
+import 'package:pwd/notes/domain/notes_provider_repository.dart';
 import 'package:pwd/notes/domain/usecases/sync_data_usecase.dart';
 
 part 'note_page_event.dart';
 part 'note_page_state.dart';
 
 class NotePageBloc extends Bloc<NotePageEvent, NotePageState> {
-  final NotesProviderUsecase notesProviderUsecase;
+  final NotesProviderRepository notesProviderUsecase;
   final SyncDataUsecase syncDataUsecase;
 
   StreamSubscription? subscription;
@@ -21,7 +21,7 @@ class NotePageBloc extends Bloc<NotePageEvent, NotePageState> {
     required this.notesProviderUsecase,
     required this.syncDataUsecase,
   }) : super(
-          NotePageState.notSynced(
+          NotePageState.common(
             data: NotePageData.initial(),
           ),
         ) {
@@ -34,6 +34,8 @@ class NotePageBloc extends Bloc<NotePageEvent, NotePageState> {
         );
       },
     );
+
+    add(const NotePageEvent.sync());
   }
 
   @override
@@ -54,7 +56,7 @@ class NotePageBloc extends Bloc<NotePageEvent, NotePageState> {
     Emitter<NotePageState> emit,
   ) async {
     emit(
-      NotePageState.notSynced(
+      NotePageState.common(
         data: state.data.copyWith(notes: event.notes),
       ),
     );
@@ -79,6 +81,12 @@ class NotePageBloc extends Bloc<NotePageEvent, NotePageState> {
     try {
       emit(NotePageState.loading(data: state.data));
       await notesProviderUsecase.updateNoteItem(event.noteItem);
+
+      emit(
+        NotePageState.common(
+          data: state.data.copyWith(needsToSync: true),
+        ),
+      );
     } catch (e) {
       emit(NotePageState.error(data: state.data, error: e));
     }
@@ -93,9 +101,16 @@ class NotePageBloc extends Bloc<NotePageEvent, NotePageState> {
 
       await syncDataUsecase.getDb();
 
-      emit(NotePageState.common(data: state.data));
+      emit(
+        NotePageState.common(
+          data: state.data.copyWith(
+            needsToSync: false,
+          ),
+        ),
+      );
     } catch (e) {
       emit(NotePageState.error(data: state.data, error: e));
+      add(const NotePageEvent.refresh());
     }
   }
 }

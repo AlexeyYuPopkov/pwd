@@ -23,7 +23,7 @@ class SqlDatasourceImpl implements NotesRepository {
     if (_db is Database) {
       return _db as Database;
     } else {
-      _db = await openDb();
+      _db = await _openDb();
       return _db as Database;
     }
   }
@@ -38,14 +38,26 @@ class SqlDatasourceImpl implements NotesRepository {
     );
   }
 
-  Future<Database> openDb() async => openDatabase(
-        await _databasePath,
-        version: 1,
-        onCreate: (Database db, int version) async {
-          const request = DbRequest.createNotesTableIfAbsent();
-          await db.execute(request.query);
-        },
-      );
+  Future<Database> _openDb() async {
+    const currentDbVersion = 2;
+    const createRequest = DbRequest.createNotesTableIfAbsent();
+    return openDatabase(
+      await _databasePath,
+      version: currentDbVersion,
+      onCreate: (Database db, int version) async {
+        await db.execute(createRequest.query);
+      },
+      onUpgrade: (db, oldVersion, newVersion) async {
+        if (oldVersion < newVersion) {
+          const tableName = CreateNotesTableIfAbsent.tableName;
+          await db.transaction((transaction) async {
+            await transaction.execute('DROP TABLE IF EXISTS $tableName');
+            await transaction.execute(createRequest.query);
+          });
+        }
+      },
+    );
+  }
 
   Future<String> get _databasePath => databasePathProvider.path;
 
@@ -124,6 +136,7 @@ class SqlDatasourceImpl implements NotesRepository {
         .then(
           (db) => db.query(
             CreateNotesTableIfAbsent.tableName,
+            orderBy: 'timestamp DESC',
           ),
         )
         .then(
@@ -145,8 +158,6 @@ class SqlDatasourceImpl implements NotesRepository {
           int changes = 0;
 
           for (final note in notes) {
-            final map = note.toJson();
-
             final result = await transaction.query(
               tableName,
               columns: ['id', 'timestamp'],
@@ -155,14 +166,23 @@ class SqlDatasourceImpl implements NotesRepository {
             );
 
             final timestamp = result.firstOrNull?['timestamp'];
+            final id = result.firstOrNull?['id'];
 
-            if (timestamp is int && timestamp < note.timestamp) {
-              changes += await transaction.update(
-                tableName,
-                map,
-                conflictAlgorithm: ConflictAlgorithm.replace,
-              );
+            if (id is int && id > 0) {
+              if (timestamp is int && timestamp < note.timestamp) {
+                final map = note.toJson();
+                changes += await transaction.update(
+                  tableName,
+                  map,
+                  where: 'id = ?',
+                  whereArgs: [id],
+                  conflictAlgorithm: ConflictAlgorithm.replace,
+                );
+              } else {
+                debugPrint('Nothing to do');
+              }
             } else {
+              final map = note.toJson();
               changes += await transaction.insert(
                 tableName,
                 map,
@@ -199,8 +219,8 @@ class CreateNotesTableIfAbsent extends DbRequest {
   String get query => 'CREATE TABLE $tableName'
       r'('
       r'id INTEGER PRIMARY KEY,'
-      r'title varchar(32),'
-      r'description varchar(255),'
+      r'title TEXT,'
+      r'description TEXT,'
       r'content TEXT,'
       r'timestamp TIMESTAMP'
       r')';

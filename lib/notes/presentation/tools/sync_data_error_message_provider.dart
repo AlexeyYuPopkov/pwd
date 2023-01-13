@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pwd/common/presentation/dialogs/show_error_dialog_mixin.dart';
-import 'package:pwd/notes/domain/sync_data_usecases_errors.dart';
-
+import 'package:pwd/notes/domain/usecases/sync_data_usecases_errors.dart';
 
 class SyncDataErrorMessageProvider {
   const SyncDataErrorMessageProvider();

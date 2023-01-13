@@ -2,10 +2,10 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:dio/adapter.dart';
 import 'package:flutter/foundation.dart';
-import 'package:pwd/common/data/cache_token_data_source.dart';
+import 'package:pwd/common/data/pin_data_source.dart';
 import 'package:pwd/common/data/network_error_mapper_impl.dart';
 import 'package:pwd/common/domain/errors/network_error_mapper.dart';
-import 'package:pwd/common/domain/token_repository.dart';
+import 'package:pwd/common/domain/pin_repository.dart';
 import 'package:pwd/common/tools/di_storage/di_storage.dart';
 
 const _scheme = 'https';
@@ -25,7 +25,7 @@ class NetworkDiModule extends DiModule {
   void bind(DiStorage di) {
     di.bind<NetworkErrorMapper>(() => NetworkErrorMapperImpl());
 
-    di.bind<TokenRepository>(() => CacheTokenDataSource());
+    di.bind<PinRepository>(() => PinDataSource());
 
     final dioOptions = _createDioOptions(di);
 
