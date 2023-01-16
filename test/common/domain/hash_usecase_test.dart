@@ -21,7 +21,7 @@ void main() {
 
     final encoded = usecase.encode(str);
 
-    final decoded = usecase.decode(encoded);
+    final decoded = usecase.tryDecode(encoded);
 
     expect(encoded.isNotEmpty, true);
     expect(decoded == str, true);
@@ -73,7 +73,7 @@ void main() {
     );
 
     expect(
-      () => usecase.decode('Lorem ipsum dolor sit amet'),
+      () => usecase.tryDecode('Lorem ipsum dolor sit amet'),
       throwsA(
         isA<HashUsecaseEmptyPinError>(),
       ),
@@ -83,7 +83,7 @@ void main() {
   test('HashUsecase - Exception: Wrong pin length', () {
     final usecase = HashUsecase(pinRepository: pinRepo);
 
-    const expectedPin = BasePin.pin(pin: '12345');
+    final expectedPin = BasePin.pin(pin: '12345');
 
     when(
       () => pinRepo.getPin(),
@@ -97,7 +97,7 @@ void main() {
     );
 
     expect(
-      () => usecase.decode('Lorem ipsum dolor sit amet'),
+      () => usecase.tryDecode('Lorem ipsum dolor sit amet'),
       throwsA(
         isA<HashUsecaseWrongPinLengthError>(),
       ),

@@ -1,16 +1,28 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pwd/common/presentation/common_size.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
 import 'package:pwd/common/presentation/dialogs/show_error_dialog_mixin.dart';
+import 'package:pwd/common/tools/di_storage/di_storage.dart';
+import 'package:pwd/theme/common_size.dart';
+
+import 'bloc/settings_page_bloc.dart';
 
 abstract class SettingsRouteData {
   const SettingsRouteData();
 
-  factory SettingsRouteData.onTest() = OnTestPage;
+  factory SettingsRouteData.onRemoteStorageSettings() =
+      OnRemoteStorageSettingsPage;
+
+  factory SettingsRouteData.onDeveloperSettingsPage() = OnDeveloperSettingsPage;
 }
 
-class OnTestPage extends SettingsRouteData {
-  const OnTestPage();
+class OnRemoteStorageSettingsPage extends SettingsRouteData {
+  const OnRemoteStorageSettingsPage();
+}
+
+class OnDeveloperSettingsPage extends SettingsRouteData {
+  const OnDeveloperSettingsPage();
 }
 
 class SettingsPage extends StatelessWidget with ShowErrorDialogMixin {
@@ -18,30 +30,69 @@ class SettingsPage extends StatelessWidget with ShowErrorDialogMixin {
 
   const SettingsPage({super.key, required this.onRoute});
 
+  void _listener(BuildContext context, SettingsPageState state) {
+    BlockingLoadingIndicator.of(context).isLoading = state is LoadingState;
+
+    if (state is ErrorState) {
+      showError(context, state.error);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text(context.pageTitle)),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const SizedBox(height: CommonSize.indent2x),
-          CupertinoButton(
-            child: Text(context.testPageButtonTitle),
-            onPressed: () => _onTest(context),
+    return BlocProvider(
+      create: (_) => SettingsPageBloc(
+        pinRepository: DiStorage.shared.resolve(),
+      ),
+      child: BlocListener<SettingsPageBloc, SettingsPageState>(
+        listener: _listener,
+        child: Scaffold(
+          appBar: AppBar(title: Text(context.pageTitle)),
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: CommonSize.indent2x),
+              CupertinoButton(
+                child: Text(context.remoteStorageSettingsPageButtonTitle),
+                onPressed: () => _onRemoteStorageSettingsPage(context),
+              ),
+              const SizedBox(height: CommonSize.indent2x),
+              CupertinoButton(
+                child: Text(context.developerSettingsPageButtonTitle),
+                onPressed: () => _onDeveloperSettingsPage(context),
+              ),
+              const SizedBox(height: CommonSize.indent2x),
+              BlocBuilder<SettingsPageBloc, SettingsPageState>(
+                builder: (context, state) => CupertinoButton(
+                  child: Text(context.logoutButtonTitle),
+                  onPressed: () => _onLogout(context),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
 
-  void _onTest(BuildContext context) {
-    onRoute(context, SettingsRouteData.onTest());
+  void _onRemoteStorageSettingsPage(BuildContext context) {
+    onRoute(context, SettingsRouteData.onRemoteStorageSettings());
   }
+
+  void _onDeveloperSettingsPage(BuildContext context) {
+    onRoute(context, SettingsRouteData.onDeveloperSettingsPage());
+  }
+
+  void _onLogout(BuildContext context) => context.read<SettingsPageBloc>().add(
+        const SettingsPageEvent.logout(),
+      );
 }
 
 // Localization
 extension on BuildContext {
   String get pageTitle => 'Settings';
-  String get testPageButtonTitle => 'On test page';
+  String get remoteStorageSettingsPageButtonTitle => 'Remote storage settings';
+
+  String get developerSettingsPageButtonTitle => 'Developer settings';
+  String get logoutButtonTitle => 'Logout';
 }

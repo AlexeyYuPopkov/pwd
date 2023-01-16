@@ -8,4 +8,6 @@ abstract class PinRepository {
   Future<void> dropPin();
 
   Stream<BasePin> get pinStream;
+
+  bool get isValidPin;
 }

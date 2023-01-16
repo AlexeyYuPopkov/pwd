@@ -8,8 +8,8 @@ part of 'get_db_response_data.dart';
 
 GetDbResponseData _$GetDbResponseDataFromJson(Map<String, dynamic> json) =>
     GetDbResponseData(
-      sha: json['sha'] as String,
-      content: json['content'],
+      sha: json['sha'] as String? ?? '',
+      content: json['content'] as String? ?? '',
     );
 
 Map<String, dynamic> _$GetDbResponseDataToJson(GetDbResponseData instance) =>

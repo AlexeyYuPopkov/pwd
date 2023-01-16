@@ -1,26 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:pwd/common/presentation/fade_animation_page.dart';
+import 'package:pwd/common/presentation/router/base_router_delegate.dart';
 import 'package:pwd/notes/presentation/edit_note/edit_note_page.dart';
 import 'package:pwd/notes/presentation/note/note_page.dart';
-import 'package:pwd/notes/presentation/router/main_route_data.dart';
+import 'package:pwd/notes/presentation/note/note_page_route.dart';
+import 'package:pwd/notes/presentation/note_details/note_details_page.dart';
 
 class MainRouterPagePath {
   static const note = 'note';
   static const editNote = 'note/edit';
 }
 
-class MainRouterDelegate extends RouterDelegate
-    with ChangeNotifier, PopNavigatorRouterDelegateMixin {
+class NoteRouterDelegate extends BaseRouterDelegate {
   @override
   final GlobalKey<NavigatorState> navigatorKey;
 
-  MainRouterDelegate({
+  NoteRouterDelegate({
     GlobalKey<NavigatorState>? navigatorKey,
   }) : navigatorKey = navigatorKey ?? GlobalKey<NavigatorState>();
-
-  void updateState() {
-    notifyListeners();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +25,7 @@ class MainRouterDelegate extends RouterDelegate
       key: navigatorKey,
       pages: [
         FadeAnimationPage(
-          child: NotePage(onRoute: _onRoute),
+          child: NotePage(onRoute: onRoute),
           name: MainRouterPagePath.note,
         )
       ],
@@ -47,14 +44,23 @@ class MainRouterDelegate extends RouterDelegate
     );
   }
 
-  Future _onRoute(BuildContext context, MainRouteData action) async {
-    if (action is OnNoteEdit) {
+  @override
+  List<Page> get initialPages => [
+        FadeAnimationPage(
+          child: NotePage(onRoute: onRoute),
+          name: MainRouterPagePath.note,
+        ),
+      ];
+
+  @override
+  Future onRoute(BuildContext context, Object action) async {
+    if (action is NotePageOnEdit) {
       return context.navigator.push(
         MaterialPageRoute(
           builder: (_) {
             return EditNotePage(
               noteItem: action.noteItem,
-              onRoute: _onRoute,
+              onRoute: onRoute,
             );
           },
         ),
@@ -64,16 +70,17 @@ class MainRouterDelegate extends RouterDelegate
           return result;
         },
       );
-    } else if (action is EditNotePageResult) {
+    } else if (action is EditNotePageRoutePopWithResult) {
       return context.navigator.pop(action.noteItem);
+    } else if (action is NotePageOnDetails) {
+      return context.navigator.push(
+        MaterialPageRoute(
+          builder: (_) => NoteDetailsPage(
+            noteItem: action.noteItem,
+          ),
+        ),
+      );
     }
-  }
-
-  void parseUri(Uri uri) {}
-
-  @override
-  Future<void> setNewRoutePath(configuration) {
-    return Future.value(null);
   }
 }
 

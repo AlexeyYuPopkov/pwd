@@ -14,9 +14,9 @@ abstract class NotesRepository {
 
   Future<void> updateDb({required String rawSql});
 
-  Future<List<NoteItemData>> exportNotes();
+  Future<String> exportNotes({required DateTime exportDate});
 
   Future<int> importNotes({
-    required List<NoteItemData> notes,
+    required Map<String, dynamic> jsonMap,
   });
 }

@@ -12,6 +12,7 @@ class PutDbRequestMapper implements Mapper<PutDbRequestData, PutDbRequest> {
           name: data.committer.name,
           email: data.committer.email,
         ),
+        branch: data.branch,
       );
 
   @override
@@ -23,6 +24,7 @@ class PutDbRequestMapper implements Mapper<PutDbRequestData, PutDbRequest> {
           name: data.committer.name,
           email: data.committer.email,
         ),
+        branch: data.branch,
       );
 
   @override

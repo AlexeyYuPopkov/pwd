@@ -13,6 +13,7 @@ PutDbRequestData _$PutDbRequestDataFromJson(Map<String, dynamic> json) =>
       sha: json['sha'] as String?,
       committer:
           CommitterData.fromJson(json['committer'] as Map<String, dynamic>),
+      branch: json['branch'] as String?,
     );
 
 Map<String, dynamic> _$PutDbRequestDataToJson(PutDbRequestData instance) =>
@@ -21,6 +22,7 @@ Map<String, dynamic> _$PutDbRequestDataToJson(PutDbRequestData instance) =>
       'content': instance.content,
       'sha': instance.sha,
       'committer': instance.committer,
+      'branch': instance.branch,
     };
 
 CommitterData _$CommitterDataFromJson(Map<String, dynamic> json) =>

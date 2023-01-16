@@ -26,27 +26,43 @@ abstract class NoteItem extends Equatable {
 
   factory NoteItem.newItem() = NewNoteItem;
 
-  const factory NoteItem.updatedItem({
+  factory NoteItem.updatedItem({
+    required int? id,
+    required String title,
+    required String description,
+    required String content,
+  }) = UpdatedNoteItem;
+
+  const factory NoteItem.decrypted({
     required int? id,
     required String title,
     required String description,
     required String content,
     required int timestamp,
-  }) = UpdatedNoteItem;
+  }) = DecryptedNoteItem;
 
   NoteItem copyWith({
     String? title,
     String? description,
     String? content,
-    int? timestamp,
-  }) =>
-      NoteItem.updatedItem(
-        id: id,
-        title: title ?? this.title,
-        description: description ?? this.description,
-        content: content ?? this.content,
-        timestamp: timestamp ?? this.timestamp,
-      );
+  }) {
+    return NoteItem.updatedItem(
+      id: id,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      content: content ?? this.content,
+    );
+  }
+}
+
+class DecryptedNoteItem extends NoteItem {
+  const DecryptedNoteItem({
+    required super.id,
+    required super.title,
+    required super.description,
+    required super.content,
+    required super.timestamp,
+  });
 }
 
 class NewNoteItem extends NoteItem {
@@ -61,13 +77,12 @@ class NewNoteItem extends NoteItem {
 }
 
 class UpdatedNoteItem extends NoteItem {
-  const UpdatedNoteItem({
+  UpdatedNoteItem({
     required super.id,
     required super.title,
     required super.description,
     required super.content,
-    required super.timestamp,
-  });
+  }) : super(timestamp: DateTime.now().timestamp);
 }
 
 extension on DateTime {

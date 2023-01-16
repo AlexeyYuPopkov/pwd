@@ -1,0 +1,134 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
+import 'package:pwd/common/presentation/dialogs/show_error_dialog_mixin.dart';
+import 'package:pwd/common/tools/di_storage/di_storage.dart';
+import 'package:pwd/theme/common_size.dart';
+
+import 'bloc/remote_storage_settings_page_bloc.dart';
+
+class RemoteStorageSettingsPage extends StatelessWidget
+    with ShowErrorDialogMixin {
+  const RemoteStorageSettingsPage({super.key});
+
+  void _listener(BuildContext context, RemoteStorageSettingsPageState state) {
+    BlockingLoadingIndicator.of(context).isLoading = state is LoadingState;
+
+    if (state is ErrorState) {
+      showError(context, state.error);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final di = DiStorage.shared;
+    return Scaffold(
+      appBar: AppBar(title: Text(context.pageTitle)),
+      body: BlocProvider(
+        create: (_) => RemoteStorageSettingsPageBloc(
+          pinRepository: di.resolve(),
+          remoteStorageConfigurationProvider: di.resolve(),
+        ),
+        child: BlocConsumer<RemoteStorageSettingsPageBloc,
+            RemoteStorageSettingsPageState>(
+          listener: _listener,
+          builder: (context, state) {
+            return SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _ListItemWidget(
+                    title: context.tokenLabelTitle,
+                    subtitle: state.data.token,
+                  ),
+                  _ListItemWidget(
+                    title: context.repoLabelTitle,
+                    subtitle: state.data.repo,
+                  ),
+                  _ListItemWidget(
+                    title: context.ownerLabelTitle,
+                    subtitle: state.data.owner,
+                  ),
+                  _ListItemWidget(
+                    title: context.branchLabelTitle,
+                    subtitle: state.data.branch ?? '',
+                  ),
+                  _ListItemWidget(
+                    title: context.fileLabelTitle,
+                    subtitle: _fileNameWithExtension(state.data.fileName),
+                  ),
+                  const SizedBox(height: CommonSize.indent2x),
+                  Center(
+                    child: CupertinoButton(
+                      child: Text(context.dropButtonTitle),
+                      onPressed: () => _onDrop(context),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  String _fileNameWithExtension(String str) => '$str.json';
+
+  void _onDrop(BuildContext context) =>
+      context.read<RemoteStorageSettingsPageBloc>().add(
+            const RemoteStorageSettingsPageEvent.drop(),
+          );
+}
+
+class _ListItemWidget extends StatelessWidget {
+  final String title;
+  final String subtitle;
+
+  const _ListItemWidget({
+    Key? key,
+    required this.title,
+    required this.subtitle,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: CommonSize.indent2x,
+        vertical: CommonSize.indent,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: theme.textTheme.titleMedium,
+            overflow: TextOverflow.ellipsis,
+          ),
+          Text(
+            subtitle,
+            style: theme.textTheme.bodyMedium,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// Localization
+extension on BuildContext {
+  String get pageTitle => 'Remote storage settings';
+
+  String get tokenLabelTitle => 'Token:';
+  String get repoLabelTitle => 'Repo:';
+  String get ownerLabelTitle => 'Owner:';
+  String get branchLabelTitle => 'Branch:';
+  String get fileLabelTitle => 'File name:';
+
+  String get dropButtonTitle => 'Drop';
+}

@@ -14,22 +14,29 @@ abstract class GitServiceApi {
   static const repo = 'notes_storage';
   static const filename = 'notes.json';
 
-  @PUT('repos/$owner/$repo/contents/$filename')
+  @PUT('repos/{owner}/{repo}/contents/{filename}')
   @Headers({
     'Accept': 'application/vnd.github+json',
     'X-GitHub-Api-Version': '2022-11-28',
   })
   Future<PutDbResponseData> putDb({
+    @Path('owner') required String owner,
+    @Path('repo') required String repo,
+    @Path('filename') required String filename,
     @Body() required PutDbRequestData body,
     @Header('Authorization') required String token,
   });
 
-  @GET('repos/$owner/$repo/contents/$filename')
+  @GET('repos/{owner}/{repo}/contents/{filename}')
   @Headers({
     'Accept': 'application/json',
     'X-GitHub-Api-Version': '2022-11-28',
   })
   Future<GetDbResponseData> getDb({
+    @Path('owner') required String owner,
+    @Path('repo') required String repo,
+    @Path('filename') required String filename,
+    @Query('ref') String? branch,
     @Header('Authorization') required String token,
   });
 }

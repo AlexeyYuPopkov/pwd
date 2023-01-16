@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/foundation.dart';
-import 'package:pwd/notes/data/model/note_item_data.dart';
+import 'package:pwd/notes/data/model/remote_db_data.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:collection/collection.dart';
-import 'package:pwd/notes/domain/database_path_provider.dart';
 import 'package:pwd/common/data_tools/mapper.dart';
+import 'package:pwd/notes/data/model/note_item_data.dart';
+import 'package:pwd/notes/domain/database_path_provider.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
 import 'package:pwd/notes/domain/notes_repository.dart';
 
@@ -128,27 +130,23 @@ class SqlDatasourceImpl implements NotesRepository {
   }
 
   @override
-  Future<List<NoteItem>> readNotes() => exportNotes();
+  Future<List<NoteItem>> readNotes() async => _readNotesDataList();
 
   @override
-  Future<List<NoteItemData>> exportNotes() async {
-    return db
-        .then(
-          (db) => db.query(
-            CreateNotesTableIfAbsent.tableName,
-            orderBy: 'timestamp DESC',
-          ),
-        )
-        .then(
-          (src) => [
-            for (final item in src) mapper.dataFromMap(item),
-          ],
-        );
+  Future<String> exportNotes({
+    required DateTime exportDate,
+  }) async {
+    return jsonEncode(
+      RemoteDbData(
+        notes: await _readNotesDataList(),
+        date: exportDate,
+      ).toJson(),
+    );
   }
 
   @override
   Future<int> importNotes({
-    required List<NoteItemData> notes,
+    required Map<String, dynamic> jsonMap,
   }) async {
     const tableName = CreateNotesTableIfAbsent.tableName;
 
@@ -157,20 +155,23 @@ class SqlDatasourceImpl implements NotesRepository {
         (transaction) async {
           int changes = 0;
 
-          for (final note in notes) {
+          final importResult = RemoteDbData.fromJson(jsonMap);
+
+          for (final remoteItem in importResult.notes) {
             final result = await transaction.query(
               tableName,
               columns: ['id', 'timestamp'],
               where: 'id = ?',
-              whereArgs: [note.id],
+              whereArgs: [remoteItem.id],
             );
 
-            final timestamp = result.firstOrNull?['timestamp'];
-            final id = result.firstOrNull?['id'];
+            final dbItemMap = result.firstOrNull;
+            final timestamp = dbItemMap?['timestamp'];
+            final id = dbItemMap?['id'];
 
-            if (id is int && id > 0) {
-              if (timestamp is int && timestamp < note.timestamp) {
-                final map = note.toJson();
+            if (dbItemMap != null && id is int && timestamp is int && id > 0) {
+              if (timestamp < remoteItem.timestamp) {
+                final map = remoteItem.toJson();
                 changes += await transaction.update(
                   tableName,
                   map,
@@ -179,10 +180,14 @@ class SqlDatasourceImpl implements NotesRepository {
                   conflictAlgorithm: ConflictAlgorithm.replace,
                 );
               } else {
-                debugPrint('Nothing to do');
+                final dbItem = NoteItemData.fromJson(dbItemMap);
+
+                if (dbItem != remoteItem) {
+                  changes++;
+                }
               }
             } else {
-              final map = note.toJson();
+              final map = remoteItem.toJson();
               changes += await transaction.insert(
                 tableName,
                 map,
@@ -200,6 +205,21 @@ class SqlDatasourceImpl implements NotesRepository {
   @override
   Future<void> close() => (_db?.close() ?? Future.value()).then(
         (_) => _db = null,
+      );
+
+  Future<List<NoteItemData>> _readNotesDataList() async => db
+          .then(
+        (db) => db.query(
+          CreateNotesTableIfAbsent.tableName,
+          orderBy: 'timestamp DESC',
+        ),
+      )
+          .then(
+        (src) {
+          return [
+            for (final item in src) mapper.dataFromMap(item),
+          ];
+        },
       );
 }
 

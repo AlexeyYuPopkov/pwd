@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:pwd/settings/presentation/developer_settings_page/developer_settings_page.dart';
 import 'package:pwd/settings/presentation/settings_page/settings_page.dart';
 
 import 'package:pwd/common/presentation/fade_animation_page.dart';
-import 'package:pwd/settings/presentation/test_page.dart';
+import 'package:pwd/settings/presentation/remote_storage_settings_page/remote_storage_settings_page.dart';
 
 class SettingsRouterPagePath {
   static const settings = 'settings';
@@ -44,16 +45,26 @@ class SettingsRouterDelegate extends RouterDelegate
   }
 
   Future _onRoute(BuildContext context, SettingsRouteData action) async {
-    if (action is OnTestPage) {
-      return context.navigator.push(
-        MaterialPageRoute(
-          builder: (_) {
-            return TestPage(onRoute: _onRoute);
-          },
-        ),
-      ).then(
-        (_) => updateState(),
-      );
+    if (action is OnRemoteStorageSettingsPage) {
+      return context.navigator
+          .push(
+            MaterialPageRoute(
+              builder: (_) => const RemoteStorageSettingsPage(),
+            ),
+          )
+          .then(
+            (_) => updateState(),
+          );
+    } else if (action is OnDeveloperSettingsPage) {
+      return context.navigator
+          .push(
+            MaterialPageRoute(
+              builder: (_) => const DeveloperSettingsPage(),
+            ),
+          )
+          .then(
+            (_) => updateState(),
+          );
     }
   }
 

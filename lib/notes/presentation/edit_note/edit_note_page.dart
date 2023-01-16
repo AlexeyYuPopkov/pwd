@@ -2,19 +2,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:pwd/common/common_sizes.dart';
 import 'package:pwd/common/presentation/dialogs/show_error_dialog_mixin.dart';
-
 import 'package:pwd/notes/domain/model/note_item.dart';
 import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
-import 'package:pwd/notes/presentation/router/main_route_data.dart';
+import 'package:pwd/theme/common_size.dart';
 
 import 'bloc/edit_note_bloc.dart';
 
-class EditNotePageResult extends MainRouteData {
+class EditNotePageRoutePopWithResult {
   final NoteItem noteItem;
 
-  EditNotePageResult({
+  EditNotePageRoutePopWithResult({
     required this.noteItem,
   });
 }
@@ -22,7 +20,7 @@ class EditNotePageResult extends MainRouteData {
 class EditNotePage extends StatelessWidget with ShowErrorDialogMixin {
   final NoteItem noteItem;
 
-  final Future Function(BuildContext, MainRouteData) onRoute;
+  final Future Function(BuildContext, Object) onRoute;
 
   const EditNotePage({
     Key? key,
@@ -30,35 +28,13 @@ class EditNotePage extends StatelessWidget with ShowErrorDialogMixin {
     required this.onRoute,
   }) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(context.pageTitle),
-      ),
-      body: SafeArea(
-        child: BlocProvider(
-          create: (context) => EditNoteBloc(
-            noteItem: noteItem,
-          ),
-          child: BlocConsumer<EditNoteBloc, EditNoteState>(
-            listener: _listener,
-            builder: (_, state) => _Form(
-              noteItem: state.data.noteItem,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   void _listener(BuildContext context, EditNoteState state) async {
     BlockingLoadingIndicator.of(context).isLoading = state is LoadingState;
 
     if (state is DidSaveState) {
       await onRoute(
         context,
-        EditNotePageResult(
+        EditNotePageRoutePopWithResult(
           noteItem: state.data.noteItem,
         ),
       );
@@ -66,6 +42,41 @@ class EditNotePage extends StatelessWidget with ShowErrorDialogMixin {
       showError(context, state.error);
     }
   }
+  
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(context.pageTitle),
+        ),
+        body: SafeArea(
+          child: BlocProvider(
+            create: (context) => EditNoteBloc(
+              noteItem: noteItem,
+            ),
+            child: BlocConsumer<EditNoteBloc, EditNoteState>(
+              listener: _listener,
+              builder: (_, state) => Column(
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: _Form(
+                        noteItem: state.data.noteItem,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+
 }
 
 class _Form extends StatefulWidget {
@@ -103,38 +114,40 @@ class _FormState extends State<_Form> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(CommonSizes.doubleIndent),
+      padding: const EdgeInsets.all(CommonSize.indent2x),
       child: Form(
         key: formKey,
         child: Column(
           children: [
-            const SizedBox(height: CommonSizes.doubleIndent),
+            const SizedBox(height: CommonSize.indent2x),
             TextFormField(
               controller: titleController,
               decoration: InputDecoration(
                 labelText: context.titleTextFieldTitle,
               ),
             ),
-            const SizedBox(height: CommonSizes.doubleIndent),
+            const SizedBox(height: CommonSize.indent2x),
             TextFormField(
               controller: descriptionController,
               decoration: InputDecoration(
                 labelText: context.descriptionTextFieldTitle,
               ),
             ),
-            const SizedBox(height: CommonSizes.doubleIndent),
+            const SizedBox(height: CommonSize.indent2x),
             TextFormField(
               controller: contentController,
-              decoration: InputDecoration(
-                labelText: context.contentTextFieldTitle,
+              decoration: InputDecoration.collapsed(
+                hintText: context.contentTextFieldTitle,
               ),
+              minLines: 10,
+              maxLines: 100,
             ),
-            const SizedBox(height: CommonSizes.doubleIndent),
+            const SizedBox(height: CommonSize.indent2x),
             CupertinoButton(
               onPressed: () => _onSave(context),
               child: Text(context.saveButtonTitle),
             ),
-            const SizedBox(height: CommonSizes.doubleIndent),
+            const SizedBox(height: CommonSize.indent2x),
           ],
         ),
       ),

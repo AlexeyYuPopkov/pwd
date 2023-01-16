@@ -1,9 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
-import 'package:pwd/notes/domain/data_storage_repository.dart';
-import 'package:pwd/notes/domain/notes_provider_repository.dart';
+import 'package:pwd/notes/domain/remote_data_storage_repository.dart';
+import 'package:pwd/notes/domain/usecases/notes_provider_usecase.dart';
 import 'package:pwd/notes/domain/usecases/sync_data_usecases_errors.dart';
-import 'package:pwd/notes/domain/sync_requests_parameters/export_db_data.dart';
 import 'package:pwd/notes/domain/sync_requests_parameters/put_db_request.dart';
 import 'package:pwd/notes/domain/sync_requests_parameters/put_db_response.dart';
 import 'package:pwd/notes/domain/notes_repository.dart';
@@ -13,10 +12,9 @@ class SyncDataUsecase {
   static const _committerName = 'Alekseii';
   static const _committerEmail = 'alexey.yu.popkov@gmail.com';
 
-  final DataStorageRepository dataStorageRepository;
-
+  final RemoteDataStorageRepository dataStorageRepository;
   final NotesRepository notesRepository;
-  final NotesProviderRepository notesProvider;
+  final NotesProviderUsecase notesProvider;
 
   SyncDataUsecase({
     required this.dataStorageRepository,
@@ -24,7 +22,7 @@ class SyncDataUsecase {
     required this.notesProvider,
   });
 
-  Future<void> getDb() async {
+  Future<void> sync() async {
     try {
       final result = await dataStorageRepository.getDb();
 
@@ -37,10 +35,8 @@ class SyncDataUsecase {
 
       final jsonMap = jsonDecode(jsonStr);
 
-      final dbImportData = ExportDbData.fromJson(jsonMap);
-
       final changesCount = await notesRepository.importNotes(
-        notes: dbImportData.notes,
+        jsonMap: jsonMap,
       );
 
       await notesProvider.readNotes();
@@ -48,7 +44,7 @@ class SyncDataUsecase {
       if (changesCount > 0) {
         await _putDb();
       } else {
-        debugPrint('no need to update remote DB');
+        debugPrint('No need to update remote DB');
       }
     } catch (e) {
       throw SyncDataError(parentError: e);
@@ -57,16 +53,12 @@ class SyncDataUsecase {
 
   Future<PutDbResponse?> _putDb() async {
     try {
-      final notes = await notesRepository.exportNotes();
-      final jsonMap = ExportDbData(
-        notes: notes,
-        date: DateTime.now(),
-      ).toJson();
+      final notesStr = await notesRepository.exportNotes(
+        exportDate: DateTime.now(),
+      );
 
-      final jsonStr = jsonEncode(jsonMap);
-
-      if (jsonStr.isNotEmpty) {
-        final bytes = utf8.encode(jsonStr);
+      if (notesStr.isNotEmpty) {
+        final bytes = utf8.encode(notesStr);
         final base64encoded = base64.encode(bytes);
         final sha = await _getSha();
 
@@ -79,6 +71,7 @@ class SyncDataUsecase {
               name: _committerName,
               email: _committerEmail,
             ),
+            branch: null,
           ),
         );
       } else {

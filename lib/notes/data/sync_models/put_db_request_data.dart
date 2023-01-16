@@ -14,12 +14,15 @@ class PutDbRequestData {
   final String? sha;
   @JsonKey(name: 'committer')
   final CommitterData committer;
+  @JsonKey(name: 'branch', defaultValue: null)
+  final String? branch;
 
   const PutDbRequestData({
     required this.message,
     required this.content,
     required this.sha,
     required this.committer,
+    required this.branch,
   });
 
   factory PutDbRequestData.fromJson(Map<String, dynamic> json) =>

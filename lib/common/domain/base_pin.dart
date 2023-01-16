@@ -1,23 +1,36 @@
 abstract class BasePin {
   const BasePin();
 
-  bool get hasPin {
-    final self = this;
-    return self is Pin && self.pin.isNotEmpty;
-  }
-
   const factory BasePin.empty() = EmptyPin;
 
-  const factory BasePin.pin({
-    required String pin,
-  }) = Pin;
+  factory BasePin.pin({required String pin}) = Pin;
+
+  @override
+  bool operator ==(Object other) => throw UnimplementedError();
+
+  @override
+  int get hashCode => throw UnimplementedError();
 }
 
 class Pin extends BasePin {
   final String pin;
-  const Pin({required this.pin});
+  final DateTime creationDate = DateTime.now();
+
+  Pin({required this.pin});
+
+  @override
+  bool operator ==(Object other) => other is Pin && other.pin == pin;
+
+  @override
+  int get hashCode => Object.hashAll({pin, creationDate});
 }
 
 class EmptyPin extends BasePin {
   const EmptyPin();
+
+  @override
+  bool operator ==(Object other) => other is EmptyPin;
+
+  @override
+  int get hashCode => runtimeType.hashCode;
 }

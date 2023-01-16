@@ -23,34 +23,44 @@ class HashUsecase {
     }
   }
 
-  String decode(String str) {
+  String? tryDecode(String str) {
     final pin = pinRepository.getPin();
 
     if (pin is Pin) {
-      return _decryptAES(str, pin.pin);
+      return _tryDecryptAES(str, pin.pin);
     } else {
       throw const HashUsecaseError.emptyPin();
     }
   }
 
   String _encryptAES(String str, String pin) {
-    if (pin.length != 32) {
+    const requiredPinHashLength = 32;
+    if (pin.length != requiredPinHashLength) {
       throw const HashUsecaseError.wrongPinLength();
     }
-    final key = encrypt.Key.fromUtf8(pin);
-    final encrypter = encrypt.Encrypter(encrypt.AES(key));
-    final encrypted = encrypter.encrypt(str, iv: _iv);
-    return encrypted.base64;
+    try {
+      final key = encrypt.Key.fromUtf8(pin);
+      final encrypter = encrypt.Encrypter(encrypt.AES(key));
+      final encrypted = encrypter.encrypt(str, iv: _iv);
+      return encrypted.base64;
+    } catch (e) {
+      return throw HashUsecaseError.encrypt(parentError: e);
+    }
   }
 
-  String _decryptAES(String str, String pin) {
-    if (pin.length != 32) {
+  String? _tryDecryptAES(String str, String pin) {
+    const requiredPinHashLength = 32;
+    if (pin.length != requiredPinHashLength) {
       throw const HashUsecaseError.wrongPinLength();
     }
-    final key = encrypt.Key.fromUtf8(pin);
-    final encrypter = encrypt.Encrypter(encrypt.AES(key));
-    final bytes = base64.decode(str);
-    return encrypter.decrypt(encrypt.Encrypted(bytes), iv: _iv);
+    try {
+      final key = encrypt.Key.fromUtf8(pin);
+      final encrypter = encrypt.Encrypter(encrypt.AES(key));
+      final bytes = base64.decode(str);
+      return encrypter.decrypt(encrypt.Encrypted(bytes), iv: _iv);
+    } catch (_) {
+      return null;
+    }
   }
 
   String pinHash(String pin) => md5.convert(utf8.encode(pin)).toString();
@@ -58,17 +68,29 @@ class HashUsecase {
 
 // Errors
 abstract class HashUsecaseError extends AppError {
-  const HashUsecaseError() : super(message: '');
+  const HashUsecaseError({Object? parentError})
+      : super(
+          message: '',
+          parentError: parentError,
+        );
 
   const factory HashUsecaseError.emptyPin() = HashUsecaseEmptyPinError;
   const factory HashUsecaseError.wrongPinLength() =
       HashUsecaseWrongPinLengthError;
+
+  const factory HashUsecaseError.encrypt({Object? parentError}) =
+      HashUsecaseEncryptError;
 }
 
 class HashUsecaseEmptyPinError extends HashUsecaseError {
-  const HashUsecaseEmptyPinError();
+  const HashUsecaseEmptyPinError() : super(parentError: null);
 }
 
 class HashUsecaseWrongPinLengthError extends HashUsecaseError {
-  const HashUsecaseWrongPinLengthError();
+  const HashUsecaseWrongPinLengthError() : super(parentError: null);
+}
+
+class HashUsecaseEncryptError extends HashUsecaseError {
+  const HashUsecaseEncryptError({Object? parentError})
+      : super(parentError: parentError);
 }

@@ -1,3 +1,4 @@
+import 'di_module.dart';
 import 'di_storage_entry.dart';
 import 'life_time.dart';
 export 'life_time.dart';
@@ -18,23 +19,64 @@ class DiStorage {
 
   late final _constructorsMap = <String, DiStorageEntry>{};
 
+  late final _scopesMap = <String, Set<String>>{};
+
   /// RU: [bind] - привязка зависимости [T] к фабричному методу
   ///
   /// EN: [bind] - binding [T] dependency to a factory method
   ///
-  void bind<T>(T Function() constructor, {LifeTime? lifeTime}) {
+  void bind<T>(
+    T Function() constructor, {
+    required DiModule? module,
+    LifeTime? lifeTime,
+  }) {
     final name = T.toString();
     _constructorsMap[name] = DiStorageEntry(
       constructor: constructor,
       lifeTime: lifeTime ?? const LifeTime.prototype(),
     );
+
+    final scopeName = module?.toString();
+
+    if (scopeName != null && _scopesMap.isNotEmpty) {
+      var names = _scopesMap[scopeName];
+
+      if (names == null) {
+        _scopesMap[scopeName] = {name};
+      } else {
+        names.add(name);
+        _scopesMap[scopeName] = names;
+      }
+    }
   }
 
   /// RU: [removeWithName] - удаление зависимости [name] - имя класса
   ///
   /// EN: [removeWithName] - remove the dependency with class [name]
   ///
-  void removeWithName(String name) => _constructorsMap.remove(name);
+  // void removeWithName(String name) => _constructorsMap.remove(name);
+
+  /// RU: [remove] - удаление зависимости <T>
+  ///
+  /// EN: [remove] - remove the dependency with type <T>
+  ///
+  void remove<T>() => _constructorsMap.remove(T.toString());
+
+  /// RU: [remove] - удаление модуля <T>
+  ///
+  /// EN: [remove] - remove the dependency with type <T>
+  ///
+  void removeScope<S extends DiModule>() {
+    final scopeName = S.toString();
+
+    final names = _scopesMap[scopeName];
+
+    if (names != null && names.isNotEmpty) {
+      for (final instanceName in names) {
+        _constructorsMap.remove(instanceName);
+      }
+    }
+  }
 
   /// RU: [resolve] - разрешение (получение) зависимости с типом <T>
   ///

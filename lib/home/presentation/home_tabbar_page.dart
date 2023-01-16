@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'home_page_tab.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class HomeTabbarPage extends StatefulWidget {
+  const HomeTabbarPage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomeTabbarPage> createState() => _HomeTabbarPageState();
 }
 
 final tabs = <TabbarTabModel>[HomeTab(), SettingsTab()];
 
-class _HomePageState extends State<HomePage> {
+class _HomeTabbarPageState extends State<HomeTabbarPage> {
   static const initialTabIndex = 0;
   final PageController controller = PageController();
 

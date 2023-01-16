@@ -22,6 +22,9 @@ class _GitServiceApi implements GitServiceApi {
 
   @override
   Future<PutDbResponseData> putDb({
+    required owner,
+    required repo,
+    required filename,
     required body,
     required token,
   }) async {
@@ -43,7 +46,7 @@ class _GitServiceApi implements GitServiceApi {
     )
             .compose(
               _dio.options,
-              'repos/AlexeyYuPopkov/notes_storage/contents/notes.json',
+              'repos/${owner}/${repo}/contents/${filename}',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -53,9 +56,16 @@ class _GitServiceApi implements GitServiceApi {
   }
 
   @override
-  Future<GetDbResponseData> getDb({required token}) async {
+  Future<GetDbResponseData> getDb({
+    required owner,
+    required repo,
+    required filename,
+    branch,
+    required token,
+  }) async {
     const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'ref': branch};
+    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{
       r'Accept': 'application/json',
       r'X-GitHub-Api-Version': '2022-11-28',
@@ -71,7 +81,7 @@ class _GitServiceApi implements GitServiceApi {
     )
             .compose(
               _dio.options,
-              'repos/AlexeyYuPopkov/notes_storage/contents/notes.json',
+              'repos/${owner}/${repo}/contents/${filename}',
               queryParameters: queryParameters,
               data: _data,
             )

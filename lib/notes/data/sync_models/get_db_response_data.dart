@@ -8,11 +8,11 @@ part 'get_db_response_data.g.dart';
 @JsonSerializable()
 class GetDbResponseData implements GetDbResponse {
   @override
-  @JsonKey(name: 'sha')
+  @JsonKey(name: 'sha', defaultValue: '')
   final String sha;
   @override
-  @JsonKey(name: 'content')
-  final dynamic content;
+  @JsonKey(name: 'content', defaultValue: '')
+  final String content;
 
   const GetDbResponseData({
     required this.sha,

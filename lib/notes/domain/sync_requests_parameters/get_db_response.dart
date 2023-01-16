@@ -1,6 +1,6 @@
 class GetDbResponse {
   final String sha;
-  final dynamic content;
+  final String content;
 
   const GetDbResponse({
     required this.sha,

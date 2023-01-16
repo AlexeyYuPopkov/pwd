@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pwd/notes/presentation/router/main_router_delegate.dart';
+import 'package:pwd/notes/presentation/router/note_router_delegate.dart';
 import 'package:pwd/settings/presentation/router/settings_router_delegate.dart';
 
 abstract class TabbarTabModel {
@@ -23,7 +23,7 @@ class HomeTab extends TabbarTabModel {
   @override
   late final Widget body = TabWrapper(
     child: Router(
-      routerDelegate: MainRouterDelegate(),
+      routerDelegate: NoteRouterDelegate(),
     ),
   );
 }

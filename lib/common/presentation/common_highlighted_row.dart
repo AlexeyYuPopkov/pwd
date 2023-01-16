@@ -42,12 +42,12 @@ class CommonHighlightedRow extends StatelessWidget {
 }
 
 /// RU: Виджет позволяет предотвратить анимацию [InkWell] при нажатии на дочерний интерактивный виджет
-/// [handler] будет вызван лишь для тех областей [child] что обёрнуты в [IgnorePointer].
-/// [onPressed] не вызовет [handler]
+/// [onTap] будет вызван лишь для тех областей [child] что обёрнуты в [IgnorePointer].
+/// [onPressed] не вызовет [onTap]
 ///
 /// EN: Widget allows you to prevent [InkWell] animation when clicking on a child interactive widget
-/// [handler] calls for wrapped in [IgnorePointer] areas of [child] only.
-/// [onPressed] do not call [handler]
+/// [onTap] calls for wrapped in [IgnorePointer] areas of [child] only.
+/// [onPressed] do not call [onTap]
 ///
 /// Example:
 ///
@@ -70,14 +70,14 @@ class CommonHighlightedRow extends StatelessWidget {
 /// }
 
 class CommonHighlightedBackgroundRow extends StatelessWidget {
-  final VoidCallback? handler;
+  final VoidCallback? onTap;
   final Widget child;
   final Color? color;
   final Color? highlightedColor;
 
   const CommonHighlightedBackgroundRow({
     Key? key,
-    this.handler,
+    this.onTap,
     this.color = Colors.transparent,
     this.highlightedColor,
     required this.child,
@@ -91,7 +91,7 @@ class CommonHighlightedBackgroundRow extends StatelessWidget {
             children: [
               Positioned.fill(
                 child: InkWell(
-                  onTap: handler,
+                  onTap: onTap,
                   splashColor: Colors.transparent,
                   highlightColor: highlightedColor,
                 ),
@@ -106,7 +106,7 @@ class CommonHighlightedBackgroundRow extends StatelessWidget {
             children: [
               Positioned.fill(
                 child: InkWell(
-                  onTap: handler,
+                  onTap: onTap,
                   highlightColor: highlightedColor,
                 ),
               ),

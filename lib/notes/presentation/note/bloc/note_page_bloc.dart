@@ -1,16 +1,15 @@
 import 'dart:async';
-
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
-import 'package:pwd/notes/domain/notes_provider_repository.dart';
+import 'package:pwd/notes/domain/usecases/notes_provider_usecase.dart';
 import 'package:pwd/notes/domain/usecases/sync_data_usecase.dart';
 
 part 'note_page_event.dart';
 part 'note_page_state.dart';
 
 class NotePageBloc extends Bloc<NotePageEvent, NotePageState> {
-  final NotesProviderRepository notesProviderUsecase;
+  final NotesProviderUsecase notesProviderUsecase;
   final SyncDataUsecase syncDataUsecase;
 
   StreamSubscription? subscription;
@@ -29,11 +28,17 @@ class NotePageBloc extends Bloc<NotePageEvent, NotePageState> {
 
     subscription = noteStream.listen(
       (notes) {
-        add(
-          NotePageEvent.newData(notes: notes),
-        );
+        add(NotePageEvent.newData(notes: notes));
       },
+      onError: (e) => add(NotePageEvent.error(e)),
+      cancelOnError: false,
     );
+
+    _initialActions();
+  }
+
+  void _initialActions() async {
+    await notesProviderUsecase.readNotes();
 
     add(const NotePageEvent.sync());
   }
@@ -46,6 +51,7 @@ class NotePageBloc extends Bloc<NotePageEvent, NotePageState> {
 
   void _setupHandlers() {
     on<NewDataEvent>(_onNewDataEvent);
+    on<ErrorEvent>(_onErrorEvent);
     on<RefreshDataEvent>(_onRefreshDataEvent);
     on<ShouldUpdateNoteItemEvent>(_onShouldUpdateNoteItemEvent);
     on<SyncEvent>(_onSyncEvent);
@@ -54,13 +60,18 @@ class NotePageBloc extends Bloc<NotePageEvent, NotePageState> {
   void _onNewDataEvent(
     NewDataEvent event,
     Emitter<NotePageState> emit,
-  ) async {
-    emit(
-      NotePageState.common(
-        data: state.data.copyWith(notes: event.notes),
-      ),
-    );
-  }
+  ) =>
+      emit(
+        NotePageState.common(
+          data: state.data.copyWith(notes: event.notes),
+        ),
+      );
+
+  void _onErrorEvent(
+    ErrorEvent event,
+    Emitter<NotePageState> emit,
+  ) =>
+      emit(NotePageState.error(data: state.data, error: event.error));
 
   void _onRefreshDataEvent(
     RefreshDataEvent event,
@@ -99,7 +110,7 @@ class NotePageBloc extends Bloc<NotePageEvent, NotePageState> {
     try {
       emit(NotePageState.loading(data: state.data));
 
-      await syncDataUsecase.getDb();
+      await syncDataUsecase.sync();
 
       emit(
         NotePageState.common(

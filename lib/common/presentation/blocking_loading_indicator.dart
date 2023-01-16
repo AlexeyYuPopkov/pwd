@@ -55,9 +55,11 @@ class BlockingLoadingIndicatorWidget extends StatelessWidget {
 
               return Visibility(
                 visible: isLoading,
-                child: const Center(
-                  child: RepaintBoundary(
-                    child: CupertinoActivityIndicator(),
+                child: const AbsorbPointer(
+                  child: Center(
+                    child: RepaintBoundary(
+                      child: CupertinoActivityIndicator(),
+                    ),
                   ),
                 ),
               );

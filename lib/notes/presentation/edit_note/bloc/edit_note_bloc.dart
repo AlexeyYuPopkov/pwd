@@ -28,12 +28,13 @@ class EditNoteBloc extends Bloc<EditNoteEvent, EditNoteState> {
     Emitter<EditNoteState> emit,
   ) async {
     emit(EditNoteState.loading(data: data));
-    final noteItem = data.noteItem.copyWith(
+    final noteItem = NoteItem.updatedItem(
+      id: data.noteItem.id,
       title: event.title,
       description: event.description,
       content: event.content,
-      timestamp: data.noteItem.timestamp,
     );
+
     emit(
       EditNoteState.didSave(
         data: data.copyWith(
