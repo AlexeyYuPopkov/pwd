@@ -18,11 +18,12 @@ class EditNotePageRoutePopWithResult {
 }
 
 class EditNotePage extends StatelessWidget with ShowErrorDialogMixin {
+  final formKey = GlobalKey<_FormState>();
   final NoteItem noteItem;
 
   final Future Function(BuildContext, Object) onRoute;
 
-  const EditNotePage({
+  EditNotePage({
     Key? key,
     required this.noteItem,
     required this.onRoute,
@@ -42,7 +43,7 @@ class EditNotePage extends StatelessWidget with ShowErrorDialogMixin {
       showError(context, state.error);
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -51,24 +52,43 @@ class EditNotePage extends StatelessWidget with ShowErrorDialogMixin {
         appBar: AppBar(
           title: Text(context.pageTitle),
         ),
-        body: SafeArea(
-          child: BlocProvider(
-            create: (context) => EditNoteBloc(
-              noteItem: noteItem,
-            ),
-            child: BlocConsumer<EditNoteBloc, EditNoteState>(
-              listener: _listener,
-              builder: (_, state) => Column(
-                children: [
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: _Form(
-                        noteItem: state.data.noteItem,
+        body: BlocProvider(
+          create: (context) => EditNoteBloc(
+            noteItem: noteItem,
+          ),
+          child: BlocConsumer<EditNoteBloc, EditNoteState>(
+            listener: _listener,
+            builder: (context, state) => CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(
+                  child: _Form(
+                    key: formKey,
+                    noteItem: state.data.noteItem,
+                  ),
+                ),
+                SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: SafeArea(
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        left: CommonSize.indent2x,
+                        right: CommonSize.indent2x,
+                        bottom: CommonSize.indent2x,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          CupertinoButton(
+                            onPressed: () => _onSave(context),
+                            child: Text(context.saveButtonTitle),
+                          ),
+                        ],
                       ),
                     ),
                   ),
-                ],
-              ),
+                )
+              ],
             ),
           ),
         ),
@@ -76,7 +96,27 @@ class EditNotePage extends StatelessWidget with ShowErrorDialogMixin {
     );
   }
 
+  void _onSave(BuildContext context) {
+    final formState = formKey.currentState;
 
+    if (formState != null &&
+        formState.formKey.currentState?.validate() == true) {
+      final String title = formState.titleController.text;
+      final String description = formState.descriptionController.text;
+      final String content = formState.contentController.text;
+
+      if (title.isNotEmpty || description.isNotEmpty || content.isNotEmpty) {
+        formState.formKey.currentState?.save();
+        context.read<EditNoteBloc>().add(
+              EditNoteEvent.save(
+                title: title,
+                description: description,
+                content: content,
+              ),
+            );
+      }
+    }
+  }
 }
 
 class _Form extends StatefulWidget {
@@ -139,13 +179,8 @@ class _FormState extends State<_Form> {
               decoration: InputDecoration.collapsed(
                 hintText: context.contentTextFieldTitle,
               ),
-              minLines: 10,
-              maxLines: 100,
-            ),
-            const SizedBox(height: CommonSize.indent2x),
-            CupertinoButton(
-              onPressed: () => _onSave(context),
-              child: Text(context.saveButtonTitle),
+              minLines: calculatedMaxLines,
+              maxLines: calculatedMaxLines + 10,
             ),
             const SizedBox(height: CommonSize.indent2x),
           ],
@@ -154,24 +189,7 @@ class _FormState extends State<_Form> {
     );
   }
 
-  void _onSave(BuildContext context) {
-    if (formKey.currentState?.validate() == true) {
-      final String title = titleController.text;
-      final String description = descriptionController.text;
-      final String content = contentController.text;
-
-      if (title.isNotEmpty || description.isNotEmpty || content.isNotEmpty) {
-        formKey.currentState?.save();
-        context.read<EditNoteBloc>().add(
-              EditNoteEvent.save(
-                title: title,
-                description: description,
-                content: content,
-              ),
-            );
-      }
-    }
-  }
+  int get calculatedMaxLines => contentController.text.split('\n').length;
 }
 
 extension on BuildContext {

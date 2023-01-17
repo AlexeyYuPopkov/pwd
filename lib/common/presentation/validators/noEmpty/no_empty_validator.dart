@@ -1,19 +1,17 @@
-import 'package:pwd/common/presentation/validators/validator.dart';
-export 'no_empty_validator_message_provider.dart';
+import 'package:pwd/common/presentation/validators/common/common_field_validator.dart';
 
-// No empty validator
-class NoEmptyValidator extends Validator {
+class NoEmptyValidator extends CommonFieldValidator {
   const NoEmptyValidator();
 
   @override
-  NoEmptyValidatorError? call(String? str) {
-    if (str == null || str.isEmpty) {
-      return NoEmptyValidatorError();
-    }
-    return null;
-  }
-}
+  bool get isRequired => true;
 
-class NoEmptyValidatorError extends Error {
-  NoEmptyValidatorError() : super();
+  @override
+  int? get minLength => null;
+
+  @override
+  int? get maxLength => null;
+
+  @override
+  String get pattern => '';
 }

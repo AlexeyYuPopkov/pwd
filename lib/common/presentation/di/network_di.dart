@@ -7,15 +7,6 @@ import 'package:pwd/common/domain/app_configuration_provider.dart';
 import 'package:pwd/common/domain/errors/network_error_mapper.dart';
 import 'package:pwd/common/tools/di_storage/di_storage.dart';
 
-// const _scheme = 'https';
-// const _host = '';
-// String get _baseUrl => '$_scheme://$_host';
-// const _proxyIp = '127.0.0.1';
-// const _proxyPort = '8888';
-
-// const _proxyIp = '';
-// const _proxyPort = '';
-
 typedef UnAuthDio = Dio;
 typedef AuthDio = Dio;
 

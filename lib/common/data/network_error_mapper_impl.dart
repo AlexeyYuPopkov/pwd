@@ -71,9 +71,16 @@ class NetworkErrorMapperImpl implements NetworkErrorMapper {
     final e = error;
 
     const unauthenticatedStatusCode = 401;
+    const notFoundStatusCode = 404;
 
     if (statusCode == unauthenticatedStatusCode) {
       return NetworkError.unauthenticated(
+        message: '',
+        parentError: e,
+        details: details,
+      );
+    } else if (statusCode == notFoundStatusCode) {
+      return NetworkError.notFound(
         message: '',
         parentError: e,
         details: details,

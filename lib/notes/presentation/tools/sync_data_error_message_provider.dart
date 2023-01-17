@@ -6,9 +6,24 @@ class SyncDataErrorMessageProvider {
   const SyncDataErrorMessageProvider();
 
   ErrorMessage? call(BuildContext context, Object e) {
-    if (e is SyncDataError) {
-      return ErrorMessage.common(context, message: 'Error when sync data');
+    if (e is UnknownSyncDataError) {
+      return ErrorMessage.common(
+        context,
+        message: context.unkhown,
+      );
+    } else if (e is DestinationNotFound) {
+      return ErrorMessage.common(
+        context,
+        message: context.destinationNotFound,
+      );
     }
     return null;
   }
+}
+
+extension on BuildContext {
+  String get unkhown => 'Error when sync data';
+  String get destinationNotFound =>
+      'Forgot to create sync file on current branch. '
+      'Synchronization is not possible';
 }

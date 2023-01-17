@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
 
 import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
 import 'package:pwd/common/presentation/dialogs/show_error_dialog_mixin.dart';
@@ -35,6 +36,9 @@ class RemoteStorageSettingsPage extends StatelessWidget
             RemoteStorageSettingsPageState>(
           listener: _listener,
           builder: (context, state) {
+            if (state.data is! ValidConfiguration) {
+              return const SizedBox();
+            }
             return SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,7 +61,7 @@ class RemoteStorageSettingsPage extends StatelessWidget
                   ),
                   _ListItemWidget(
                     title: context.fileLabelTitle,
-                    subtitle: _fileNameWithExtension(state.data.fileName),
+                    subtitle: state.data.fileName,
                   ),
                   const SizedBox(height: CommonSize.indent2x),
                   Center(
@@ -74,8 +78,6 @@ class RemoteStorageSettingsPage extends StatelessWidget
       ),
     );
   }
-
-  String _fileNameWithExtension(String str) => '$str.json';
 
   void _onDrop(BuildContext context) =>
       context.read<RemoteStorageSettingsPageBloc>().add(

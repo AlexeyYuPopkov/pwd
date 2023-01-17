@@ -10,9 +10,6 @@ import 'package:pwd/notes/domain/sync_requests_parameters/put_db_request.dart';
 import 'package:pwd/notes/domain/sync_requests_parameters/put_db_response.dart';
 
 class RemoteDataStorageRepositoryImpl implements RemoteDataStorageRepository {
-  static const _token = 'Bearer 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';
-
-  final RemoteStorageConfiguration remoteStorageConfiguration;
   final GitServiceApi service;
   final DatabasePathProvider databasePathProvider;
 
@@ -21,7 +18,6 @@ class RemoteDataStorageRepositoryImpl implements RemoteDataStorageRepository {
   final NetworkErrorMapper errorMapper;
 
   RemoteDataStorageRepositoryImpl({
-    required this.remoteStorageConfiguration,
     required this.service,
     required this.databasePathProvider,
     required this.errorMapper,
@@ -29,9 +25,13 @@ class RemoteDataStorageRepositoryImpl implements RemoteDataStorageRepository {
   });
 
   @override
-  Future<PutDbResponse> putDb({required PutDbRequest request}) async {
+  Future<PutDbResponse> putDb({
+    required PutDbRequest request,
+    required RemoteStorageConfiguration configuration,
+  }) async {
     PutDbRequest adjustedWithBranch(PutDbRequest request) {
-      final branch = remoteStorageConfiguration.branch;
+      final branch = configuration.branch;
+
       if (branch != null && branch.isNotEmpty) {
         return request.copyWithBranch(branch: branch);
       }
@@ -41,11 +41,11 @@ class RemoteDataStorageRepositoryImpl implements RemoteDataStorageRepository {
 
     return service
         .putDb(
-          owner: remoteStorageConfiguration.owner,
-          repo: remoteStorageConfiguration.repo,
-          filename: _fileNameWithExtension(remoteStorageConfiguration.fileName),
+          owner: configuration.owner,
+          repo: configuration.repo,
+          filename: configuration.fileName,
           body: putDbRequestMapper.toData(adjustedWithBranch(request)),
-          token: _token,
+          token: _adjustedToken(configuration.token),
         )
         .catchError(
           (e) => throw errorMapper(e),
@@ -53,15 +53,23 @@ class RemoteDataStorageRepositoryImpl implements RemoteDataStorageRepository {
   }
 
   @override
-  Future<GetDbResponse> getDb() => service.getDb(
-        token: _token,
-        owner: remoteStorageConfiguration.owner,
-        repo: remoteStorageConfiguration.repo,
-        filename: _fileNameWithExtension(remoteStorageConfiguration.fileName),
-        branch: remoteStorageConfiguration.branch,
-      );
+  Future<GetDbResponse> getDb({
+    required RemoteStorageConfiguration configuration,
+  }) {
+    return service
+        .getDb(
+          token: _adjustedToken(configuration.token),
+          owner: configuration.owner,
+          repo: configuration.repo,
+          filename: configuration.fileName,
+          branch: configuration.branch,
+        )
+        .catchError(
+          (e) => throw errorMapper(e),
+        );
+  }
 
-  String _fileNameWithExtension(String str) {
-    return '$str.json';
+  String _adjustedToken(String str) {
+    return 'Bearer $str';
   }
 }

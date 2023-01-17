@@ -31,6 +31,12 @@ class NetworkError implements AppError {
     required Object? parentError,
     required Map<String, dynamic>? details,
   }) = UnknownNetworkError;
+
+  const factory NetworkError.notFound({
+    required String message,
+    required Object? parentError,
+    required Map<String, dynamic>? details,
+  }) = NotFoundError;
 }
 
 class UnknownNetworkError extends NetworkError {
@@ -51,6 +57,14 @@ class UnauthenticatedError extends NetworkError {
 
 class ServiceTimeoutError extends NetworkError {
   const ServiceTimeoutError({
+    required super.message,
+    required super.parentError,
+    required super.details,
+  });
+}
+
+class NotFoundError extends NetworkError {
+  const NotFoundError({
     required super.message,
     required super.parentError,
     required super.details,

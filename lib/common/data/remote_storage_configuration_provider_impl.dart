@@ -30,16 +30,17 @@ class RemoteStorageConfigurationProviderImpl
   @override
   Future<void> setConfiguration(
     RemoteStorageConfiguration configuration,
-  ) async =>
-      dropConfiguration().then(
-        (_) => Future.wait([
-          storage.write(key: _tokenKey, value: configuration.token),
-          storage.write(key: _repoKey, value: configuration.repo),
-          storage.write(key: _ownerKey, value: configuration.owner),
-          storage.write(key: _branchKey, value: configuration.branch),
-          storage.write(key: _fileNameKey, value: configuration.fileName),
-        ]),
-      );
+  ) async {
+    return dropConfiguration().then(
+      (_) => Future.wait([
+        storage.write(key: _tokenKey, value: configuration.token),
+        storage.write(key: _repoKey, value: configuration.repo),
+        storage.write(key: _ownerKey, value: configuration.owner),
+        storage.write(key: _branchKey, value: configuration.branch),
+        storage.write(key: _fileNameKey, value: configuration.fileName),
+      ]),
+    );
+  }
 
   @override
   Future<void> dropConfiguration() => Future.wait([

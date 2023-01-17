@@ -10,10 +10,6 @@ part 'git_service_api.g.dart';
 abstract class GitServiceApi {
   factory GitServiceApi(Dio dio, {String baseUrl}) = _GitServiceApi;
 
-  static const owner = 'AlexeyYuPopkov';
-  static const repo = 'notes_storage';
-  static const filename = 'notes.json';
-
   @PUT('repos/{owner}/{repo}/contents/{filename}')
   @Headers({
     'Accept': 'application/vnd.github+json',
