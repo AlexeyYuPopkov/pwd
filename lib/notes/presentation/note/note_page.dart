@@ -119,11 +119,9 @@ class NotePage extends StatelessWidget with ShowErrorDialogMixin {
         NotePageRoute.onEdit(noteItem: note),
       ).then(
         (result) {
-          if (result is NoteItem) {
+          if (result is NotePageShouldSync) {
             context.read<NotePageBloc>().add(
-                  NotePageEvent.shouldUpdateNote(
-                    noteItem: result,
-                  ),
+                  const NotePageEvent.shouldSync(),
                 );
           }
         },

@@ -54,7 +54,7 @@ class SyncDataUsecase {
 
       await notesProvider.readNotes();
 
-      await _putDb();
+      await forcePushDb();
     } on NotFoundError catch (e) {
       throw SyncDataError.destinationNotFound(parentError: e);
     } catch (e) {
@@ -62,7 +62,7 @@ class SyncDataUsecase {
     }
   }
 
-  Future<PutDbResponse?> _putDb() async {
+  Future<PutDbResponse?> forcePushDb() async {
     try {
       final notesStr = await notesRepository.exportNotes(
         exportDate: DateTime.now(),

@@ -53,19 +53,22 @@ class NotePageBloc extends Bloc<NotePageEvent, NotePageState> {
     on<NewDataEvent>(_onNewDataEvent);
     on<ErrorEvent>(_onErrorEvent);
     on<RefreshDataEvent>(_onRefreshDataEvent);
-    on<ShouldUpdateNoteItemEvent>(_onShouldUpdateNoteItemEvent);
+    on<ShouldSyncEvent>(_onShouldSyncEvent);
     on<SyncEvent>(_onSyncEvent);
   }
 
   void _onNewDataEvent(
     NewDataEvent event,
     Emitter<NotePageState> emit,
-  ) =>
-      emit(
-        NotePageState.common(
-          data: state.data.copyWith(notes: event.notes),
-        ),
-      );
+  ) {
+    final newData = state.data.copyWith(notes: event.notes);
+
+    if (state is DidSyncState) {
+      emit(NotePageState.didSync(data: newData));
+    } else {
+      emit(NotePageState.common(data: newData));
+    }
+  }
 
   void _onErrorEvent(
     ErrorEvent event,
@@ -85,19 +88,12 @@ class NotePageBloc extends Bloc<NotePageEvent, NotePageState> {
     }
   }
 
-  void _onShouldUpdateNoteItemEvent(
-    ShouldUpdateNoteItemEvent event,
+  void _onShouldSyncEvent(
+    ShouldSyncEvent event,
     Emitter<NotePageState> emit,
   ) async {
     try {
-      emit(NotePageState.loading(data: state.data));
-      await notesProviderUsecase.updateNoteItem(event.noteItem);
-
-      emit(
-        NotePageState.common(
-          data: state.data.copyWith(needsToSync: true),
-        ),
-      );
+      emit(NotePageState.common(data: state.data));
     } catch (e) {
       emit(NotePageState.error(data: state.data, error: e));
     }
@@ -112,13 +108,7 @@ class NotePageBloc extends Bloc<NotePageEvent, NotePageState> {
 
       await syncDataUsecase.sync();
 
-      emit(
-        NotePageState.common(
-          data: state.data.copyWith(
-            needsToSync: false,
-          ),
-        ),
-      );
+      emit(NotePageState.didSync(data: state.data));
     } catch (e) {
       emit(NotePageState.error(data: state.data, error: e));
       add(const NotePageEvent.refresh());

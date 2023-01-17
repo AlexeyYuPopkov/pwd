@@ -64,6 +64,18 @@ class SqlDatasourceImpl implements NotesRepository {
   Future<String> get _databasePath => databasePathProvider.path;
 
   @override
+  Future<void> dropDb() {
+    return db.then((db) async {
+      const tableName = CreateNotesTableIfAbsent.tableName;
+      const createRequest = DbRequest.createNotesTableIfAbsent();
+      await db.transaction((transaction) async {
+        await transaction.execute('DROP TABLE IF EXISTS $tableName');
+        await transaction.execute(createRequest.query);
+      });
+    });
+  }
+
+  @override
   Future<int> updateNote(NoteItem noteItem) async {
     return db.then(
       (db) => db.transaction(

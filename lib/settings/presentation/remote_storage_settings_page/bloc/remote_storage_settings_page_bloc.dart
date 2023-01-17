@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
 import 'package:pwd/common/domain/pin_repository.dart';
 import 'package:pwd/common/domain/remote_storage_configuration_provider.dart';
+import 'package:pwd/notes/domain/notes_repository.dart';
 
 part 'remote_storage_settings_page_state.dart';
 part 'remote_storage_settings_page_event.dart';
@@ -11,11 +12,14 @@ class RemoteStorageSettingsPageBloc extends Bloc<RemoteStorageSettingsPageEvent,
     RemoteStorageSettingsPageState> {
   final PinRepository pinRepository;
   final RemoteStorageConfigurationProvider remoteStorageConfigurationProvider;
+  final NotesRepository notesRepository;
+
   RemoteStorageConfiguration get data => state.data;
 
   RemoteStorageSettingsPageBloc({
     required this.pinRepository,
     required this.remoteStorageConfigurationProvider,
+    required this.notesRepository,
   }) : super(
           const RemoteStorageSettingsPageState.common(
             data: RemoteStorageConfiguration.empty(),
@@ -53,6 +57,7 @@ class RemoteStorageSettingsPageBloc extends Bloc<RemoteStorageSettingsPageEvent,
     emit(RemoteStorageSettingsPageState.loading(data: data));
 
     await remoteStorageConfigurationProvider.dropConfiguration();
+    await notesRepository.dropDb();
     await pinRepository.dropPin();
 
     emit(RemoteStorageSettingsPageState.didLogout(data: data));

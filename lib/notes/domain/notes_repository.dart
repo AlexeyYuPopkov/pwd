@@ -19,4 +19,6 @@ abstract class NotesRepository {
   Future<int> importNotes({
     required Map<String, dynamic> jsonMap,
   });
+
+  Future<void> dropDb();
 }

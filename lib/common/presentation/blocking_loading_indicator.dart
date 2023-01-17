@@ -48,7 +48,7 @@ class BlockingLoadingIndicatorWidget extends StatelessWidget {
           child,
           StreamBuilder<bool>(
             initialData: false,
-            stream: BlockingLoadingIndicator.of(context).streem,
+            stream: BlockingLoadingIndicator.of(context).streem.distinct(),
             builder: (context, snapshot) {
               final isLoading = snapshot.data ??
                   BlockingLoadingIndicator.of(context).isLoading;

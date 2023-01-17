@@ -7,9 +7,11 @@ abstract class NotePageRoute {
     required NoteItem noteItem,
   }) = NotePageOnEdit;
 
-    const factory NotePageRoute.onDetails({
+  const factory NotePageRoute.onDetails({
     required NoteItem noteItem,
   }) = NotePageOnDetails;
+
+  const factory NotePageRoute.shouldSync() = NotePageShouldSync;
 }
 
 class NotePageOnEdit extends NotePageRoute {
@@ -26,4 +28,8 @@ class NotePageOnDetails extends NotePageRoute {
   const NotePageOnDetails({
     required this.noteItem,
   });
+}
+
+class NotePageShouldSync extends NotePageRoute {
+  const NotePageShouldSync();
 }

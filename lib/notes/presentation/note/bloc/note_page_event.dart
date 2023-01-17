@@ -6,11 +6,9 @@ abstract class NotePageEvent extends Equatable {
   const factory NotePageEvent.newData({required List<NoteItem> notes}) =
       NewDataEvent;
 
-        const factory NotePageEvent.error(Object error) =
-      ErrorEvent;
+  const factory NotePageEvent.error(Object error) = ErrorEvent;
 
-  const factory NotePageEvent.shouldUpdateNote({required NoteItem noteItem}) =
-      ShouldUpdateNoteItemEvent;
+  const factory NotePageEvent.shouldSync() = ShouldSyncEvent;
 
   const factory NotePageEvent.refresh() = RefreshDataEvent;
 
@@ -34,9 +32,8 @@ class RefreshDataEvent extends NotePageEvent {
   const RefreshDataEvent();
 }
 
-class ShouldUpdateNoteItemEvent extends NotePageEvent {
-  final NoteItem noteItem;
-  const ShouldUpdateNoteItemEvent({required this.noteItem});
+class ShouldSyncEvent extends NotePageEvent {
+  const ShouldSyncEvent();
 }
 
 class SyncEvent extends NotePageEvent {

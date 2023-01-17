@@ -11,6 +11,9 @@ abstract class NotePageState extends Equatable {
   const factory NotePageState.common({required NotePageData data}) =
       CommonState;
 
+  const factory NotePageState.didSync({required NotePageData data}) =
+      DidSyncState;
+
   const factory NotePageState.loading({required NotePageData data}) =
       LoadingState;
 
@@ -19,46 +22,46 @@ abstract class NotePageState extends Equatable {
     required Object error,
   }) = ErrorState;
 
-  bool get needsSync => data.needsToSync;
+  bool get needsSync => this is CommonState;
 }
 
 class CommonState extends NotePageState {
-  const CommonState({required NotePageData data}) : super(data: data);
+  const CommonState({required super.data});
+}
+
+class DidSyncState extends NotePageState {
+  const DidSyncState({required super.data});
 }
 
 class LoadingState extends NotePageState {
-  const LoadingState({required NotePageData data}) : super(data: data);
+  const LoadingState({required super.data});
 }
 
 class ErrorState extends NotePageState {
   final Object error;
   const ErrorState({
-    required NotePageData data,
+    required super.data,
     required this.error,
-  }) : super(data: data);
+  });
 }
 
 // Data
 class NotePageData extends Equatable {
-  final bool needsToSync;
   final List<NoteItem> notes;
 
-  const NotePageData._({required this.needsToSync, required this.notes});
+  const NotePageData._({required this.notes});
 
   factory NotePageData.initial() => const NotePageData._(
         notes: [],
-        needsToSync: true,
       );
 
   @override
   List<Object?> get props => [notes];
 
   NotePageData copyWith({
-    bool? needsToSync,
     List<NoteItem>? notes,
   }) {
     return NotePageData._(
-      needsToSync: needsToSync ?? this.needsToSync,
       notes: notes ?? this.notes,
     );
   }

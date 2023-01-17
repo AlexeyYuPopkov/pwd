@@ -9,6 +9,8 @@ abstract class EditNoteEvent extends Equatable {
     required String content,
   }) = SaveEvent;
 
+  const factory EditNoteEvent.delete() = DeleteEvent;
+
   @override
   List<Object?> get props => const [];
 }
@@ -23,4 +25,8 @@ class SaveEvent extends EditNoteEvent {
     required this.description,
     required this.content,
   });
+}
+
+class DeleteEvent extends EditNoteEvent {
+  const DeleteEvent();
 }

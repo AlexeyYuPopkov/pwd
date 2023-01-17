@@ -10,6 +10,8 @@ abstract class NotesProviderUsecase {
   Future<void> readNotes();
 
   Future<void> updateNoteItem(NoteItem noteItem);
+
+  Future<void> deleteNoteItem(NoteItem noteItem);
 }
 
 class NotesProviderUsecaseImpl implements NotesProviderUsecase {
@@ -71,6 +73,19 @@ class NotesProviderUsecaseImpl implements NotesProviderUsecase {
       );
       await repository.updateNote(encoded);
       readNotes();
+    } catch (e) {
+      throw NotesProviderError.updated(parentError: e);
+    }
+  }
+
+  @override
+  Future<void> deleteNoteItem(NoteItem noteItem) async {
+    try {
+      final id = noteItem.id;
+      if (id != null && id > 0) {
+        await repository.delete(id);
+        readNotes();
+      }
     } catch (e) {
       throw NotesProviderError.updated(parentError: e);
     }

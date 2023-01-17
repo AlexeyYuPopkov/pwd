@@ -70,8 +70,10 @@ class NoteRouterDelegate extends BaseRouterDelegate {
           return result;
         },
       );
-    } else if (action is EditNotePageRoutePopWithResult) {
-      return context.navigator.pop(action.noteItem);
+    } else if (action is EditNotePagePopResult) {
+      return context.navigator.pop(
+        const NotePageRoute.shouldSync(),
+      );
     } else if (action is NotePageOnDetails) {
       return context.navigator.push(
         MaterialPageRoute(

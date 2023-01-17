@@ -17,6 +17,9 @@ abstract class EditNoteState extends Equatable {
   const factory EditNoteState.didSave({required EditNotePageData data}) =
       DidSaveState;
 
+  const factory EditNoteState.didDelete({required EditNotePageData data}) =
+      DidDeleteState;
+
   const factory EditNoteState.error({
     required EditNotePageData data,
     required Object error,
@@ -24,23 +27,27 @@ abstract class EditNoteState extends Equatable {
 }
 
 class CommonState extends EditNoteState {
-  const CommonState({required EditNotePageData data}) : super(data: data);
+  const CommonState({required super.data});
 }
 
 class DidSaveState extends EditNoteState {
-  const DidSaveState({required EditNotePageData data}) : super(data: data);
+  const DidSaveState({required super.data});
+}
+
+class DidDeleteState extends EditNoteState {
+  const DidDeleteState({required super.data});
 }
 
 class LoadingState extends EditNoteState {
-  const LoadingState({required EditNotePageData data}) : super(data: data);
+  const LoadingState({required super.data});
 }
 
 class ErrorState extends EditNoteState {
   final Object error;
   const ErrorState({
-    required EditNotePageData data,
+    required super.data,
     required this.error,
-  }) : super(data: data);
+  });
 }
 
 // Data

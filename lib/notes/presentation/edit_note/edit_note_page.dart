@@ -1,23 +1,40 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pwd/common/presentation/dialogs/dialog_helper.dart';
 
 import 'package:pwd/common/presentation/dialogs/show_error_dialog_mixin.dart';
+import 'package:pwd/common/tools/di_storage/di_storage.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
 import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
+import 'package:pwd/notes/presentation/tools/crypt_error_message_provider.dart';
+import 'package:pwd/notes/presentation/tools/notes_provider_error_message_provider.dart';
+import 'package:pwd/notes/presentation/tools/sync_data_error_message_provider.dart';
 import 'package:pwd/theme/common_size.dart';
 
 import 'bloc/edit_note_bloc.dart';
 
-class EditNotePageRoutePopWithResult {
-  final NoteItem noteItem;
+abstract class EditNotePagePopResult {
+  const EditNotePagePopResult();
 
-  EditNotePageRoutePopWithResult({
-    required this.noteItem,
-  });
+  const factory EditNotePagePopResult.didUpdate({required NoteItem noteItem}) =
+      DidUpdateResult;
+
+  const factory EditNotePagePopResult.didDidDelete() = DidDeleteResult;
 }
 
-class EditNotePage extends StatelessWidget with ShowErrorDialogMixin {
+class DidUpdateResult extends EditNotePagePopResult {
+  final NoteItem noteItem;
+
+  const DidUpdateResult({required this.noteItem});
+}
+
+class DidDeleteResult extends EditNotePagePopResult {
+  const DidDeleteResult();
+}
+
+class EditNotePage extends StatelessWidget
+    with ShowErrorDialogMixin, DialogHelper {
   final formKey = GlobalKey<_FormState>();
   final NoteItem noteItem;
 
@@ -35,12 +52,25 @@ class EditNotePage extends StatelessWidget with ShowErrorDialogMixin {
     if (state is DidSaveState) {
       await onRoute(
         context,
-        EditNotePageRoutePopWithResult(
+        EditNotePagePopResult.didUpdate(
           noteItem: state.data.noteItem,
         ),
       );
+    } else if (state is DidDeleteState) {
+      await onRoute(
+        context,
+        const EditNotePagePopResult.didDidDelete(),
+      );
     } else if (state is ErrorState) {
-      showError(context, state.error);
+      showError(
+        context,
+        state.error,
+        errorMessageProviders: [
+          const NotesProviderErrorMessageProvider(),
+          const SyncDataErrorMessageProvider(),
+          const CryptErrorMessageProvider(),
+        ],
+      );
     }
   }
 
@@ -54,6 +84,8 @@ class EditNotePage extends StatelessWidget with ShowErrorDialogMixin {
         ),
         body: BlocProvider(
           create: (context) => EditNoteBloc(
+            notesProviderUsecase: DiStorage.shared.resolve(),
+            syncDataUsecase: DiStorage.shared.resolve(),
             noteItem: noteItem,
           ),
           child: BlocConsumer<EditNoteBloc, EditNoteState>(
@@ -79,9 +111,23 @@ class EditNotePage extends StatelessWidget with ShowErrorDialogMixin {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          CupertinoButton(
-                            onPressed: () => _onSave(context),
-                            child: Text(context.saveButtonTitle),
+                          Row(
+                            children: [
+                              Flexible(
+                                fit: FlexFit.tight,
+                                child: CupertinoButton(
+                                  onPressed: () => _onSave(context),
+                                  child: Text(context.saveButtonTitle),
+                                ),
+                              ),
+                              Flexible(
+                                fit: FlexFit.tight,
+                                child: CupertinoButton(
+                                  onPressed: () => _onDelete(context),
+                                  child: Text(context.deleteButtonTitle),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -116,6 +162,19 @@ class EditNotePage extends StatelessWidget with ShowErrorDialogMixin {
             );
       }
     }
+  }
+
+  void _onDelete(BuildContext context) {
+    showOkCancelDialog(
+      context,
+      title: context.deleteConfirmationMessage,
+      onOk: (dialogContext) {
+        Navigator.of(dialogContext).pop();
+        context.read<EditNoteBloc>().add(
+              const EditNoteEvent.delete(),
+            );
+      },
+    );
   }
 }
 
@@ -200,4 +259,8 @@ extension on BuildContext {
   String get contentTextFieldTitle => 'Content';
 
   String get saveButtonTitle => 'Save';
+  String get deleteButtonTitle => 'Delete';
+
+  String get deleteConfirmationMessage =>
+      'Do you really whant to delete the entry?';
 }
