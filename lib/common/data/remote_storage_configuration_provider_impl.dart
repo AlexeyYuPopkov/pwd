@@ -74,8 +74,6 @@ class RemoteStorageConfigurationProviderImpl
         repo.isNotEmpty &&
         owner != null &&
         owner.isNotEmpty &&
-        branch != null &&
-        branch.isNotEmpty &&
         fileName != null &&
         fileName.isNotEmpty) {
       return RemoteStorageConfiguration.configuration(

@@ -5,6 +5,7 @@ import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
 import 'package:pwd/common/domain/pin_repository.dart';
 import 'package:pwd/common/domain/remote_storage_configuration_provider.dart';
 import 'package:pwd/common/domain/usecases/hash_usecase.dart';
+import 'package:pwd/common/domain/usecases/should_create_remote_storage_file_usecase.dart';
 
 part 'pin_page_bloc_state.dart';
 part 'pin_page_bloc_event.dart';
@@ -13,6 +14,8 @@ class PinPageBloc extends Bloc<PinPageBlocEvent, PinPageBlocState> {
   final RemoteStorageConfigurationProvider remoteStorageConfigurationProvider;
   final PinRepository pinRepository;
   final HashUsecase hashUsecase;
+  final ShouldCreateRemoteStorageFileUsecase
+      shouldCreateRemoteStorageFileUsecase;
 
   PinPageBlocData get data => state.data;
 
@@ -20,6 +23,7 @@ class PinPageBloc extends Bloc<PinPageBlocEvent, PinPageBlocState> {
     required this.remoteStorageConfigurationProvider,
     required this.pinRepository,
     required this.hashUsecase,
+    required this.shouldCreateRemoteStorageFileUsecase,
   }) : super(
           const PinPageBlocState.initializing(
             data: PinPageBlocData(),
@@ -65,6 +69,8 @@ class PinPageBloc extends Bloc<PinPageBlocEvent, PinPageBlocState> {
         fileName: event.fileName,
       );
       await remoteStorageConfigurationProvider.setConfiguration(configuration);
+
+      shouldCreateRemoteStorageFileUsecase.setFlag(event.needsCreateNewFile);
 
       emit(PinPageBlocState.shouldEnterThePin(data: data));
     } catch (e) {

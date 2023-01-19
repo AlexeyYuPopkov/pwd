@@ -219,6 +219,14 @@ class SqlDatasourceImpl implements NotesRepository {
         (_) => _db = null,
       );
 
+  @override
+  String createEmptyDbContent(DateTime creationDate) => jsonEncode(
+        RemoteDbData(
+          notes: const [],
+          date: creationDate,
+        ).toJson(),
+      );
+
   Future<List<NoteItemData>> _readNotesDataList() async => db
           .then(
         (db) => db.query(

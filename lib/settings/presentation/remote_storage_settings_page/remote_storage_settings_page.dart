@@ -38,7 +38,15 @@ class RemoteStorageSettingsPage extends StatelessWidget
           listener: _listener,
           builder: (context, state) {
             if (state.data is! ValidConfiguration) {
-              return const SizedBox();
+              return Center(
+                child: CupertinoButton(
+                  key: const Key(
+                    'test_drop_remote_storage_settings_button',
+                  ),
+                  child: Text(context.dropButtonTitle),
+                  onPressed: () => _onDrop(context),
+                ),
+              );
             }
             return SingleChildScrollView(
               child: Column(
@@ -67,6 +75,9 @@ class RemoteStorageSettingsPage extends StatelessWidget
                   const SizedBox(height: CommonSize.indent2x),
                   Center(
                     child: CupertinoButton(
+                      key: const Key(
+                        'test_drop_remote_storage_settings_button',
+                      ),
                       child: Text(context.dropButtonTitle),
                       onPressed: () => _onDrop(context),
                     ),

@@ -11,6 +11,7 @@ abstract class PinPageBlocEvent extends Equatable {
     required String owner,
     required String branch,
     required String fileName,
+    required bool needsCreateNewFile,
   }) = SetRemoteStorageConfigurationEvent;
 
   const factory PinPageBlocEvent.login({required String pin}) = LoginEvent;
@@ -29,6 +30,7 @@ class SetRemoteStorageConfigurationEvent extends PinPageBlocEvent {
   final String owner;
   final String branch;
   final String fileName;
+  final bool needsCreateNewFile;
 
   const SetRemoteStorageConfigurationEvent({
     required this.token,
@@ -36,6 +38,7 @@ class SetRemoteStorageConfigurationEvent extends PinPageBlocEvent {
     required this.owner,
     required this.branch,
     required this.fileName,
+    required this.needsCreateNewFile,
   });
 }
 

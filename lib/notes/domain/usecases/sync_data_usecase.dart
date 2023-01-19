@@ -42,8 +42,7 @@ class SyncDataUsecase {
       );
 
       if (jsonStr.trim().isEmpty) {
-        final date = DateTime.now().toIso8601String();
-        jsonStr = '{"notes":[],"date": "$date"}';
+        jsonStr = notesRepository.createEmptyDbContent(DateTime.now());
       }
 
       final jsonMap = jsonDecode(jsonStr);
@@ -69,26 +68,8 @@ class SyncDataUsecase {
       );
 
       if (notesStr.isNotEmpty) {
-        final bytes = utf8.encode(notesStr);
-        final base64encoded = base64.encode(bytes);
         final sha = await _getSha();
-
-        final configuration =
-            await remoteStorageConfigurationProvider.configuration;
-
-        return remoteStorageRepository.putDb(
-          configuration: configuration,
-          request: PutDbRequest(
-            message: _commitMessage,
-            content: base64encoded,
-            sha: sha,
-            committer: const Committer(
-              name: _committerName,
-              email: _committerEmail,
-            ),
-            branch: null,
-          ),
-        );
+        return overrideDbWithContent(contentStr: notesStr, sha: sha);
       } else {
         return null;
       }
@@ -97,6 +78,51 @@ class SyncDataUsecase {
     } catch (e) {
       throw SyncDataError.unknown(parentError: e);
     }
+  }
+
+  Future<PutDbResponse?> createOrOverrideDb() async {
+    try {
+      final ssa = await _getSha();
+
+      return overrideDbWithContent(
+        contentStr: notesRepository.createEmptyDbContent(
+          DateTime.now(),
+        ),
+        sha: ssa,
+      );
+    } catch (e) {
+      return overrideDbWithContent(
+        contentStr: notesRepository.createEmptyDbContent(
+          DateTime.now(),
+        ),
+        sha: null,
+      );
+    }
+  }
+
+  Future<PutDbResponse?> overrideDbWithContent({
+    required String contentStr,
+    required String? sha,
+  }) async {
+    final bytes = utf8.encode(contentStr);
+    final base64encoded = base64.encode(bytes);
+
+    final configuration =
+        await remoteStorageConfigurationProvider.configuration;
+
+    return remoteStorageRepository.putDb(
+      configuration: configuration,
+      request: PutDbRequest(
+        message: _commitMessage,
+        content: base64encoded,
+        sha: sha,
+        committer: const Committer(
+          name: _committerName,
+          email: _committerEmail,
+        ),
+        branch: null,
+      ),
+    );
   }
 
   Future<String?> _getSha() async {

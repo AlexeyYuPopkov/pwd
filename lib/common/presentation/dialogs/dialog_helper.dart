@@ -41,11 +41,13 @@ mixin DialogHelper {
           content: message == null ? null : Text(message),
           actions: [
             PlatformDialogAction(
+              key: const Key('test_ok_cancel_dialog_ok_button'),
               onPressed: () =>
                   onOk == null ? Navigator.pop(context) : onOk(context),
               child: Text(okButtonTitle ?? context.okButtonTitle),
             ),
             PlatformDialogAction(
+              key: const Key('test_ok_cancel_dialog_cancel_button'),
               onPressed: () =>
                   onCancel == null ? Navigator.pop(context) : onCancel(context),
               child: Text(cancelButtonTitle ?? context.cancelButtonTitle),

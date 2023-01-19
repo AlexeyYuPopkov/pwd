@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'home_page_tab.dart';
+import 'package:pwd/notes/presentation/router/note_router_delegate.dart';
+import 'package:pwd/settings/presentation/router/settings_router_delegate.dart';
 
 class HomeTabbarPage extends StatefulWidget {
   const HomeTabbarPage({super.key});
@@ -8,31 +9,41 @@ class HomeTabbarPage extends StatefulWidget {
   State<HomeTabbarPage> createState() => _HomeTabbarPageState();
 }
 
-final tabs = <TabbarTabModel>[HomeTab(), SettingsTab()];
-
 class _HomeTabbarPageState extends State<HomeTabbarPage> {
   static const initialTabIndex = 0;
-  final PageController controller = PageController();
-
+  late final _noteRouterKey = GlobalKey<NavigatorState>();
+  late final _settingsRouterKey = GlobalKey<NavigatorState>();
   int _selectedIndex = initialTabIndex;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PageView(
-        controller: controller,
+      body: IndexedStack(
+        index: _selectedIndex,
         children: [
-          for (final tab in tabs) tab.body,
+          Router(
+            routerDelegate: NoteRouterDelegate(navigatorKey: _noteRouterKey),
+          ),
+          Router(
+            routerDelegate: SettingsRouterDelegate(
+              navigatorKey: _settingsRouterKey,
+            ),
+          ),
         ],
-        onPageChanged: (index) => setState(() => _selectedIndex = index),
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: [
-          for (final tab in tabs)
-            BottomNavigationBarItem(
-              icon: Icon(tab.icon),
-              label: tab.title(context),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.home),
+            label: context.homeTabName,
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(
+              Icons.settings,
+              key: Key('test_bottom_navigation_bar_settings_item_icon'),
             ),
+            label: context.settingsTabName,
+          ),
         ],
         currentIndex: _selectedIndex,
         onTap: _onTap,
@@ -42,7 +53,12 @@ class _HomeTabbarPageState extends State<HomeTabbarPage> {
 
   void _onTap(int index) {
     if (_selectedIndex != index) {
-      controller.jumpToPage(index);
+      setState(() => _selectedIndex = index);
     }
   }
+}
+
+extension on BuildContext {
+  String get homeTabName => 'Home';
+  String get settingsTabName => 'Settings';
 }

@@ -15,9 +15,7 @@ class NoteRouterDelegate extends BaseRouterDelegate {
   @override
   final GlobalKey<NavigatorState> navigatorKey;
 
-  NoteRouterDelegate({
-    GlobalKey<NavigatorState>? navigatorKey,
-  }) : navigatorKey = navigatorKey ?? GlobalKey<NavigatorState>();
+  NoteRouterDelegate({required this.navigatorKey});
 
   @override
   Widget build(BuildContext context) {

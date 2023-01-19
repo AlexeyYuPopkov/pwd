@@ -34,6 +34,7 @@ class _PinPageEnterPinFormState extends State<PinPageEnterPinForm> {
           children: [
             const SizedBox(height: CommonSize.indent2x),
             TextFormField(
+              key: const Key('test_pin_text_field_key'),
               controller: pinController,
               decoration: InputDecoration(
                 labelText: context.pinTextFieldTitle,
@@ -41,6 +42,7 @@ class _PinPageEnterPinFormState extends State<PinPageEnterPinForm> {
             ),
             const SizedBox(height: CommonSize.indent2x),
             CupertinoButton(
+              key: const Key('test_on_auth_zone_button'),
               onPressed: () => _onLogin(context),
               child: Text(context.saveButtonTitle),
             ),

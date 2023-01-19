@@ -3,6 +3,9 @@ part of 'note_page_bloc.dart';
 abstract class NotePageEvent extends Equatable {
   const NotePageEvent();
 
+  const factory NotePageEvent.forceCreateRemoteSyncFile() =
+      ForceCreateRemoteSyncFileEvent;
+
   const factory NotePageEvent.newData({required List<NoteItem> notes}) =
       NewDataEvent;
 
@@ -16,6 +19,10 @@ abstract class NotePageEvent extends Equatable {
 
   @override
   List<Object?> get props => const [];
+}
+
+class ForceCreateRemoteSyncFileEvent extends NotePageEvent {
+  const ForceCreateRemoteSyncFileEvent();
 }
 
 class NewDataEvent extends NotePageEvent {

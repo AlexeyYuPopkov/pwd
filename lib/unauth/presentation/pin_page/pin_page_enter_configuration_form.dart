@@ -1,12 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pwd/common/presentation/dialogs/dialog_helper.dart';
 import 'package:pwd/common/presentation/validators/common/common_field_input_formatter.dart';
 
 import 'package:pwd/common/presentation/validators/noEmpty/no_empty_validator.dart';
 import 'package:pwd/common/presentation/validators/common/validator.dart';
 import 'package:pwd/common/presentation/validators/remote_settings_field_validator/file_name_validator.dart';
 import 'package:pwd/common/presentation/validators/remote_settings_field_validator/remote_settings_field_validator.dart';
+import 'package:pwd/common/presentation/validators/remote_settings_field_validator/remote_settings_field_validator_not_required.dart';
 import 'package:pwd/theme/common_size.dart';
 
 import 'bloc/pin_page_bloc.dart';
@@ -20,7 +22,7 @@ class PinPageEnterConfigurationForm extends StatefulWidget {
 }
 
 class _PinPageEnterConfigurationFormState
-    extends State<PinPageEnterConfigurationForm> {
+    extends State<PinPageEnterConfigurationForm> with DialogHelper {
   late final formKey = GlobalKey<FormState>();
   late final tokenController = TextEditingController();
   late final repoController = TextEditingController();
@@ -30,17 +32,24 @@ class _PinPageEnterConfigurationFormState
 
   final noEmptyValidator = const NoEmptyValidator();
   final remoteSettingsFieldValidator = const RemoteSettingsFieldValidator();
+  final remoteSettingsFieldValidatorNotRequired =
+      const RemoteSettingsFieldValidatorNotRequired();
   final remoteSettingsFieldInputFormatter =
       const RemoteSettingsFieldInputFormatter();
+  final remoteSettingsFieldNotRequiredInputFormatter =
+      const RemoteSettingsFieldNotRequiredInputFormatter();
 
   final fileNameValidator = const FileNameValidator();
   final fileNameInputFormatter = const FileNameInputFormatter();
+
+  bool checkBoxState = false;
 
   @override
   void dispose() {
     tokenController.dispose();
     repoController.dispose();
     ownerController.dispose();
+    branchController.dispose();
     fileNameController.dispose();
 
     super.dispose();
@@ -65,6 +74,7 @@ class _PinPageEnterConfigurationFormState
               ),
               const SizedBox(height: CommonSize.indent2x),
               _TextFieldRow(
+                key: const Key('test_token_text_field'),
                 hint: context.tokenTextFieldHint,
                 tooltipMessage: context.tokenTooltip,
                 controller: tokenController,
@@ -73,6 +83,7 @@ class _PinPageEnterConfigurationFormState
               ),
               const SizedBox(height: CommonSize.indent2x),
               _TextFieldRow(
+                key: const Key('test_repo_text_field'),
                 hint: context.repoTextFieldHint,
                 tooltipMessage: context.repoTooltip,
                 controller: repoController,
@@ -81,6 +92,7 @@ class _PinPageEnterConfigurationFormState
               ),
               const SizedBox(height: CommonSize.indent2x),
               _TextFieldRow(
+                key: const Key('test_owner_text_field'),
                 hint: context.ownerTextFieldHint,
                 tooltipMessage: context.ownerTooltip,
                 controller: ownerController,
@@ -89,14 +101,16 @@ class _PinPageEnterConfigurationFormState
               ),
               const SizedBox(height: CommonSize.indent2x),
               _TextFieldRow(
+                key: const Key('test_branch_text_field'),
                 hint: context.branchTextFieldHint,
                 tooltipMessage: context.branchTooltip,
                 controller: branchController,
-                validator: remoteSettingsFieldValidator,
-                inputFormatter: remoteSettingsFieldInputFormatter,
+                validator: remoteSettingsFieldValidatorNotRequired,
+                inputFormatter: remoteSettingsFieldNotRequiredInputFormatter,
               ),
               const SizedBox(height: CommonSize.indent2x),
               _TextFieldRow(
+                key: const Key('test_file_name_text_field'),
                 hint: context.fileNameTextFieldHint,
                 tooltipMessage: context.fileTooltip,
                 controller: fileNameController,
@@ -104,7 +118,29 @@ class _PinPageEnterConfigurationFormState
                 inputFormatter: fileNameInputFormatter,
               ),
               const SizedBox(height: CommonSize.indent2x),
+              Row(
+                children: [
+                  SizedBox(
+                    width: CommonSize.iconSize,
+                    height: CommonSize.iconSize,
+                    child: Checkbox(
+                      key: const Key('test_remote_configuration_checkbox'),
+                      value: checkBoxState,
+                      onChanged: (value) => _onCheckbox(
+                        context,
+                        newValue: value,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: CommonSize.indent2x),
+                  Expanded(
+                    child: Text(context.checkboxDescription),
+                  ),
+                ],
+              ),
+              const SizedBox(height: CommonSize.indent2x),
               CupertinoButton(
+                key: const Key('test_on_enter_pin_page_button'),
                 onPressed: () => _onNext(context),
                 child: Text(context.saveButtonTitle),
               ),
@@ -118,11 +154,34 @@ class _PinPageEnterConfigurationFormState
 
   bool get isValidForm => [
         noEmptyValidator(tokenController.text),
-        noEmptyValidator(repoController.text),
-        noEmptyValidator(ownerController.text),
-        noEmptyValidator(branchController.text),
-        noEmptyValidator(fileNameController.text),
+        remoteSettingsFieldValidator(repoController.text),
+        remoteSettingsFieldValidator(ownerController.text),
+        remoteSettingsFieldValidatorNotRequired(branchController.text),
+        remoteSettingsFieldValidator(fileNameController.text),
       ].where((e) => e != null).isEmpty;
+
+  void _onCheckbox(
+    BuildContext context, {
+    required bool? newValue,
+  }) {
+    if (newValue == true) {
+      showOkCancelDialog(
+        context,
+        title: context.createNewFileDialogPrompt,
+        onOk: (dialogContext) {
+          if (checkBoxState != newValue) {
+            setState(() => checkBoxState = newValue ?? false);
+          }
+
+          Navigator.of(dialogContext).pop();
+        },
+      );
+    } else {
+      if (checkBoxState != newValue) {
+        setState(() => checkBoxState = false);
+      }
+    }
+  }
 
   void _onNext(BuildContext context) {
     if (formKey.currentState?.validate() == true) {
@@ -136,6 +195,7 @@ class _PinPageEnterConfigurationFormState
                 owner: ownerController.text,
                 branch: branchController.text,
                 fileName: fileNameController.text,
+                needsCreateNewFile: checkBoxState,
               ),
             );
       }
@@ -205,6 +265,12 @@ extension on BuildContext {
   String get fileNameTextFieldHint => 'File name';
   String get fileTooltip => 'Create {your repo}/{your brunch}/{file_name} '
       'then paste {file_name}.';
+
+  String get checkboxDescription =>
+      'Create new file. Overrides the old one, if present';
+
+  String get createNewFileDialogPrompt =>
+      'Do you shure whant override old file, if presents?';
 
   String get saveButtonTitle => 'Next';
 }

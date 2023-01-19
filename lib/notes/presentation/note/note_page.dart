@@ -20,7 +20,13 @@ import 'bloc/note_page_bloc.dart';
 class NotePage extends StatelessWidget with ShowErrorDialogMixin {
   final Future Function(BuildContext, Object) onRoute;
 
-  const NotePage({
+  late final bloc = NotePageBloc(
+    notesProviderUsecase: DiStorage.shared.resolve<NotesProviderUsecase>(),
+    syncDataUsecase: DiStorage.shared.resolve(),
+    shouldCreateRemoteStorageFileUsecase: DiStorage.shared.resolve(),
+  );
+
+  NotePage({
     Key? key,
     required this.onRoute,
   }) : super(key: key);
@@ -43,11 +49,8 @@ class NotePage extends StatelessWidget with ShowErrorDialogMixin {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => NotePageBloc(
-        notesProviderUsecase: DiStorage.shared.resolve<NotesProviderUsecase>(),
-        syncDataUsecase: DiStorage.shared.resolve(),
-      ),
+    return BlocProvider.value(
+      value: bloc,
       child: BlocConsumer<NotePageBloc, NotePageState>(
         listener: _listener,
         buildWhen: (old, current) => old.needsSync != current.needsSync,
@@ -61,6 +64,7 @@ class NotePage extends StatelessWidget with ShowErrorDialogMixin {
                   onPressed: state.needsSync ? () => _onSync(context) : null,
                 ),
                 AppBarButton(
+                  key: const Key('test_add_note_button'),
                   iconData: Icons.add,
                   onPressed: () => _onEditButton(
                     context,
@@ -78,7 +82,7 @@ class NotePage extends StatelessWidget with ShowErrorDialogMixin {
                     onRefresh: () async => _onPullToRefresh(context),
                     child: ListView.builder(
                       physics: const AlwaysScrollableScrollPhysics(),
-                      itemBuilder: (context, index) => _NoteListItemWidget(
+                      itemBuilder: (context, index) => NoteListItemWidget(
                         note: state.data.notes[index],
                         onDetailsButton: _onDetailsButton,
                         onEditButton: _onEditButton,
@@ -95,11 +99,10 @@ class NotePage extends StatelessWidget with ShowErrorDialogMixin {
     );
   }
 
-  void _onSync(BuildContext context) =>
-      context.read<NotePageBloc>().add(const NotePageEvent.sync());
+  void _onSync(BuildContext context) => bloc.add(const NotePageEvent.sync());
 
   void _onPullToRefresh(BuildContext context) =>
-      context.read<NotePageBloc>().add(const NotePageEvent.refresh());
+      bloc.add(const NotePageEvent.refresh());
 
   void _onDetailsButton(
     BuildContext context, {
@@ -113,22 +116,23 @@ class NotePage extends StatelessWidget with ShowErrorDialogMixin {
   void _onEditButton(
     BuildContext context, {
     required NoteItem note,
-  }) =>
-      onRoute(
-        context,
-        NotePageRoute.onEdit(noteItem: note),
-      ).then(
-        (result) {
-          if (result is NotePageShouldSync) {
-            context.read<NotePageBloc>().add(
-                  const NotePageEvent.shouldSync(),
-                );
-          }
-        },
-      );
+  }) {
+    onRoute(
+      context,
+      NotePageRoute.onEdit(noteItem: note),
+    ).then(
+      (result) {
+        if (result is NotePageShouldSync) {
+          bloc.add(
+            const NotePageEvent.shouldSync(),
+          );
+        }
+      },
+    );
+  }
 }
 
-class _NoteListItemWidget extends StatelessWidget {
+class NoteListItemWidget extends StatelessWidget {
   final NoteItem note;
 
   final void Function(
@@ -141,7 +145,8 @@ class _NoteListItemWidget extends StatelessWidget {
     required NoteItem note,
   }) onEditButton;
 
-  const _NoteListItemWidget({
+  const NoteListItemWidget({
+    super.key,
     required this.note,
     required this.onDetailsButton,
     required this.onEditButton,
@@ -199,6 +204,7 @@ class _NoteListItemWidget extends StatelessWidget {
                 note: note,
               ),
               child: const Icon(
+                key: Key('test_npte_page_edit_icon'),
                 Icons.edit,
                 size: CommonSize.indent2x,
               ),

@@ -34,6 +34,7 @@ class PinPage extends StatelessWidget with ShowErrorDialogMixin {
             remoteStorageConfigurationProvider: DiStorage.shared.resolve(),
             pinRepository: DiStorage.shared.resolve(),
             hashUsecase: DiStorage.shared.resolve(),
+            shouldCreateRemoteStorageFileUsecase: DiStorage.shared.resolve(),
           ),
           child: BlocConsumer<PinPageBloc, PinPageBlocState>(
             listener: _listener,
@@ -78,13 +79,15 @@ class _PageViewState extends State<_PageView> {
 
   @override
   Widget build(BuildContext context) {
-    return PageView(
-      controller: controller,
-      physics: const NeverScrollableScrollPhysics(),
-      children: const [
-        PinPageEnterConfigurationForm(),
-        PinPageEnterPinForm(),
-      ],
+    return SafeArea(
+      child: PageView(
+        controller: controller,
+        physics: const NeverScrollableScrollPhysics(),
+        children: const [
+          PinPageEnterConfigurationForm(),
+          PinPageEnterPinForm(),
+        ],
+      ),
     );
   }
 }

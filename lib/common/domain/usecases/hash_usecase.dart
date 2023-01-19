@@ -14,6 +14,9 @@ class HashUsecase {
   });
 
   String encode(String str) {
+    if (str.isEmpty) {
+      return '';
+    }
     final pin = pinRepository.getPin();
 
     if (pin is Pin) {
@@ -24,6 +27,9 @@ class HashUsecase {
   }
 
   String? tryDecode(String str) {
+    if (str.isEmpty) {
+      return '';
+    }
     final pin = pinRepository.getPin();
 
     if (pin is Pin) {
@@ -41,8 +47,13 @@ class HashUsecase {
     try {
       final key = encrypt.Key.fromUtf8(pin);
       final encrypter = encrypt.Encrypter(encrypt.AES(key));
-      final encrypted = encrypter.encrypt(str, iv: _iv);
-      return encrypted.base64;
+
+      if (str.isNotEmpty) {
+        final encrypted = encrypter.encrypt(str, iv: _iv);
+        return encrypted.base64;
+      } else {
+        return '';
+      }
     } catch (e) {
       return throw HashUsecaseError.encrypt(parentError: e);
     }

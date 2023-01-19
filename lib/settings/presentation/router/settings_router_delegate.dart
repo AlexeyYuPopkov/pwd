@@ -12,9 +12,9 @@ class SettingsRouterPagePath {
 class SettingsRouterDelegate extends RouterDelegate
     with ChangeNotifier, PopNavigatorRouterDelegateMixin {
   SettingsRouterDelegate({
-    GlobalKey<NavigatorState>? navigatorKey,
-  }) : navigatorKey = navigatorKey ?? GlobalKey<NavigatorState>();
-
+    required this.navigatorKey,
+  }); //: navigatorKey = navigatorKey ?? ;
+// GlobalKey<NavigatorState>()
   void updateState() {
     notifyListeners();
   }

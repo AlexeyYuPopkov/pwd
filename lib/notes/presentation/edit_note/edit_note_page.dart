@@ -116,6 +116,9 @@ class EditNotePage extends StatelessWidget
                               Flexible(
                                 fit: FlexFit.tight,
                                 child: CupertinoButton(
+                                  key: const Key(
+                                    'test_edit_note_save_button_key',
+                                  ),
                                   onPressed: () => _onSave(context),
                                   child: Text(context.saveButtonTitle),
                                 ),
@@ -123,6 +126,9 @@ class EditNotePage extends StatelessWidget
                               Flexible(
                                 fit: FlexFit.tight,
                                 child: CupertinoButton(
+                                  key: const Key(
+                                    'test_edit_note_delete_button_key',
+                                  ),
                                   onPressed: () => _onDelete(context),
                                   child: Text(context.deleteButtonTitle),
                                 ),
@@ -220,6 +226,7 @@ class _FormState extends State<_Form> {
           children: [
             const SizedBox(height: CommonSize.indent2x),
             TextFormField(
+              key: const Key('test_edit_note_title_key'),
               controller: titleController,
               decoration: InputDecoration(
                 labelText: context.titleTextFieldTitle,
@@ -227,6 +234,7 @@ class _FormState extends State<_Form> {
             ),
             const SizedBox(height: CommonSize.indent2x),
             TextFormField(
+              key: const Key('test_edit_note_description_key'),
               controller: descriptionController,
               decoration: InputDecoration(
                 labelText: context.descriptionTextFieldTitle,
@@ -234,6 +242,7 @@ class _FormState extends State<_Form> {
             ),
             const SizedBox(height: CommonSize.indent2x),
             TextFormField(
+              key: const Key('test_edit_note_content_key'),
               controller: contentController,
               decoration: InputDecoration.collapsed(
                 hintText: context.contentTextFieldTitle,

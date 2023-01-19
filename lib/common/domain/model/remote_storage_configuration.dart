@@ -22,6 +22,16 @@ abstract class RemoteStorageConfiguration {
 
   @override
   int get hashCode => Object.hashAll({token, repo, owner, fileName});
+
+  @override
+  String toString() {
+    return 'type: $runtimeType\n'
+        'token: $token\n'
+        'repo: $repo\n'
+        'owner: $owner\n'
+        'branch: $branch\n'
+        'fileName: $fileName\n';
+  }
 }
 
 class RemoteStorageConfigurationEmpty extends RemoteStorageConfiguration {

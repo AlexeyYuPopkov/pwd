@@ -53,6 +53,7 @@ class SettingsPage extends StatelessWidget with ShowErrorDialogMixin {
             children: [
               const SizedBox(height: CommonSize.indent2x),
               CupertinoButton(
+                key: const Key('test_remote_storage_settings_menu_item'),
                 child: Text(context.remoteStorageSettingsPageButtonTitle),
                 onPressed: () => _onRemoteStorageSettingsPage(context),
               ),
