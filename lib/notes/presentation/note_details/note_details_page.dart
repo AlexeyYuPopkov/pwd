@@ -1,6 +1,6 @@
-import 'package:clipboard/clipboard.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pwd/common/presentation/dialogs/dialog_helper.dart';
 import 'package:pwd/common/presentation/dialogs/show_error_dialog_mixin.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
@@ -126,10 +126,12 @@ class NoteLine extends StatelessWidget with DialogHelper {
     BuildContext context, {
     required String text,
   }) {
-    FlutterClipboard.copy(text);
+    final trimmed = text.trim();
+    Clipboard.setData(ClipboardData(text: trimmed));
+
     showSnackBar(
       context,
-      '${context.tooltipMessage} "$text"',
+      '${context.tooltipMessage} "$trimmed"',
     );
   }
 }
