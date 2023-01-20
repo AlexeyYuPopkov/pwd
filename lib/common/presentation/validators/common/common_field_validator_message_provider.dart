@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'common_field_validator.dart';
 
-mixin CommonFieldValidatorMessageProvider  {
+mixin CommonFieldValidatorMessageProvider {
   String? message(
     BuildContext context, {
     CommonFieldValidatorErrorMessages messages =

@@ -5,7 +5,7 @@ class TextSizes {
   /// [TextSizes.large = 21.0]
   static const large = 21.0;
 
-    /// [TextSizes.large = 19.0]
+  /// [TextSizes.large = 19.0]
   static const titleMedium = 19.0;
 
   /// [TextSizes.normal = 17.0]

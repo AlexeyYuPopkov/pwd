@@ -24,18 +24,15 @@ abstract class DeveloperSettingsPageState extends Equatable {
 }
 
 class CommonState extends DeveloperSettingsPageState {
-  const CommonState({required AppConfiguration data})
-      : super(data: data);
+  const CommonState({required AppConfiguration data}) : super(data: data);
 }
 
 class DidSaveState extends DeveloperSettingsPageState {
-  const DidSaveState({required AppConfiguration data})
-      : super(data: data);
+  const DidSaveState({required AppConfiguration data}) : super(data: data);
 }
 
 class LoadingState extends DeveloperSettingsPageState {
-  const LoadingState({required AppConfiguration data})
-      : super(data: data);
+  const LoadingState({required AppConfiguration data}) : super(data: data);
 }
 
 class ErrorState extends DeveloperSettingsPageState {
@@ -45,4 +42,3 @@ class ErrorState extends DeveloperSettingsPageState {
     required this.error,
   }) : super(data: data);
 }
-

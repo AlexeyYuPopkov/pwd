@@ -43,7 +43,7 @@ class EditNoteBloc extends Bloc<EditNoteEvent, EditNoteState> {
         description: event.description,
         content: event.content,
       );
- 
+
       await notesProviderUsecase.updateNoteItem(noteItem);
 
       emit(

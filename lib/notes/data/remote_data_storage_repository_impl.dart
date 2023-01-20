@@ -68,7 +68,5 @@ class RemoteDataStorageRepositoryImpl implements RemoteDataStorageRepository {
             (e) => throw errorMapper(e),
           );
 
-  String _adjustedToken(String str) {
-    return 'Bearer $str';
-  }
+  String _adjustedToken(String str) => 'Bearer $str';
 }

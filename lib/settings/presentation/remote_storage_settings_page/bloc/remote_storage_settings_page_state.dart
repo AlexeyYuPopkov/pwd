@@ -45,5 +45,3 @@ class ErrorState extends RemoteStorageSettingsPageState {
     required this.error,
   }) : super(data: data);
 }
-
-

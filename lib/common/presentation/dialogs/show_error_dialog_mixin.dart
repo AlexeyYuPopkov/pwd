@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pwd/common/domain/errors/app_error.dart';
 import 'package:pwd/common/domain/errors/network_error.dart';
-import 'package:pwd/theme/common_size.dart';
 
 import 'dialog_helper.dart';
 
