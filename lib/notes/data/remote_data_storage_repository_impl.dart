@@ -55,19 +55,18 @@ class RemoteDataStorageRepositoryImpl implements RemoteDataStorageRepository {
   @override
   Future<GetDbResponse> getDb({
     required RemoteStorageConfiguration configuration,
-  }) {
-    return service
-        .getDb(
-          token: _adjustedToken(configuration.token),
-          owner: configuration.owner,
-          repo: configuration.repo,
-          filename: configuration.fileName,
-          branch: configuration.branch,
-        )
-        .catchError(
-          (e) => throw errorMapper(e),
-        );
-  }
+  }) =>
+      service
+          .getDb(
+            token: _adjustedToken(configuration.token),
+            owner: configuration.owner,
+            repo: configuration.repo,
+            filename: configuration.fileName,
+            branch: configuration.branch,
+          )
+          .catchError(
+            (e) => throw errorMapper(e),
+          );
 
   String _adjustedToken(String str) {
     return 'Bearer $str';
