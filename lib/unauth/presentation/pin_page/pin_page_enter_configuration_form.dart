@@ -9,6 +9,7 @@ import 'package:pwd/common/presentation/validators/common/validator.dart';
 import 'package:pwd/common/presentation/validators/remote_settings_field_validator/file_name_validator.dart';
 import 'package:pwd/common/presentation/validators/remote_settings_field_validator/remote_settings_field_validator.dart';
 import 'package:pwd/common/presentation/validators/remote_settings_field_validator/remote_settings_field_validator_not_required.dart';
+import 'package:pwd/common/presentation/validators/remote_settings_field_validator/remote_settings_file_name_validator.dart';
 import 'package:pwd/theme/common_size.dart';
 
 import 'bloc/pin_page_bloc.dart';
@@ -34,10 +35,14 @@ class _PinPageEnterConfigurationFormState
   final remoteSettingsFieldValidator = const RemoteSettingsFieldValidator();
   final remoteSettingsFieldValidatorNotRequired =
       const RemoteSettingsFieldValidatorNotRequired();
+  final remoteSettingsFileNameValidator =
+      const RemoteSettingsFileNameValidator();
   final remoteSettingsFieldInputFormatter =
       const RemoteSettingsFieldInputFormatter();
   final remoteSettingsFieldNotRequiredInputFormatter =
       const RemoteSettingsFieldNotRequiredInputFormatter();
+  final remoteSettingsFileNameInputFormatter =
+      const RemoteSettingsFileNameInputFormatter();
 
   final fileNameValidator = const FileNameValidator();
   final fileNameInputFormatter = const FileNameInputFormatter();
@@ -115,7 +120,7 @@ class _PinPageEnterConfigurationFormState
                 tooltipMessage: context.fileTooltip,
                 controller: fileNameController,
                 validator: fileNameValidator,
-                inputFormatter: fileNameInputFormatter,
+                inputFormatter: remoteSettingsFileNameInputFormatter,
               ),
               const SizedBox(height: CommonSize.indent2x),
               Row(
@@ -157,7 +162,7 @@ class _PinPageEnterConfigurationFormState
         remoteSettingsFieldValidator(repoController.text),
         remoteSettingsFieldValidator(ownerController.text),
         remoteSettingsFieldValidatorNotRequired(branchController.text),
-        remoteSettingsFieldValidator(fileNameController.text),
+        remoteSettingsFileNameValidator(fileNameController.text),
       ].where((e) => e != null).isEmpty;
 
   void _onCheckbox(

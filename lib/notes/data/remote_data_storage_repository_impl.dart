@@ -32,7 +32,7 @@ class RemoteDataStorageRepositoryImpl implements RemoteDataStorageRepository {
     PutDbRequest adjustedWithBranch(PutDbRequest request) {
       final branch = configuration.branch;
 
-      if (branch != null && branch.isNotEmpty) {
+      if (branch != null && branch.trim().isNotEmpty) {
         return request.copyWithBranch(branch: branch);
       }
 

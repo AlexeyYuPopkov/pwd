@@ -14,7 +14,11 @@ class PutDbRequestData {
   final String? sha;
   @JsonKey(name: 'committer')
   final CommitterData committer;
-  @JsonKey(name: 'branch', defaultValue: null)
+  @JsonKey(
+    name: 'branch',
+    defaultValue: null,
+    includeIfNull: false,
+  )
   final String? branch;
 
   const PutDbRequestData({

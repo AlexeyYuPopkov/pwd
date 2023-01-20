@@ -7,9 +7,6 @@ import 'dialog_helper.dart';
 
 part 'show_error_dialog_model.dart';
 
-const _snackBarIconSize = CommonSize.indent2x;
-const _snackBarBottomPadding = 68.0;
-
 abstract class ShowErrorDialogInterface {
   void showError(
     BuildContext context,
@@ -61,7 +58,7 @@ mixin ShowErrorDialogMixin implements ShowErrorDialogInterface {
         );
         return;
       case ErrorMessageDestination.snackBar:
-        showSnackBar(context, message.message);
+        _Presenter().showSnackBar(context, message.message);
         return;
       case ErrorMessageDestination.ignore:
         return;
@@ -85,40 +82,6 @@ mixin ShowErrorDialogMixin implements ShowErrorDialogInterface {
 
       return ErrorMessage.uncatch(context);
     }
-  }
-
-  void showSnackBar(BuildContext context, String message) {
-    final theme = Theme.of(context);
-    final mainColor = theme.colorScheme.onError;
-
-    final snackBar = SnackBar(
-      content: Row(
-        children: [
-          Icon(
-            Icons.close,
-            color: mainColor,
-            size: _snackBarIconSize,
-          ),
-          const SizedBox(width: CommonSize.indent2x),
-          Expanded(
-            child: Text(
-              message,
-              style: theme.textTheme.subtitle2?.copyWith(color: mainColor),
-            ),
-          ),
-        ],
-      ),
-      margin: const EdgeInsets.only(
-        bottom: _snackBarBottomPadding,
-        left: CommonSize.indentVariant2x,
-        right: CommonSize.indentVariant2x,
-      ),
-      behavior: SnackBarBehavior.floating,
-    );
-
-    // Find the ScaffoldMessenger in the widget tree
-    // and use it to show a SnackBar.
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   void showErrorAlertDialog(

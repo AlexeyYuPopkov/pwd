@@ -61,15 +61,18 @@ class ValidConfiguration extends RemoteStorageConfiguration {
   @override
   final String owner;
   @override
-  final String? branch;
+  String? get branch => _branch?.trim().isNotEmpty == true ? _branch : null;
+
   @override
   final String fileName;
+
+  final String? _branch;
 
   const ValidConfiguration({
     required this.token,
     required this.repo,
     required this.owner,
-    required this.branch,
+    required String? branch,
     required this.fileName,
-  });
+  }) : _branch = branch;
 }

@@ -1,6 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
+import 'package:pwd/theme/common_size.dart';
 
 mixin DialogHelper {
   showMessage(
@@ -77,10 +77,23 @@ mixin DialogHelper {
           ],
         ),
       );
+
+  void showSnackBar(BuildContext context, String message) =>
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(message),
+          margin: const EdgeInsets.only(
+            bottom: CommonSize.indent,
+            left: CommonSize.indentVariant2x,
+            right: CommonSize.indentVariant2x,
+          ),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
 }
 
+// Localization
 extension on BuildContext {
   String get okButtonTitle => 'OK';
-
   String get cancelButtonTitle => 'Cancel';
 }

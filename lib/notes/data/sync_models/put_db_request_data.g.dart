@@ -16,14 +16,23 @@ PutDbRequestData _$PutDbRequestDataFromJson(Map<String, dynamic> json) =>
       branch: json['branch'] as String?,
     );
 
-Map<String, dynamic> _$PutDbRequestDataToJson(PutDbRequestData instance) =>
-    <String, dynamic>{
-      'message': instance.message,
-      'content': instance.content,
-      'sha': instance.sha,
-      'committer': instance.committer,
-      'branch': instance.branch,
-    };
+Map<String, dynamic> _$PutDbRequestDataToJson(PutDbRequestData instance) {
+  final val = <String, dynamic>{
+    'message': instance.message,
+    'content': instance.content,
+    'sha': instance.sha,
+    'committer': instance.committer,
+  };
+
+  void writeNotNull(String key, dynamic value) {
+    if (value != null) {
+      val[key] = value;
+    }
+  }
+
+  writeNotNull('branch', instance.branch);
+  return val;
+}
 
 CommitterData _$CommitterDataFromJson(Map<String, dynamic> json) =>
     CommitterData(

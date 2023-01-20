@@ -1,7 +1,7 @@
 import 'package:clipboard/clipboard.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:pwd/common/presentation/dialogs/dialog_helper.dart';
 import 'package:pwd/common/presentation/dialogs/show_error_dialog_mixin.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
 import 'package:pwd/theme/common_size.dart';
@@ -17,7 +17,6 @@ class NoteDetailsPage extends StatelessWidget with ShowErrorDialogMixin {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final tooltipMessage = context.tooltipMessage;
 
     return Scaffold(
       appBar: AppBar(
@@ -58,7 +57,7 @@ class NoteDetailsPage extends StatelessWidget with ShowErrorDialogMixin {
                           .map(
                             (str) => str.isEmpty
                                 ? const SizedBox(
-                                    height: CommonSize.indentVariant2x,
+                                    height: CommonSize.indent2x,
                                   )
                                 : NoteLine(
                                     text: str,
@@ -78,24 +77,12 @@ class NoteDetailsPage extends StatelessWidget with ShowErrorDialogMixin {
   }
 
   List<String> tags() {
-    final result = noteItem.content
-        .split('\n')
-        // .where(
-        //   (str) => str.isNotEmpty,
-        // )
-        // .map((str) => '$str')
-        .toList();
+    final result = noteItem.content.split('\n').toList();
     return result;
   }
-
-  void _onCopyText(
-    BuildContext context, {
-    required String text,
-  }) =>
-      FlutterClipboard.copy(text);
 }
 
-class NoteLine extends StatelessWidget {
+class NoteLine extends StatelessWidget with DialogHelper {
   final String text;
   final TextStyle? style;
 
@@ -106,22 +93,21 @@ class NoteLine extends StatelessWidget {
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: Text(
-            text,
-            style: style,
-            textAlign: TextAlign.left,
+    return SizedBox(
+      height: CommonSize.indent4x,
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              text,
+              style: style,
+              textAlign: TextAlign.left,
+            ),
           ),
-        ),
-        const SizedBox(
-          width: CommonSize.indent2x,
-        ),
-        Tooltip(
-          message: context.tooltipMessage,
-          child: CupertinoButton(
+          const SizedBox(width: CommonSize.indent2x),
+          CupertinoButton(
             padding: EdgeInsets.zero,
+            minSize: CommonSize.smallIcon,
             onPressed: () => _onCopyText(context, text: text),
             child: const Padding(
               padding: EdgeInsets.symmetric(horizontal: CommonSize.indent),
@@ -131,19 +117,24 @@ class NoteLine extends StatelessWidget {
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
   void _onCopyText(
     BuildContext context, {
     required String text,
-  }) =>
-      FlutterClipboard.copy(text);
+  }) {
+    FlutterClipboard.copy(text);
+    showSnackBar(
+      context,
+      '${context.tooltipMessage} "$text"',
+    );
+  }
 }
 
 extension on BuildContext {
   String get pageTitle => 'Details';
-  String get tooltipMessage => 'Copied';
+  String get tooltipMessage => 'Copied:';
 }
