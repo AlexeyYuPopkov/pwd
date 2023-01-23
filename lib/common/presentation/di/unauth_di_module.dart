@@ -37,9 +37,7 @@ class UnauthDiModule extends DiModule {
 
     di.bind<HashUsecase>(
       module: this,
-      () => HashUsecase(
-        pin: pinRepository.getPin(),
-      ),
+      () => const HashUsecase(),
     );
 
     di.bind<AppConfigurationProvider>(

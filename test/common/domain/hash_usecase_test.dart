@@ -7,20 +7,14 @@ import 'package:pwd/common/domain/usecases/hash_usecase.dart';
 class MockPinRepository extends Mock implements PinRepository {}
 
 void main() {
-  // late final PinRepository pinRepo = MockPinRepository();
+  void testIteration(String str, BasePin pin) {
+    const usecase = HashUsecase();
 
-  void testIteration(String str, String pin) {
-    final pinHash = HashUsecase.pinHash(pin);
-    final expectedPin = BasePin.pin(pin: pinHash);
-    final usecase = HashUsecase(pin: expectedPin);
+    final expectedPin = pin;
 
-    // when(
-    //   () => pinRepo.getPin(),
-    // ).thenReturn(expectedPin);
+    final encoded = usecase.encode(str, expectedPin);
 
-    final encoded = usecase.encode(str);
-
-    final decoded = usecase.tryDecode(encoded);
+    final decoded = usecase.tryDecode(encoded, expectedPin);
 
     expect(encoded.isNotEmpty, true);
     expect(decoded == str, true);
@@ -51,27 +45,28 @@ void main() {
     ];
 
     for (final item in values) {
-      testIteration(item.value, item.key);
+      testIteration(
+        item.value,
+        BasePin.pin(
+          pin: const HashUsecase().pinHash(item.key),
+        ),
+      );
     }
   });
 
   test('HashUsecase - Exception: Empty Pin', () {
     const expectedPin = BasePin.empty();
-    const usecase = HashUsecase(pin: expectedPin);
-
-    // when(
-    //   () => pinRepo.getPin(),
-    // ).thenReturn(expectedPin);
+    const usecase = HashUsecase();
 
     expect(
-      () => usecase.encode('Lorem ipsum dolor sit amet'),
+      () => usecase.encode('Lorem ipsum dolor sit amet', expectedPin),
       throwsA(
         isA<HashUsecaseEmptyPinError>(),
       ),
     );
 
     expect(
-      () => usecase.tryDecode('Lorem ipsum dolor sit amet'),
+      () => usecase.tryDecode('Lorem ipsum dolor sit amet', expectedPin),
       throwsA(
         isA<HashUsecaseEmptyPinError>(),
       ),
@@ -80,21 +75,17 @@ void main() {
 
   test('HashUsecase - Exception: Wrong pin length', () {
     final expectedPin = BasePin.pin(pin: '12345');
-    final usecase = HashUsecase(pin: expectedPin);
-
-    // when(
-    //   () => pinRepo.getPin(),
-    // ).thenReturn(expectedPin);
+    const usecase = HashUsecase();
 
     expect(
-      () => usecase.encode('Lorem ipsum dolor sit amet'),
+      () => usecase.encode('Lorem ipsum dolor sit amet', expectedPin),
       throwsA(
         isA<HashUsecaseWrongPinLengthError>(),
       ),
     );
 
     expect(
-      () => usecase.tryDecode('Lorem ipsum dolor sit amet'),
+      () => usecase.tryDecode('Lorem ipsum dolor sit amet', expectedPin),
       throwsA(
         isA<HashUsecaseWrongPinLengthError>(),
       ),

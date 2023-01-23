@@ -1,7 +1,7 @@
 import 'dart:isolate';
 import 'package:rxdart/rxdart.dart';
 
-import 'package:pwd/common/domain/base_pin.dart';
+import 'package:pwd/common/domain/pin_repository.dart';
 import 'package:pwd/common/domain/errors/app_error.dart';
 import 'package:pwd/common/domain/usecases/hash_usecase.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
@@ -20,10 +20,12 @@ abstract class NotesProviderUsecase {
 class NotesProviderUsecaseImpl implements NotesProviderUsecase {
   final NotesRepository repository;
   final HashUsecase hashUsecase;
+  final PinRepository pinRepository;
 
   NotesProviderUsecaseImpl({
     required this.repository,
     required this.hashUsecase,
+    required this.pinRepository,
   });
 
   late final _noteStream = BehaviorSubject<List<NoteItem>>();
@@ -31,6 +33,7 @@ class NotesProviderUsecaseImpl implements NotesProviderUsecase {
   @override
   Stream<List<NoteItem>> get noteStream => _noteStream.asyncMap(
         (items) async {
+          final pin = pinRepository.getPin();
           final port = ReceivePort();
 
           final isolate = await Isolate.spawn<List<dynamic>>(
@@ -39,6 +42,7 @@ class NotesProviderUsecaseImpl implements NotesProviderUsecase {
               port.sendPort,
               hashUsecase,
               items,
+              pin,
             ],
           );
 
@@ -62,11 +66,12 @@ class NotesProviderUsecaseImpl implements NotesProviderUsecase {
   @override
   Future<void> updateNoteItem(NoteItem noteItem) async {
     try {
+      final pin = pinRepository.getPin();
       final encoded = NoteItem.updatedItem(
         id: noteItem.id,
-        title: hashUsecase.encode(noteItem.title),
-        description: hashUsecase.encode(noteItem.description),
-        content: hashUsecase.encode(noteItem.content),
+        title: hashUsecase.encode(noteItem.title, pin),
+        description: hashUsecase.encode(noteItem.description, pin),
+        content: hashUsecase.encode(noteItem.content, pin),
       );
       await repository.updateNote(encoded);
       readNotes();
@@ -92,11 +97,12 @@ class NotesProviderUsecaseImpl implements NotesProviderUsecase {
     SendPort sendPort = parameters[0];
     final hashUsecase = parameters[1];
     final items = parameters[2];
+    final pin = parameters[3];
 
     NoteItem decryptedOrRaw(NoteItem item) {
-      final title = hashUsecase.tryDecode(item.title);
-      final description = hashUsecase.tryDecode(item.description);
-      final content = hashUsecase.tryDecode(item.content);
+      final title = hashUsecase.tryDecode(item.title, pin);
+      final description = hashUsecase.tryDecode(item.description, pin);
+      final content = hashUsecase.tryDecode(item.content, pin);
 
       if (title == null || description == null || content == null) {
         return NoteItem(
@@ -123,16 +129,6 @@ class NotesProviderUsecaseImpl implements NotesProviderUsecase {
 
     sendPort.send(result);
   }
-}
-
-class Message {
-  final BasePin pin;
-  final List<NoteItem> items;
-
-  Message({
-    required this.pin,
-    required this.items,
-  });
 }
 
 // Errors

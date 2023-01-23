@@ -30,6 +30,7 @@ class NotesDi extends DiModule {
       () => NotesProviderUsecaseImpl(
         repository: di.resolve(),
         hashUsecase: di.resolve(),
+        pinRepository: di.resolve(),
       ),
       lifeTime: const LifeTime.single(),
     );

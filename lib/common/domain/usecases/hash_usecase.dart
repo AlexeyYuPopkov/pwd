@@ -7,15 +7,12 @@ import 'package:pwd/common/domain/errors/app_error.dart';
 final _iv = encrypt.IV.fromLength(16);
 
 class HashUsecase {
-  final BasePin pin;
+  const HashUsecase();
 
-  const HashUsecase({required this.pin});
-
-  String encode(String str) {
+  String encode(String str, BasePin pin) {
     if (str.isEmpty) {
       return '';
     }
-    final pin = this.pin;
 
     if (pin is Pin) {
       return _encryptAES(str, pin.pin);
@@ -24,12 +21,10 @@ class HashUsecase {
     }
   }
 
-  String? tryDecode(String str) {
+  String? tryDecode(String str, BasePin pin) {
     if (str.isEmpty) {
       return '';
     }
-
-    final pin = this.pin;
 
     if (pin is Pin) {
       return _tryDecryptAES(str, pin.pin);
@@ -74,7 +69,8 @@ class HashUsecase {
     }
   }
 
-  static String pinHash(String pin) => md5.convert(utf8.encode(pin)).toString();
+  // static
+  String pinHash(String pin) => md5.convert(utf8.encode(pin)).toString();
 }
 
 // Errors
