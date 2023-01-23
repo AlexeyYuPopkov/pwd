@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pwd/common/domain/app_configuration_provider.dart';
 import 'package:pwd/common/domain/model/app_configuration.dart';
-import 'package:pwd/common/domain/pin_repository.dart';
+import 'package:pwd/common/domain/usecases/pin_usecase.dart';
 
 part 'developer_settings_page_state.dart';
 part 'developer_settings_page_event.dart';
@@ -10,12 +10,12 @@ part 'developer_settings_page_event.dart';
 class DeveloperSettingsPageBloc
     extends Bloc<DeveloperSettingsPageEvent, DeveloperSettingsPageState> {
   final AppConfigurationProvider appConfigurationProvider;
-  final PinRepository pinRepository;
+  final PinUsecase pinUsecase;
   AppConfiguration get data => state.data;
 
   DeveloperSettingsPageBloc({
     required this.appConfigurationProvider,
-    required this.pinRepository,
+    required this.pinUsecase,
   }) : super(
           DeveloperSettingsPageState.common(
             data: AppConfiguration.empty(),
@@ -59,7 +59,7 @@ class DeveloperSettingsPageBloc
 
       await appConfigurationProvider.setEnvironment(newData);
 
-      await pinRepository.dropPin();
+      await pinUsecase.dropPin();
 
       emit(DeveloperSettingsPageState.didSave(data: newData));
     } catch (e) {

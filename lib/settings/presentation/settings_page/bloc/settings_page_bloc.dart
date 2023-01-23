@@ -1,16 +1,16 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pwd/common/domain/pin_repository.dart';
+import 'package:pwd/common/domain/usecases/pin_usecase.dart';
 
 part 'settings_page_state.dart';
 part 'settings_page_event.dart';
 
 class SettingsPageBloc extends Bloc<SettingsPageEvent, SettingsPageState> {
-  final PinRepository pinRepository;
+  final PinUsecase pinUsecase;
   SettingsPageData get data => state.data;
 
   SettingsPageBloc({
-    required this.pinRepository,
+    required this.pinUsecase,
   }) : super(
           const SettingsPageState.common(
             data: SettingsPageData(),
@@ -30,7 +30,7 @@ class SettingsPageBloc extends Bloc<SettingsPageEvent, SettingsPageState> {
     try {
       emit(SettingsPageState.loading(data: data));
 
-      await pinRepository.dropPin();
+      await pinUsecase.dropPin();
 
       emit(SettingsPageState.didLogout(data: data));
     } catch (e) {

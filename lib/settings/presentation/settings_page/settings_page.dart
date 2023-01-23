@@ -42,7 +42,7 @@ class SettingsPage extends StatelessWidget with ShowErrorDialogMixin {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => SettingsPageBloc(
-        pinRepository: DiStorage.shared.resolve(),
+        pinUsecase: DiStorage.shared.resolve(),
       ),
       child: BlocListener<SettingsPageBloc, SettingsPageState>(
         listener: _listener,

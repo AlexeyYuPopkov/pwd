@@ -50,7 +50,7 @@ class NotesProviderUsecaseImpl implements NotesProviderUsecase {
             for (final item in items) decryptedOrRaw(item),
           ];
         },
-      );
+      ).asBroadcastStream();
 
   @override
   Future<void> readNotes() async {

@@ -29,7 +29,7 @@ class RemoteStorageSettingsPage extends StatelessWidget
       appBar: AppBar(title: Text(context.pageTitle)),
       body: BlocProvider(
         create: (_) => RemoteStorageSettingsPageBloc(
-          pinRepository: di.resolve(),
+          pinUsecase: di.resolve(),
           remoteStorageConfigurationProvider: di.resolve(),
           notesRepository: di.resolve(),
         ),

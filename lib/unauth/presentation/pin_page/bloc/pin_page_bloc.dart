@@ -2,9 +2,9 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pwd/common/domain/base_pin.dart';
 import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
-import 'package:pwd/common/domain/pin_repository.dart';
 import 'package:pwd/common/domain/remote_storage_configuration_provider.dart';
 import 'package:pwd/common/domain/usecases/hash_usecase.dart';
+import 'package:pwd/common/domain/usecases/pin_usecase.dart';
 import 'package:pwd/common/domain/usecases/should_create_remote_storage_file_usecase.dart';
 
 part 'pin_page_bloc_state.dart';
@@ -12,7 +12,7 @@ part 'pin_page_bloc_event.dart';
 
 class PinPageBloc extends Bloc<PinPageBlocEvent, PinPageBlocState> {
   final RemoteStorageConfigurationProvider remoteStorageConfigurationProvider;
-  final PinRepository pinRepository;
+  final PinUsecase pinUsecase;
   final HashUsecase hashUsecase;
   final ShouldCreateRemoteStorageFileUsecase
       shouldCreateRemoteStorageFileUsecase;
@@ -21,7 +21,7 @@ class PinPageBloc extends Bloc<PinPageBlocEvent, PinPageBlocState> {
 
   PinPageBloc({
     required this.remoteStorageConfigurationProvider,
-    required this.pinRepository,
+    required this.pinUsecase,
     required this.hashUsecase,
     required this.shouldCreateRemoteStorageFileUsecase,
   }) : super(
@@ -86,7 +86,7 @@ class PinPageBloc extends Bloc<PinPageBlocEvent, PinPageBlocState> {
 
     final pinHash = hashUsecase.pinHash(event.pin);
 
-    await pinRepository.setPin(
+    await pinUsecase.setPin(
       Pin(pin: pinHash),
     );
 

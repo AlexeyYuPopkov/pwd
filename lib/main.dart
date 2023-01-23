@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:pwd/common/domain/base_pin.dart';
-import 'package:pwd/common/domain/pin_repository.dart';
+import 'package:pwd/common/domain/usecases/pin_usecase.dart';
 import 'package:pwd/common/tools/di_storage/di_storage.dart';
 import 'package:pwd/theme/theme_data.dart';
 import 'package:pwd/common/presentation/di/app_di_modules.dart';
@@ -22,7 +22,7 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  PinRepository get pinRepository => DiStorage.shared.resolve();
+  PinUsecase get pinUsecase => DiStorage.shared.resolve();
 
   @override
   Widget build(BuildContext context) {
@@ -35,11 +35,11 @@ class MyApp extends StatelessWidget {
       debugShowMaterialGrid: false,
       home: BlockingLoadingIndicator(
         child: StreamBuilder<BasePin>(
-          stream: pinRepository.pinStream,
+          stream: pinUsecase.pinStream,
           builder: (context, snapshot) {
             final pin = snapshot.data;
 
-            if (pin is Pin && pinRepository.isValidPin) {
+            if (pin is Pin && pinUsecase.isValidPin) {
               AppDiModules.dropAuthModules();
               return const HomeTabbarPage();
             } else {

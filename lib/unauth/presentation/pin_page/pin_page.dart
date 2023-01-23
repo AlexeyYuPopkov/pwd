@@ -32,7 +32,7 @@ class PinPage extends StatelessWidget with ShowErrorDialogMixin {
         body: BlocProvider(
           create: (context) => PinPageBloc(
             remoteStorageConfigurationProvider: DiStorage.shared.resolve(),
-            pinRepository: DiStorage.shared.resolve(),
+            pinUsecase: DiStorage.shared.resolve(),
             hashUsecase: DiStorage.shared.resolve(),
             shouldCreateRemoteStorageFileUsecase: DiStorage.shared.resolve(),
           ),

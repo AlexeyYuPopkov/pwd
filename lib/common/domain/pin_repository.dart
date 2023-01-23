@@ -1,13 +1,9 @@
 import 'base_pin.dart';
 
 abstract class PinRepository {
+  void dropPin();
+
   BasePin getPin();
 
-  Future<void> setPin(Pin pin);
-
-  Future<void> dropPin();
-
-  Stream<BasePin> get pinStream;
-
-  bool get isValidPin;
+  void setPin(BasePin pin);
 }

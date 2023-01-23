@@ -7,7 +7,7 @@ import 'package:pwd/common/domain/pin_repository.dart';
 
 class HashUsecase {
   final PinRepository pinRepository;
-  final _iv = encrypt.IV.fromLength(16);
+  // final _iv = encrypt.IV.fromLength(16);
 
   HashUsecase({
     required this.pinRepository,
@@ -39,7 +39,7 @@ class HashUsecase {
     }
   }
 
-  String _encryptAES(String str, String pin) {
+  static String _encryptAES(String str, String pin) {
     const requiredPinHashLength = 32;
     if (pin.length != requiredPinHashLength) {
       throw const HashUsecaseError.wrongPinLength();
@@ -49,7 +49,8 @@ class HashUsecase {
       final encrypter = encrypt.Encrypter(encrypt.AES(key));
 
       if (str.isNotEmpty) {
-        final encrypted = encrypter.encrypt(str, iv: _iv);
+        final iv = encrypt.IV.fromLength(16);
+        final encrypted = encrypter.encrypt(str, iv: iv);
         return encrypted.base64;
       } else {
         return '';
@@ -59,7 +60,7 @@ class HashUsecase {
     }
   }
 
-  String? _tryDecryptAES(String str, String pin) {
+  static String? _tryDecryptAES(String str, String pin) {
     const requiredPinHashLength = 32;
     if (pin.length != requiredPinHashLength) {
       throw const HashUsecaseError.wrongPinLength();
@@ -68,7 +69,8 @@ class HashUsecase {
       final key = encrypt.Key.fromUtf8(pin);
       final encrypter = encrypt.Encrypter(encrypt.AES(key));
       final bytes = base64.decode(str);
-      return encrypter.decrypt(encrypt.Encrypted(bytes), iv: _iv);
+      final iv = encrypt.IV.fromLength(16);
+      return encrypter.decrypt(encrypt.Encrypted(bytes), iv: iv);
     } catch (_) {
       return null;
     }

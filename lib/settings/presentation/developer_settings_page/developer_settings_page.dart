@@ -31,7 +31,7 @@ class DeveloperSettingsPage extends StatelessWidget with ShowErrorDialogMixin {
         body: BlocProvider(
           create: (_) => DeveloperSettingsPageBloc(
             appConfigurationProvider: di.resolve(),
-            pinRepository: di.resolve(),
+            pinUsecase: di.resolve(),
           ),
           child: BlocConsumer<DeveloperSettingsPageBloc,
               DeveloperSettingsPageState>(

@@ -19,7 +19,8 @@ class Pin extends BasePin {
   Pin({required this.pin});
 
   @override
-  bool operator ==(Object other) => other is Pin && other.pin == pin;
+  bool operator ==(Object other) =>
+      other is Pin && other.pin == pin && other.creationDate == creationDate;
 
   @override
   int get hashCode => Object.hashAll({pin, creationDate});
