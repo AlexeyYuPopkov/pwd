@@ -13,7 +13,9 @@ abstract class NotesRepository {
 
   Future<void> updateDb({required String rawSql});
 
-  Future<String> exportNotes({required DateTime exportDate});
+  Future<int> lastRecordTimestamp();
+
+  Future<String> exportNotes();
 
   Future<int> importNotes({
     required Map<String, dynamic> jsonMap,
@@ -21,5 +23,5 @@ abstract class NotesRepository {
 
   Future<void> dropDb();
 
-  String createEmptyDbContent(DateTime creationDate);
+  String createEmptyDbContent(int timestamp);
 }

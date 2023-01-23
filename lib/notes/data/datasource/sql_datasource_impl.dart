@@ -145,13 +145,11 @@ class SqlDatasourceImpl implements NotesRepository {
   Future<List<NoteItem>> readNotes() async => _readNotesDataList();
 
   @override
-  Future<String> exportNotes({
-    required DateTime exportDate,
-  }) async {
+  Future<String> exportNotes() async {
     return jsonEncode(
       RemoteDbData(
         notes: await _readNotesDataList(),
-        date: exportDate,
+        timestamp: await lastRecordTimestamp(),
       ).toJson(),
     );
   }
@@ -220,10 +218,10 @@ class SqlDatasourceImpl implements NotesRepository {
       );
 
   @override
-  String createEmptyDbContent(DateTime creationDate) => jsonEncode(
+  String createEmptyDbContent(int timestamp) => jsonEncode(
         RemoteDbData(
           notes: const [],
-          date: creationDate,
+          timestamp: timestamp,
         ).toJson(),
       );
 
@@ -241,6 +239,21 @@ class SqlDatasourceImpl implements NotesRepository {
           ];
         },
       );
+
+  @override
+  Future<int> lastRecordTimestamp() async {
+    final results = await db.then(
+      (db) => db.rawQuery(
+        'SELECT MAX(timestamp) FROM ${CreateNotesTableIfAbsent.tableName}',
+      ),
+    );
+
+    final first = results.firstOrNull;
+
+    final timestamp = first?['MAX(timestamp)'];
+
+    return timestamp is int ? timestamp : 0;
+  }
 }
 
 abstract class DbRequest {

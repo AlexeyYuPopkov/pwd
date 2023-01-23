@@ -11,12 +11,11 @@ RemoteDbData _$RemoteDbDataFromJson(Map<String, dynamic> json) => RemoteDbData(
               ?.map((e) => NoteItemData.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
-      date:
-          json['date'] == null ? null : DateTime.parse(json['date'] as String),
+      timestamp: json['timestamp'] as int? ?? 0,
     );
 
 Map<String, dynamic> _$RemoteDbDataToJson(RemoteDbData instance) =>
     <String, dynamic>{
       'notes': instance.notes,
-      'date': instance.date?.toIso8601String(),
+      'timestamp': instance.timestamp,
     };

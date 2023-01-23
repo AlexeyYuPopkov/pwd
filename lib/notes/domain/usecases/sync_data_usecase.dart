@@ -42,7 +42,9 @@ class SyncDataUsecase {
       );
 
       if (jsonStr.trim().isEmpty) {
-        jsonStr = notesRepository.createEmptyDbContent(DateTime.now());
+        jsonStr = notesRepository.createEmptyDbContent(
+          DateTime.now().timestamp,
+        );
       }
 
       final jsonMap = jsonDecode(jsonStr);
@@ -53,7 +55,16 @@ class SyncDataUsecase {
 
       await notesProvider.readNotes();
 
-      await forcePushDb();
+      final localTimestamp = await notesRepository.lastRecordTimestamp();
+      final remoteTimestamp = jsonMap['timestamp'];
+
+      if (remoteTimestamp is! int) {
+        await forcePushDb();
+      } else {
+        if (localTimestamp != remoteTimestamp) {
+          await forcePushDb();
+        }
+      }
     } on NotFoundError catch (e) {
       throw SyncDataError.destinationNotFound(parentError: e);
     } catch (e) {
@@ -63,9 +74,7 @@ class SyncDataUsecase {
 
   Future<PutDbResponse?> forcePushDb() async {
     try {
-      final notesStr = await notesRepository.exportNotes(
-        exportDate: DateTime.now(),
-      );
+      final notesStr = await notesRepository.exportNotes();
 
       if (notesStr.isNotEmpty) {
         final sha = await _getSha();
@@ -86,14 +95,14 @@ class SyncDataUsecase {
 
       return overrideDbWithContent(
         contentStr: notesRepository.createEmptyDbContent(
-          DateTime.now(),
+          DateTime.now().timestamp,
         ),
         sha: ssa,
       );
     } catch (e) {
       return overrideDbWithContent(
         contentStr: notesRepository.createEmptyDbContent(
-          DateTime.now(),
+          DateTime.now().timestamp,
         ),
         sha: null,
       );
@@ -139,4 +148,8 @@ class SyncDataUsecase {
       throw SyncDataError.unknown(parentError: e);
     }
   }
+}
+
+extension on DateTime {
+  int get timestamp => millisecondsSinceEpoch * 1000;
 }

@@ -10,12 +10,12 @@ class RemoteDbData {
   @JsonKey(name: 'notes', defaultValue: [])
   final List<NoteItemData> notes;
 
-  @JsonKey(name: 'date')
-  final DateTime? date;
+  @JsonKey(name: 'timestamp', defaultValue: 0)
+  final int timestamp;
 
   const RemoteDbData({
     required this.notes,
-    required this.date,
+    required this.timestamp,
   });
 
   factory RemoteDbData.fromJson(Map<String, dynamic> json) =>
