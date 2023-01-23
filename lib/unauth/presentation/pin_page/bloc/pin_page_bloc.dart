@@ -84,7 +84,7 @@ class PinPageBloc extends Bloc<PinPageBlocEvent, PinPageBlocState> {
   ) async {
     emit(PinPageBlocState.loading(data: data));
 
-    final pinHash = hashUsecase.pinHash(event.pin);
+    final pinHash = HashUsecase.pinHash(event.pin);
 
     await pinUsecase.setPin(
       Pin(pin: pinHash),

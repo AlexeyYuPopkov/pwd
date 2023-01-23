@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-abstract class NoteItem extends Equatable {
+class NoteItem extends Equatable {
   final int? id;
   final String title;
   final String description;

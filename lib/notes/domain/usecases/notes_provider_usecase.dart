@@ -1,6 +1,9 @@
-import 'package:pwd/common/domain/usecases/hash_usecase.dart';
+import 'dart:isolate';
 import 'package:rxdart/rxdart.dart';
+
+import 'package:pwd/common/domain/base_pin.dart';
 import 'package:pwd/common/domain/errors/app_error.dart';
+import 'package:pwd/common/domain/usecases/hash_usecase.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
 import 'package:pwd/notes/domain/notes_repository.dart';
 
@@ -26,29 +29,23 @@ class NotesProviderUsecaseImpl implements NotesProviderUsecase {
   late final _noteStream = BehaviorSubject<List<NoteItem>>();
 
   @override
-  Stream<List<NoteItem>> get noteStream => _noteStream.map(
-        (items) {
-          NoteItem decryptedOrRaw(NoteItem item) {
-            final title = hashUsecase.tryDecode(item.title);
-            final description = hashUsecase.tryDecode(item.description);
-            final content = hashUsecase.tryDecode(item.content);
+  Stream<List<NoteItem>> get noteStream => _noteStream.asyncMap(
+        (items) async {
+          final port = ReceivePort();
 
-            if (title == null || description == null || content == null) {
-              return item;
-            } else {
-              return NoteItem.decrypted(
-                id: item.id,
-                title: title,
-                description: description,
-                content: content,
-                timestamp: item.timestamp,
-              );
-            }
-          }
+          final isolate = await Isolate.spawn<List<dynamic>>(
+            _parse,
+            [
+              port.sendPort,
+              hashUsecase,
+              items,
+            ],
+          );
 
-          return [
-            for (final item in items) decryptedOrRaw(item),
-          ];
+          final result = await port.first as List<NoteItem>;
+          isolate.kill(priority: Isolate.immediate);
+
+          return result;
         },
       ).asBroadcastStream();
 
@@ -90,6 +87,52 @@ class NotesProviderUsecaseImpl implements NotesProviderUsecase {
       throw NotesProviderError.updated(parentError: e);
     }
   }
+
+  static void _parse(List parameters) {
+    SendPort sendPort = parameters[0];
+    final hashUsecase = parameters[1];
+    final items = parameters[2];
+
+    NoteItem decryptedOrRaw(NoteItem item) {
+      final title = hashUsecase.tryDecode(item.title);
+      final description = hashUsecase.tryDecode(item.description);
+      final content = hashUsecase.tryDecode(item.content);
+
+      if (title == null || description == null || content == null) {
+        return NoteItem(
+          id: item.id,
+          title: item.title,
+          description: item.description,
+          content: item.content,
+          timestamp: item.timestamp,
+        );
+      } else {
+        return NoteItem.decrypted(
+          id: item.id,
+          title: title,
+          description: description,
+          content: content,
+          timestamp: item.timestamp,
+        );
+      }
+    }
+
+    final result = [
+      for (final item in items) decryptedOrRaw(item),
+    ];
+
+    sendPort.send(result);
+  }
+}
+
+class Message {
+  final BasePin pin;
+  final List<NoteItem> items;
+
+  Message({
+    required this.pin,
+    required this.items,
+  });
 }
 
 // Errors

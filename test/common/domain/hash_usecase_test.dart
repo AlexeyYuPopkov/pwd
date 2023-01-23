@@ -7,17 +7,16 @@ import 'package:pwd/common/domain/usecases/hash_usecase.dart';
 class MockPinRepository extends Mock implements PinRepository {}
 
 void main() {
-  late final PinRepository pinRepo = MockPinRepository();
+  // late final PinRepository pinRepo = MockPinRepository();
 
   void testIteration(String str, String pin) {
-    final usecase = HashUsecase(pinRepository: pinRepo);
-
-    final pinHash = usecase.pinHash(pin);
+    final pinHash = HashUsecase.pinHash(pin);
     final expectedPin = BasePin.pin(pin: pinHash);
+    final usecase = HashUsecase(pin: expectedPin);
 
-    when(
-      () => pinRepo.getPin(),
-    ).thenReturn(expectedPin);
+    // when(
+    //   () => pinRepo.getPin(),
+    // ).thenReturn(expectedPin);
 
     final encoded = usecase.encode(str);
 
@@ -57,13 +56,12 @@ void main() {
   });
 
   test('HashUsecase - Exception: Empty Pin', () {
-    final usecase = HashUsecase(pinRepository: pinRepo);
-
     const expectedPin = BasePin.empty();
+    const usecase = HashUsecase(pin: expectedPin);
 
-    when(
-      () => pinRepo.getPin(),
-    ).thenReturn(expectedPin);
+    // when(
+    //   () => pinRepo.getPin(),
+    // ).thenReturn(expectedPin);
 
     expect(
       () => usecase.encode('Lorem ipsum dolor sit amet'),
@@ -81,13 +79,12 @@ void main() {
   });
 
   test('HashUsecase - Exception: Wrong pin length', () {
-    final usecase = HashUsecase(pinRepository: pinRepo);
-
     final expectedPin = BasePin.pin(pin: '12345');
+    final usecase = HashUsecase(pin: expectedPin);
 
-    when(
-      () => pinRepo.getPin(),
-    ).thenReturn(expectedPin);
+    // when(
+    //   () => pinRepo.getPin(),
+    // ).thenReturn(expectedPin);
 
     expect(
       () => usecase.encode('Lorem ipsum dolor sit amet'),

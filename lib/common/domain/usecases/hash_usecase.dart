@@ -3,21 +3,19 @@ import 'package:crypto/crypto.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:pwd/common/domain/base_pin.dart';
 import 'package:pwd/common/domain/errors/app_error.dart';
-import 'package:pwd/common/domain/pin_repository.dart';
+
+final _iv = encrypt.IV.fromLength(16);
 
 class HashUsecase {
-  final PinRepository pinRepository;
-  // final _iv = encrypt.IV.fromLength(16);
+  final BasePin pin;
 
-  HashUsecase({
-    required this.pinRepository,
-  });
+  const HashUsecase({required this.pin});
 
   String encode(String str) {
     if (str.isEmpty) {
       return '';
     }
-    final pin = pinRepository.getPin();
+    final pin = this.pin;
 
     if (pin is Pin) {
       return _encryptAES(str, pin.pin);
@@ -30,7 +28,8 @@ class HashUsecase {
     if (str.isEmpty) {
       return '';
     }
-    final pin = pinRepository.getPin();
+
+    final pin = this.pin;
 
     if (pin is Pin) {
       return _tryDecryptAES(str, pin.pin);
@@ -39,7 +38,7 @@ class HashUsecase {
     }
   }
 
-  static String _encryptAES(String str, String pin) {
+  String _encryptAES(String str, String pin) {
     const requiredPinHashLength = 32;
     if (pin.length != requiredPinHashLength) {
       throw const HashUsecaseError.wrongPinLength();
@@ -49,8 +48,7 @@ class HashUsecase {
       final encrypter = encrypt.Encrypter(encrypt.AES(key));
 
       if (str.isNotEmpty) {
-        final iv = encrypt.IV.fromLength(16);
-        final encrypted = encrypter.encrypt(str, iv: iv);
+        final encrypted = encrypter.encrypt(str, iv: _iv);
         return encrypted.base64;
       } else {
         return '';
@@ -60,7 +58,7 @@ class HashUsecase {
     }
   }
 
-  static String? _tryDecryptAES(String str, String pin) {
+  String? _tryDecryptAES(String str, String pin) {
     const requiredPinHashLength = 32;
     if (pin.length != requiredPinHashLength) {
       throw const HashUsecaseError.wrongPinLength();
@@ -69,14 +67,14 @@ class HashUsecase {
       final key = encrypt.Key.fromUtf8(pin);
       final encrypter = encrypt.Encrypter(encrypt.AES(key));
       final bytes = base64.decode(str);
-      final iv = encrypt.IV.fromLength(16);
-      return encrypter.decrypt(encrypt.Encrypted(bytes), iv: iv);
+
+      return encrypter.decrypt(encrypt.Encrypted(bytes), iv: _iv);
     } catch (_) {
       return null;
     }
   }
 
-  String pinHash(String pin) => md5.convert(utf8.encode(pin)).toString();
+  static String pinHash(String pin) => md5.convert(utf8.encode(pin)).toString();
 }
 
 // Errors

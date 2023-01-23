@@ -20,19 +20,26 @@ class UnauthDiModule extends DiModule {
   void bind(DiStorage di) {
     final PinRepository pinRepository = PinRepositoryImpl();
 
+    di.bind<PinRepository>(
+      module: this,
+      () => pinRepository,
+      lifeTime: const LifeTime.single(),
+    );
+
     di.bind<PinUsecase>(
       module: this,
       () => PinUsecaseImpl(
         validDuration: const Duration(minutes: 10),
-        repository: pinRepository,
+        repository: di.resolve(),
       ),
       lifeTime: const LifeTime.single(),
     );
 
     di.bind<HashUsecase>(
       module: this,
-      () => HashUsecase(pinRepository: pinRepository),
-      lifeTime: const LifeTime.single(),
+      () => HashUsecase(
+        pin: pinRepository.getPin(),
+      ),
     );
 
     di.bind<AppConfigurationProvider>(
