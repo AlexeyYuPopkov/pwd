@@ -19,6 +19,8 @@ class SyncDataUsecase {
   final NotesRepository notesRepository;
   final NotesProviderUsecase notesProvider;
 
+  String? lastSha;
+
   SyncDataUsecase({
     required this.remoteStorageConfigurationProvider,
     required this.remoteStorageRepository,
@@ -33,6 +35,8 @@ class SyncDataUsecase {
       final result = await remoteStorageRepository.getDb(
         configuration: configuration,
       );
+
+      lastSha = result.sha;
 
       final base64Str = result.content.replaceAll(RegExp(r'\s+'), '');
 
@@ -77,7 +81,7 @@ class SyncDataUsecase {
       final notesStr = await notesRepository.exportNotes();
 
       if (notesStr.isNotEmpty) {
-        final sha = await _getSha();
+        final sha = lastSha ?? await _getSha();
         return overrideDbWithContent(contentStr: notesStr, sha: sha);
       } else {
         return null;
@@ -91,7 +95,7 @@ class SyncDataUsecase {
 
   Future<PutDbResponse?> createOrOverrideDb() async {
     try {
-      final ssa = await _getSha();
+      final ssa = lastSha ?? await _getSha();
 
       return overrideDbWithContent(
         contentStr: notesRepository.createEmptyDbContent(
