@@ -101,6 +101,8 @@ class SetRemoteConfigRobot {
 
     await tester.tap(remoteStorageSettingsMenuItem);
 
+    await tester.pumpAndSettle();
+    
     final dropRemoteStorageSettingsButton = find.byKey(
       const Key('test_drop_remote_storage_settings_button'),
     );
