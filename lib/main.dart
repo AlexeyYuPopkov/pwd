@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       theme: lightThemeData,
       themeMode: ThemeMode.light,
-      debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: true,
       showPerformanceOverlay: false,
       showSemanticsDebugger: false,
       debugShowMaterialGrid: false,

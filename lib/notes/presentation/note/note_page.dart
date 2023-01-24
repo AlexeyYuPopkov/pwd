@@ -80,14 +80,17 @@ class NotePage extends StatelessWidget with ShowErrorDialogMixin {
                 builder: (context, state) {
                   return RefreshIndicator(
                     onRefresh: () async => _onPullToRefresh(context),
-                    child: ListView.builder(
+                    child: ListView.separated(
                       physics: const AlwaysScrollableScrollPhysics(),
+                      itemCount: state.data.notes.length,
                       itemBuilder: (context, index) => NoteListItemWidget(
                         note: state.data.notes[index],
                         onDetailsButton: _onDetailsButton,
                         onEditButton: _onEditButton,
                       ),
-                      itemCount: state.data.notes.length,
+                      separatorBuilder: (context, index) => const Divider(
+                        height: CommonSize.thickness,
+                      ),
                     ),
                   );
                 },

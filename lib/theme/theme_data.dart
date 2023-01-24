@@ -9,6 +9,9 @@ final lightThemeData = ThemeData.light().copyWith(
   colorScheme: ColorScheme.fromSeed(
     seedColor: Colors.lightGreenAccent,
   ),
+  navigationRailTheme: const NavigationRailThemeData(
+    backgroundColor: Colors.white,
+  ),
   textTheme: const TextTheme().copyWith(
     titleLarge: const TextStyle(
       fontSize: TextSizes.large,
