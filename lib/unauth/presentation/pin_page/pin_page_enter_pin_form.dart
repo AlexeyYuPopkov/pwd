@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pwd/theme/common_size.dart';
@@ -25,30 +24,58 @@ class _PinPageEnterPinFormState extends State<PinPageEnterPinForm> {
 
   @override
   Widget build(BuildContext context) {
+    const maxWidth = 400.0;
     return Padding(
       padding: const EdgeInsets.all(CommonSize.indent2x),
       child: Form(
         key: formKey,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const SizedBox(height: CommonSize.indent2x),
-            TextFormField(
-              key: const Key('test_pin_text_field_key'),
-              controller: pinController,
-              decoration: InputDecoration(
-                labelText: context.pinTextFieldTitle,
+        child: LayoutBuilder(builder: (context, constraints) {
+          final topSpace = (constraints.maxHeight ~/ 3).toDouble();
+          return CustomScrollView(
+            slivers: [
+              SliverToBoxAdapter(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(height: topSpace),
+                    ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: maxWidth),
+                      child: TextFormField(
+                        key: const Key('test_pin_text_field_key'),
+                        controller: pinController,
+                        decoration: InputDecoration(
+                          labelText: context.pinTextFieldTitle,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: CommonSize.indent2x),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: CommonSize.indent2x),
-            CupertinoButton(
-              key: const Key('test_on_auth_zone_button'),
-              onPressed: () => _onLogin(context),
-              child: Text(context.saveButtonTitle),
-            ),
-            const SizedBox(height: CommonSize.indent2x),
-          ],
-        ),
+              SliverFillRemaining(
+                hasScrollBody: false,
+                child: SafeArea(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      left: CommonSize.indent2x,
+                      right: CommonSize.indent2x,
+                      bottom: CommonSize.indent4x,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        OutlinedButton(
+                          onPressed: () => _onLogin(context),
+                          child: Text(context.saveButtonTitle),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
+        }),
       ),
     );
   }
