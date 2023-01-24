@@ -7,7 +7,7 @@ const _textColor = Color.fromARGB(255, 66, 66, 66);
 final lightThemeData = ThemeData.light().copyWith(
   appBarTheme: const AppBarTheme(elevation: 0),
   colorScheme: ColorScheme.fromSeed(
-    seedColor: Colors.lightGreenAccent,
+    seedColor: Colors.white,
   ),
   navigationRailTheme: const NavigationRailThemeData(
     backgroundColor: Colors.white,
