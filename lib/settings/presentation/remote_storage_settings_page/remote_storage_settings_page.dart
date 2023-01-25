@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
 
 import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
+import 'package:pwd/common/presentation/dialogs/dialog_helper.dart';
 import 'package:pwd/common/presentation/dialogs/show_error_dialog_mixin.dart';
 import 'package:pwd/common/tools/di_storage/di_storage.dart';
 import 'package:pwd/theme/common_size.dart';
@@ -11,7 +12,7 @@ import 'package:pwd/theme/common_size.dart';
 import 'bloc/remote_storage_settings_page_bloc.dart';
 
 class RemoteStorageSettingsPage extends StatelessWidget
-    with ShowErrorDialogMixin {
+    with ShowErrorDialogMixin, DialogHelper {
   const RemoteStorageSettingsPage({super.key});
 
   void _listener(BuildContext context, RemoteStorageSettingsPageState state) {
@@ -48,42 +49,52 @@ class RemoteStorageSettingsPage extends StatelessWidget
                 ),
               );
             }
-            return SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _ListItemWidget(
-                    title: context.tokenLabelTitle,
-                    subtitle: state.data.token,
-                  ),
-                  _ListItemWidget(
-                    title: context.repoLabelTitle,
-                    subtitle: state.data.repo,
-                  ),
-                  _ListItemWidget(
-                    title: context.ownerLabelTitle,
-                    subtitle: state.data.owner,
-                  ),
-                  _ListItemWidget(
-                    title: context.branchLabelTitle,
-                    subtitle: state.data.branch ?? '',
-                  ),
-                  _ListItemWidget(
-                    title: context.fileLabelTitle,
-                    subtitle: state.data.fileName,
-                  ),
-                  const SizedBox(height: CommonSize.indent2x),
-                  Center(
-                    child: CupertinoButton(
-                      key: const Key(
-                        'test_drop_remote_storage_settings_button',
+            return CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _ListItemWidget(
+                        title: context.tokenLabelTitle,
+                        subtitle: state.data.token,
                       ),
-                      child: Text(context.dropButtonTitle),
-                      onPressed: () => _onDrop(context),
-                    ),
+                      _ListItemWidget(
+                        title: context.repoLabelTitle,
+                        subtitle: state.data.repo,
+                      ),
+                      _ListItemWidget(
+                        title: context.ownerLabelTitle,
+                        subtitle: state.data.owner,
+                      ),
+                      _ListItemWidget(
+                        title: context.branchLabelTitle,
+                        subtitle: state.data.branch ?? '',
+                      ),
+                      _ListItemWidget(
+                        title: context.fileLabelTitle,
+                        subtitle: state.data.fileName,
+                      ),
+                      const SizedBox(height: CommonSize.indent2x),
+                    ],
                   ),
-                ],
-              ),
+                ),
+                SliverFillRemaining(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      OutlinedButton(
+                        key: const Key(
+                          'test_drop_remote_storage_settings_button',
+                        ),
+                        child: Text(context.dropButtonTitle),
+                        onPressed: () => _onDrop(context),
+                      ),
+                      const SizedBox(height: CommonSize.indent2x),
+                    ],
+                  ),
+                ),
+              ],
             );
           },
         ),
@@ -91,10 +102,18 @@ class RemoteStorageSettingsPage extends StatelessWidget
     );
   }
 
-  void _onDrop(BuildContext context) =>
-      context.read<RemoteStorageSettingsPageBloc>().add(
-            const RemoteStorageSettingsPageEvent.drop(),
-          );
+  void _onDrop(BuildContext context) {
+    showOkCancelDialog(
+      context,
+      title: context.dropConfirmationMessage,
+      onOk: (dialogContext) {
+        Navigator.of(dialogContext).pop();
+        context.read<RemoteStorageSettingsPageBloc>().add(
+              const RemoteStorageSettingsPageEvent.drop(),
+            );
+      },
+    );
+  }
 }
 
 class _ListItemWidget extends StatelessWidget {
@@ -145,4 +164,6 @@ extension on BuildContext {
   String get fileLabelTitle => 'File name:';
 
   String get dropButtonTitle => 'Drop';
+  String get dropConfirmationMessage =>
+      'Do you realy whant to drop remote storage settings?';
 }

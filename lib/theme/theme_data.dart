@@ -12,6 +12,16 @@ final lightThemeData = ThemeData.light().copyWith(
   navigationRailTheme: const NavigationRailThemeData(
     backgroundColor: Colors.white,
   ),
+  outlinedButtonTheme: const OutlinedButtonThemeData(
+    style: ButtonStyle(
+      minimumSize: MaterialStatePropertyAll(Size(150, 44)),
+      textStyle: MaterialStatePropertyAll(
+        TextStyle(
+          fontSize: TextSizes.normal,
+        ),
+      ),
+    ),
+  ),
   textTheme: const TextTheme().copyWith(
     titleLarge: const TextStyle(
       fontSize: TextSizes.large,

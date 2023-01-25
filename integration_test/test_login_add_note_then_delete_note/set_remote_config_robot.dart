@@ -102,7 +102,7 @@ class SetRemoteConfigRobot {
     await tester.tap(remoteStorageSettingsMenuItem);
 
     await tester.pumpAndSettle();
-    
+
     final dropRemoteStorageSettingsButton = find.byKey(
       const Key('test_drop_remote_storage_settings_button'),
     );
@@ -110,6 +110,15 @@ class SetRemoteConfigRobot {
     await tester.ensureVisible(dropRemoteStorageSettingsButton);
 
     await tester.tap(dropRemoteStorageSettingsButton);
+
+    await tester.pumpAndSettle();
+
+    final confirmationDialogOkButton =
+        find.byKey(const Key('test_ok_cancel_dialog_ok_button'));
+
+    await tester.ensureVisible(confirmationDialogOkButton);
+
+    await tester.tap(confirmationDialogOkButton);
 
     await Future.delayed(const Duration(seconds: 1));
 

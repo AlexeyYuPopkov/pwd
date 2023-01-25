@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pwd/common/presentation/dialogs/dialog_helper.dart';
@@ -11,6 +10,7 @@ import 'package:pwd/notes/presentation/tools/crypt_error_message_provider.dart';
 import 'package:pwd/notes/presentation/tools/notes_provider_error_message_provider.dart';
 import 'package:pwd/notes/presentation/tools/sync_data_error_message_provider.dart';
 import 'package:pwd/theme/common_size.dart';
+import 'package:rxdart/subjects.dart';
 
 import 'bloc/edit_note_bloc.dart';
 
@@ -39,6 +39,8 @@ class EditNotePage extends StatelessWidget
   final NoteItem noteItem;
 
   final Future Function(BuildContext, Object) onRoute;
+
+  final isSubmitEnabledStream = BehaviorSubject.seeded(false);
 
   EditNotePage({
     Key? key,
@@ -96,6 +98,7 @@ class EditNotePage extends StatelessWidget
                   child: _Form(
                     key: formKey,
                     noteItem: state.data.noteItem,
+                    isSubmitEnabledStream: isSubmitEnabledStream,
                   ),
                 ),
                 SliverFillRemaining(
@@ -115,17 +118,25 @@ class EditNotePage extends StatelessWidget
                             children: [
                               Flexible(
                                 fit: FlexFit.tight,
-                                child: CupertinoButton(
-                                  key: const Key(
-                                    'test_edit_note_save_button_key',
-                                  ),
-                                  onPressed: () => _onSave(context),
-                                  child: Text(context.saveButtonTitle),
-                                ),
+                                child: StreamBuilder<bool>(
+                                    initialData: false,
+                                    stream: isSubmitEnabledStream,
+                                    builder: (context, snapshot) {
+                                      return OutlinedButton(
+                                        key: const Key(
+                                          'test_edit_note_save_button_key',
+                                        ),
+                                        onPressed: snapshot.data ?? false
+                                            ? () => _onSave(context)
+                                            : null,
+                                        child: Text(context.saveButtonTitle),
+                                      );
+                                    }),
                               ),
+                              const SizedBox(width: CommonSize.indent2x),
                               Flexible(
                                 fit: FlexFit.tight,
-                                child: CupertinoButton(
+                                child: OutlinedButton(
                                   key: const Key(
                                     'test_edit_note_delete_button_key',
                                   ),
@@ -186,10 +197,12 @@ class EditNotePage extends StatelessWidget
 
 class _Form extends StatefulWidget {
   final NoteItem noteItem;
+  final BehaviorSubject isSubmitEnabledStream;
 
   const _Form({
     Key? key,
     required this.noteItem,
+    required this.isSubmitEnabledStream,
   }) : super(key: key);
 
   @override
@@ -222,6 +235,7 @@ class _FormState extends State<_Form> {
       padding: const EdgeInsets.all(CommonSize.indent2x),
       child: Form(
         key: formKey,
+        onChanged: _shouldChangeSubmitEnabledStatusIfNeeded,
         child: Column(
           children: [
             const SizedBox(height: CommonSize.indent2x),
@@ -256,6 +270,19 @@ class _FormState extends State<_Form> {
       ),
     );
   }
+
+  void _shouldChangeSubmitEnabledStatusIfNeeded() {
+    final checkResult = checkIsSubmitEnabled();
+
+    if (checkResult != widget.isSubmitEnabledStream.value) {
+      widget.isSubmitEnabledStream.add(checkResult);
+    }
+  }
+
+  bool checkIsSubmitEnabled() =>
+      widget.noteItem.title != titleController.text ||
+      widget.noteItem.description != descriptionController.text ||
+      widget.noteItem.content != contentController.text;
 
   int get calculatedMaxLines => contentController.text.split('\n').length;
 }

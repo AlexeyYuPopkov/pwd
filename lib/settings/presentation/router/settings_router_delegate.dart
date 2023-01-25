@@ -59,7 +59,7 @@ class SettingsRouterDelegate extends RouterDelegate
       return context.navigator
           .push(
             MaterialPageRoute(
-              builder: (_) => const DeveloperSettingsPage(),
+              builder: (_) => DeveloperSettingsPage(),
             ),
           )
           .then(

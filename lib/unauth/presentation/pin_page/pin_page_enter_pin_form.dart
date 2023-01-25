@@ -65,6 +65,7 @@ class _PinPageEnterPinFormState extends State<PinPageEnterPinForm> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         OutlinedButton(
+                          key: const Key('test_on_auth_zone_button'),
                           onPressed: () => _onLogin(context),
                           child: Text(context.saveButtonTitle),
                         ),
