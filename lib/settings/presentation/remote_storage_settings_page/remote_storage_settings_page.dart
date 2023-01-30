@@ -69,7 +69,7 @@ class RemoteStorageSettingsPage extends StatelessWidget
                       ),
                       _ListItemWidget(
                         title: context.branchLabelTitle,
-                        subtitle: state.data.branch ?? '',
+                        subtitle: state.data.branch ?? context.defaultBranch,
                       ),
                       _ListItemWidget(
                         title: context.fileLabelTitle,
@@ -161,6 +161,7 @@ extension on BuildContext {
   String get repoLabelTitle => 'Repo:';
   String get ownerLabelTitle => 'Owner:';
   String get branchLabelTitle => 'Branch:';
+  String get defaultBranch => 'default (main)';
   String get fileLabelTitle => 'File name:';
 
   String get dropButtonTitle => 'Drop';

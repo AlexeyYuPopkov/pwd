@@ -24,7 +24,6 @@ class NotePageRobot {
   }
 
   Future<void> toEditNoteWithTextPage(String noteTitle) async {
-
     final title = find.text(noteTitle);
 
     final cell = find.ancestor(

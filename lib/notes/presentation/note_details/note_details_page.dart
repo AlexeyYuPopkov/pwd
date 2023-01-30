@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pwd/common/presentation/dashed_divider.dart';
 import 'package:pwd/common/presentation/dialogs/dialog_helper.dart';
 import 'package:pwd/common/presentation/dialogs/show_error_dialog_mixin.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
@@ -17,6 +18,9 @@ class NoteDetailsPage extends StatelessWidget with ShowErrorDialogMixin {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    const dashWidth = 2.0;
+    const spaceWidth = 2.0;
+    const thickness = 0.5;
 
     return Scaffold(
       appBar: AppBar(
@@ -32,32 +36,30 @@ class NoteDetailsPage extends StatelessWidget with ShowErrorDialogMixin {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      if (noteItem.title.isNotEmpty)
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            top: CommonSize.indent2x,
-                          ),
-                          child: NoteLine(
-                            text: noteItem.title,
-                            style: theme.textTheme.bodyLarge,
-                          ),
+                      if (noteItem.title.isNotEmpty) ...[
+                        const SizedBox(height: CommonSize.indent2x),
+                        NoteLine(
+                          text: noteItem.title,
+                          style: theme.textTheme.bodyLarge,
                         ),
-                      if (noteItem.description.isNotEmpty)
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            top: CommonSize.indent2x,
-                          ),
-                          child: NoteLine(
-                            text: noteItem.description,
-                            style: theme.textTheme.bodyLarge,
-                          ),
+                      ],
+                      if (noteItem.description.isNotEmpty) ...[
+                        const SizedBox(height: CommonSize.indent2x),
+                        NoteLine(
+                          text: noteItem.description,
+                          style: theme.textTheme.bodyLarge,
                         ),
+                        const Divider(thickness: thickness),
+                      ],
                       const SizedBox(height: CommonSize.indent2x),
                       ...tags()
                           .map(
                             (str) => str.isEmpty
-                                ? const SizedBox(
+                                ? const DashedDivider(
                                     height: CommonSize.indent2x,
+                                    thickness: thickness,
+                                    dash: dashWidth,
+                                    disaredSpace: spaceWidth,
                                   )
                                 : NoteLine(
                                     text: str,
@@ -110,7 +112,7 @@ class NoteLine extends StatelessWidget with DialogHelper {
             minSize: CommonSize.smallIcon,
             onPressed: () => _onCopyText(context, text: text),
             child: const Padding(
-              padding: EdgeInsets.symmetric(horizontal: CommonSize.indent),
+              padding: EdgeInsets.only(left: CommonSize.indent2x),
               child: Icon(
                 Icons.copy_sharp,
                 size: CommonSize.smallIcon,
