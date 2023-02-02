@@ -88,7 +88,7 @@ class NotePage extends StatelessWidget with ShowErrorDialogMixin {
                         onDetailsButton: _onDetailsButton,
                         onEditButton: _onEditButton,
                       ),
-                      separatorBuilder: (context, index) => const Divider(
+                      separatorBuilder: (_, __) => const Divider(
                         height: CommonSize.thickness,
                       ),
                     ),

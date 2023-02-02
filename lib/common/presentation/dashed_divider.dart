@@ -130,7 +130,13 @@ class TestRenderObject extends RenderBox {
     required double dash,
     required double disaredSpace,
     required Color color,
-  })  : _height = height,
+  })  : assert(height >= 0),
+        assert(indent >= 0),
+        assert(endIndent >= 0),
+        assert(dash >= 0),
+        assert(disaredSpace >= 0),
+        assert(thickness >= 0),
+        _height = height,
         _indent = indent,
         _endIndent = endIndent,
         _disaredSpace = disaredSpace,
@@ -140,13 +146,16 @@ class TestRenderObject extends RenderBox {
 
   @override
   void performLayout() {
-    size = constraints.constrain(
-      Size(
-        _sizeFromWidth(constraints.maxWidth),
-        height,
-      ),
-    );
+    size = computeDryLayout(constraints);
   }
+
+  @override
+  Size computeDryLayout(BoxConstraints constraints) => constraints.constrain(
+        Size(
+          _sizeFromWidth(constraints.maxWidth),
+          height,
+        ),
+      );
 
   double _sizeFromWidth(double width) => max(0.0, width - indent - endIndent);
 
@@ -155,6 +164,7 @@ class TestRenderObject extends RenderBox {
     final canvas = context.canvas;
 
     canvas.save();
+
     canvas.translate(offset.dx, offset.dy + height ~/ 2);
     final paint = Paint()
       ..color = color
