@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pwd/common/domain/time_formatter/time_formatter.dart';
+import 'package:pwd/common/presentation/clock/clocks_widget/clocks_widget.dart';
 import 'package:pwd/theme/common_size.dart';
 
 import 'bloc/pin_page_bloc.dart';
 
 class PinPageEnterPinForm extends StatefulWidget {
-  const PinPageEnterPinForm({Key? key}) : super(key: key);
+  final TimeFormatter timeFormatter;
+  const PinPageEnterPinForm({
+    Key? key,
+    required this.timeFormatter,
+  }) : super(key: key);
 
   @override
   State<PinPageEnterPinForm> createState() => _PinPageEnterPinFormState();
@@ -37,7 +43,14 @@ class _PinPageEnterPinFormState extends State<PinPageEnterPinForm> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SizedBox(height: topSpace),
+                    SizedBox(
+                      height: topSpace,
+                      child: Center(
+                        child: RepaintBoundary(
+                          child: ClocksWidget(formatter: widget.timeFormatter),
+                        ),
+                      ),
+                    ),
                     ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: maxWidth),
                       child: TextFormField(

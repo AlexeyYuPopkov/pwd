@@ -15,6 +15,8 @@ abstract class SettingsRouteData {
       OnRemoteStorageSettingsPage;
 
   factory SettingsRouteData.onDeveloperSettingsPage() = OnDeveloperSettingsPage;
+
+  factory SettingsRouteData.onClockSettingsPage() = OnClockSettingsPage;
 }
 
 class OnRemoteStorageSettingsPage extends SettingsRouteData {
@@ -23,6 +25,10 @@ class OnRemoteStorageSettingsPage extends SettingsRouteData {
 
 class OnDeveloperSettingsPage extends SettingsRouteData {
   const OnDeveloperSettingsPage();
+}
+
+class OnClockSettingsPage extends SettingsRouteData {
+  const OnClockSettingsPage();
 }
 
 class SettingsPage extends StatelessWidget with ShowErrorDialogMixin {
@@ -63,6 +69,11 @@ class SettingsPage extends StatelessWidget with ShowErrorDialogMixin {
                 onPressed: () => _onDeveloperSettingsPage(context),
               ),
               const Divider(height: CommonSize.indent2x),
+              CupertinoButton(
+                child: Text(context.clockSettingsPageButtonTitle),
+                onPressed: () => _onClockSettingsPage(context),
+              ),
+              const Divider(height: CommonSize.indent2x),
               BlocBuilder<SettingsPageBloc, SettingsPageState>(
                 builder: (context, state) => CupertinoButton(
                   child: Text(context.logoutButtonTitle),
@@ -84,6 +95,10 @@ class SettingsPage extends StatelessWidget with ShowErrorDialogMixin {
     onRoute(context, SettingsRouteData.onDeveloperSettingsPage());
   }
 
+  void _onClockSettingsPage(BuildContext context) {
+    onRoute(context, SettingsRouteData.onClockSettingsPage());
+  }
+
   void _onLogout(BuildContext context) => context.read<SettingsPageBloc>().add(
         const SettingsPageEvent.logout(),
       );
@@ -95,5 +110,7 @@ extension on BuildContext {
   String get remoteStorageSettingsPageButtonTitle => 'Remote storage settings';
 
   String get developerSettingsPageButtonTitle => 'Developer settings';
+
+  String get clockSettingsPageButtonTitle => 'Clock widget settings';
   String get logoutButtonTitle => 'Logout';
 }

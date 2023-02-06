@@ -2,12 +2,15 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:pwd/common/data/app_configuration_provider_impl.dart';
+import 'package:pwd/common/data/clock_configuration_provider_impl.dart';
 import 'package:pwd/common/data/pin_repository_impl.dart';
 import 'package:pwd/common/data/remote_storage_configuration_provider_impl.dart';
 import 'package:pwd/common/data/remote_storage_configuration_provider_macos_impl.dart';
 import 'package:pwd/common/domain/app_configuration_provider.dart';
+import 'package:pwd/common/domain/clock_configuration_provider.dart';
 import 'package:pwd/common/domain/pin_repository.dart';
 import 'package:pwd/common/domain/remote_storage_configuration_provider.dart';
+import 'package:pwd/common/domain/time_formatter/time_formatter.dart';
 import 'package:pwd/common/domain/usecases/hash_usecase.dart';
 import 'package:pwd/common/domain/usecases/pin_usecase.dart';
 import 'package:pwd/common/domain/usecases/should_create_remote_storage_file_usecase.dart';
@@ -57,6 +60,18 @@ class UnauthDiModule extends DiModule {
     di.bind(
       module: this,
       () => ShouldCreateRemoteStorageFileUsecase(),
+      lifeTime: const LifeTime.single(),
+    );
+
+    di.bind<TimeFormatter>(
+      () => TimeFormatterImpl(),
+      module: this,
+      lifeTime: const LifeTime.single(),
+    );
+
+    di.bind<ClockConfigurationProvider>(
+      () => ClockConfigurationProviderImpl(),
+      module: this,
       lifeTime: const LifeTime.single(),
     );
   }

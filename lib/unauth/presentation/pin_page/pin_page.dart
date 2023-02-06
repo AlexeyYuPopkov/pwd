@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pwd/common/domain/time_formatter/time_formatter.dart';
 import 'package:pwd/common/presentation/dialogs/show_error_dialog_mixin.dart';
 import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
 import 'package:pwd/common/tools/di_storage/di_storage.dart';
@@ -11,6 +12,7 @@ import 'pin_page_enter_configuration_form.dart';
 class PinPage extends StatelessWidget with ShowErrorDialogMixin {
   final Future Function(BuildContext, Object) onRoute;
   final _pageViewKey = GlobalKey<_PageViewState>();
+  TimeFormatter get timeFormatter => DiStorage.shared.resolve();
 
   PinPage({super.key, required this.onRoute});
 
@@ -44,6 +46,7 @@ class PinPage extends StatelessWidget with ShowErrorDialogMixin {
                   : _PageView(
                       key: _pageViewKey,
                       initialPage: state.page,
+                      timeFormatter: timeFormatter,
                     );
             },
           ),
@@ -55,7 +58,12 @@ class PinPage extends StatelessWidget with ShowErrorDialogMixin {
 
 class _PageView extends StatefulWidget {
   final int initialPage;
-  const _PageView({super.key, required this.initialPage});
+  final TimeFormatter timeFormatter;
+  const _PageView({
+    super.key,
+    required this.initialPage,
+    required this.timeFormatter,
+  });
 
   @override
   State<_PageView> createState() => _PageViewState();
@@ -83,9 +91,9 @@ class _PageViewState extends State<_PageView> {
       child: PageView(
         controller: controller,
         physics: const NeverScrollableScrollPhysics(),
-        children: const [
-          PinPageEnterConfigurationForm(),
-          PinPageEnterPinForm(),
+        children: [
+          const PinPageEnterConfigurationForm(),
+          PinPageEnterPinForm(timeFormatter: widget.timeFormatter),
         ],
       ),
     );

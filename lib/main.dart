@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:pwd/common/domain/base_pin.dart';
 import 'package:pwd/common/domain/usecases/pin_usecase.dart';
 import 'package:pwd/common/tools/di_storage/di_storage.dart';
@@ -10,7 +9,8 @@ import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
 import 'package:pwd/unauth/presentation/router/unauth_router_delegate.dart';
 
 void main() async {
-  debugRepaintRainbowEnabled = false;
+  // debugRepaintRainbowEnabled = true;
+  // debugPaintLayerBordersEnabled = true;
 
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -30,9 +30,10 @@ class MyApp extends StatelessWidget {
       theme: lightThemeData,
       themeMode: ThemeMode.light,
       debugShowCheckedModeBanner: false,
-      showPerformanceOverlay: false,
+      // showPerformanceOverlay: true,
       showSemanticsDebugger: false,
       debugShowMaterialGrid: false,
+      checkerboardRasterCacheImages: true,
       home: BlockingLoadingIndicator(
         child: StreamBuilder<BasePin>(
           stream: pinUsecase.pinStream,

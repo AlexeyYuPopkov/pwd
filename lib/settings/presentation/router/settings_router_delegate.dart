@@ -5,6 +5,8 @@ import 'package:pwd/settings/presentation/settings_page/settings_page.dart';
 import 'package:pwd/common/presentation/fade_animation_page.dart';
 import 'package:pwd/settings/presentation/remote_storage_settings_page/remote_storage_settings_page.dart';
 
+import '../clock_settings_page/clock_settings_page.dart';
+
 class SettingsRouterPagePath {
   static const settings = 'settings';
 }
@@ -60,6 +62,16 @@ class SettingsRouterDelegate extends RouterDelegate
           .push(
             MaterialPageRoute(
               builder: (_) => DeveloperSettingsPage(),
+            ),
+          )
+          .then(
+            (_) => updateState(),
+          );
+    } else if (action is OnClockSettingsPage) {
+      return context.navigator
+          .push(
+            MaterialPageRoute(
+              builder: (_) => const ClockSettingsPage(),
             ),
           )
           .then(
