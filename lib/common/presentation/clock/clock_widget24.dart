@@ -66,17 +66,19 @@ class ClockWidget extends StatelessWidget {
     return Stack(
       children: [
         ClockBackgroundWidget(color: backgroundColor),
-        StreamBuilder<DateTime>(
-          initialData: DateTime.now(),
-          stream: timerStream.map(
-            (e) => formatter.dateTimeInTimezone(
-              date: e,
-              timezoneOffset: parameters.timezoneOffset,
+        RepaintBoundary(
+          child: StreamBuilder<DateTime>(
+            initialData: DateTime.now(),
+            stream: timerStream.map(
+              (e) => formatter.dateTimeInTimezone(
+                date: e,
+                timezoneOffset: parameters.timezoneOffset,
+              ),
             ),
-          ),
-          builder: (context, snapshot) => ClockForegroundWidget(
-            date: snapshot.data ?? DateTime.now(),
-            color: foregroundColor,
+            builder: (context, snapshot) => ClockForegroundWidget(
+              date: snapshot.data ?? DateTime.now(),
+              color: foregroundColor,
+            ),
           ),
         ),
       ],

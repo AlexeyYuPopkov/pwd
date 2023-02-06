@@ -17,7 +17,7 @@ abstract class TimeFormatter {
 class TimeFormatterImpl implements TimeFormatter {
   TimeFormatterImpl();
 
-  late final timeFormatter = DateFormat('HH:mm:ss');
+  late final timeFormatter = DateFormat('HH:mm');
 
   @override
   String time(DateTime date) => timeFormatter.format(date);
