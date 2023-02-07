@@ -10,7 +10,7 @@ abstract class TimeFormatter {
 
   DateTime dateTimeInTimezone({
     required DateTime date,
-    required Duration timezoneOffset,
+    required Duration timeZoneOffset,
   });
 }
 
@@ -27,15 +27,19 @@ class TimeFormatterImpl implements TimeFormatter {
     required DateTime date,
     required Duration timezoneOffset,
   }) =>
-      time(dateTimeInTimezone(date: date, timezoneOffset: timezoneOffset));
+      time(dateTimeInTimezone(date: date, timeZoneOffset: timezoneOffset));
 
   @override
   DateTime dateTimeInTimezone({
     required DateTime date,
-    required Duration timezoneOffset,
+    required Duration timeZoneOffset,
   }) {
-    final utc = date.subtract(date.timeZoneOffset);
-    final result = utc.add(timezoneOffset);
-    return result;
+    if (timeZoneOffset == Duration.zero) {
+      return date;
+    } else {
+      final utc = date.subtract(date.timeZoneOffset);
+      final result = utc.add(timeZoneOffset);
+      return result;
+    }
   }
 }

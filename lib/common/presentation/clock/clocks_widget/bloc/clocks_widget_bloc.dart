@@ -1,13 +1,14 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pwd/common/domain/clock_configuration_provider.dart';
+
 import 'package:pwd/common/domain/model/clock_model.dart';
+import 'package:pwd/common/domain/usecases/clock_usecase.dart';
 
 part 'clocks_widget_event.dart';
 part 'clocks_widget_state.dart';
 
 class ClocksWidgetBloc extends Bloc<ClocksWidgetEvent, ClocksWidgetState> {
-  final ClockConfigurationProvider clockConfigurationProvider;
+  final ClockUsecase clockUsecase;
 
   late final timerStream = Stream<DateTime>.periodic(
     const Duration(seconds: 1),
@@ -15,11 +16,10 @@ class ClocksWidgetBloc extends Bloc<ClocksWidgetEvent, ClocksWidgetState> {
   ).asBroadcastStream();
 
   ClocksWidgetBloc({
-    required String localLabelText,
-    required this.clockConfigurationProvider,
+    required this.clockUsecase,
   }) : super(
           ClocksWidgetState.common(
-            data: NotePageData.initial(localLabelText: localLabelText),
+            data: NotePageData.initial(),
           ),
         ) {
     _setupHandlers();
@@ -28,6 +28,8 @@ class ClocksWidgetBloc extends Bloc<ClocksWidgetEvent, ClocksWidgetState> {
 
   void _setupHandlers() {
     on<InitialEvent>(_onInitialEvent);
+    on<ToggleEditingEvent>(_onToggleEditingEvent);
+    on<DeleteEvent>(_onDeleteEvent);
     on<AddClockEvent>(_onAddClockEvent);
   }
 
@@ -35,21 +37,11 @@ class ClocksWidgetBloc extends Bloc<ClocksWidgetEvent, ClocksWidgetState> {
     InitialEvent event,
     Emitter<ClocksWidgetState> emit,
   ) async {
-    final clocks = await clockConfigurationProvider.clocks;
-    final hasZeroTimezoneClock = clocks
-        .where(
-          (e) => e.timezoneOffset == Duration.zero,
-        )
-        .isNotEmpty;
+    final clocks = await clockUsecase.getClocks();
 
     emit(
       ClocksWidgetState.common(
-        data: state.data.copyWith(
-          parameters: [
-            if (!hasZeroTimezoneClock) ...state.data.parameters,
-            ...clocks,
-          ],
-        ),
+        data: state.data.copyWith(parameters: clocks),
       ),
     );
   }
@@ -58,12 +50,7 @@ class ClocksWidgetBloc extends Bloc<ClocksWidgetEvent, ClocksWidgetState> {
     AddClockEvent event,
     Emitter<ClocksWidgetState> emit,
   ) async {
-    final clocks = [
-      ...state.data.parameters,
-      event.parameters,
-    ];
-
-    await clockConfigurationProvider.setClocks(clocks);
+    final clocks = await clockUsecase.byAdding(event.parameters);
 
     emit(
       ClocksWidgetState.common(
@@ -71,6 +58,32 @@ class ClocksWidgetBloc extends Bloc<ClocksWidgetEvent, ClocksWidgetState> {
           parameters: clocks,
         ),
       ),
+    );
+  }
+
+  void _onToggleEditingEvent(
+    ToggleEditingEvent event,
+    Emitter<ClocksWidgetState> emit,
+  ) {
+    if (state is! EditingState) {
+      emit(
+        ClocksWidgetState.editing(data: state.data),
+      );
+    } else {
+      emit(
+        ClocksWidgetState.common(data: state.data),
+      );
+    }
+  }
+
+  void _onDeleteEvent(
+    DeleteEvent event,
+    Emitter<ClocksWidgetState> emit,
+  ) async {
+    final clocks = await clockUsecase.byClockDeletion(event.clock);
+
+    emit(
+      ClocksWidgetState.common(data: state.data.copyWith(parameters: clocks)),
     );
   }
 }

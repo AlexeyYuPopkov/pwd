@@ -5,6 +5,12 @@ abstract class ClocksWidgetEvent extends Equatable {
 
   const factory ClocksWidgetEvent.initial() = InitialEvent;
 
+  const factory ClocksWidgetEvent.edit() = ToggleEditingEvent;
+
+  const factory ClocksWidgetEvent.delete({
+    required ClockModel clock,
+  }) = DeleteEvent;
+
   const factory ClocksWidgetEvent.addClock({
     required ClockModel parameters,
   }) = AddClockEvent;
@@ -15,6 +21,15 @@ abstract class ClocksWidgetEvent extends Equatable {
 
 class InitialEvent extends ClocksWidgetEvent {
   const InitialEvent();
+}
+
+class ToggleEditingEvent extends ClocksWidgetEvent {
+  const ToggleEditingEvent();
+}
+
+class DeleteEvent extends ClocksWidgetEvent {
+  final ClockModel clock;
+  const DeleteEvent({required this.clock});
 }
 
 class AddClockEvent extends ClocksWidgetEvent {

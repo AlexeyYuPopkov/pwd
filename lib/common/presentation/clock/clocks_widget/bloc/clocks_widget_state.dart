@@ -5,15 +5,23 @@ abstract class ClocksWidgetState extends Equatable {
 
   const ClocksWidgetState({required this.data});
 
+  bool get isEditing => this is EditingState;
   @override
   List<Object?> get props => [data];
 
   const factory ClocksWidgetState.common({required NotePageData data}) =
       CommonState;
+
+  const factory ClocksWidgetState.editing({required NotePageData data}) =
+      EditingState;
 }
 
 class CommonState extends ClocksWidgetState {
   const CommonState({required super.data});
+}
+
+class EditingState extends ClocksWidgetState {
+  const EditingState({required super.data});
 }
 
 // Data
@@ -24,16 +32,7 @@ class NotePageData extends Equatable {
     required this.parameters,
   });
 
-  factory NotePageData.initial({
-    required String localLabelText,
-  }) =>
-      NotePageData._(
-        parameters: [
-          DefaultClockModel(
-            label: localLabelText,
-          ),
-        ],
-      );
+  factory NotePageData.initial() => const NotePageData._(parameters: []);
 
   @override
   List<Object?> get props => [parameters];

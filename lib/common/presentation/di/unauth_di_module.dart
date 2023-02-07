@@ -11,6 +11,7 @@ import 'package:pwd/common/domain/clock_configuration_provider.dart';
 import 'package:pwd/common/domain/pin_repository.dart';
 import 'package:pwd/common/domain/remote_storage_configuration_provider.dart';
 import 'package:pwd/common/domain/time_formatter/time_formatter.dart';
+import 'package:pwd/common/domain/usecases/clock_usecase.dart';
 import 'package:pwd/common/domain/usecases/hash_usecase.dart';
 import 'package:pwd/common/domain/usecases/pin_usecase.dart';
 import 'package:pwd/common/domain/usecases/should_create_remote_storage_file_usecase.dart';
@@ -74,5 +75,14 @@ class UnauthDiModule extends DiModule {
       module: this,
       lifeTime: const LifeTime.single(),
     );
+
+    di.bind<ClockUsecase>(
+      () => ClockUsecase(
+        clockConfigurationProvider: di.resolve(),
+      ),
+      module: this,
+      lifeTime: const LifeTime.single(),
+    );
+    //
   }
 }
