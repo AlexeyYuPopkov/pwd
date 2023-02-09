@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
       // showPerformanceOverlay: true,
       showSemanticsDebugger: false,
       debugShowMaterialGrid: false,
-      checkerboardRasterCacheImages: true,
+      // checkerboardRasterCacheImages: true,
       home: BlockingLoadingIndicator(
         child: StreamBuilder<BasePin>(
           stream: pinUsecase.pinStream,

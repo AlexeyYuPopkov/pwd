@@ -1,3 +1,5 @@
+import 'dart:math' show min;
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,7 +25,8 @@ class ClocksWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return LayoutBuilder(builder: (context, constraints) {
-      final itemWidth = constraints.maxWidth / 3;
+      final itemSize =
+          min(constraints.maxWidth ~/ 3, constraints.maxHeight).toDouble();
 
       return BlocProvider(
         create: (context) => ClocksWidgetBloc(
@@ -41,7 +44,7 @@ class ClocksWidget extends StatelessWidget {
                     children: [
                       for (final clock in state.data.parameters)
                         SizedBox(
-                          width: itemWidth,
+                          width: itemSize,
                           child: Stack(
                             children: [
                               Padding(
