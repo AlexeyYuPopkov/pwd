@@ -15,7 +15,7 @@ class DiStorage {
 
   static DiStorage get shared => _instance ??= DiStorage._();
 
-  factory DiStorage.another() = DiStorage._;
+  // factory DiStorage.another() = DiStorage._;
 
   late final _constructorsMap = <String, DiStorageEntry>{};
 
@@ -24,7 +24,7 @@ class DiStorage {
   /// RU: [bind] - привязка зависимости [T] к фабричному методу
   ///
   /// EN: [bind] - binding [T] dependency to a factory method
-  ///
+  ///s
   void bind<T>(
     T Function() constructor, {
     required DiModule? module,
@@ -36,9 +36,9 @@ class DiStorage {
       lifeTime: lifeTime ?? const LifeTime.prototype(),
     );
 
-    final scopeName = module?.toString();
+    final scopeName = module?.runtimeType.toString();
 
-    if (scopeName != null && _scopesMap.isNotEmpty) {
+    if (scopeName != null && scopeName.isNotEmpty) {
       var names = _scopesMap[scopeName];
 
       if (names == null) {
@@ -49,12 +49,6 @@ class DiStorage {
       }
     }
   }
-
-  /// RU: [removeWithName] - удаление зависимости [name] - имя класса
-  ///
-  /// EN: [removeWithName] - remove the dependency with class [name]
-  ///
-  // void removeWithName(String name) => _constructorsMap.remove(name);
 
   /// RU: [remove] - удаление зависимости <T>
   ///
@@ -78,6 +72,15 @@ class DiStorage {
     }
   }
 
+  /// RU: [canResolve] - привязана ли зависимость с типом <T>
+  ///
+  /// EN: [resolve] - is binded the dependency with type <T>
+  ///
+  bool canResolve<T>() {
+    final name = T.toString();
+    return _constructorsMap[name] != null;
+  }
+
   /// RU: [resolve] - разрешение (получение) зависимости с типом <T>
   ///
   /// EN: [resolve] - resolve the dependency with type <T>
@@ -88,12 +91,33 @@ class DiStorage {
     final box = _constructorsMap[name];
 
     if (box == null) {
-      throw Exception('DiStorage: Forgot bind instance');
+      throw Exception('DiStorage: Forgot bind instance: $name');
     }
 
+    return _resolve(box, name);
+  }
+
+  /// RU: [tryResolve] - разрешение (получение) зависимости с типом <T>
+  /// или null, если отсутствует
+  ///
+  /// EN: [tryResolve] - resolve the dependency with type <T> or null if absent
+  ///
+  T? tryResolve<T>() {
+    final name = T.toString();
+
+    final box = _constructorsMap[name];
+
+    if (box == null) {
+      return null;
+    }
+
+    return _resolve(box, name);
+  }
+
+  T _resolve<T>(DiStorageEntry box, String name) {
     final instance = box.instance;
 
-    if (instance is T) {
+    if (instance != null && instance is T) {
       return instance;
     } else {
       final lifeTime = box.lifeTime;

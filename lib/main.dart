@@ -36,15 +36,21 @@ class MyApp extends StatelessWidget {
       // checkerboardRasterCacheImages: true,
       home: BlockingLoadingIndicator(
         child: StreamBuilder<BasePin>(
-          stream: pinUsecase.pinStream,
+          stream: pinUsecase.pinStream.asyncMap((pin) {
+            if (pin is Pin && pinUsecase.isValidPin) {
+              AppDiModules.bindAuthModules();
+            } else {
+              AppDiModules.dropAuthModules();
+            }
+
+            return pin;
+          }),
           builder: (context, snapshot) {
             final pin = snapshot.data;
 
             if (pin is Pin && pinUsecase.isValidPin) {
-              AppDiModules.dropAuthModules();
               return const HomeTabbarPage();
             } else {
-              AppDiModules.bindAuthModules();
               return Router(
                 routerDelegate: UnauthRouterDelegate(),
               );

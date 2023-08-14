@@ -65,8 +65,9 @@ class _HomeTabbarPageDesktopContentState
               index: _selectedIndex,
               children: [
                 Router(
-                  routerDelegate:
-                      NoteRouterDelegate(navigatorKey: _noteRouterKey),
+                  routerDelegate: NoteRouterDelegate(
+                    navigatorKey: _noteRouterKey,
+                  ),
                 ),
                 Router(
                   routerDelegate: SettingsRouterDelegate(
