@@ -79,13 +79,8 @@ class NetworkDiModule extends DiModule {
       dio.httpClientAdapter = IOHttpClientAdapter(
         createHttpClient: () {
           final client = HttpClient();
-          // Config the client.
-          client.findProxy = (uri) {
-            // Forward all request to proxy "localhost:8888".
-            // Be aware, the proxy should went through you running device,
-            // not the host platform.
-            // return 'PROXY localhost:8888';
 
+          client.findProxy = (uri) {
             if (kDebugMode) {
               final proxyPort = int.tryParse(port) ?? 0;
               final isProxyAvailable = proxy.isNotEmpty && proxyPort != 0;
