@@ -11,9 +11,9 @@ class NoteDetailsPage extends StatelessWidget with ShowErrorDialogMixin {
   final NoteItem noteItem;
 
   const NoteDetailsPage({
-    Key? key,
+    super.key,
     required this.noteItem,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -52,21 +52,19 @@ class NoteDetailsPage extends StatelessWidget with ShowErrorDialogMixin {
                         const Divider(thickness: thickness),
                       ],
                       const SizedBox(height: CommonSize.indent2x),
-                      ...tags()
-                          .map(
-                            (str) => str.isEmpty
-                                ? const DashedDivider(
-                                    height: CommonSize.indent2x,
-                                    thickness: thickness,
-                                    dash: dashWidth,
-                                    disaredSpace: spaceWidth,
-                                  )
-                                : NoteLine(
-                                    text: str,
-                                    style: theme.textTheme.bodyMedium,
-                                  ),
-                          )
-                          .toList(),
+                      ...tags().map(
+                        (str) => str.isEmpty
+                            ? const DashedDivider(
+                                height: CommonSize.indent2x,
+                                thickness: thickness,
+                                dash: dashWidth,
+                                disaredSpace: spaceWidth,
+                              )
+                            : NoteLine(
+                                text: str,
+                                style: theme.textTheme.bodyMedium,
+                              ),
+                      ),
                     ],
                   ),
                 ),
@@ -89,10 +87,10 @@ class NoteLine extends StatelessWidget with DialogHelper {
   final TextStyle? style;
 
   const NoteLine({
-    Key? key,
+    super.key,
     required this.text,
     required this.style,
-  }) : super(key: key);
+  });
   @override
   Widget build(BuildContext context) {
     return SizedBox(

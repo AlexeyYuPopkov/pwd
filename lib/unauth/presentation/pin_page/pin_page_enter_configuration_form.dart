@@ -15,7 +15,7 @@ import 'package:pwd/theme/common_size.dart';
 import 'bloc/pin_page_bloc.dart';
 
 class PinPageEnterConfigurationForm extends StatefulWidget {
-  const PinPageEnterConfigurationForm({Key? key}) : super(key: key);
+  const PinPageEnterConfigurationForm({super.key});
 
   @override
   State<PinPageEnterConfigurationForm> createState() =>
@@ -216,13 +216,13 @@ class _TextFieldRow extends StatelessWidget {
   final String tooltipMessage;
 
   const _TextFieldRow({
-    Key? key,
+    super.key,
     required this.controller,
     required this.validator,
     required this.inputFormatter,
     required this.hint,
     required this.tooltipMessage,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

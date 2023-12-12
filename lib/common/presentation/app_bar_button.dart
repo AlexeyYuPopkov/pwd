@@ -6,10 +6,10 @@ class AppBarButton extends StatelessWidget {
   final IconData? iconData;
 
   const AppBarButton({
-    Key? key,
+    super.key,
     this.onPressed,
     required this.iconData,
-  }) : super(key: key);
+  });
 
   Color get iconColor =>
       onPressed == null ? Colors.white.withOpacity(0.4) : Colors.white;

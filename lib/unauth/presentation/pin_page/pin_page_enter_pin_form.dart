@@ -9,9 +9,9 @@ import 'bloc/pin_page_bloc.dart';
 class PinPageEnterPinForm extends StatefulWidget {
   final TimeFormatter timeFormatter;
   const PinPageEnterPinForm({
-    Key? key,
+    super.key,
     required this.timeFormatter,
-  }) : super(key: key);
+  });
 
   @override
   State<PinPageEnterPinForm> createState() => _PinPageEnterPinFormState();

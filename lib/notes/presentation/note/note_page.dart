@@ -27,9 +27,9 @@ class NotePage extends StatelessWidget with ShowErrorDialogMixin {
   );
 
   NotePage({
-    Key? key,
+    super.key,
     required this.onRoute,
-  }) : super(key: key);
+  });
 
   void _listener(BuildContext context, NotePageState state) {
     BlockingLoadingIndicator.of(context).isLoading = state is LoadingState;
@@ -39,9 +39,9 @@ class NotePage extends StatelessWidget with ShowErrorDialogMixin {
         context,
         state.error,
         errorMessageProviders: [
-          const NotesProviderErrorMessageProvider(),
-          const SyncDataErrorMessageProvider(),
-          const CryptErrorMessageProvider(),
+          const NotesProviderErrorMessageProvider().call,
+          const SyncDataErrorMessageProvider().call,
+          const CryptErrorMessageProvider().call,
         ],
       );
     }

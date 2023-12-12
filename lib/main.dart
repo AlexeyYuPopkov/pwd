@@ -20,7 +20,7 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   PinUsecase get pinUsecase => DiStorage.shared.resolve();
 

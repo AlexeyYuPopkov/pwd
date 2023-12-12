@@ -75,10 +75,9 @@ class HashUsecase {
 
 // Errors
 abstract class HashUsecaseError extends AppError {
-  const HashUsecaseError({Object? parentError})
+  const HashUsecaseError({super.parentError})
       : super(
           message: '',
-          parentError: parentError,
         );
 
   const factory HashUsecaseError.emptyPin() = HashUsecaseEmptyPinError;
@@ -98,6 +97,5 @@ class HashUsecaseWrongPinLengthError extends HashUsecaseError {
 }
 
 class HashUsecaseEncryptError extends HashUsecaseError {
-  const HashUsecaseEncryptError({Object? parentError})
-      : super(parentError: parentError);
+  const HashUsecaseEncryptError({super.parentError});
 }

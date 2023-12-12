@@ -12,12 +12,12 @@ class CommonHighlightedRow extends StatelessWidget {
   final Color? highlightedColor;
 
   const CommonHighlightedRow({
-    Key? key,
+    super.key,
     this.onTap,
     this.color = Colors.transparent,
     this.highlightedColor,
     required this.child,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -76,12 +76,12 @@ class CommonHighlightedBackgroundRow extends StatelessWidget {
   final Color? highlightedColor;
 
   const CommonHighlightedBackgroundRow({
-    Key? key,
+    super.key,
     this.onTap,
     this.color = Colors.transparent,
     this.highlightedColor,
     required this.child,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) => _isMaterial

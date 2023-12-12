@@ -43,10 +43,10 @@ class EditNotePage extends StatelessWidget
   final isSubmitEnabledStream = BehaviorSubject.seeded(false);
 
   EditNotePage({
-    Key? key,
+    super.key,
     required this.noteItem,
     required this.onRoute,
-  }) : super(key: key);
+  });
 
   void _listener(BuildContext context, EditNoteState state) async {
     BlockingLoadingIndicator.of(context).isLoading = state is LoadingState;
@@ -68,9 +68,9 @@ class EditNotePage extends StatelessWidget
         context,
         state.error,
         errorMessageProviders: [
-          const NotesProviderErrorMessageProvider(),
-          const SyncDataErrorMessageProvider(),
-          const CryptErrorMessageProvider(),
+          const NotesProviderErrorMessageProvider().call,
+          const SyncDataErrorMessageProvider().call,
+          const CryptErrorMessageProvider().call,
         ],
       );
     }
@@ -200,10 +200,10 @@ class _Form extends StatefulWidget {
   final BehaviorSubject isSubmitEnabledStream;
 
   const _Form({
-    Key? key,
+    super.key,
     required this.noteItem,
     required this.isSubmitEnabledStream,
-  }) : super(key: key);
+  });
 
   @override
   State<_Form> createState() => _FormState();

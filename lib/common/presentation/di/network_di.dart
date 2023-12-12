@@ -1,7 +1,4 @@
-import 'dart:io';
 import 'package:dio/dio.dart';
-import 'package:dio/adapter.dart';
-import 'package:flutter/foundation.dart';
 import 'package:pwd/common/data/network_error_mapper_impl.dart';
 import 'package:pwd/common/domain/app_configuration_provider.dart';
 import 'package:pwd/common/domain/errors/network_error_mapper.dart';
@@ -57,15 +54,15 @@ class NetworkDiModule extends DiModule {
   }
 
   BaseOptions _createDioOptions(DiStorage di) {
-    const connectTimeout = 60 * 1000;
-    const receiveTimeout = 60 * 1000;
-    const sendTimeout = 60 * 1000;
+    // const connectTimeout = 60 * 1000;
+    // const receiveTimeout = 60 * 1000;
+    // const sendTimeout = 60 * 1000;
 
     return BaseOptions(
-      connectTimeout: connectTimeout,
-      receiveTimeout: receiveTimeout,
-      sendTimeout: sendTimeout,
-    );
+        // connectTimeout:  connectTimeout,
+        // receiveTimeout: receiveTimeout,
+        // sendTimeout: sendTimeout,
+        );
   }
 
   Dio _adjustedDioProxyIfNeeded({
@@ -73,43 +70,80 @@ class NetworkDiModule extends DiModule {
     required String proxy,
     required String port,
   }) {
-    if (!kIsWeb && kDebugMode) {
-      var adapter = dio.httpClientAdapter;
+    // if (!kIsWeb && kDebugMode) {
+    //   dio.httpClientAdapter = IOHttpClientAdapter(
+    //     createHttpClient: () {
+    //       final client = HttpClient();
+    //       // Config the client.
+    //       client.findProxy = (uri) {
+    //         // Forward all request to proxy "localhost:8888".
+    //         // Be aware, the proxy should went through you running device,
+    //         // not the host platform.
+    //         // return 'PROXY localhost:8888';
 
-      if (adapter is DefaultHttpClientAdapter) {
-        adapter.onHttpClientCreate = _configureHttpClient(
-          allowHostsWithBadCertificates: const {},
-          proxyIp: proxy,
-          proxyPort: int.tryParse(port) ?? 0,
-        );
-      }
-    }
+    //         if (kDebugMode) {
+    //           final proxyPort = int.tryParse(port) ?? 0;
+    //           final isProxyAvailable = proxy.isNotEmpty && proxyPort != 0;
+
+    //           // httpClient.findProxy =
+
+    //           debugPrint('PROXY: $proxy:$proxyPort;');
+
+    //           return isProxyAvailable ? 'PROXY $proxy:$proxyPort;' : '';
+
+    //           // httpClient.badCertificateCallback = (
+    //           //   X509Certificate cert,
+    //           //   String host,
+    //           //   int port,
+    //           // ) =>
+    //           //     allowHostsWithBadCertificates.contains(host);
+    //         } else {
+    //           return 'DIRECT';
+    //         }
+    //       };
+    //       // You can also create a new HttpClient for Dio instead of returning,
+    //       // but a client must being returned here.
+    //       return client;
+    //     },
+    //   );
+    // }
+
+    //   var adapter = dio.httpClientAdapter;
+
+    //   if (adapter is IOHttpClientAdapter) {
+    //     adapter.onHttpClientCreate = _configureHttpClient(
+    //       allowHostsWithBadCertificates: const {},
+    //       proxyIp: proxy,
+    //       proxyPort: int.tryParse(port) ?? 0,
+    //     );
+    //   }
+    // }
     return dio;
   }
 
-  dynamic _configureHttpClient({
-    required Set<String> allowHostsWithBadCertificates,
-    required String proxyIp,
-    required int proxyPort,
-  }) {
-    return (HttpClient httpClient) {
-      if (kDebugMode) {
-        final isProxyAvailable = proxyIp.isNotEmpty && proxyPort != 0;
-        httpClient.findProxy = isProxyAvailable
-            ? (url) => 'PROXY $proxyIp:$proxyPort;'
-            : (url) => 'DIRECT';
+  // dynamic _configureHttpClient({
+  //   required Set<String> allowHostsWithBadCertificates,
+  //   required String proxyIp,
+  //   required int proxyPort,
+  // }) {
+  //   return (HttpClient httpClient) {
+  //     if (kDebugMode) {
+  //       final isProxyAvailable = proxyIp.isNotEmpty && proxyPort != 0;
+  //       httpClient.findProxy = isProxyAvailable
+  //           ? (url) => 'PROXY $proxyIp:$proxyPort;'
+  //           : (url) => 'DIRECT';
 
-        debugPrint('PROXY: $proxyIp:$proxyPort;');
+  //       debugPrint('PROXY: $proxyIp:$proxyPort;');
 
-        httpClient.badCertificateCallback = (
-          X509Certificate cert,
-          String host,
-          int port,
-        ) =>
-            allowHostsWithBadCertificates.contains(host);
-      }
+  //       httpClient.badCertificateCallback = (
+  //         X509Certificate cert,
+  //         String host,
+  //         int port,
+  //       ) =>
+  //           allowHostsWithBadCertificates.contains(host);
+  //     }
 
-      return httpClient;
-    };
-  }
+  //     return httpClient;
+  //   };
+  // }
 }

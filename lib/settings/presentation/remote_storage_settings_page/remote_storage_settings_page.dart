@@ -121,10 +121,9 @@ class _ListItemWidget extends StatelessWidget {
   final String subtitle;
 
   const _ListItemWidget({
-    Key? key,
     required this.title,
     required this.subtitle,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

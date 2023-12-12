@@ -24,24 +24,21 @@ abstract class RemoteStorageSettingsPageState extends Equatable {
 }
 
 class CommonState extends RemoteStorageSettingsPageState {
-  const CommonState({required RemoteStorageConfiguration data})
-      : super(data: data);
+  const CommonState({required super.data});
 }
 
 class DidLogoutState extends RemoteStorageSettingsPageState {
-  const DidLogoutState({required RemoteStorageConfiguration data})
-      : super(data: data);
+  const DidLogoutState({required super.data});
 }
 
 class LoadingState extends RemoteStorageSettingsPageState {
-  const LoadingState({required RemoteStorageConfiguration data})
-      : super(data: data);
+  const LoadingState({required super.data});
 }
 
 class ErrorState extends RemoteStorageSettingsPageState {
   final Object error;
   const ErrorState({
-    required RemoteStorageConfiguration data,
+    required super.data,
     required this.error,
-  }) : super(data: data);
+  });
 }

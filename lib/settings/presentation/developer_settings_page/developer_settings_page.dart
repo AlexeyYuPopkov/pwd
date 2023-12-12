@@ -86,11 +86,11 @@ class _Form extends StatefulWidget {
   final BehaviorSubject<bool> isSubmitEnabledStream;
 
   const _Form({
-    Key? key,
+    super.key,
     required this.proxy,
     required this.port,
     required this.isSubmitEnabledStream,
-  }) : super(key: key);
+  });
 
   @override
   State<_Form> createState() => _FormState();

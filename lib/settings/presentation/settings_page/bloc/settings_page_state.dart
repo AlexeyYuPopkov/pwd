@@ -24,23 +24,23 @@ abstract class SettingsPageState extends Equatable {
 }
 
 class CommonState extends SettingsPageState {
-  const CommonState({required SettingsPageData data}) : super(data: data);
+  const CommonState({required super.data});
 }
 
 class DidLogoutState extends SettingsPageState {
-  const DidLogoutState({required SettingsPageData data}) : super(data: data);
+  const DidLogoutState({required super.data});
 }
 
 class LoadingState extends SettingsPageState {
-  const LoadingState({required SettingsPageData data}) : super(data: data);
+  const LoadingState({required super.data});
 }
 
 class ErrorState extends SettingsPageState {
   final Object error;
   const ErrorState({
-    required SettingsPageData data,
+    required super.data,
     required this.error,
-  }) : super(data: data);
+  });
 }
 
 // Data
