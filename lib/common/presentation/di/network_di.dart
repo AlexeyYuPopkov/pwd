@@ -1,4 +1,9 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
+import 'package:flutter/foundation.dart';
+
 import 'package:pwd/common/data/network_error_mapper_impl.dart';
 import 'package:pwd/common/domain/app_configuration_provider.dart';
 import 'package:pwd/common/domain/errors/network_error_mapper.dart';
@@ -70,54 +75,40 @@ class NetworkDiModule extends DiModule {
     required String proxy,
     required String port,
   }) {
-    // if (!kIsWeb && kDebugMode) {
-    //   dio.httpClientAdapter = IOHttpClientAdapter(
-    //     createHttpClient: () {
-    //       final client = HttpClient();
-    //       // Config the client.
-    //       client.findProxy = (uri) {
-    //         // Forward all request to proxy "localhost:8888".
-    //         // Be aware, the proxy should went through you running device,
-    //         // not the host platform.
-    //         // return 'PROXY localhost:8888';
+    if (!kIsWeb && kDebugMode) {
+      dio.httpClientAdapter = IOHttpClientAdapter(
+        createHttpClient: () {
+          final client = HttpClient();
+          // Config the client.
+          client.findProxy = (uri) {
+            // Forward all request to proxy "localhost:8888".
+            // Be aware, the proxy should went through you running device,
+            // not the host platform.
+            // return 'PROXY localhost:8888';
 
-    //         if (kDebugMode) {
-    //           final proxyPort = int.tryParse(port) ?? 0;
-    //           final isProxyAvailable = proxy.isNotEmpty && proxyPort != 0;
+            if (kDebugMode) {
+              final proxyPort = int.tryParse(port) ?? 0;
+              final isProxyAvailable = proxy.isNotEmpty && proxyPort != 0;
 
-    //           // httpClient.findProxy =
+              final result =
+                  isProxyAvailable ? 'PROXY $proxy:$proxyPort' : 'DIRECT';
 
-    //           debugPrint('PROXY: $proxy:$proxyPort;');
+              debugPrint('PROXY: $result');
 
-    //           return isProxyAvailable ? 'PROXY $proxy:$proxyPort;' : '';
+              return result;
+            } else {
+              return 'DIRECT';
+            }
+          };
 
-    //           // httpClient.badCertificateCallback = (
-    //           //   X509Certificate cert,
-    //           //   String host,
-    //           //   int port,
-    //           // ) =>
-    //           //     allowHostsWithBadCertificates.contains(host);
-    //         } else {
-    //           return 'DIRECT';
-    //         }
-    //       };
-    //       // You can also create a new HttpClient for Dio instead of returning,
-    //       // but a client must being returned here.
-    //       return client;
-    //     },
-    //   );
-    // }
+          client.badCertificateCallback =
+              (X509Certificate cert, String host, int port) => true;
 
-    //   var adapter = dio.httpClientAdapter;
+          return client;
+        },
+      );
+    }
 
-    //   if (adapter is IOHttpClientAdapter) {
-    //     adapter.onHttpClientCreate = _configureHttpClient(
-    //       allowHostsWithBadCertificates: const {},
-    //       proxyIp: proxy,
-    //       proxyPort: int.tryParse(port) ?? 0,
-    //     );
-    //   }
-    // }
     return dio;
   }
 
