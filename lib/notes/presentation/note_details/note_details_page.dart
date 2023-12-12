@@ -22,6 +22,8 @@ class NoteDetailsPage extends StatelessWidget with ShowErrorDialogMixin {
     const spaceWidth = 2.0;
     const thickness = 0.5;
 
+    final models = _createModels(noteItem);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(context.pageTitle),
@@ -32,40 +34,48 @@ class NoteDetailsPage extends StatelessWidget with ShowErrorDialogMixin {
           child: Column(
             children: [
               Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      if (noteItem.title.isNotEmpty) ...[
-                        const SizedBox(height: CommonSize.indent2x),
-                        NoteLine(
-                          text: noteItem.title,
+                child: ScrollConfiguration(
+                  behavior: ScrollConfiguration.of(context)
+                      .copyWith(scrollbars: false),
+                  child: ListView.separated(
+                    itemCount: models.length,
+                    itemBuilder: (context, index) {
+                      final item = models[index];
+                      if (item is _TitleItem) {
+                        return NoteLine(
+                          text: item.text,
                           style: theme.textTheme.bodyLarge,
-                        ),
-                      ],
-                      if (noteItem.description.isNotEmpty) ...[
-                        const SizedBox(height: CommonSize.indent2x),
-                        NoteLine(
-                          text: noteItem.description,
-                          style: theme.textTheme.bodyLarge,
-                        ),
-                        const Divider(thickness: thickness),
-                      ],
-                      const SizedBox(height: CommonSize.indent2x),
-                      ...tags().map(
-                        (str) => str.isEmpty
-                            ? const DashedDivider(
-                                height: CommonSize.indent2x,
-                                thickness: thickness,
-                                dash: dashWidth,
-                                disaredSpace: spaceWidth,
-                              )
-                            : NoteLine(
-                                text: str,
-                                style: theme.textTheme.bodyMedium,
-                              ),
-                      ),
-                    ],
+                        );
+                      } else if (item is _SubtitleItem) {
+                        return Column(
+                          children: [
+                            const SizedBox(height: CommonSize.indent2x),
+                            NoteLine(
+                              text: item.text,
+                              style: theme.textTheme.bodyLarge,
+                            ),
+                            const Divider(thickness: thickness),
+                          ],
+                        );
+                      } else if (item is _NoteItem) {
+                        return NoteLine(
+                          text: item.text,
+                          style: theme.textTheme.bodyMedium,
+                        );
+                      } else if (item is _DividerItem) {
+                        return const DashedDivider(
+                          height: CommonSize.indent2x,
+                          thickness: thickness,
+                          dash: dashWidth,
+                          disaredSpace: spaceWidth,
+                        );
+                      } else {
+                        return const SizedBox();
+                      }
+                    },
+                    separatorBuilder: (_, __) {
+                      return const SizedBox();
+                    },
                   ),
                 ),
               ),
@@ -76,10 +86,39 @@ class NoteDetailsPage extends StatelessWidget with ShowErrorDialogMixin {
     );
   }
 
-  List<String> tags() {
-    final result = noteItem.content.split('\n').toList();
-    return result;
+  List<_ListItem> _createModels(NoteItem noteItem) {
+    final tags = noteItem.content.split('\n').map((e) => e.trim()).toList();
+    return [
+      if (noteItem.title.isNotEmpty) _TitleItem(text: noteItem.title),
+      if (noteItem.description.isNotEmpty)
+        _SubtitleItem(text: noteItem.description),
+      for (final str in tags)
+        str.isEmpty || str == " " ? const _DividerItem() : _NoteItem(text: str)
+    ];
   }
+}
+
+abstract class _ListItem {
+  const _ListItem();
+}
+
+final class _TitleItem extends _ListItem {
+  final String text;
+  const _TitleItem({required this.text});
+}
+
+final class _SubtitleItem extends _ListItem {
+  final String text;
+  const _SubtitleItem({required this.text});
+}
+
+final class _NoteItem extends _ListItem {
+  final String text;
+  const _NoteItem({required this.text});
+}
+
+final class _DividerItem extends _ListItem {
+  const _DividerItem();
 }
 
 class NoteLine extends StatelessWidget with DialogHelper {
@@ -91,6 +130,7 @@ class NoteLine extends StatelessWidget with DialogHelper {
     required this.text,
     required this.style,
   });
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -110,7 +150,10 @@ class NoteLine extends StatelessWidget with DialogHelper {
             minSize: CommonSize.smallIcon,
             onPressed: () => _onCopyText(context, text: text),
             child: const Padding(
-              padding: EdgeInsets.only(left: CommonSize.indent2x),
+              padding: EdgeInsets.only(
+                left: CommonSize.indent2x,
+                right: CommonSize.indent,
+              ),
               child: Icon(
                 Icons.copy_sharp,
                 size: CommonSize.smallIcon,
