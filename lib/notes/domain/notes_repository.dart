@@ -3,9 +3,9 @@ import 'package:pwd/notes/domain/model/note_item.dart';
 abstract class NotesRepository {
   Future<int> updateNote(NoteItem noteItem);
 
-  Future<int> delete(int id);
+  Future<int> delete(String id);
 
-  Future<NoteItem?> readNote(int id);
+  Future<NoteItem?> readNote(String id);
 
   Future<List<NoteItem>> readNotes();
 

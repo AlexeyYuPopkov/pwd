@@ -7,7 +7,7 @@ class UnauthRouterPagePath {
   static const pin = 'pin';
 }
 
-class UnauthRouterDelegate extends BaseRouterDelegate {
+final class UnauthRouterDelegate extends BaseRouterDelegate {
   @override
   final GlobalKey<NavigatorState> navigatorKey;
 

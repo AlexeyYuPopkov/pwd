@@ -7,7 +7,7 @@ part of 'note_item_data.dart';
 // **************************************************************************
 
 NoteItemData _$NoteItemDataFromJson(Map<String, dynamic> json) => NoteItemData(
-      id: json['id'] as int?,
+      id: json['id'] as String? ?? '',
       title: json['title'] as String? ?? '',
       description: json['description'] as String? ?? '',
       content: json['content'] as String? ?? '',
@@ -22,3 +22,9 @@ Map<String, dynamic> _$NoteItemDataToJson(NoteItemData instance) =>
       'content': instance.content,
       'timestamp': instance.timestamp,
     };
+
+// **************************************************************************
+// RealmObjectGenerator
+// **************************************************************************
+
+// ignore_for_file: type=lint

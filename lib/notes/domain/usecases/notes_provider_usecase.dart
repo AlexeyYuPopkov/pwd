@@ -84,7 +84,7 @@ class NotesProviderUsecaseImpl implements NotesProviderUsecase {
   Future<void> deleteNoteItem(NoteItem noteItem) async {
     try {
       final id = noteItem.id;
-      if (id != null && id > 0) {
+      if (id.isNotEmpty) {
         await repository.delete(id);
         readNotes();
       }

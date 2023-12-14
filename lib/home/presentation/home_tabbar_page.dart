@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:pwd/notes/presentation/router/note_router_delegate.dart';
+import 'package:pwd/notes/presentation/router/note_router_variant_delegate.dart';
 import 'package:pwd/settings/presentation/router/settings_router_delegate.dart';
 import 'package:pwd/theme/common_size.dart';
 
 final _noteRouterKey = GlobalKey<NavigatorState>();
+final _notesListRouterKey = GlobalKey<NavigatorState>();
 final _settingsRouterKey = GlobalKey<NavigatorState>();
 
 class HomeTabbarPage extends StatelessWidget {
@@ -113,6 +115,11 @@ class _HomeTabbarPageMobileContentState
             routerDelegate: NoteRouterDelegate(navigatorKey: _noteRouterKey),
           ),
           Router(
+            routerDelegate: NoteRouterVariantDelegate(
+              navigatorKey: _notesListRouterKey,
+            ),
+          ),
+          Router(
             routerDelegate: SettingsRouterDelegate(
               navigatorKey: _settingsRouterKey,
             ),
@@ -123,6 +130,10 @@ class _HomeTabbarPageMobileContentState
         items: [
           BottomNavigationBarItem(
             icon: const Icon(Icons.home),
+            label: context.homeTabName,
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.list),
             label: context.homeTabName,
           ),
           BottomNavigationBarItem(

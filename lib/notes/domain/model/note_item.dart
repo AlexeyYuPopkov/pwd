@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 class NoteItem extends Equatable {
-  final int? id;
+  final String id;
   final String title;
   final String description;
   final String content;
@@ -27,14 +27,14 @@ class NoteItem extends Equatable {
   factory NoteItem.newItem() = NewNoteItem;
 
   factory NoteItem.updatedItem({
-    required int? id,
+    required String id,
     required String title,
     required String description,
     required String content,
   }) = UpdatedNoteItem;
 
   const factory NoteItem.decrypted({
-    required int? id,
+    required String id,
     required String title,
     required String description,
     required String content,
@@ -68,7 +68,7 @@ class DecryptedNoteItem extends NoteItem {
 class NewNoteItem extends NoteItem {
   NewNoteItem()
       : super(
-          id: null,
+          id: '',
           title: '',
           description: '',
           content: '',

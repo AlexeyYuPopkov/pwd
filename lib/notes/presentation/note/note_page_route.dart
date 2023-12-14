@@ -1,6 +1,6 @@
 import 'package:pwd/notes/domain/model/note_item.dart';
 
-abstract class NotePageRoute {
+sealed class NotePageRoute {
   const NotePageRoute();
 
   const factory NotePageRoute.onEdit({
@@ -14,7 +14,7 @@ abstract class NotePageRoute {
   const factory NotePageRoute.shouldSync() = NotePageShouldSync;
 }
 
-class NotePageOnEdit extends NotePageRoute {
+final class NotePageOnEdit extends NotePageRoute {
   final NoteItem noteItem;
 
   const NotePageOnEdit({
@@ -22,7 +22,7 @@ class NotePageOnEdit extends NotePageRoute {
   });
 }
 
-class NotePageOnDetails extends NotePageRoute {
+final class NotePageOnDetails extends NotePageRoute {
   final NoteItem noteItem;
 
   const NotePageOnDetails({
@@ -30,6 +30,6 @@ class NotePageOnDetails extends NotePageRoute {
   });
 }
 
-class NotePageShouldSync extends NotePageRoute {
+final class NotePageShouldSync extends NotePageRoute {
   const NotePageShouldSync();
 }

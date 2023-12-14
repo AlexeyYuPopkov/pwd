@@ -41,7 +41,7 @@ class SqlDatasourceImpl implements NotesRepository {
   }
 
   Future<Database> _openDb() async {
-    const currentDbVersion = 2;
+    const currentDbVersion = 3;
     const createRequest = DbRequest.createNotesTableIfAbsent();
     return openDatabase(
       await _databasePath,
@@ -91,7 +91,7 @@ class SqlDatasourceImpl implements NotesRepository {
 
           final existedId = result.firstOrNull?['id'];
 
-          if (existedId is int && existedId == noteItem.id) {
+          if (existedId is String && existedId == noteItem.id) {
             changes += await transaction.update(
               CreateNotesTableIfAbsent.tableName,
               where: 'id = ?',
@@ -114,7 +114,7 @@ class SqlDatasourceImpl implements NotesRepository {
   }
 
   @override
-  Future<int> delete(int id) async {
+  Future<int> delete(String id) async {
     return db.then(
       (db) => db.delete(
         CreateNotesTableIfAbsent.tableName,
@@ -125,7 +125,7 @@ class SqlDatasourceImpl implements NotesRepository {
   }
 
   @override
-  Future<NoteItem?> readNote(int id) async {
+  Future<NoteItem?> readNote(String id) async {
     final results = await db.then((db) => db.query(
           CreateNotesTableIfAbsent.tableName,
           where: 'id = ?',
@@ -271,7 +271,7 @@ class CreateNotesTableIfAbsent extends DbRequest {
   @override
   String get query => 'CREATE TABLE $tableName'
       r'('
-      r'id INTEGER PRIMARY KEY,'
+      r'id VARCHAR PRIMARY KEY,'
       r'title TEXT,'
       r'description TEXT,'
       r'content TEXT,'

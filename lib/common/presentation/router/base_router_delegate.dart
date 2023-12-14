@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-abstract class BaseRouterDelegate extends RouterDelegate
+abstract base class BaseRouterDelegate extends RouterDelegate
     with ChangeNotifier, PopNavigatorRouterDelegateMixin {
   @override
   GlobalKey<NavigatorState> get navigatorKey;

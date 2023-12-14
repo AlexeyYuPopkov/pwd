@@ -9,8 +9,8 @@ part 'note_item_data.g.dart';
 @JsonSerializable()
 class NoteItemData implements NoteItem {
   @override
-  @JsonKey(name: 'id', defaultValue: null)
-  final int? id;
+  @JsonKey(name: 'id', defaultValue: '')
+  final String id;
 
   @override
   @JsonKey(name: 'title', defaultValue: '')

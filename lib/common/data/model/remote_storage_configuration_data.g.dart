@@ -25,3 +25,9 @@ Map<String, dynamic> _$RemoteStorageConfigurationDataToJson(
       'branch': instance.branch,
       'fileName': instance.fileName,
     };
+
+// **************************************************************************
+// RealmObjectGenerator
+// **************************************************************************
+
+// ignore_for_file: type=lint
