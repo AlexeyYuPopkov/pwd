@@ -7,7 +7,7 @@ final class NoteRealmMapper {
       id: src.id,
       title: src.title,
       description: src.description,
-      content: src.content.map((e) => e.text).join("\n"),
+      content: src.content.map((e) => e.text).join('\n'),
       timestamp: src.timestamp,
     );
   }

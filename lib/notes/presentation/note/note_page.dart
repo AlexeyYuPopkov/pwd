@@ -1,14 +1,13 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:pwd/common/presentation/app_bar_button.dart';
-import 'package:pwd/common/presentation/common_highlighted_row.dart';
 import 'package:pwd/common/presentation/dialogs/show_error_dialog_mixin.dart';
 import 'package:pwd/common/tools/di_storage/di_storage.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
 import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
 import 'package:pwd/notes/domain/usecases/notes_provider_usecase.dart';
+import 'package:pwd/notes/presentation/common/widgets/note_list_itemtem_widget.dart';
 import 'package:pwd/notes/presentation/note/note_page_route.dart';
 import 'package:pwd/notes/presentation/tools/crypt_error_message_provider.dart';
 import 'package:pwd/notes/presentation/tools/notes_provider_error_message_provider.dart';
@@ -135,91 +134,6 @@ class NotePage extends StatelessWidget with ShowErrorDialogMixin {
   }
 }
 
-class NoteListItemWidget extends StatelessWidget {
-  final NoteItem note;
-
-  final void Function(
-    BuildContext context, {
-    required NoteItem note,
-  }) onDetailsButton;
-
-  final void Function(
-    BuildContext context, {
-    required NoteItem note,
-  }) onEditButton;
-
-  const NoteListItemWidget({
-    super.key,
-    required this.note,
-    required this.onDetailsButton,
-    required this.onEditButton,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return CommonHighlightedBackgroundRow(
-      highlightedColor: Colors.grey.shade200,
-      onTap: () => onDetailsButton(
-        context,
-        note: note,
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: CommonSize.indent2x,
-          vertical: CommonSize.indent,
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: IgnorePointer(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (note.title.isNotEmpty)
-                      Text(
-                        note.title,
-                        style: theme.textTheme.titleMedium,
-                      ),
-                    if (note.description.isNotEmpty)
-                      Text(
-                        note.description,
-                        style: theme.textTheme.titleSmall,
-                      ),
-                  ],
-                ),
-              ),
-            ),
-            if (note is! DecryptedNoteItem)
-              Tooltip(
-                message: context.rawNoteTooltipMessage,
-                child: const Icon(
-                  Icons.warning,
-                  size: CommonSize.indent2x,
-                ),
-              ),
-            CupertinoButton(
-              alignment: Alignment.centerRight,
-              padding: const EdgeInsets.only(left: CommonSize.indent2x),
-              onPressed: () => onEditButton(
-                context,
-                note: note,
-              ),
-              child: const Icon(
-                key: Key('test_npte_page_edit_icon'),
-                Icons.edit,
-                size: CommonSize.indent2x,
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 extension on BuildContext {
   String get pageTitle => 'Note';
-  String get rawNoteTooltipMessage => 'Not Encrypted';
 }

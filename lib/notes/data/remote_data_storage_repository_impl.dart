@@ -4,14 +4,13 @@ import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
 import 'package:pwd/notes/data/sync_data_service/git_service_api.dart';
 import 'package:pwd/notes/data/sync_models/put_db_request_data.dart';
 import 'package:pwd/notes/domain/remote_data_storage_repository.dart';
-import 'package:pwd/notes/domain/database_path_provider.dart';
+
 import 'package:pwd/notes/domain/sync_requests_parameters/get_db_response.dart';
 import 'package:pwd/notes/domain/sync_requests_parameters/put_db_request.dart';
 import 'package:pwd/notes/domain/sync_requests_parameters/put_db_response.dart';
 
 class RemoteDataStorageRepositoryImpl implements RemoteDataStorageRepository {
   final GitServiceApi service;
-  final DatabasePathProvider databasePathProvider;
 
   final Mapper<PutDbRequestData, PutDbRequest> putDbRequestMapper;
 
@@ -19,7 +18,6 @@ class RemoteDataStorageRepositoryImpl implements RemoteDataStorageRepository {
 
   RemoteDataStorageRepositoryImpl({
     required this.service,
-    required this.databasePathProvider,
     required this.errorMapper,
     required this.putDbRequestMapper,
   });

@@ -93,7 +93,7 @@ class NoteDetailsPage extends StatelessWidget with ShowErrorDialogMixin {
       if (noteItem.description.isNotEmpty)
         _SubtitleItem(text: noteItem.description),
       for (final str in tags)
-        str.isEmpty || str == " " ? const _DividerItem() : _NoteItem(text: str)
+        str.isEmpty || str == ' ' ? const _DividerItem() : _NoteItem(text: str)
     ];
   }
 }

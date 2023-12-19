@@ -53,6 +53,6 @@ class CommonSize {
   /// [elevation = 6.0]
   static const elevation = 6.0;
 
-  /// [rowHeight = 48.0]
-  static const rowHeight = 48.0;
+  /// [rowHeight = 50.0]
+  static const rowHeight = 50.0;
 }
