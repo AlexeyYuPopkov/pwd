@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:pwd/notes/domain/usecases/get_google_file_list_usecase.dart';
 import 'notes_list_variant_bloc_data.dart';
 
 sealed class NotesListVariantBlocState extends Equatable {
@@ -40,5 +41,13 @@ class ErrorState extends NotesListVariantBlocState {
   const ErrorState({
     required super.data,
     required this.e,
+  });
+}
+
+class FilesListState extends NotesListVariantBlocState {
+  final List<RemoteFile> files;
+  const FilesListState({
+    required super.data,
+    required this.files,
   });
 }

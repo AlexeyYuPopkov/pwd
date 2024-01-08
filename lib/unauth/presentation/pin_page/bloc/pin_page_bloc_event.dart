@@ -1,6 +1,6 @@
 part of 'pin_page_bloc.dart';
 
-abstract class PinPageBlocEvent extends Equatable {
+sealed class PinPageBlocEvent extends Equatable {
   const PinPageBlocEvent();
 
   const factory PinPageBlocEvent.initial() = InitialEvent;
@@ -20,11 +20,11 @@ abstract class PinPageBlocEvent extends Equatable {
   List<Object?> get props => const [];
 }
 
-class InitialEvent extends PinPageBlocEvent {
+final class InitialEvent extends PinPageBlocEvent {
   const InitialEvent();
 }
 
-class SetRemoteStorageConfigurationEvent extends PinPageBlocEvent {
+final class SetRemoteStorageConfigurationEvent extends PinPageBlocEvent {
   final String token;
   final String repo;
   final String owner;
@@ -42,7 +42,7 @@ class SetRemoteStorageConfigurationEvent extends PinPageBlocEvent {
   });
 }
 
-class LoginEvent extends PinPageBlocEvent {
+final class LoginEvent extends PinPageBlocEvent {
   final String pin;
   const LoginEvent({required this.pin});
 }

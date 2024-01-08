@@ -3,6 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
 
+@GenerateNiceMocks([MockSpec<Service>()])
+// @GenerateMocks([Service])
 import 'mock_test_example_test.mocks.dart';
 
 final class ModelMapper {
@@ -45,7 +47,6 @@ final class DeleteUsecase {
   }
 }
 
-@GenerateMocks([Service])
 void main() {
   final service = MockService();
 
@@ -74,27 +75,37 @@ void main() {
         Exception(),
       );
 
-      expectLater(usecase.getModel(), throwsException);
+      expect(() => usecase.getModel(), throwsException);
+      verify(service.getModel());
     });
 
-    test('invalid1', () async {
+    test('invalid variant', () async {
       final response = <String, dynamic>{};
 
       when(service.getModel()).thenAnswer((_) {
         return Future.value(response);
       });
 
-      expectLater(() => usecase.getModel(), throwsA(isA<Error>()));
+      expect(() => usecase.getModel(), throwsA(isA<Error>()));
+      verify(service.getModel());
     });
   });
 
-  // group('DeleteUsecase', () {
-  //   final usecase = DeleteUsecase(service: service);
+  group('DeleteUsecase', () {
+    final usecase = DeleteUsecase(service: service);
 
-  //   test('valid1', () {
-  //     when(service.deleteModel()).thenAnswer((_) => Future.value());
-  //   });
+    test('valid', () async {
+      when(service.deleteModel()).thenAnswer((_) => Future.value());
+      await usecase.deleteModel();
+      verify(service.deleteModel());
+    });
 
-  //   expectLater(() => true, true);
-  // });
+    test('invalid', () async {
+      when(service.deleteModel()).thenThrow(Exception());
+
+      expect(() => usecase.deleteModel(), throwsException);
+      verify(service.deleteModel());
+      // verifyNever(service.deleteModel());
+    });
+  });
 }

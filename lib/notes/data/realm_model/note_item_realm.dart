@@ -16,3 +16,9 @@ class _NoteItemRealm {
 class _NoteItemContentRealm {
   late String text;
 }
+
+// @RealmModel()
+// class _MetaRealm {
+//   @PrimaryKey()
+//   late int timestamp;
+// }

@@ -72,7 +72,7 @@ class NotePageBloc extends Bloc<NotePageEvent, NotePageState> {
   ) async {
     try {
       emit(NotePageState.loading(data: state.data));
-      await syncDataUsecase.createOrOverrideDb();
+      await (syncDataUsecase as SyncDataUsecaseImpl).createOrOverrideDb();
       emit(NotePageState.common(data: state.data));
       _initialActions();
     } catch (e) {

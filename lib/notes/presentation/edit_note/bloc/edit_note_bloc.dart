@@ -64,7 +64,7 @@ class EditNoteBloc extends Bloc<EditNoteEvent, EditNoteState> {
       emit(EditNoteState.loading(data: data));
 
       await notesProviderUsecase.deleteNoteItem(data.noteItem);
-      await syncDataUsecase.forcePushDb();
+      await syncDataUsecase.updateRemote();
       emit(EditNoteState.didDelete(data: data));
     } catch (e) {
       emit(EditNoteState.error(data: state.data, error: e));

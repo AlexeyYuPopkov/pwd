@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:encrypt/encrypt.dart' as encrypt;
+import 'package:flutter/foundation.dart';
 import 'package:pwd/common/domain/base_pin.dart';
 import 'package:pwd/common/domain/errors/app_error.dart';
 
@@ -71,6 +72,13 @@ class HashUsecase {
 
   // static
   String pinHash(String pin) => md5.convert(utf8.encode(pin)).toString();
+
+  List<int> pinHash512(String pin) {
+    if (kDebugMode) {
+      print('Key str:${sha512.convert(utf8.encode(pin))}');
+    }
+    return sha512.convert(utf8.encode(pin)).bytes;
+  }
 }
 
 // Errors

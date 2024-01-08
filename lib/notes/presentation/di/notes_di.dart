@@ -6,6 +6,7 @@ import 'package:pwd/notes/domain/database_path_provider.dart';
 
 import 'package:pwd/notes/domain/usecases/notes_provider_usecase.dart';
 import 'package:pwd/notes/domain/notes_repository.dart';
+import 'package:pwd/notes/domain/usecases/notes_provider_usecase_variant.dart';
 
 class NotesDi extends DiModule {
   @override
@@ -31,6 +32,15 @@ class NotesDi extends DiModule {
         repository: di.resolve(),
         hashUsecase: di.resolve(),
         pinRepository: di.resolve(),
+      ),
+      lifeTime: const LifeTime.single(),
+    );
+
+    di.bind<NotesProviderUsecaseVariant>(
+      module: this,
+      () => NotesProviderUsecaseVariantImpl(
+        repository: di.resolve(),
+        pinUsecase: di.resolve(),
       ),
       lifeTime: const LifeTime.single(),
     );

@@ -49,6 +49,7 @@ void main() {
         item.value,
         BasePin.pin(
           pin: const HashUsecase().pinHash(item.key),
+          pinSha512: const [],
         ),
       );
     }
@@ -74,7 +75,10 @@ void main() {
   });
 
   test('HashUsecase - Exception: Wrong pin length', () {
-    final expectedPin = BasePin.pin(pin: '12345');
+    final expectedPin = BasePin.pin(
+      pin: '12345',
+      pinSha512: const [],
+    );
     const usecase = HashUsecase();
 
     expect(

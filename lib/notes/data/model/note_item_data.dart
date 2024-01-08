@@ -36,8 +36,7 @@ class NoteItemData implements NoteItem {
     required this.timestamp,
   });
 
-  factory NoteItemData.fromJson(Map<String, dynamic> json) =>
-      _$NoteItemDataFromJson(json);
+  factory NoteItemData.fromJson(Map<String, dynamic> json) => _fromJson(json);
 
   Map<String, dynamic> toJson() => _$NoteItemDataToJson(this);
 
@@ -68,3 +67,16 @@ class NoteItemData implements NoteItem {
         timestamp: timestamp ?? this.timestamp,
       );
 }
+
+NoteItemData _fromJson(Map<String, dynamic> json) => NoteItemData(
+      // id: json['id'] as String? ?? '',
+      id: json['id'] is String
+          ? json['id'] as String
+          : json['id'] is int
+              ? json['id'].toString()
+              : '',
+      title: json['title'] as String? ?? '',
+      description: json['description'] as String? ?? '',
+      content: json['content'] as String? ?? '',
+      timestamp: json['timestamp'] as int,
+    );

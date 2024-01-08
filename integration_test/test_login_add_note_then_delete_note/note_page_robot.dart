@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pwd/notes/presentation/common/widgets/note_list_itemtem_widget.dart';
+import 'package:pwd/notes/presentation/common/widgets/note_list_item_widget.dart';
 import 'package:pwd/notes/presentation/note/note_page.dart';
 
 class NotePageRobot {

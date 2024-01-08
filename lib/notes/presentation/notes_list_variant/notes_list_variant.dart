@@ -6,7 +6,8 @@ import 'package:pwd/common/presentation/dialogs/show_error_dialog_mixin.dart';
 import 'package:pwd/common/presentation/shimmer/common_shimmer.dart';
 import 'package:pwd/common/tools/di_storage/di_storage.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
-import 'package:pwd/notes/presentation/common/widgets/note_list_itemtem_widget.dart';
+import 'package:pwd/notes/presentation/common/widgets/note_list_item_widget.dart';
+import 'package:pwd/notes/presentation/note/note_page_route.dart';
 import 'package:pwd/notes/presentation/tools/crypt_error_message_provider.dart';
 import 'package:pwd/notes/presentation/tools/notes_provider_error_message_provider.dart';
 import 'package:pwd/notes/presentation/tools/sync_data_error_message_provider.dart';
@@ -30,6 +31,7 @@ final class NotesListVariant extends StatelessWidget with ShowErrorDialogMixin {
       create: (context) => NotesListVariantBloc(
         notesProviderUsecase: DiStorage.shared.resolve(),
         syncNotesVariantUsecase: DiStorage.shared.resolve(),
+        hashUsecase: DiStorage.shared.resolve(),
       ),
       child: BlocConsumer<NotesListVariantBloc, NotesListVariantBlocState>(
         listener: _listener,
@@ -39,8 +41,20 @@ final class NotesListVariant extends StatelessWidget with ShowErrorDialogMixin {
               title: Text(context.pageTitle),
               actions: [
                 AppBarButton(
+                  iconData: Icons.get_app_outlined,
+                  onPressed: () => _onSqlToRealm(context),
+                ),
+                AppBarButton(
                   iconData: Icons.sync,
                   onPressed: () => _onSync(context),
+                ),
+                AppBarButton(
+                  key: const Key('test_add_note_button'),
+                  iconData: Icons.add,
+                  onPressed: () => _onEditButton(
+                    context,
+                    note: NoteItem.newItem(),
+                  ),
                 ),
               ],
             ),
@@ -61,6 +75,10 @@ final class NotesListVariant extends StatelessWidget with ShowErrorDialogMixin {
       case CommonState():
       case LoadingState():
         break;
+      case FilesListState():
+        // print('Files:');
+        // print(state.files.map((e) => '${e.name}\n'));
+        break;
       case ErrorState(e: final e):
         showError(
           context,
@@ -76,7 +94,29 @@ final class NotesListVariant extends StatelessWidget with ShowErrorDialogMixin {
 
   void _onSync(BuildContext context) => context
       .read<NotesListVariantBloc>()
-      .add(const NotesListVariantBlocEvent.saveNotes());
+      .add(const NotesListVariantBlocEvent.sync());
+
+  void _onSqlToRealm(BuildContext context) => context
+      .read<NotesListVariantBloc>()
+      .add(const NotesListVariantBlocEvent.sqlToRealm());
+
+  void _onEditButton(
+    BuildContext context, {
+    required NoteItem note,
+  }) {
+    onRoute(
+      context,
+      NotePageRoute.onEdit(noteItem: note),
+    ).then(
+      (result) {
+        // if (result is NotePageShouldSync) {
+        //   bloc.add(
+        //     const NotePageEvent.shouldSync(),
+        //   );
+        // }
+      },
+    );
+  }
 }
 
 final class _Notes extends StatelessWidget {

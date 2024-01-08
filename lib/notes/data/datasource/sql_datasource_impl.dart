@@ -179,7 +179,8 @@ class SqlDatasourceImpl implements NotesRepository {
             final timestamp = dbItemMap?['timestamp'];
             final id = dbItemMap?['id'];
 
-            if (dbItemMap != null && id is int && timestamp is int && id > 0) {
+            // if (dbItemMap != null && id is int && timestamp is int && id > 0) {
+            if (dbItemMap != null && timestamp is int) {
               if (timestamp < remoteItem.timestamp) {
                 final map = remoteItem.toJson();
                 changes += await transaction.update(

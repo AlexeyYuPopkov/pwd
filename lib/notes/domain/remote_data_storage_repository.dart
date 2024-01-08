@@ -9,7 +9,16 @@ abstract class RemoteDataStorageRepository {
     required RemoteStorageConfiguration configuration,
   });
 
+  Future<PutDbResponse> putRealmDb({
+    required PutDbRequest request,
+    required RemoteStorageConfiguration configuration,
+  });
+
   Future<GetDbResponse> getDb({
+    required RemoteStorageConfiguration configuration,
+  });
+
+  Future<GetDbResponse> getRealmDb({
     required RemoteStorageConfiguration configuration,
   });
 }

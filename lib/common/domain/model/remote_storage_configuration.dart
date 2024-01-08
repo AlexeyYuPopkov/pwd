@@ -1,10 +1,11 @@
-abstract class RemoteStorageConfiguration {
+sealed class RemoteStorageConfiguration {
   const RemoteStorageConfiguration();
   String get token;
   String get repo;
   String get owner;
   String? get branch;
   String get fileName;
+  String get realmFileName;
 
   const factory RemoteStorageConfiguration.empty() =
       RemoteStorageConfigurationEmpty;
@@ -34,7 +35,7 @@ abstract class RemoteStorageConfiguration {
   }
 }
 
-class RemoteStorageConfigurationEmpty extends RemoteStorageConfiguration {
+final class RemoteStorageConfigurationEmpty extends RemoteStorageConfiguration {
   @override
   String get fileName => '';
 
@@ -51,9 +52,12 @@ class RemoteStorageConfigurationEmpty extends RemoteStorageConfiguration {
   String? get branch => null;
 
   const RemoteStorageConfigurationEmpty();
+
+  @override
+  String get realmFileName => '';
 }
 
-class ValidConfiguration extends RemoteStorageConfiguration {
+final class ValidConfiguration extends RemoteStorageConfiguration {
   @override
   final String token;
   @override
@@ -67,6 +71,9 @@ class ValidConfiguration extends RemoteStorageConfiguration {
   final String fileName;
 
   final String? _branch;
+
+  @override
+  final String realmFileName = 'realm_migration';
 
   const ValidConfiguration({
     required this.token,

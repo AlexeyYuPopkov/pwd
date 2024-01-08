@@ -46,9 +46,7 @@ class _PinPageEnterPinFormState extends State<PinPageEnterPinForm> {
                     SizedBox(
                       height: topSpace,
                       child: Center(
-                        child: RepaintBoundary(
-                          child: ClocksWidget(formatter: widget.timeFormatter),
-                        ),
+                        child: ClocksWidget(formatter: widget.timeFormatter),
                       ),
                     ),
                     ConstrainedBox(

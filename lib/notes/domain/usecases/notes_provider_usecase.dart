@@ -10,6 +10,8 @@ import 'package:pwd/notes/domain/notes_repository.dart';
 abstract class NotesProviderUsecase {
   Stream<List<NoteItem>> get noteStream;
 
+  List<NoteItem> get notes;
+
   Future<void> readNotes();
 
   Future<void> updateNoteItem(NoteItem noteItem);
@@ -31,7 +33,8 @@ class NotesProviderUsecaseImpl implements NotesProviderUsecase {
   late final _noteStream = BehaviorSubject<List<NoteItem>>();
 
   @override
-  Stream<List<NoteItem>> get noteStream => _noteStream.asyncMap(
+  Stream<List<NoteItem>> get noteStream => _noteStream
+      .asyncMap(
         (items) async {
           final pin = pinRepository.getPin();
           final port = ReceivePort();
@@ -51,7 +54,14 @@ class NotesProviderUsecaseImpl implements NotesProviderUsecase {
 
           return result;
         },
-      ).asBroadcastStream();
+      )
+      .doOnData(
+        (e) => notes = e,
+      )
+      .asBroadcastStream();
+
+  @override
+  List<NoteItem> notes = [];
 
   @override
   Future<void> readNotes() async {

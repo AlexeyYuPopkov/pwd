@@ -1,6 +1,6 @@
 import 'package:pwd/common/presentation/di/network_di.dart';
 import 'package:pwd/common/tools/di_storage/di_storage.dart';
-import 'package:pwd/notes/data/local_repository_impl.dart';
+import 'package:pwd/notes/data/datasource/realm_datasource_impl.dart';
 import 'package:pwd/notes/data/remote_data_storage_repository_impl.dart';
 import 'package:pwd/notes/data/sync_data_mappers/put_db_request_mapper.dart';
 import 'package:pwd/notes/data/sync_data_service/git_service_api.dart';
@@ -25,7 +25,7 @@ class SyncDi extends DiModule {
 
     di.bind<SyncDataUsecase>(
       module: this,
-      () => SyncDataUsecase(
+      () => SyncDataUsecaseImpl(
         remoteStorageConfigurationProvider: di.resolve(),
         remoteStorageRepository: di.resolve(),
         notesRepository: di.resolve(),
@@ -41,13 +41,17 @@ extension _Variant on SyncDi {
   void _bindVariant(DiStorage di) async {
     di.bind<LocalRepository>(
       module: this,
-      () => LocalRepositoryImpl(),
+      () => RealmDatasourceImpl(),
     );
 
-    di.bind<SyncNotesVariantUsecase>(
+    di.bind<SyncDataVariantUsecase>(
       module: this,
-      () => SyncNotesVariantUsecase(
+      () => SyncNotesVariantUsecaseImpl(
         repository: di.resolve(),
+        pinUsecase: di.resolve(),
+        remoteStorageConfigurationProvider: di.resolve(),
+        remoteStorageRepository: di.resolve(),
+        hashUsecase: di.resolve(),
       ),
     );
   }

@@ -12,7 +12,9 @@ sealed class NotesListVariantBlocEvent extends Equatable {
     required Object e,
   }) = ErrorEvent;
 
-  const factory NotesListVariantBlocEvent.saveNotes() = SaveNotesEvent;
+  const factory NotesListVariantBlocEvent.sync() = SyncEvent;
+
+  const factory NotesListVariantBlocEvent.sqlToRealm() = SqlToRealmEvent;
 
   @override
   List<Object?> get props => const [];
@@ -28,6 +30,10 @@ final class ErrorEvent extends NotesListVariantBlocEvent {
   const ErrorEvent({required this.e});
 }
 
-final class SaveNotesEvent extends NotesListVariantBlocEvent {
-  const SaveNotesEvent();
+final class SyncEvent extends NotesListVariantBlocEvent {
+  const SyncEvent();
+}
+
+final class SqlToRealmEvent extends NotesListVariantBlocEvent {
+  const SqlToRealmEvent();
 }
