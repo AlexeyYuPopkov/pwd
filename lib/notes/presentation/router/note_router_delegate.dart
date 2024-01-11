@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pwd/common/presentation/fade_animation_page.dart';
 import 'package:pwd/common/presentation/router/base_router_delegate.dart';
+import 'package:pwd/common/tools/di_storage/di_storage.dart';
 import 'package:pwd/notes/presentation/edit_note/edit_note_page.dart';
 import 'package:pwd/notes/presentation/note/note_page.dart';
 import 'package:pwd/notes/presentation/note/note_page_route.dart';
@@ -62,9 +63,12 @@ final class NoteRouterDelegate extends BaseRouterDelegate {
           return context.navigator.push(
             MaterialPageRoute(
               builder: (_) {
+
                 return EditNotePage(
                   noteItem: action.noteItem,
                   onRoute: onRoute,
+                  notesProviderUsecase: DiStorage.shared.resolve(),
+                  syncDataUsecase: DiStorage.shared.resolve(),
                 );
               },
             ),

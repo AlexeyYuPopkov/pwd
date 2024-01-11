@@ -4,7 +4,7 @@ import 'package:pwd/common/presentation/common_highlighted_row.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
 import 'package:pwd/theme/common_size.dart';
 
-class NoteListItemWidget extends StatelessWidget {
+final class NoteListItemWidget extends StatelessWidget {
   final NoteItem note;
 
   final void Function(
@@ -60,7 +60,7 @@ class NoteListItemWidget extends StatelessWidget {
                 ),
               ),
             ),
-            if (note is! DecryptedNoteItem)
+            if (!note.isDecrypted)
               Tooltip(
                 message: context.rawNoteTooltipMessage,
                 child: const Icon(

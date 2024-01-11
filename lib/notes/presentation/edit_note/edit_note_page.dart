@@ -6,6 +6,8 @@ import 'package:pwd/common/presentation/dialogs/show_error_dialog_mixin.dart';
 import 'package:pwd/common/tools/di_storage/di_storage.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
 import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
+import 'package:pwd/notes/domain/usecases/notes_provider_usecase.dart';
+import 'package:pwd/notes/domain/usecases/sync_data_usecase.dart';
 import 'package:pwd/notes/presentation/tools/crypt_error_message_provider.dart';
 import 'package:pwd/notes/presentation/tools/notes_provider_error_message_provider.dart';
 import 'package:pwd/notes/presentation/tools/sync_data_error_message_provider.dart';
@@ -14,7 +16,7 @@ import 'package:rxdart/subjects.dart';
 
 import 'bloc/edit_note_bloc.dart';
 
-abstract class EditNotePagePopResult {
+sealed class EditNotePagePopResult {
   const EditNotePagePopResult();
 
   const factory EditNotePagePopResult.didUpdate({required NoteItem noteItem}) =
@@ -23,20 +25,23 @@ abstract class EditNotePagePopResult {
   const factory EditNotePagePopResult.didDidDelete() = DidDeleteResult;
 }
 
-class DidUpdateResult extends EditNotePagePopResult {
+final class DidUpdateResult extends EditNotePagePopResult {
   final NoteItem noteItem;
 
   const DidUpdateResult({required this.noteItem});
 }
 
-class DidDeleteResult extends EditNotePagePopResult {
+final class DidDeleteResult extends EditNotePagePopResult {
   const DidDeleteResult();
 }
 
-class EditNotePage extends StatelessWidget
+final class EditNotePage extends StatelessWidget
     with ShowErrorDialogMixin, DialogHelper {
   final formKey = GlobalKey<_FormState>();
+
   final NoteItem noteItem;
+  final NotesProviderUsecase notesProviderUsecase;
+  final SyncDataUsecase syncDataUsecase;
 
   final Future Function(BuildContext, Object) onRoute;
 
@@ -46,6 +51,8 @@ class EditNotePage extends StatelessWidget
     super.key,
     required this.noteItem,
     required this.onRoute,
+    required this.notesProviderUsecase,
+    required this.syncDataUsecase,
   });
 
   void _listener(BuildContext context, EditNoteState state) async {

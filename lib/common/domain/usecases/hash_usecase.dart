@@ -7,7 +7,7 @@ import 'package:pwd/common/domain/errors/app_error.dart';
 
 final _iv = encrypt.IV.fromLength(16);
 
-class HashUsecase {
+final class HashUsecase {
   const HashUsecase();
 
   String encode(String str, BasePin pin) {

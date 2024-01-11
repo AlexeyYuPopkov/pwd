@@ -9,6 +9,7 @@ final class NoteRealmMapper {
       description: src.description,
       content: src.content.map((e) => e.text).join('\n'),
       timestamp: src.timestamp,
+      isDecrypted: true,
     );
   }
 

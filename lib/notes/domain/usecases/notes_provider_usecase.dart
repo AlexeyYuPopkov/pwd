@@ -114,23 +114,19 @@ class NotesProviderUsecaseImpl implements NotesProviderUsecase {
       final description = hashUsecase.tryDecode(item.description, pin);
       final content = hashUsecase.tryDecode(item.content, pin);
 
-      if (title == null || description == null || content == null) {
-        return NoteItem(
-          id: item.id,
-          title: item.title,
-          description: item.description,
-          content: item.content,
-          timestamp: item.timestamp,
-        );
-      } else {
-        return NoteItem.decrypted(
-          id: item.id,
-          title: title,
-          description: description,
-          content: content,
-          timestamp: item.timestamp,
-        );
-      }
+      final isDecrypted =
+          title != null && description != null && content != null;
+
+      return isDecrypted
+          ? NoteItem(
+              id: item.id,
+              title: title,
+              description: description,
+              content: content,
+              timestamp: item.timestamp,
+              isDecrypted: isDecrypted,
+            )
+          : item.copyWith();
     }
 
     final result = [

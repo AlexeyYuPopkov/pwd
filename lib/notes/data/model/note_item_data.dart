@@ -28,6 +28,9 @@ class NoteItemData implements NoteItem {
   @JsonKey(name: 'timestamp')
   final int timestamp;
 
+  @override
+  final isDecrypted = false;
+
   const NoteItemData({
     required this.id,
     required this.title,
@@ -53,7 +56,7 @@ class NoteItemData implements NoteItem {
   bool? get stringify => false;
 
   @override
-  NoteItem copyWith({
+  NoteItem copyToUpdatedWith({
     String? title,
     String? description,
     String? content,
@@ -66,6 +69,23 @@ class NoteItemData implements NoteItem {
         content: content ?? this.content,
         timestamp: timestamp ?? this.timestamp,
       );
+
+  @override
+  NoteItemData copyWith({
+    String? title,
+    String? description,
+    String? content,
+    int? timestamp,
+    bool? isDecrypted,
+  }) {
+    return NoteItemData(
+      id: id,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      content: content ?? this.content,
+      timestamp: timestamp ?? this.timestamp,
+    );
+  }
 }
 
 NoteItemData _fromJson(Map<String, dynamic> json) => NoteItemData(

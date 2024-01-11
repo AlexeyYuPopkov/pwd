@@ -1,6 +1,6 @@
 part of 'edit_note_bloc.dart';
 
-abstract class EditNoteEvent extends Equatable {
+sealed class EditNoteEvent extends Equatable {
   const EditNoteEvent();
 
   const factory EditNoteEvent.save({
@@ -15,7 +15,7 @@ abstract class EditNoteEvent extends Equatable {
   List<Object?> get props => const [];
 }
 
-class SaveEvent extends EditNoteEvent {
+final class SaveEvent extends EditNoteEvent {
   final String title;
   final String description;
   final String content;
@@ -27,6 +27,6 @@ class SaveEvent extends EditNoteEvent {
   });
 }
 
-class DeleteEvent extends EditNoteEvent {
+final class DeleteEvent extends EditNoteEvent {
   const DeleteEvent();
 }

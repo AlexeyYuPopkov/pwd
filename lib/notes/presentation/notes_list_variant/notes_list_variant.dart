@@ -60,7 +60,7 @@ final class NotesListVariant extends StatelessWidget with ShowErrorDialogMixin {
             ),
             body: state is InitialState
                 ? const _LoadingShimmer()
-                : _Notes(notes: state.data.notes),
+                : _NotesList(notes: state.data.notes),
           );
         },
       ),
@@ -119,10 +119,12 @@ final class NotesListVariant extends StatelessWidget with ShowErrorDialogMixin {
   }
 }
 
-final class _Notes extends StatelessWidget {
+// Notes List 
+
+final class _NotesList extends StatelessWidget {
   final List<NoteItem> notes;
 
-  const _Notes({required this.notes});
+  const _NotesList({required this.notes});
 
   @override
   Widget build(BuildContext context) {
@@ -149,6 +151,8 @@ final class _Notes extends StatelessWidget {
   }) {}
 }
 
+// _LoadingShimmer
+
 final class _LoadingShimmer extends StatelessWidget {
   const _LoadingShimmer();
 
@@ -173,6 +177,7 @@ final class _LoadingShimmer extends StatelessWidget {
   }
 }
 
+// Private
 extension on BuildContext {
   String get pageTitle => 'Note';
 }

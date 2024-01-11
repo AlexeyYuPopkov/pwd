@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pwd/common/presentation/fade_animation_page.dart';
 import 'package:pwd/common/presentation/router/base_router_delegate.dart';
+import 'package:pwd/common/tools/di_storage/di_storage.dart';
+import 'package:pwd/notes/domain/usecases/notes_provider_usecase_variant.dart';
+import 'package:pwd/notes/domain/usecases/sync_notes_variant_usecase.dart';
 import 'package:pwd/notes/presentation/edit_note/edit_note_page.dart';
 import 'package:pwd/notes/presentation/note/note_page.dart';
 import 'package:pwd/notes/presentation/note/note_page_route.dart';
@@ -65,6 +68,10 @@ final class NoteRouterVariantDelegate extends BaseRouterDelegate {
                 return EditNotePage(
                   noteItem: action.noteItem,
                   onRoute: onRoute,
+                  notesProviderUsecase:
+                      DiStorage.shared.resolve<NotesProviderUsecaseVariant>(),
+                  syncDataUsecase:
+                      DiStorage.shared.resolve<SyncDataVariantUsecase>(),
                 );
               },
             ),

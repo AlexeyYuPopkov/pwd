@@ -8,7 +8,7 @@ import 'package:pwd/notes/domain/usecases/sync_data_usecase.dart';
 part 'edit_note_state.dart';
 part 'edit_note_event.dart';
 
-class EditNoteBloc extends Bloc<EditNoteEvent, EditNoteState> {
+final class EditNoteBloc extends Bloc<EditNoteEvent, EditNoteState> {
   final NotesProviderUsecase notesProviderUsecase;
   final SyncDataUsecase syncDataUsecase;
   EditNotePageData get data => state.data;
