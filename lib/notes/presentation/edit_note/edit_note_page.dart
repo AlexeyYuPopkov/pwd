@@ -225,7 +225,7 @@ class _FormState extends State<_Form> {
     text: widget.noteItem.description,
   );
   late final contentController = TextEditingController(
-    text: widget.noteItem.content,
+    text: widget.noteItem.content.str,
   );
 
   @override
@@ -289,7 +289,7 @@ class _FormState extends State<_Form> {
   bool checkIsSubmitEnabled() =>
       widget.noteItem.title != titleController.text ||
       widget.noteItem.description != descriptionController.text ||
-      widget.noteItem.content != contentController.text;
+      widget.noteItem.content.str != contentController.text;
 
   int get calculatedMaxLines => contentController.text.split('\n').length;
 }

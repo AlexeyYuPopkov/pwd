@@ -10,7 +10,7 @@ import 'package:pwd/notes/domain/database_path_provider.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
 import 'package:pwd/notes/domain/notes_repository.dart';
 
-class SqlDatasourceImpl implements NotesRepository {
+final class SqlDatasourceImpl implements NotesRepository {
   final DatabasePathProvider databasePathProvider;
   Database? _db;
 
@@ -142,7 +142,11 @@ class SqlDatasourceImpl implements NotesRepository {
   }
 
   @override
-  Future<List<NoteItem>> readNotes() async => _readNotesDataList();
+  Future<List<NoteItem>> readNotes() async => _readNotesDataList().then(
+        (items) => [
+          for (final item in items) mapper.toDomain(item),
+        ],
+      );
 
   @override
   Future<String> exportNotes() async {

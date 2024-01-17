@@ -73,9 +73,7 @@ class NoteDetailsPage extends StatelessWidget with ShowErrorDialogMixin {
                         return const SizedBox();
                       }
                     },
-                    separatorBuilder: (_, __) {
-                      return const SizedBox();
-                    },
+                    separatorBuilder: (_, __) => const SizedBox(),
                   ),
                 ),
               ),
@@ -86,42 +84,18 @@ class NoteDetailsPage extends StatelessWidget with ShowErrorDialogMixin {
     );
   }
 
-  List<_ListItem> _createModels(NoteItem noteItem) {
-    final tags = noteItem.content.split('\n').map((e) => e.trim()).toList();
-    return [
-      if (noteItem.title.isNotEmpty) _TitleItem(text: noteItem.title),
-      if (noteItem.description.isNotEmpty)
-        _SubtitleItem(text: noteItem.description),
-      for (final str in tags)
-        str.isEmpty || str == ' ' ? const _DividerItem() : _NoteItem(text: str)
-    ];
-  }
+  List<_ListItem> _createModels(NoteItem noteItem) => [
+        if (noteItem.title.isNotEmpty) _TitleItem(text: noteItem.title),
+        if (noteItem.description.isNotEmpty)
+          _SubtitleItem(text: noteItem.description),
+        for (final item in noteItem.content.items)
+          item.text.isEmpty || item.text == ' '
+              ? const _DividerItem()
+              : _NoteItem(text: item.text)
+      ];
 }
 
-abstract class _ListItem {
-  const _ListItem();
-}
-
-final class _TitleItem extends _ListItem {
-  final String text;
-  const _TitleItem({required this.text});
-}
-
-final class _SubtitleItem extends _ListItem {
-  final String text;
-  const _SubtitleItem({required this.text});
-}
-
-final class _NoteItem extends _ListItem {
-  final String text;
-  const _NoteItem({required this.text});
-}
-
-final class _DividerItem extends _ListItem {
-  const _DividerItem();
-}
-
-class NoteLine extends StatelessWidget with DialogHelper {
+final class NoteLine extends StatelessWidget with DialogHelper {
   final String text;
   final TextStyle? style;
 
@@ -182,4 +156,28 @@ class NoteLine extends StatelessWidget with DialogHelper {
 extension on BuildContext {
   String get pageTitle => 'Details';
   String get tooltipMessage => 'Copied:';
+}
+
+// _ListItem
+abstract interface class _ListItem {
+  const _ListItem();
+}
+
+final class _TitleItem implements _ListItem {
+  final String text;
+  const _TitleItem({required this.text});
+}
+
+final class _SubtitleItem implements _ListItem {
+  final String text;
+  const _SubtitleItem({required this.text});
+}
+
+final class _NoteItem implements _ListItem {
+  final String text;
+  const _NoteItem({required this.text});
+}
+
+final class _DividerItem extends _ListItem {
+  const _DividerItem();
 }

@@ -63,7 +63,6 @@ final class NoteRouterDelegate extends BaseRouterDelegate {
           return context.navigator.push(
             MaterialPageRoute(
               builder: (_) {
-
                 return EditNotePage(
                   noteItem: action.noteItem,
                   onRoute: onRoute,

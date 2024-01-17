@@ -1,4 +1,5 @@
 import 'dart:isolate';
+import 'package:pwd/notes/domain/model/note_item_content.dart';
 import 'package:rxdart/rxdart.dart';
 
 import 'package:pwd/common/domain/pin_repository.dart';
@@ -81,7 +82,9 @@ class NotesProviderUsecaseImpl implements NotesProviderUsecase {
         id: noteItem.id,
         title: hashUsecase.encode(noteItem.title, pin),
         description: hashUsecase.encode(noteItem.description, pin),
-        content: hashUsecase.encode(noteItem.content, pin),
+        content: NoteStringContent(
+          str: hashUsecase.encode(noteItem.content.str, pin),
+        ),
       );
       await repository.updateNote(encoded);
       readNotes();
@@ -112,7 +115,7 @@ class NotesProviderUsecaseImpl implements NotesProviderUsecase {
     NoteItem decryptedOrRaw(NoteItem item) {
       final title = hashUsecase.tryDecode(item.title, pin);
       final description = hashUsecase.tryDecode(item.description, pin);
-      final content = hashUsecase.tryDecode(item.content, pin);
+      final content = hashUsecase.tryDecode(item.content.str, pin);
 
       final isDecrypted =
           title != null && description != null && content != null;
@@ -122,7 +125,7 @@ class NotesProviderUsecaseImpl implements NotesProviderUsecase {
               id: item.id,
               title: title,
               description: description,
-              content: content,
+              content: NoteStringContent(str: content),
               timestamp: item.timestamp,
               isDecrypted: isDecrypted,
             )

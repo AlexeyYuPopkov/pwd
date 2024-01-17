@@ -16,4 +16,3 @@ class _NoteItemRealm {
 class _NoteItemContentRealm {
   late String text;
 }
-

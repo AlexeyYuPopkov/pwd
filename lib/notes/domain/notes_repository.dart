@@ -1,6 +1,6 @@
 import 'package:pwd/notes/domain/model/note_item.dart';
 
-abstract class NotesRepository {
+abstract interface class NotesRepository {
   Future<int> updateNote(NoteItem noteItem);
 
   Future<int> delete(String id);

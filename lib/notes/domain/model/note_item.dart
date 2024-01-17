@@ -1,10 +1,12 @@
 import 'package:equatable/equatable.dart';
 
+import 'note_item_content.dart';
+
 class NoteItem extends Equatable {
   final String id;
   final String title;
   final String description;
-  final String content;
+  final NoteContentInterface content;
   final int timestamp;
   final bool isDecrypted;
 
@@ -33,14 +35,14 @@ class NoteItem extends Equatable {
     required String id,
     required String title,
     required String description,
-    required String content,
+    required NoteContentInterface content,
   }) = UpdatedNoteItem;
 
   factory NoteItem.decrypted({
     required String id,
     required String title,
     required String description,
-    required String content,
+    required NoteContentInterface content,
     required int timestamp,
   }) =>
       NoteItem(
@@ -55,7 +57,7 @@ class NoteItem extends Equatable {
   NoteItem copyToUpdatedWith({
     String? title,
     String? description,
-    String? content,
+    NoteContentInterface? content,
   }) {
     return NoteItem.updatedItem(
       id: id,
@@ -68,7 +70,7 @@ class NoteItem extends Equatable {
   NoteItem copyWith({
     String? title,
     String? description,
-    String? content,
+    NoteContentInterface? content,
     int? timestamp,
     bool? isDecrypted,
   }) {
@@ -89,7 +91,7 @@ final class NewNoteItem extends NoteItem {
           id: '',
           title: '',
           description: '',
-          content: '',
+          content: const NoteStringContent(str: ''),
           timestamp: DateTime.now().timestamp,
           isDecrypted: true,
         );

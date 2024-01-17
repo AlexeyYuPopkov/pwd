@@ -1,5 +1,6 @@
 import 'package:pwd/notes/data/realm_model/note_item_realm.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
+import 'package:pwd/notes/domain/model/note_item_content.dart';
 
 final class NoteRealmMapper {
   static NoteItem toDomain(NoteItemRealm src) {
@@ -7,7 +8,11 @@ final class NoteRealmMapper {
       id: src.id,
       title: src.title,
       description: src.description,
-      content: src.content.map((e) => e.text).join('\n'),
+      content: NoteContent(
+        items: [
+          for (final item in src.content) NoteContentItem(text: item.text),
+        ],
+      ),
       timestamp: src.timestamp,
       isDecrypted: true,
     );
@@ -19,9 +24,9 @@ final class NoteRealmMapper {
       src.title,
       src.description,
       src.timestamp,
-      content: src.content.split('\n').map(
-            (e) => NoteItemContentRealm(e.trim()),
-          ),
+      content: [
+        for (final item in src.content.items) NoteItemContentRealm(item.text),
+      ],
     );
   }
 }

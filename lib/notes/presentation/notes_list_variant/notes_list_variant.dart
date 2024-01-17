@@ -119,7 +119,7 @@ final class NotesListVariant extends StatelessWidget with ShowErrorDialogMixin {
   }
 }
 
-// Notes List 
+// Notes List
 
 final class _NotesList extends StatelessWidget {
   final List<NoteItem> notes;
@@ -128,7 +128,7 @@ final class _NotesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
+    return ListView.separated(
       itemCount: notes.length,
       itemBuilder: (context, index) {
         return NoteListItemWidget(
@@ -137,6 +137,9 @@ final class _NotesList extends StatelessWidget {
           onEditButton: _onEditButton,
         );
       },
+      separatorBuilder: (_, __) => const Divider(
+        height: CommonSize.thickness,
+      ),
     );
   }
 
