@@ -1,12 +1,8 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pwd/common/domain/usecases/hash_usecase.dart';
-import 'package:pwd/common/tools/di_storage/di_storage.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
-import 'package:pwd/notes/domain/usecases/get_google_file_list_usecase.dart';
+import 'package:pwd/notes/domain/usecases/google_sync_usecase.dart';
 import 'package:pwd/notes/domain/usecases/notes_provider_usecase_variant.dart';
-import 'package:pwd/notes/domain/usecases/sql_to_realm_usecase.dart';
-import 'package:pwd/notes/domain/usecases/sync_notes_variant_usecase.dart';
 
 import 'notes_list_variant_bloc_data.dart';
 import 'notes_list_variant_bloc_event.dart';
@@ -17,17 +13,17 @@ class NotesListVariantBloc
   NotesListVariantBlocData get data => state.data;
 
   final NotesProviderUsecaseVariant notesProviderUsecase;
-  final SyncDataVariantUsecase syncNotesVariantUsecase;
-  final HashUsecase hashUsecase;
+  // final SyncDataVariantUsecase syncNotesVariantUsecase;
+  // final HashUsecase hashUsecase;
 
-  final sqlToRealmUsecase = SqlToRealmUsecase(
-    notesProviderUsecase: DiStorage.shared.resolve(),
-    notesProviderUsecaseVariant: DiStorage.shared.resolve(),
-    repository: DiStorage.shared.resolve(),
-    pinUsecase: DiStorage.shared.resolve(),
-  );
+  final GoogleSyncUsecase googleSyncUsecase;
 
-  final getGoogleFileListUsecase = GetGoogleFileListUsecase();
+  // final sqlToRealmUsecase = SqlToRealmUsecase(
+  //   notesProviderUsecase: DiStorage.shared.resolve(),
+  //   notesProviderUsecaseVariant: DiStorage.shared.resolve(),
+  //   repository: DiStorage.shared.resolve(),
+  //   pinUsecase: DiStorage.shared.resolve(),
+  // );
 
   Stream<List<NoteItem>> get noteStream => notesProviderUsecase.noteStream;
 
@@ -35,8 +31,9 @@ class NotesListVariantBloc
 
   NotesListVariantBloc({
     required this.notesProviderUsecase,
-    required this.syncNotesVariantUsecase,
-    required this.hashUsecase,
+    // required this.syncNotesVariantUsecase,
+    // required this.hashUsecase,
+    required this.googleSyncUsecase,
   }) : super(
           InitialState(
             data: NotesListVariantBlocData.initial(),
@@ -66,7 +63,7 @@ class NotesListVariantBloc
   void _setupHandlers() {
     on<NewNotesEvent>(_onNewNotesEvent);
     on<SyncEvent>(_onSyncEvent);
-    on<SqlToRealmEvent>(_onSqlToRealmEvent);
+    // on<SqlToRealmEvent>(_onSqlToRealmEvent);
   }
 
   void _onNewNotesEvent(
@@ -87,7 +84,9 @@ class NotesListVariantBloc
     try {
       emit(NotesListVariantBlocState.loading(data: data));
 
-      await syncNotesVariantUsecase.sync();
+      // await syncNotesVariantUsecase.sync();
+
+      await googleSyncUsecase.sync();
 
       emit(NotesListVariantBlocState.common(data: data));
     } catch (e) {
@@ -95,20 +94,20 @@ class NotesListVariantBloc
     }
   }
 
-  void _onSqlToRealmEvent(
-    SqlToRealmEvent event,
-    Emitter<NotesListVariantBlocState> emit,
-  ) async {
-    try {
-      emit(NotesListVariantBlocState.loading(data: data));
+  // void _onSqlToRealmEvent(
+  //   SqlToRealmEvent event,
+  //   Emitter<NotesListVariantBlocState> emit,
+  // ) async {
+  //   try {
+  //     emit(NotesListVariantBlocState.loading(data: data));
 
-      await sqlToRealmUsecase();
+  //     await sqlToRealmUsecase();
 
-      emit(NotesListVariantBlocState.common(data: data));
-    } catch (e) {
-      emit(NotesListVariantBlocState.error(data: data, e: e));
-    }
-  }
+  //     emit(NotesListVariantBlocState.common(data: data));
+  //   } catch (e) {
+  //     emit(NotesListVariantBlocState.error(data: data, e: e));
+  //   }
+  // }
 
   // void _onGetFileListEvent(
   //   GetFileListEvent event,

@@ -79,6 +79,8 @@ final class SyncNotesVariantUsecaseImpl implements SyncDataVariantUsecase {
     // final timestamp = await repository.getTimestamp(key: pin.pinSha512);
     final path = await repository.getPath(key: pin.pinSha512);
     final file = File(path);
+
+    // file.lastModified()
     final data = await file.readAsBytes();
 
     await _overrideDbWithContent(bytes: data, sha: lastSha);
@@ -87,7 +89,6 @@ final class SyncNotesVariantUsecaseImpl implements SyncDataVariantUsecase {
 
 extension on SyncNotesVariantUsecaseImpl {
   Future<PutDbResponse?> _overrideDbWithContent({
-    // required String contentStr,
     required String? sha,
     required Uint8List bytes,
   }) async {

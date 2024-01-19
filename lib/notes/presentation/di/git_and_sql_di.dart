@@ -1,14 +1,18 @@
+import 'package:pwd/common/presentation/di/network_di.dart';
 import 'package:pwd/common/tools/di_storage/di_storage.dart';
 import 'package:pwd/notes/data/datasource/database_path_provider_impl.dart';
 import 'package:pwd/notes/data/datasource/sql_datasource_impl.dart';
 import 'package:pwd/notes/data/mappers/db_note_mapper.dart';
+import 'package:pwd/notes/data/remote_data_storage_repository_impl.dart';
+import 'package:pwd/notes/data/sync_data_mappers/put_db_request_mapper.dart';
+import 'package:pwd/notes/data/sync_data_service/git_service_api.dart';
 import 'package:pwd/notes/domain/database_path_provider.dart';
-
+import 'package:pwd/notes/domain/remote_data_storage_repository.dart';
 import 'package:pwd/notes/domain/usecases/notes_provider_usecase.dart';
 import 'package:pwd/notes/domain/notes_repository.dart';
-import 'package:pwd/notes/domain/usecases/notes_provider_usecase_variant.dart';
+import 'package:pwd/notes/domain/usecases/sync_data_usecase.dart';
 
-class NotesDi extends DiModule {
+final class GitAndSqlDi extends DiModule {
   @override
   void bind(DiStorage di) {
     di.bind<DatabasePathProvider>(
@@ -36,13 +40,31 @@ class NotesDi extends DiModule {
       lifeTime: const LifeTime.single(),
     );
 
-    di.bind<NotesProviderUsecaseVariant>(
+    _bindSync(di);
+  }
+
+  void _bindSync(DiStorage di) {
+    di.bind<RemoteDataStorageRepository>(
       module: this,
-      () => NotesProviderUsecaseVariantImpl(
-        repository: di.resolve(),
-        pinUsecase: di.resolve(),
+      () => RemoteDataStorageRepositoryImpl(
+        service: GitServiceApi(
+          di.resolve<UnAuthDio>(),
+        ),
+        putDbRequestMapper: PutDbRequestMapper(),
+        errorMapper: di.resolve(),
       ),
-      lifeTime: const LifeTime.single(),
+    );
+
+    di.bind<SyncDataUsecase>(
+      module: this,
+      () => SyncDataUsecaseImpl(
+        remoteStorageConfigurationProvider: di.resolve(),
+        remoteStorageRepository: di.resolve(),
+        notesRepository: di.resolve(),
+        notesProvider: di.resolve(),
+      ),
     );
   }
 }
+
+///

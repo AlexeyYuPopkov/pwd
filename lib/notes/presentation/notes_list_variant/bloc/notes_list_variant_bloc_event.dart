@@ -14,7 +14,7 @@ sealed class NotesListVariantBlocEvent extends Equatable {
 
   const factory NotesListVariantBlocEvent.sync() = SyncEvent;
 
-  const factory NotesListVariantBlocEvent.sqlToRealm() = SqlToRealmEvent;
+  // const factory NotesListVariantBlocEvent.sqlToRealm() = SqlToRealmEvent;
 
   @override
   List<Object?> get props => const [];
@@ -34,6 +34,6 @@ final class SyncEvent extends NotesListVariantBlocEvent {
   const SyncEvent();
 }
 
-final class SqlToRealmEvent extends NotesListVariantBlocEvent {
-  const SqlToRealmEvent();
-}
+// final class SqlToRealmEvent extends NotesListVariantBlocEvent {
+//   const SqlToRealmEvent();
+// }

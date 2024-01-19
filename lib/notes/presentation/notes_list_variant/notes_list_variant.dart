@@ -30,8 +30,9 @@ final class NotesListVariant extends StatelessWidget with ShowErrorDialogMixin {
     return BlocProvider(
       create: (context) => NotesListVariantBloc(
         notesProviderUsecase: DiStorage.shared.resolve(),
-        syncNotesVariantUsecase: DiStorage.shared.resolve(),
-        hashUsecase: DiStorage.shared.resolve(),
+        // syncNotesVariantUsecase: DiStorage.shared.resolve(),
+        // hashUsecase: DiStorage.shared.resolve(),
+        googleSyncUsecase: DiStorage.shared.resolve(),
       ),
       child: BlocConsumer<NotesListVariantBloc, NotesListVariantBlocState>(
         listener: _listener,
@@ -96,9 +97,11 @@ final class NotesListVariant extends StatelessWidget with ShowErrorDialogMixin {
       .read<NotesListVariantBloc>()
       .add(const NotesListVariantBlocEvent.sync());
 
-  void _onSqlToRealm(BuildContext context) => context
-      .read<NotesListVariantBloc>()
-      .add(const NotesListVariantBlocEvent.sqlToRealm());
+  void _onSqlToRealm(BuildContext context) {
+    // context
+    //   .read<NotesListVariantBloc>()
+    //   .add(const NotesListVariantBlocEvent.sqlToRealm());
+  }
 
   void _onEditButton(
     BuildContext context, {
