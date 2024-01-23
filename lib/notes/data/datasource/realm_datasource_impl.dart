@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:pwd/notes/data/mappers/note_realm_mapper.dart';
 import 'package:pwd/notes/data/realm_model/note_item_realm.dart';
@@ -9,6 +8,7 @@ import 'package:realm/realm.dart';
 import 'package:path_provider/path_provider.dart';
 
 final class RealmDatasourceImpl implements LocalRepository {
+  static const _tempFileMame = 'temp.realm';
   Realm? realm;
   Realm? realmDecrypted;
 
@@ -112,6 +112,7 @@ final class RealmDatasourceImpl implements LocalRepository {
   Future<void> migrateWithDatabasePath({
     required Uint8List bytes,
     required List<int>? key,
+    required Set<String> deleted,
   }) async {
     assert(bytes.isNotEmpty);
 
@@ -121,34 +122,44 @@ final class RealmDatasourceImpl implements LocalRepository {
     assert(realmPath.isNotEmpty);
 
     final tempDirPath = await getTemporaryDirectory().then((e) => e.path);
-    final tempRealmPath = '$tempDirPath/temp.realm';
+    final tempRealmPath = '$tempDirPath/$_tempFileMame';
 
     final tempRealmFile = await File(tempRealmPath).writeAsBytes(bytes);
 
     final tempRealm = _createRealm(key: key, path: tempRealmPath);
 
-    await realm.writeAsync(() {
-      realm.addAll<NoteItemRealm>(
-        tempRealm.all<NoteItemRealm>().map(
-          (p) {
-            final localItem = realm.find<NoteItemRealm>(p.id);
+    await realm.writeAsync(
+      () {
+        realm.addAll<NoteItemRealm>(
+          tempRealm.all<NoteItemRealm>().map(
+            (p) {
+              final localItem = realm.find<NoteItemRealm>(p.id);
 
-            if (localItem != null && localItem.timestamp > p.timestamp) {
-              return localItem;
-            } else {
-              return NoteItemRealm(
-                p.id,
-                p.title,
-                p.description,
-                p.timestamp,
-                content: p.content.map((e) => NoteItemContentRealm(e.text)),
-              );
-            }
+              if (localItem != null && localItem.timestamp > p.timestamp) {
+                return localItem;
+              } else {
+                return NoteItemRealm(
+                  p.id,
+                  p.title,
+                  p.description,
+                  p.timestamp,
+                  content: p.content.map((e) => NoteItemContentRealm(e.text)),
+                );
+              }
+            },
+          ),
+          update: true,
+        );
+
+        final itemsToRemove = realm.all<NoteItemRealm>().where(
+          (e) {
+            return deleted.contains(e.id) || e.id.isEmpty;
           },
-        ),
-        update: true,
-      );
-    });
+        );
+
+        realm.deleteMany(itemsToRemove);
+      },
+    );
 
     tempRealm.close();
 
@@ -171,8 +182,6 @@ extension on RealmDatasourceImpl {
     );
 
     final realm = Realm(config);
-
-    this.realm = realm;
 
     if (kDebugMode) {
       print('Realm.config.path: ${realm.config.path}');

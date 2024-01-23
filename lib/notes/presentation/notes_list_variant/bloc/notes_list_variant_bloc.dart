@@ -13,17 +13,7 @@ class NotesListVariantBloc
   NotesListVariantBlocData get data => state.data;
 
   final NotesProviderUsecaseVariant notesProviderUsecase;
-  // final SyncDataVariantUsecase syncNotesVariantUsecase;
-  // final HashUsecase hashUsecase;
-
   final GoogleSyncUsecase googleSyncUsecase;
-
-  // final sqlToRealmUsecase = SqlToRealmUsecase(
-  //   notesProviderUsecase: DiStorage.shared.resolve(),
-  //   notesProviderUsecaseVariant: DiStorage.shared.resolve(),
-  //   repository: DiStorage.shared.resolve(),
-  //   pinUsecase: DiStorage.shared.resolve(),
-  // );
 
   Stream<List<NoteItem>> get noteStream => notesProviderUsecase.noteStream;
 
@@ -31,8 +21,6 @@ class NotesListVariantBloc
 
   NotesListVariantBloc({
     required this.notesProviderUsecase,
-    // required this.syncNotesVariantUsecase,
-    // required this.hashUsecase,
     required this.googleSyncUsecase,
   }) : super(
           InitialState(
@@ -52,6 +40,8 @@ class NotesListVariantBloc
     // add(const GetFileListEvent());
 
     notesProviderUsecase.readNotes();
+
+    add(const NotesListVariantBlocEvent.sync());
   }
 
   @override
@@ -63,7 +53,6 @@ class NotesListVariantBloc
   void _setupHandlers() {
     on<NewNotesEvent>(_onNewNotesEvent);
     on<SyncEvent>(_onSyncEvent);
-    // on<SqlToRealmEvent>(_onSqlToRealmEvent);
   }
 
   void _onNewNotesEvent(
@@ -84,8 +73,6 @@ class NotesListVariantBloc
     try {
       emit(NotesListVariantBlocState.loading(data: data));
 
-      // await syncNotesVariantUsecase.sync();
-
       await googleSyncUsecase.sync();
 
       emit(NotesListVariantBlocState.common(data: data));
@@ -93,34 +80,4 @@ class NotesListVariantBloc
       emit(NotesListVariantBlocState.error(data: data, e: e));
     }
   }
-
-  // void _onSqlToRealmEvent(
-  //   SqlToRealmEvent event,
-  //   Emitter<NotesListVariantBlocState> emit,
-  // ) async {
-  //   try {
-  //     emit(NotesListVariantBlocState.loading(data: data));
-
-  //     await sqlToRealmUsecase();
-
-  //     emit(NotesListVariantBlocState.common(data: data));
-  //   } catch (e) {
-  //     emit(NotesListVariantBlocState.error(data: data, e: e));
-  //   }
-  // }
-
-  // void _onGetFileListEvent(
-  //   GetFileListEvent event,
-  //   Emitter<NotesListVariantBlocState> emit,
-  // ) async {
-  //   try {
-  //     emit(NotesListVariantBlocState.loading(data: data));
-
-  //     final list = await getGoogleFileListUsecase.execute();
-
-  //     emit(FilesListState(data: data, files: list));
-  //   } catch (e) {
-  //     emit(NotesListVariantBlocState.error(data: data, e: e));
-  //   }
-  // }
 }

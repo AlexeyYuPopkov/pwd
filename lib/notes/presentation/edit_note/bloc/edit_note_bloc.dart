@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:pwd/notes/domain/model/note_item.dart';
 import 'package:pwd/notes/domain/model/note_item_content.dart';
 import 'package:pwd/notes/domain/usecases/notes_provider_usecase.dart';
@@ -53,7 +52,7 @@ final class EditNoteBloc extends Bloc<EditNoteEvent, EditNoteState> {
         ),
       );
     } catch (e) {
-      emit(EditNoteState.error(data: state.data, error: e));
+      emit(EditNoteState.error(data: state.data, e: e));
     }
   }
 
@@ -68,7 +67,7 @@ final class EditNoteBloc extends Bloc<EditNoteEvent, EditNoteState> {
       await syncDataUsecase.updateRemote();
       emit(EditNoteState.didDelete(data: data));
     } catch (e) {
-      emit(EditNoteState.error(data: state.data, error: e));
+      emit(EditNoteState.error(data: state.data, e: e));
     }
   }
 }

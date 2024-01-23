@@ -11,12 +11,13 @@ import 'package:pwd/notes/domain/model/google_file.dart';
 
 final class _Consts {
   static const fileName = 'pwd_notes';
+  static const fileNameQ = 'name = \'${_Consts.fileName}\'';
   static const fields =
       'nextPageToken, files(id, name, md5Checksum, modifiedTime)';
   static const spaces = 'drive';
   static const scopes = [
     'email',
-    'https://www.googleapis.com/auth/drive.file',
+    'https://www.googleapis.com/auth/drive',
   ];
 }
 
@@ -25,41 +26,39 @@ final class GoogleRepositoryImpl implements GoogleRepository {
 
   @override
   Future<GoogleFile?> getFile() async {
-    final api = await _getDriveApi();
-
-    final first = await api.files
-        .list(
-      q: 'name = \'$_Consts.fileName\'',
-      pageSize: 1,
-      pageToken: null,
-      spaces: _Consts.spaces,
-      $fields: _Consts.fields,
-    )
-        .then(
-      (e) {
-        final files = e.files;
-        if (files == null || files.isEmpty) {
-          return null;
-        } else {
-          return GoogleFileMapper.toDomain(files[0]);
-        }
-      },
+    return _getFile().then(
+      (e) => e == null ? null : GoogleFileMapper.toDomain(e),
     );
-
-    return first;
   }
 
   @override
-  Future<GoogleFile> createFileWithData(Uint8List data) async {
+  Future<GoogleFile> updateRemote(
+    Uint8List data,
+  ) async {
     final api = await _getDriveApi();
-    final newFile = await api.files.create(
-      drive.File(name: _Consts.fileName),
+
+    final file = await _getFile();
+    final fileId = file?.id;
+
+    if (file == null || fileId == null || fileId.isEmpty) {
+      return createFileWithData(data);
+    }
+
+// https://github.com/google/google-api-objectivec-client/issues/145
+    final newFile = await api.files.update(
+      drive.File(
+        name: _Consts.fileName,
+        // parents: file.parents,
+        // description: file.description,
+      ),
+      fileId,
       uploadMedia: drive.Media(
         Stream.value(
           List<int>.from(data),
         ),
         data.length,
       ),
+      // uploadOptions:
     );
 
     final result = GoogleFileMapper.toDomain(newFile);
@@ -68,29 +67,6 @@ final class GoogleRepositoryImpl implements GoogleRepository {
     } else {
       return result;
     }
-
-    // return api.files
-    //     .update(
-    //   newFile,
-    //   newFileId,
-    //   uploadMedia: drive.Media(
-    //     Stream.value(
-    //       List<int>.from(data),
-    //     ),
-    //     data.length,
-    //   ),
-    //   $fields: _fields,
-    // )
-    //     .then(
-    //   (file) {
-    //     final result = RemoteFileMapper.toDomain(file);
-    //     if (result == null) {
-    //       throw const GoogleError.canNotCreateFile();
-    //     } else {
-    //       return result;
-    //     }
-    //   },
-    // );
   }
 
   @override
@@ -149,21 +125,43 @@ extension on GoogleRepositoryImpl {
     return drive.DriveApi(authClient);
   }
 
-  // Future<GoogleFile> createFile() async {
-  //   final api = await _getDriveApi();
-  //   return api.files
-  //       .create(drive.File(name: _fileName, spaces: [_spaces]))
-  //       .then(
-  //     (file) {
-  //       final result = GoogleFileMapper.toDomain(file);
-  //       if (result == null) {
-  //         throw const GoogleError.canNotCreateFile();
-  //       } else {
-  //         return result;
-  //       }
-  //     },
-  //   );
-  // }
+  Future<drive.File?> _getFile() async {
+    final api = await _getDriveApi();
+
+    final first = await api.files
+        .list(
+          q: _Consts.fileNameQ,
+          pageSize: 1,
+          pageToken: null,
+          spaces: _Consts.spaces,
+          $fields: _Consts.fields,
+        )
+        .then(
+          (e) => e.files?.firstOrNull,
+        );
+
+    return first;
+  }
+
+  Future<GoogleFile> createFileWithData(Uint8List data) async {
+    final api = await _getDriveApi();
+    final newFile = await api.files.create(
+      drive.File(name: _Consts.fileName),
+      uploadMedia: drive.Media(
+        Stream.value(
+          List<int>.from(data),
+        ),
+        data.length,
+      ),
+    );
+
+    final result = GoogleFileMapper.toDomain(newFile);
+    if (result == null) {
+      throw const GoogleError.canNotCreateFile();
+    } else {
+      return result;
+    }
+  }
 }
 
 // AuthClient

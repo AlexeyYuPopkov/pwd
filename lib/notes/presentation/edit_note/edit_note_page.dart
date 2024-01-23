@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rxdart/subjects.dart';
 import 'package:pwd/common/presentation/dialogs/dialog_helper.dart';
-
 import 'package:pwd/common/presentation/dialogs/show_error_dialog_mixin.dart';
-import 'package:pwd/common/tools/di_storage/di_storage.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
 import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
 import 'package:pwd/notes/domain/usecases/notes_provider_usecase.dart';
@@ -12,7 +11,6 @@ import 'package:pwd/notes/presentation/tools/crypt_error_message_provider.dart';
 import 'package:pwd/notes/presentation/tools/notes_provider_error_message_provider.dart';
 import 'package:pwd/notes/presentation/tools/sync_data_error_message_provider.dart';
 import 'package:pwd/theme/common_size.dart';
-import 'package:rxdart/subjects.dart';
 
 import 'bloc/edit_note_bloc.dart';
 
@@ -58,28 +56,35 @@ final class EditNotePage extends StatelessWidget
   void _listener(BuildContext context, EditNoteState state) async {
     BlockingLoadingIndicator.of(context).isLoading = state is LoadingState;
 
-    if (state is DidSaveState) {
-      await onRoute(
-        context,
-        EditNotePagePopResult.didUpdate(
-          noteItem: state.data.noteItem,
-        ),
-      );
-    } else if (state is DidDeleteState) {
-      await onRoute(
-        context,
-        const EditNotePagePopResult.didDidDelete(),
-      );
-    } else if (state is ErrorState) {
-      showError(
-        context,
-        state.error,
-        errorMessageProviders: [
-          const NotesProviderErrorMessageProvider().call,
-          const SyncDataErrorMessageProvider().call,
-          const CryptErrorMessageProvider().call,
-        ],
-      );
+    switch (state) {
+      case LoadingState():
+      case CommonState():
+        break;
+      case DidSaveState():
+        await onRoute(
+          context,
+          EditNotePagePopResult.didUpdate(
+            noteItem: state.data.noteItem,
+          ),
+        );
+      case DidDeleteState():
+        await onRoute(
+          context,
+          const EditNotePagePopResult.didDidDelete(),
+        );
+        break;
+
+      case ErrorState(e: final e):
+        showError(
+          context,
+          e,
+          errorMessageProviders: [
+            const NotesProviderErrorMessageProvider().call,
+            const SyncDataErrorMessageProvider().call,
+            const CryptErrorMessageProvider().call,
+          ],
+        );
+        break;
     }
   }
 
@@ -93,8 +98,8 @@ final class EditNotePage extends StatelessWidget
         ),
         body: BlocProvider(
           create: (context) => EditNoteBloc(
-            notesProviderUsecase: DiStorage.shared.resolve(),
-            syncDataUsecase: DiStorage.shared.resolve(),
+            notesProviderUsecase: notesProviderUsecase,
+            syncDataUsecase: syncDataUsecase,
             noteItem: noteItem,
           ),
           child: BlocConsumer<EditNoteBloc, EditNoteState>(

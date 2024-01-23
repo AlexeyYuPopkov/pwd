@@ -4,6 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 final class ChecksumCheckerImpl implements ChecksumChecker {
   static const String _sharedPreferencesKey = 'ChecksumChecker.ChecksumKey';
 
+  const ChecksumCheckerImpl();
+
   @override
   Future<String?> getChecksum() async {
     final storage = await SharedPreferences.getInstance();
@@ -17,7 +19,7 @@ final class ChecksumCheckerImpl implements ChecksumChecker {
   }
 
   @override
-  Future<void> dropChecksum(String checksum) async {
+  Future<void> dropChecksum() async {
     final storage = await SharedPreferences.getInstance();
     storage.remove(_sharedPreferencesKey);
   }

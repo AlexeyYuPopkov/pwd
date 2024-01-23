@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:uuid/uuid.dart';
 
 import 'note_item_content.dart';
 
@@ -29,7 +30,12 @@ class NoteItem extends Equatable {
         isDecrypted,
       ];
 
-  factory NoteItem.newItem() = NewNoteItem;
+  factory NoteItem.newItem() => UpdatedNoteItem(
+        id: '',
+        title: '',
+        description: '',
+        content: const NoteStringContent(str: ''),
+      );
 
   factory NoteItem.updatedItem({
     required String id,
@@ -85,25 +91,14 @@ class NoteItem extends Equatable {
   }
 }
 
-final class NewNoteItem extends NoteItem {
-  NewNoteItem()
-      : super(
-          id: '',
-          title: '',
-          description: '',
-          content: const NoteStringContent(str: ''),
-          timestamp: DateTime.now().timestamp,
-          isDecrypted: true,
-        );
-}
-
 final class UpdatedNoteItem extends NoteItem {
   UpdatedNoteItem({
-    required super.id,
+    required String id,
     required super.title,
     required super.description,
     required super.content,
   }) : super(
+          id: id.isEmpty ? const Uuid().v4() : id,
           timestamp: DateTime.now().timestamp,
           isDecrypted: true,
         );

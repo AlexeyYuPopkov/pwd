@@ -22,7 +22,7 @@ sealed class EditNoteState extends Equatable {
 
   const factory EditNoteState.error({
     required EditNotePageData data,
-    required Object error,
+    required Object e,
   }) = ErrorState;
 }
 
@@ -43,10 +43,10 @@ final class LoadingState extends EditNoteState {
 }
 
 final class ErrorState extends EditNoteState {
-  final Object error;
+  final Object e;
   const ErrorState({
     required super.data,
-    required this.error,
+    required this.e,
   });
 }
 

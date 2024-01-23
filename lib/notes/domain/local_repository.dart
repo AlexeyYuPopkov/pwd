@@ -34,5 +34,6 @@ abstract interface class LocalRepository {
   Future<void> migrateWithDatabasePath({
     required Uint8List bytes,
     required List<int>? key,
+    required Set<String> deleted,
   });
 }

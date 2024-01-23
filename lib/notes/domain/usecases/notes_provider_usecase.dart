@@ -20,7 +20,7 @@ abstract class NotesProviderUsecase {
   Future<void> deleteNoteItem(NoteItem noteItem);
 }
 
-class NotesProviderUsecaseImpl implements NotesProviderUsecase {
+final class NotesProviderUsecaseImpl implements NotesProviderUsecase {
   final NotesRepository repository;
   final HashUsecase hashUsecase;
   final PinRepository pinRepository;

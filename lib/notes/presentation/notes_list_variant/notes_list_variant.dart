@@ -30,8 +30,6 @@ final class NotesListVariant extends StatelessWidget with ShowErrorDialogMixin {
     return BlocProvider(
       create: (context) => NotesListVariantBloc(
         notesProviderUsecase: DiStorage.shared.resolve(),
-        // syncNotesVariantUsecase: DiStorage.shared.resolve(),
-        // hashUsecase: DiStorage.shared.resolve(),
         googleSyncUsecase: DiStorage.shared.resolve(),
       ),
       child: BlocConsumer<NotesListVariantBloc, NotesListVariantBlocState>(
@@ -52,7 +50,7 @@ final class NotesListVariant extends StatelessWidget with ShowErrorDialogMixin {
                 AppBarButton(
                   key: const Key('test_add_note_button'),
                   iconData: Icons.add,
-                  onPressed: () => _onEditButton(
+                  onPressed: () => _onEdit(
                     context,
                     note: NoteItem.newItem(),
                   ),
@@ -61,7 +59,11 @@ final class NotesListVariant extends StatelessWidget with ShowErrorDialogMixin {
             ),
             body: state is InitialState
                 ? const _LoadingShimmer()
-                : _NotesList(notes: state.data.notes),
+                : _NotesList(
+                    notes: state.data.notes,
+                    onEdit: _onEdit,
+                    onDetails: _onDetails,
+                  ),
           );
         },
       ),
@@ -103,7 +105,7 @@ final class NotesListVariant extends StatelessWidget with ShowErrorDialogMixin {
     //   .add(const NotesListVariantBlocEvent.sqlToRealm());
   }
 
-  void _onEditButton(
+  void _onEdit(
     BuildContext context, {
     required NoteItem note,
   }) {
@@ -112,22 +114,37 @@ final class NotesListVariant extends StatelessWidget with ShowErrorDialogMixin {
       NotePageRoute.onEdit(noteItem: note),
     ).then(
       (result) {
-        // if (result is NotePageShouldSync) {
-        //   bloc.add(
-        //     const NotePageEvent.shouldSync(),
-        //   );
-        // }
+        if (result is NotePageShouldSync) {
+          context.read<NotesListVariantBloc>().add(
+                const NotesListVariantBlocEvent.sync(),
+              );
+        }
       },
     );
   }
+
+  void _onDetails(
+    BuildContext context, {
+    required NoteItem note,
+  }) =>
+      onRoute(
+        context,
+        NotePageRoute.onDetails(noteItem: note),
+      );
 }
 
 // Notes List
 
 final class _NotesList extends StatelessWidget {
   final List<NoteItem> notes;
+  final void Function(BuildContext, {required NoteItem note}) onEdit;
+  final void Function(BuildContext, {required NoteItem note}) onDetails;
 
-  const _NotesList({required this.notes});
+  const _NotesList({
+    required this.notes,
+    required this.onEdit,
+    required this.onDetails,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -136,8 +153,8 @@ final class _NotesList extends StatelessWidget {
       itemBuilder: (context, index) {
         return NoteListItemWidget(
           note: notes[index],
-          onDetailsButton: _onDetailsButton,
-          onEditButton: _onEditButton,
+          onDetailsButton: onDetails,
+          onEditButton: onEdit,
         );
       },
       separatorBuilder: (_, __) => const Divider(
@@ -145,16 +162,6 @@ final class _NotesList extends StatelessWidget {
       ),
     );
   }
-
-  void _onDetailsButton(
-    BuildContext context, {
-    required NoteItem note,
-  }) {}
-
-  void _onEditButton(
-    BuildContext context, {
-    required NoteItem note,
-  }) {}
 }
 
 // _LoadingShimmer

@@ -1,9 +1,7 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:pwd/common/domain/base_pin.dart';
 import 'package:pwd/common/domain/usecases/pin_usecase.dart';
 import 'package:pwd/common/tools/di_storage/di_storage.dart';
-import 'package:pwd/firebase_options.dart';
 import 'package:pwd/theme/theme_data.dart';
 import 'package:pwd/common/presentation/di/app_di_modules.dart';
 import 'package:pwd/home/presentation/home_tabbar_page.dart';
@@ -17,10 +15,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   AppDiModules.bindUnauthModules();
-
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
 
   runApp(const MyApp());
 }

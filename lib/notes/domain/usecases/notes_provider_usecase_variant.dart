@@ -1,19 +1,26 @@
 import 'package:pwd/common/domain/usecases/pin_usecase.dart';
+import 'package:pwd/notes/domain/checksum_checker.dart';
+import 'package:pwd/notes/domain/deleted_items_provider.dart';
 import 'package:pwd/notes/domain/local_repository.dart';
 import 'package:pwd/notes/domain/usecases/notes_provider_usecase.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:pwd/common/domain/errors/app_error.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
 
-abstract class NotesProviderUsecaseVariant extends NotesProviderUsecase {}
+abstract class NotesProviderUsecaseVariant implements NotesProviderUsecase {}
 
-class NotesProviderUsecaseVariantImpl implements NotesProviderUsecaseVariant {
+final class NotesProviderUsecaseVariantImpl
+    implements NotesProviderUsecaseVariant {
   final LocalRepository repository;
   final PinUsecase pinUsecase;
+  final ChecksumChecker checksumChecker;
+  final DeletedItemsProvider deletedItemsProvider;
 
   NotesProviderUsecaseVariantImpl({
     required this.repository,
     required this.pinUsecase,
+    required this.checksumChecker,
+    required this.deletedItemsProvider,
   });
 
   late final _noteStream = BehaviorSubject<List<NoteItem>>();
@@ -40,6 +47,7 @@ class NotesProviderUsecaseVariantImpl implements NotesProviderUsecaseVariant {
     try {
       final pin = pinUsecase.getPinOrThrow();
       await repository.updateNote(noteItem, key: pin.pinSha512);
+      await checksumChecker.dropChecksum();
       readNotes();
     } catch (e) {
       throw NotesProviderError(parentError: e);
@@ -52,8 +60,15 @@ class NotesProviderUsecaseVariantImpl implements NotesProviderUsecaseVariant {
       final pin = pinUsecase.getPinOrThrow();
       final id = noteItem.id;
       if (id.isNotEmpty) {
-        await repository.delete(id, key: pin.pinSha512);
-        readNotes();
+        await Future.wait(
+          [
+            repository.delete(id, key: pin.pinSha512),
+            deletedItemsProvider.addDeletedItems({id}),
+            checksumChecker.dropChecksum(),
+          ],
+        );
+
+        await readNotes();
       }
     } catch (e) {
       throw NotesProviderError(parentError: e);

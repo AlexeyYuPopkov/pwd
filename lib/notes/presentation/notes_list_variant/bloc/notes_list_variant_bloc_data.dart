@@ -12,7 +12,7 @@ class NotesListVariantBlocData extends Equatable {
   }
 
   @override
-  List<Object?> get props => const [];
+  List<Object?> get props => [notes];
 
   NotesListVariantBlocData copyWith({
     List<NoteItem>? notes,
