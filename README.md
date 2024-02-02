@@ -1,4 +1,3 @@
 # pwd
 
-dart pub global activate flutterfire_cli
-flutterfire configure --project=notesstorage-374314
+ Notes app with encryption and synchronization via git api
