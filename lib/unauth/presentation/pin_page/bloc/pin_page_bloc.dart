@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pwd/common/domain/base_pin.dart';
-import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
 import 'package:pwd/common/domain/remote_storage_configuration_provider.dart';
 import 'package:pwd/common/domain/usecases/hash_usecase.dart';
 import 'package:pwd/common/domain/usecases/pin_usecase.dart';
@@ -31,52 +30,27 @@ class PinPageBloc extends Bloc<PinPageBlocEvent, PinPageBlocState> {
         ) {
     _setupHandlers();
 
-    add(const PinPageBlocEvent.initial());
+    // add(const PinPageBlocEvent.initial());
   }
 
   void _setupHandlers() {
-    on<InitialEvent>(_onInitialEvent);
+    // on<InitialEvent>(_onInitialEvent);
     on<LoginEvent>(_onLoginEvent);
-    on<SetRemoteStorageConfigurationEvent>(
-      _onSetRemoteStorageConfigurationEvent,
-    );
   }
 
-  void _onInitialEvent(
-    InitialEvent event,
-    Emitter<PinPageBlocState> emit,
-  ) async {
-    final remoteConfig = await remoteStorageConfigurationProvider.configuration;
+  // void _onInitialEvent(
+  //   InitialEvent event,
+  //   Emitter<PinPageBlocState> emit,
+  // ) async {
+  //   final remoteConfig =
+  //       await remoteStorageConfigurationProvider.currentConfiguration;
 
-    if (remoteConfig is RemoteStorageConfigurationEmpty) {
-      emit(PinPageBlocState.shouldFillConfiguration(data: data));
-    } else {
-      emit(PinPageBlocState.shouldEnterThePin(data: data));
-    }
-  }
-
-  void _onSetRemoteStorageConfigurationEvent(
-    SetRemoteStorageConfigurationEvent event,
-    Emitter<PinPageBlocState> emit,
-  ) async {
-    try {
-      emit(PinPageBlocState.loading(data: data));
-      final configuration = RemoteStorageConfiguration.configuration(
-        token: event.token,
-        repo: event.repo,
-        owner: event.owner,
-        branch: event.branch,
-        fileName: event.fileName,
-      );
-      await remoteStorageConfigurationProvider.setConfiguration(configuration);
-
-      shouldCreateRemoteStorageFileUsecase.setFlag(event.needsCreateNewFile);
-
-      emit(PinPageBlocState.shouldEnterThePin(data: data));
-    } catch (e) {
-      emit(PinPageBlocState.error(data: data, error: e));
-    }
-  }
+  //   if (remoteConfig is RemoteStorageConfigurationEmpty) {
+  //     emit(PinPageBlocState.shouldFillConfiguration(data: data));
+  //   } else {
+  //     emit(PinPageBlocState.shouldEnterThePin(data: data));
+  //   }
+  // }
 
   void _onLoginEvent(
     LoginEvent event,

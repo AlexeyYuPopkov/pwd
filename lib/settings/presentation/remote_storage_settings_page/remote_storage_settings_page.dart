@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
@@ -18,85 +17,88 @@ class RemoteStorageSettingsPage extends StatelessWidget
   void _listener(BuildContext context, RemoteStorageSettingsPageState state) {
     BlockingLoadingIndicator.of(context).isLoading = state is LoadingState;
 
-    if (state is ErrorState) {
-      showError(context, state.error);
+    switch (state) {
+      case CommonState():
+      case DidLogoutState():
+      case LoadingState():
+        break;
+      case ErrorState(error: final error):
+        showError(context, error);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final di = DiStorage.shared;
-    return Scaffold(
-      appBar: AppBar(title: Text(context.pageTitle)),
-      body: BlocProvider(
-        create: (_) => RemoteStorageSettingsPageBloc(
-          pinUsecase: di.resolve(),
-          remoteStorageConfigurationProvider: di.resolve(),
-          notesRepository: di.resolve(),
-        ),
-        child: BlocConsumer<RemoteStorageSettingsPageBloc,
-            RemoteStorageSettingsPageState>(
-          listener: _listener,
-          builder: (context, state) {
-            if (state.data is! ValidConfiguration) {
-              return Center(
-                child: CupertinoButton(
-                  key: const Key(
-                    'test_drop_remote_storage_settings_button',
+    return BlockingLoadingIndicator(
+      child: Scaffold(
+        appBar: AppBar(title: Text(context.pageTitle)),
+        body: BlocProvider(
+          create: (_) => RemoteStorageSettingsPageBloc(
+            pinUsecase: di.resolve(),
+            remoteStorageConfigurationProvider: di.resolve(),
+            notesRepository: di.resolve(),
+          ),
+          child: BlocConsumer<RemoteStorageSettingsPageBloc,
+              RemoteStorageSettingsPageState>(
+            listener: _listener,
+            builder: (context, state) {
+// TODO: refactor
+              final git = state.data.configurations
+                  .whereType<GitConfiguration>()
+                  .firstOrNull;
+
+              return CustomScrollView(
+                slivers: [
+                  SliverToBoxAdapter(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: git == null
+                          ? []
+                          : [
+                              _ListItemWidget(
+                                title: context.tokenLabelTitle,
+                                subtitle: git.token,
+                              ),
+                              _ListItemWidget(
+                                title: context.repoLabelTitle,
+                                subtitle: git.repo,
+                              ),
+                              _ListItemWidget(
+                                title: context.ownerLabelTitle,
+                                subtitle: git.owner,
+                              ),
+                              _ListItemWidget(
+                                title: context.branchLabelTitle,
+                                subtitle: git.branch ?? context.defaultBranch,
+                              ),
+                              _ListItemWidget(
+                                title: context.fileLabelTitle,
+                                subtitle: git.fileName,
+                              ),
+                              const SizedBox(height: CommonSize.indent2x),
+                            ],
+                    ),
                   ),
-                  child: Text(context.dropButtonTitle),
-                  onPressed: () => _onDrop(context),
-                ),
-              );
-            }
-            return CustomScrollView(
-              slivers: [
-                SliverToBoxAdapter(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _ListItemWidget(
-                        title: context.tokenLabelTitle,
-                        subtitle: state.data.token,
-                      ),
-                      _ListItemWidget(
-                        title: context.repoLabelTitle,
-                        subtitle: state.data.repo,
-                      ),
-                      _ListItemWidget(
-                        title: context.ownerLabelTitle,
-                        subtitle: state.data.owner,
-                      ),
-                      _ListItemWidget(
-                        title: context.branchLabelTitle,
-                        subtitle: state.data.branch ?? context.defaultBranch,
-                      ),
-                      _ListItemWidget(
-                        title: context.fileLabelTitle,
-                        subtitle: state.data.fileName,
-                      ),
-                      const SizedBox(height: CommonSize.indent2x),
-                    ],
-                  ),
-                ),
-                SliverFillRemaining(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      OutlinedButton(
-                        key: const Key(
-                          'test_drop_remote_storage_settings_button',
+                  SliverFillRemaining(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        OutlinedButton(
+                          key: const Key(
+                            'test_drop_remote_storage_settings_button',
+                          ),
+                          child: Text(context.dropButtonTitle),
+                          onPressed: () => _onDrop(context),
                         ),
-                        child: Text(context.dropButtonTitle),
-                        onPressed: () => _onDrop(context),
-                      ),
-                      const SizedBox(height: CommonSize.indent2x),
-                    ],
+                        const SizedBox(height: CommonSize.indent2x),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            );
-          },
+                ],
+              );
+            },
+          ),
         ),
       ),
     );

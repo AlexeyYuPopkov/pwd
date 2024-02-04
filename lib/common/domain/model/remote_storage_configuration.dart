@@ -1,85 +1,85 @@
-sealed class RemoteStorageConfiguration {
+import 'package:equatable/equatable.dart';
+
+final class RemoteStorageConfigurations extends Equatable {
+  RemoteStorageConfigurations({required this.configurations})
+      : assert(Set.from(configurations).length == configurations.length);
+
+  @override
+  List<Object?> get props => [configurations];
+
+  final List<RemoteStorageConfiguration> configurations;
+
+  bool get isValid => configurations.isNotEmpty;
+
+  factory RemoteStorageConfigurations.empty() =>
+      RemoteStorageConfigurations(configurations: const []);
+}
+
+sealed class RemoteStorageConfiguration extends Equatable {
   const RemoteStorageConfiguration();
-  String get token;
-  String get repo;
-  String get owner;
-  String? get branch;
-  String get fileName;
-  String get realmFileName;
 
-  const factory RemoteStorageConfiguration.empty() =
-      RemoteStorageConfigurationEmpty;
+  // const factory RemoteStorageConfiguration.empty() =
+  //     RemoteStorageConfigurationEmpty;
 
-  const factory RemoteStorageConfiguration.configuration({
+  const factory RemoteStorageConfiguration.git({
     required String token,
     required String repo,
     required String owner,
     required String? branch,
     required String fileName,
-  }) = ValidConfiguration;
+  }) = GitConfiguration;
 
-  @override
-  bool operator ==(Object other) => other.hashCode == hashCode;
-
-  @override
-  int get hashCode => Object.hashAll({token, repo, owner, fileName});
-
-  @override
-  String toString() {
-    return 'type: $runtimeType\n'
-        'token: $token\n'
-        'repo: $repo\n'
-        'owner: $owner\n'
-        'branch: $branch\n'
-        'fileName: $fileName\n';
-  }
+  const factory RemoteStorageConfiguration.google({
+    required String filename,
+  }) = GoogleDriveConfiguration;
 }
 
-final class RemoteStorageConfigurationEmpty extends RemoteStorageConfiguration {
-  @override
-  String get fileName => '';
+// final class RemoteStorageConfigurationEmpty extends RemoteStorageConfiguration {
+//   const RemoteStorageConfigurationEmpty();
 
-  @override
-  String get owner => '';
+//   @override
+//   List<Object?> get props => [];
+// }
 
-  @override
-  String get repo => '';
-
-  @override
-  String get token => '';
-
-  @override
-  String? get branch => null;
-
-  const RemoteStorageConfigurationEmpty();
-
-  @override
-  String get realmFileName => '';
-}
-
-final class ValidConfiguration extends RemoteStorageConfiguration {
-  @override
+final class GitConfiguration extends RemoteStorageConfiguration {
   final String token;
-  @override
   final String repo;
-  @override
   final String owner;
-  @override
   String? get branch => _branch?.trim().isNotEmpty == true ? _branch : null;
-
-  @override
   final String fileName;
-
   final String? _branch;
-
-  @override
   final String realmFileName = 'realm_migration';
 
-  const ValidConfiguration({
+  const GitConfiguration({
     required this.token,
     required this.repo,
     required this.owner,
     required String? branch,
     required this.fileName,
   }) : _branch = branch;
+
+  @override
+  List<Object?> get props => [
+        token,
+        repo,
+        owner,
+        branch,
+        branch,
+        realmFileName,
+      ];
+}
+
+final class GoogleDriveConfiguration extends RemoteStorageConfiguration {
+  final String filename;
+  final String realmFileName = 'realm_migration';
+
+  const GoogleDriveConfiguration({
+    required this.filename,
+  });
+
+  @override
+  List<Object?> get props => [
+        filename,
+        realmFileName,
+      ];
 }

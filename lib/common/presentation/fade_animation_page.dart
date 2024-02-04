@@ -1,6 +1,7 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
-class FadeAnimationPage extends Page {
+class FadeAnimationPage extends Page implements Equatable {
   final Widget child;
 
   const FadeAnimationPage({
@@ -25,4 +26,10 @@ class FadeAnimationPage extends Page {
       },
     );
   }
+
+  @override
+  List<Object?> get props => [name, arguments, child.runtimeType];
+
+  @override
+  bool? get stringify => null;
 }

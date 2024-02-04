@@ -25,7 +25,7 @@ class RemoteDataStorageRepositoryImpl implements RemoteDataStorageRepository {
   @override
   Future<PutDbResponse> putDb({
     required PutDbRequest request,
-    required RemoteStorageConfiguration configuration,
+    required GitConfiguration configuration,
   }) async {
     PutDbRequest adjustedWithBranch(PutDbRequest request) {
       final branch = configuration.branch;
@@ -52,7 +52,7 @@ class RemoteDataStorageRepositoryImpl implements RemoteDataStorageRepository {
 
   @override
   Future<GetDbResponse> getDb({
-    required RemoteStorageConfiguration configuration,
+    required GitConfiguration configuration,
   }) =>
       service
           .getDb(
@@ -66,49 +66,49 @@ class RemoteDataStorageRepositoryImpl implements RemoteDataStorageRepository {
             (e) => throw errorMapper(e),
           );
 
-  @override
-  Future<PutDbResponse> putRealmDb({
-    required PutDbRequest request,
-    required RemoteStorageConfiguration configuration,
-  }) async {
-    PutDbRequest adjustedWithBranch(PutDbRequest request) {
-      final branch = configuration.branch;
+  // @override
+  // Future<PutDbResponse> putRealmDb({
+  //   required PutDbRequest request,
+  //   required RemoteStorageConfiguration configuration,
+  // }) async {
+  //   PutDbRequest adjustedWithBranch(PutDbRequest request) {
+  //     final branch = configuration.branch;
 
-      if (branch != null && branch.trim().isNotEmpty) {
-        return request.copyWithBranch(branch: branch);
-      }
+  //     if (branch != null && branch.trim().isNotEmpty) {
+  //       return request.copyWithBranch(branch: branch);
+  //     }
 
-      return request;
-    }
+  //     return request;
+  //   }
 
-    return service
-        .putDb(
-          owner: configuration.owner,
-          repo: configuration.repo,
-          filename: configuration.realmFileName,
-          body: putDbRequestMapper.toData(adjustedWithBranch(request)),
-          token: _adjustedToken(configuration.token),
-        )
-        .catchError(
-          (e) => throw errorMapper(e),
-        );
-  }
+  //   return service
+  //       .putDb(
+  //         owner: configuration.owner,
+  //         repo: configuration.repo,
+  //         filename: configuration.realmFileName,
+  //         body: putDbRequestMapper.toData(adjustedWithBranch(request)),
+  //         token: _adjustedToken(configuration.token),
+  //       )
+  //       .catchError(
+  //         (e) => throw errorMapper(e),
+  //       );
+  // }
 
-  @override
-  Future<GetDbResponse> getRealmDb({
-    required RemoteStorageConfiguration configuration,
-  }) =>
-      service
-          .getDb(
-            token: _adjustedToken(configuration.token),
-            owner: configuration.owner,
-            repo: configuration.repo,
-            filename: configuration.realmFileName,
-            branch: configuration.branch,
-          )
-          .catchError(
-            (e) => throw errorMapper(e),
-          );
+  // @override
+  // Future<GetDbResponse> getRealmDb({
+  //   required RemoteStorageConfiguration configuration,
+  // }) =>
+  //     service
+  //         .getDb(
+  //           token: _adjustedToken(configuration.token),
+  //           owner: configuration.owner,
+  //           repo: configuration.repo,
+  //           filename: configuration.realmFileName,
+  //           branch: configuration.branch,
+  //         )
+  //         .catchError(
+  //           (e) => throw errorMapper(e),
+  //         );
 
   String _adjustedToken(String str) => 'Bearer $str';
 }

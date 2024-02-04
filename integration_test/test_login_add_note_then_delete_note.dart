@@ -9,7 +9,7 @@ import 'package:pwd/home/presentation/home_tabbar_page.dart';
 import 'package:pwd/main.dart' as app;
 import 'package:pwd/notes/presentation/edit_note/edit_note_page.dart';
 import 'package:pwd/notes/presentation/note/note_page.dart';
-import 'package:pwd/unauth/presentation/pin_page/pin_page_enter_configuration_form.dart';
+import 'package:pwd/unauth/presentation/configuration_screen/enter_configuration_form.dart';
 import 'package:pwd/unauth/presentation/pin_page/pin_page_enter_pin_form.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -39,6 +39,7 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
   testWidgets('Test Login and add note, then delete note', (tester) async {
+    
     app.main();
 
     final setRemoteConfigRobot = SetRemoteConfigRobot(tester);
@@ -46,12 +47,9 @@ void main() {
     adjustDI();
 
     await tester.pumpAndSettle();
-    expect(find.byType(PinPageEnterConfigurationForm), findsOneWidget);
-    expect(find.byType(PinPageEnterPinForm), findsNothing);
+    expect(find.byType(EnterConfigurationForm), findsOneWidget);
 
     await setRemoteConfigRobot.fillRemoteStorageConfigurationForm();
-
-    expect(find.byType(PinPageEnterPinForm), findsOneWidget);
 
     final enterPinRobot = EnterPinRobot(tester);
 
@@ -92,7 +90,7 @@ void main() {
 
     await setRemoteConfigRobot.dropRemoteStorageConfigurationFromHomePage();
 
-    expect(find.byType(PinPageEnterConfigurationForm), findsOneWidget);
+    expect(find.byType(EnterConfigurationForm), findsOneWidget);
     expect(find.byType(PinPageEnterPinForm), findsNothing);
   });
 }

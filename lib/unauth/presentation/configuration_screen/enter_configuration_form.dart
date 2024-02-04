@@ -11,19 +11,18 @@ import 'package:pwd/common/presentation/validators/remote_settings_field_validat
 import 'package:pwd/common/presentation/validators/remote_settings_field_validator/remote_settings_field_validator_not_required.dart';
 import 'package:pwd/common/presentation/validators/remote_settings_field_validator/remote_settings_file_name_validator.dart';
 import 'package:pwd/theme/common_size.dart';
+import 'package:pwd/unauth/presentation/configuration_screen/bloc/configuration_screen_bloc.dart';
+import 'package:pwd/unauth/presentation/configuration_screen/bloc/configuration_screen_event.dart';
 
-import 'bloc/pin_page_bloc.dart';
-
-class PinPageEnterConfigurationForm extends StatefulWidget {
-  const PinPageEnterConfigurationForm({super.key});
+final class EnterConfigurationForm extends StatefulWidget {
+  const EnterConfigurationForm({super.key});
 
   @override
-  State<PinPageEnterConfigurationForm> createState() =>
-      _PinPageEnterConfigurationFormState();
+  State<EnterConfigurationForm> createState() => _EnterConfigurationFormState();
 }
 
-class _PinPageEnterConfigurationFormState
-    extends State<PinPageEnterConfigurationForm> with DialogHelper {
+class _EnterConfigurationFormState extends State<EnterConfigurationForm>
+    with DialogHelper {
   late final formKey = GlobalKey<FormState>();
   late final tokenController = TextEditingController();
   late final repoController = TextEditingController();
@@ -193,8 +192,8 @@ class _PinPageEnterConfigurationFormState
       if (isValidForm) {
         formKey.currentState?.save();
 
-        context.read<PinPageBloc>().add(
-              PinPageBlocEvent.setRemoteStorageConfiguration(
+        context.read<ConfigurationScreenBloc>().add(
+              ConfigurationScreenEvent.setRemoteStorageConfiguration(
                 token: tokenController.text,
                 repo: repoController.text,
                 owner: ownerController.text,

@@ -1,11 +1,11 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
-part 'remote_storage_configuration_data.g.dart';
+part 'git_configuration_data.g.dart';
 
 @immutable
 @JsonSerializable()
-class RemoteStorageConfigurationData {
+final class GitConfigurationData {
   @JsonKey(name: 'token', defaultValue: null)
   final String token;
 
@@ -21,7 +21,7 @@ class RemoteStorageConfigurationData {
   @JsonKey(name: 'fileName', defaultValue: '')
   final String fileName;
 
-  const RemoteStorageConfigurationData({
+  const GitConfigurationData({
     required this.token,
     required this.repo,
     required this.owner,
@@ -45,8 +45,8 @@ class RemoteStorageConfigurationData {
         'fileName: $fileName\n';
   }
 
-  factory RemoteStorageConfigurationData.fromJson(Map<String, dynamic> json) =>
-      _$RemoteStorageConfigurationDataFromJson(json);
+  factory GitConfigurationData.fromJson(Map<String, dynamic> json) =>
+      _$GitConfigurationDataFromJson(json);
 
-  Map<String, dynamic> toJson() => _$RemoteStorageConfigurationDataToJson(this);
+  Map<String, dynamic> toJson() => _$GitConfigurationDataToJson(this);
 }

@@ -109,10 +109,10 @@ packages:
     dependency: "direct dev"
     description:
       name: build_runner
-      sha256: "67d591d602906ef9201caf93452495ad1812bea2074f04e25dbd7c133785821b"
+      sha256: "581bacf68f89ec8792f5e5a0b2c4decd1c948e97ce659dc783688c8a88fbec21"
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.7"
+    version: "2.4.8"
   build_runner_core:
     dependency: transitive
     description:
@@ -748,14 +748,6 @@ packages:
     description:
       name: realm_common
       sha256: c1ca3cf5cf1d143684c313b7faa82699442e41d943bf9818a04b72987fd365d3
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.6.1"
-  realm_dart:
-    dependency: "direct main"
-    description:
-      name: realm_dart
-      sha256: a2f4e67aafed8b77d791a90a915f0c303d45a1e18225c4cdb8a128b5439dc626
       url: "https://pub.dev"
     source: hosted
     version: "1.6.1"

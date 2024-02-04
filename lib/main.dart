@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:pwd/common/domain/base_pin.dart';
-import 'package:pwd/common/domain/usecases/pin_usecase.dart';
+import 'package:pwd/common/domain/usecases/user_session_provider_usecase.dart';
 import 'package:pwd/common/tools/di_storage/di_storage.dart';
 import 'package:pwd/theme/theme_data.dart';
 import 'package:pwd/common/presentation/di/app_di_modules.dart';
-import 'package:pwd/home/presentation/home_tabbar_page.dart';
 import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
-import 'package:pwd/unauth/presentation/router/unauth_router_delegate.dart';
+import 'unauth/presentation/router/root_router_delegate.dart';
 
 void main() async {
   // debugRepaintRainbowEnabled = true;
@@ -16,13 +14,16 @@ void main() async {
 
   AppDiModules.bindUnauthModules();
 
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+final class MyApp extends StatelessWidget {
+  MyApp({super.key});
 
-  PinUsecase get pinUsecase => DiStorage.shared.resolve();
+  UserSessionProviderUsecase get userSessionProviderUsecase =>
+      DiStorage.shared.resolve();
+
+  final rootNavigatorKey = GlobalKey<NavigatorState>();
 
   @override
   Widget build(BuildContext context) {
@@ -35,27 +36,11 @@ class MyApp extends StatelessWidget {
       // debugShowMaterialGrid: false,
       // checkerboardRasterCacheImages: true,
       home: BlockingLoadingIndicator(
-        child: StreamBuilder<BasePin>(
-          stream: pinUsecase.pinStream.asyncMap((pin) {
-            if (pin is Pin && pinUsecase.isValidPin) {
-              AppDiModules.bindAuthModules();
-            } else {
-              AppDiModules.dropAuthModules();
-            }
-
-            return pin;
-          }),
-          builder: (context, snapshot) {
-            final pin = snapshot.data;
-
-            if (pin is Pin && pinUsecase.isValidPin) {
-              return const HomeTabbarPage();
-            } else {
-              return Router(
-                routerDelegate: UnauthRouterDelegate(),
-              );
-            }
-          },
+        child: Router(
+          routerDelegate: RootRouterDelegate(
+            navigatorKey: rootNavigatorKey,
+            userSessionProviderUsecase: userSessionProviderUsecase,
+          ),
         ),
       ),
     );

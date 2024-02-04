@@ -1,14 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:pwd/notes/presentation/router/note_router_delegate.dart';
-import 'package:pwd/notes/presentation/router/note_router_variant_delegate.dart';
-import 'package:pwd/settings/presentation/router/settings_router_delegate.dart';
+import 'package:pwd/home/presentation/home_tabbar_tab_model.dart';
 import 'package:pwd/theme/common_size.dart';
 
-final _noteRouterKey = GlobalKey<NavigatorState>();
-final _notesListRouterKey = GlobalKey<NavigatorState>();
-final _settingsRouterKey = GlobalKey<NavigatorState>();
-
-class HomeTabbarPage extends StatelessWidget {
+final class HomeTabbarPage extends StatelessWidget {
   const HomeTabbarPage({super.key});
 
   @override
@@ -23,7 +17,7 @@ class HomeTabbarPage extends StatelessWidget {
   }
 }
 
-class HomeTabbarPageDesktopContent extends StatefulWidget {
+final class HomeTabbarPageDesktopContent extends StatefulWidget {
   const HomeTabbarPageDesktopContent({super.key});
 
   @override
@@ -31,9 +25,11 @@ class HomeTabbarPageDesktopContent extends StatefulWidget {
       _HomeTabbarPageDesktopContentState();
 }
 
-class _HomeTabbarPageDesktopContentState
+final class _HomeTabbarPageDesktopContentState
     extends State<HomeTabbarPageDesktopContent> {
   static const initialTabIndex = 0;
+  List<HomeTabbarTabModel> get tabs => HomeTabbarTabModel.tabs;
+
   int _selectedIndex = initialTabIndex;
 
   @override
@@ -45,17 +41,8 @@ class _HomeTabbarPageDesktopContentState
             selectedIndex: _selectedIndex,
             onDestinationSelected: (index) => _onTap(index),
             destinations: [
-              NavigationRailDestination(
-                icon: const Icon(Icons.home),
-                label: Text(context.homeTabName),
-              ),
-              NavigationRailDestination(
-                icon: const Icon(
-                  Icons.settings,
-                  key: Key('test_bottom_navigation_bar_settings_item_icon'),
-                ),
-                label: Text(context.settingsTabName),
-              ),
+              for (final tab in tabs)
+                tab.buildNavigationRailDestination(context)
             ],
           ),
           const VerticalDivider(
@@ -66,16 +53,7 @@ class _HomeTabbarPageDesktopContentState
             child: IndexedStack(
               index: _selectedIndex,
               children: [
-                Router(
-                  routerDelegate: NoteRouterDelegate(
-                    navigatorKey: _noteRouterKey,
-                  ),
-                ),
-                Router(
-                  routerDelegate: SettingsRouterDelegate(
-                    navigatorKey: _settingsRouterKey,
-                  ),
-                ),
+                for (final tab in tabs) tab.buildRoute(context),
               ],
             ),
           ),
@@ -91,7 +69,7 @@ class _HomeTabbarPageDesktopContentState
   }
 }
 
-class HomeTabbarPageMobileContent extends StatefulWidget {
+final class HomeTabbarPageMobileContent extends StatefulWidget {
   const HomeTabbarPageMobileContent({super.key});
 
   @override
@@ -99,9 +77,11 @@ class HomeTabbarPageMobileContent extends StatefulWidget {
       _HomeTabbarPageMobileContentState();
 }
 
-class _HomeTabbarPageMobileContentState
+final class _HomeTabbarPageMobileContentState
     extends State<HomeTabbarPageMobileContent> {
   static const initialTabIndex = 0;
+
+  List<HomeTabbarTabModel> get tabs => HomeTabbarTabModel.tabs;
 
   int _selectedIndex = initialTabIndex;
 
@@ -111,38 +91,12 @@ class _HomeTabbarPageMobileContentState
       body: IndexedStack(
         index: _selectedIndex,
         children: [
-          Router(
-            routerDelegate: NoteRouterDelegate(navigatorKey: _noteRouterKey),
-          ),
-          Router(
-            routerDelegate: NoteRouterVariantDelegate(
-              navigatorKey: _notesListRouterKey,
-            ),
-          ),
-          Router(
-            routerDelegate: SettingsRouterDelegate(
-              navigatorKey: _settingsRouterKey,
-            ),
-          ),
+          for (final tab in tabs) tab.buildRoute(context),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: [
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.home),
-            label: context.homeTabName,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.list),
-            label: context.homeTabName,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(
-              Icons.settings,
-              key: Key('test_bottom_navigation_bar_settings_item_icon'),
-            ),
-            label: context.settingsTabName,
-          ),
+          for (final tab in tabs) tab.buildNavigationBarItem(context),
         ],
         currentIndex: _selectedIndex,
         onTap: _onTap,
@@ -155,9 +109,4 @@ class _HomeTabbarPageMobileContentState
       setState(() => _selectedIndex = index);
     }
   }
-}
-
-extension on BuildContext {
-  String get homeTabName => 'Home';
-  String get settingsTabName => 'Settings';
 }

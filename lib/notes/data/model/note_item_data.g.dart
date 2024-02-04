@@ -6,9 +6,8 @@ part of 'note_item_data.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-// ignore: unused_element
 NoteItemData _$NoteItemDataFromJson(Map<String, dynamic> json) => NoteItemData(
-      id: json['id'] as String? ?? '',
+      id: json['id'] == null ? '' : _idFromJson(json['id']),
       title: json['title'] as String? ?? '',
       description: json['description'] as String? ?? '',
       content: json['content'] as String? ?? '',

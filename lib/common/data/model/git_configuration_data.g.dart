@@ -1,14 +1,14 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'remote_storage_configuration_data.dart';
+part of 'git_configuration_data.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-RemoteStorageConfigurationData _$RemoteStorageConfigurationDataFromJson(
+GitConfigurationData _$GitConfigurationDataFromJson(
         Map<String, dynamic> json) =>
-    RemoteStorageConfigurationData(
+    GitConfigurationData(
       token: json['token'] as String,
       repo: json['repo'] as String? ?? '',
       owner: json['owner'] as String? ?? '',
@@ -16,8 +16,8 @@ RemoteStorageConfigurationData _$RemoteStorageConfigurationDataFromJson(
       fileName: json['fileName'] as String? ?? '',
     );
 
-Map<String, dynamic> _$RemoteStorageConfigurationDataToJson(
-        RemoteStorageConfigurationData instance) =>
+Map<String, dynamic> _$GitConfigurationDataToJson(
+        GitConfigurationData instance) =>
     <String, dynamic>{
       'token': instance.token,
       'repo': instance.repo,

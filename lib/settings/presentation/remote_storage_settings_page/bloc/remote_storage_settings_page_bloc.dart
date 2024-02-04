@@ -14,15 +14,15 @@ class RemoteStorageSettingsPageBloc extends Bloc<RemoteStorageSettingsPageEvent,
   final RemoteStorageConfigurationProvider remoteStorageConfigurationProvider;
   final NotesRepository notesRepository;
 
-  RemoteStorageConfiguration get data => state.data;
+  RemoteStorageConfigurations get data => state.data;
 
   RemoteStorageSettingsPageBloc({
     required this.pinUsecase,
     required this.remoteStorageConfigurationProvider,
     required this.notesRepository,
   }) : super(
-          const RemoteStorageSettingsPageState.common(
-            data: RemoteStorageConfiguration.empty(),
+          RemoteStorageSettingsPageState.common(
+            data: RemoteStorageConfigurations.empty(),
           ),
         ) {
     _setupHandlers();
@@ -42,7 +42,7 @@ class RemoteStorageSettingsPageBloc extends Bloc<RemoteStorageSettingsPageEvent,
       emit(RemoteStorageSettingsPageState.loading(data: data));
 
       final configuration =
-          await remoteStorageConfigurationProvider.configuration;
+          remoteStorageConfigurationProvider.currentConfiguration;
 
       emit(RemoteStorageSettingsPageState.common(data: configuration));
     } catch (e) {
@@ -55,9 +55,9 @@ class RemoteStorageSettingsPageBloc extends Bloc<RemoteStorageSettingsPageEvent,
     Emitter<RemoteStorageSettingsPageState> emit,
   ) async {
     emit(RemoteStorageSettingsPageState.loading(data: data));
-
     await remoteStorageConfigurationProvider.dropConfiguration();
     await notesRepository.dropDb();
+    // TODO: drop realm
     await pinUsecase.dropPin();
 
     emit(RemoteStorageSettingsPageState.didLogout(data: data));

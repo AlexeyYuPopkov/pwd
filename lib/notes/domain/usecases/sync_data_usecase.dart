@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:pwd/common/domain/errors/network_error.dart';
+import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
 import 'package:pwd/common/domain/remote_storage_configuration_provider.dart';
 import 'package:pwd/notes/domain/remote_data_storage_repository.dart';
 import 'package:pwd/notes/domain/usecases/notes_provider_usecase.dart';
@@ -36,10 +37,21 @@ final class SyncDataUsecaseImpl implements SyncDataUsecase {
   @override
   Future<void> sync() async {
     try {
-      final configuration =
-          await remoteStorageConfigurationProvider.configuration;
+      final configurations =
+          remoteStorageConfigurationProvider.currentConfiguration;
+// TODO: refactor
+      final git = configurations.configurations
+          .whereType<GitConfiguration>()
+          .firstOrNull;
+
+      assert(git != null);
+
+      if (git == null) {
+        return;
+      }
+
       final result = await remoteStorageRepository.getDb(
-        configuration: configuration,
+        configuration: git,
       );
 
       lastSha = result.sha;
@@ -125,11 +137,21 @@ final class SyncDataUsecaseImpl implements SyncDataUsecase {
     final bytes = utf8.encode(contentStr);
     final base64encoded = base64.encode(bytes);
 
-    final configuration =
-        await remoteStorageConfigurationProvider.configuration;
+    final configurations =
+        remoteStorageConfigurationProvider.currentConfiguration;
+
+// TODO: refactor
+    final git =
+        configurations.configurations.whereType<GitConfiguration>().firstOrNull;
+
+    assert(git != null);
+
+    if (git == null) {
+      return null;
+    }
 
     return remoteStorageRepository.putDb(
-      configuration: configuration,
+      configuration: git,
       request: PutDbRequest(
         message: _commitMessage,
         content: base64encoded,
@@ -145,11 +167,22 @@ final class SyncDataUsecaseImpl implements SyncDataUsecase {
 
   Future<String?> _getSha() async {
     try {
-      final configuration =
-          await remoteStorageConfigurationProvider.configuration;
+      final configurations =
+          remoteStorageConfigurationProvider.currentConfiguration;
+
+      // TODO: refactor
+      final git = configurations.configurations
+          .whereType<GitConfiguration>()
+          .firstOrNull;
+
+      assert(git != null);
+
+      if (git == null) {
+        return null;
+      }
 
       return await remoteStorageRepository
-          .getDb(configuration: configuration)
+          .getDb(configuration: git)
           .then((result) => result.sha);
     } on NotFoundError catch (e) {
       throw SyncDataError.destinationNotFound(parentError: e);

@@ -26,9 +26,7 @@ abstract base class BaseRouterDelegate extends RouterDelegate
   }
 
   @override
-  Future<void> setNewRoutePath(configuration) {
-    return Future.value(null);
-  }
+  Future<void> setNewRoutePath(configuration) async {}
 
   void updateState() {
     notifyListeners();

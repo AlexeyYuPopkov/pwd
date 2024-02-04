@@ -6,7 +6,7 @@ import 'package:pwd/theme/common_size.dart';
 
 import 'bloc/pin_page_bloc.dart';
 
-class PinPageEnterPinForm extends StatefulWidget {
+final class PinPageEnterPinForm extends StatefulWidget {
   final TimeFormatter timeFormatter;
   const PinPageEnterPinForm({
     super.key,
