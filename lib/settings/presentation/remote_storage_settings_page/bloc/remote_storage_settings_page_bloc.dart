@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
 import 'package:pwd/common/domain/remote_storage_configuration_provider.dart';
 import 'package:pwd/common/domain/usecases/pin_usecase.dart';
+import 'package:pwd/common/domain/usecases/should_create_remote_storage_file_usecase.dart';
 import 'package:pwd/notes/domain/notes_repository.dart';
 
 part 'remote_storage_settings_page_state.dart';
@@ -11,6 +12,8 @@ part 'remote_storage_settings_page_event.dart';
 class RemoteStorageSettingsPageBloc extends Bloc<RemoteStorageSettingsPageEvent,
     RemoteStorageSettingsPageState> {
   final PinUsecase pinUsecase;
+  final ShouldCreateRemoteStorageFileUsecase
+      shouldCreateRemoteStorageFileUsecase;
   final RemoteStorageConfigurationProvider remoteStorageConfigurationProvider;
   final NotesRepository notesRepository;
 
@@ -18,6 +21,7 @@ class RemoteStorageSettingsPageBloc extends Bloc<RemoteStorageSettingsPageEvent,
 
   RemoteStorageSettingsPageBloc({
     required this.pinUsecase,
+    required this.shouldCreateRemoteStorageFileUsecase,
     required this.remoteStorageConfigurationProvider,
     required this.notesRepository,
   }) : super(
@@ -57,6 +61,8 @@ class RemoteStorageSettingsPageBloc extends Bloc<RemoteStorageSettingsPageEvent,
     emit(RemoteStorageSettingsPageState.loading(data: data));
     await remoteStorageConfigurationProvider.dropConfiguration();
     await notesRepository.dropDb();
+    shouldCreateRemoteStorageFileUsecase.dropFlag();
+
     // TODO: drop realm
     await pinUsecase.dropPin();
 

@@ -1,42 +1,68 @@
 import 'package:equatable/equatable.dart';
+import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
+
+import 'configuration_screen_data.dart';
 
 sealed class ConfigurationScreenEvent extends Equatable {
   const ConfigurationScreenEvent();
 
-  const factory ConfigurationScreenEvent.initial() = InitialEvent;
+  const factory ConfigurationScreenEvent.updateState({
+    ConfigurationScreenData? data,
+  }) = UpdateStateEvent;
 
-  const factory ConfigurationScreenEvent.setRemoteStorageConfiguration({
-    required String token,
-    required String repo,
-    required String owner,
-    required String branch,
-    required String fileName,
+  const factory ConfigurationScreenEvent.setGitConfiguration({
+    required GitConfiguration configuration,
     required bool needsCreateNewFile,
-  }) = SetRemoteStorageConfigurationEvent;
+  }) = SetGitConfigurationEvent;
+
+  const factory ConfigurationScreenEvent.setGoogleDriveConfiguration({
+    required GoogleDriveConfiguration configuration,
+  }) = SetGoogleDriveConfigurationEvent;
+
+  const factory ConfigurationScreenEvent.toggleConfiguration({
+    required bool isOn,
+    required ConfigurationType type,
+  }) = ToggleConfigurationEvent;
+
+  const factory ConfigurationScreenEvent.next() = NextEvent;
 
   @override
   List<Object?> get props => const [];
 }
 
-class InitialEvent extends ConfigurationScreenEvent {
-  const InitialEvent();
+final class UpdateStateEvent extends ConfigurationScreenEvent {
+  final ConfigurationScreenData? data;
+  const UpdateStateEvent({this.data});
 }
 
-final class SetRemoteStorageConfigurationEvent
-    extends ConfigurationScreenEvent {
-  final String token;
-  final String repo;
-  final String owner;
-  final String branch;
-  final String fileName;
+final class SetGitConfigurationEvent extends ConfigurationScreenEvent {
+  final GitConfiguration configuration;
   final bool needsCreateNewFile;
 
-  const SetRemoteStorageConfigurationEvent({
-    required this.token,
-    required this.repo,
-    required this.owner,
-    required this.branch,
-    required this.fileName,
+  const SetGitConfigurationEvent({
+    required this.configuration,
     required this.needsCreateNewFile,
   });
+}
+
+final class SetGoogleDriveConfigurationEvent extends ConfigurationScreenEvent {
+  final GoogleDriveConfiguration configuration;
+
+  const SetGoogleDriveConfigurationEvent({
+    required this.configuration,
+  });
+}
+
+final class ToggleConfigurationEvent extends ConfigurationScreenEvent {
+  final bool isOn;
+  final ConfigurationType type;
+
+  const ToggleConfigurationEvent({
+    required this.isOn,
+    required this.type,
+  });
+}
+
+final class NextEvent extends ConfigurationScreenEvent {
+  const NextEvent();
 }

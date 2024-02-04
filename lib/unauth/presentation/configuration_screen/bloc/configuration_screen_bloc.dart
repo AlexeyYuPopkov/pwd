@@ -27,35 +27,112 @@ final class ConfigurationScreenBloc
   }
 
   void _setupHandlers() {
-    on<SetRemoteStorageConfigurationEvent>(
-        _onSetRemoteStorageConfigurationEvent);
+    on<SetGitConfigurationEvent>(_onSetGitConfigurationEventEvent);
+    on<SetGoogleDriveConfigurationEvent>(_onSetGoogleDriveConfigurationEvent);
+    on<ToggleConfigurationEvent>(_onToggleConfigurationEvent);
+    on<UpdateStateEvent>(_onUpdateStateEvent);
+    on<NextEvent>(_onNextEvent);
   }
 
-  void _onSetRemoteStorageConfigurationEvent(
-    SetRemoteStorageConfigurationEvent event,
+  void _onSetGitConfigurationEventEvent(
+    SetGitConfigurationEvent event,
+    Emitter<ConfigurationScreenState> emit,
+  ) =>
+      emit(
+        ConfigurationScreenState.common(
+          data: data.copyWith(
+            git: ConfigurationScreenDataGitBox(
+              git: ConfigurationScreenDataGit(
+                configuration: event.configuration,
+                shouldCreateNewFile: event.needsCreateNewFile,
+              ),
+            ),
+          ),
+        ),
+      );
+
+  void _onSetGoogleDriveConfigurationEvent(
+    SetGoogleDriveConfigurationEvent event,
+    Emitter<ConfigurationScreenState> emit,
+  ) =>
+      emit(
+        ConfigurationScreenState.common(
+          data: data.copyWith(
+            googleDrive: ConfigurationScreenDataGoogleDriveBox(
+              googleDrive: event.configuration,
+            ),
+          ),
+        ),
+      );
+
+  void _onNextEvent(
+    NextEvent event,
     Emitter<ConfigurationScreenState> emit,
   ) async {
     try {
       emit(ConfigurationScreenState.loading(data: data));
-      final git = RemoteStorageConfiguration.git(
-        token: event.token,
-        repo: event.repo,
-        owner: event.owner,
-        branch: event.branch,
-        fileName: event.fileName,
-      );
+
+      final git = data.git.git;
+      final googleDrive = data.googleDrive.googleDrive;
+
+      final configurations = [
+        if (git != null) git.configuration,
+        if (googleDrive != null) googleDrive,
+      ];
+
+      RemoteStorageConfigurations(configurations: configurations);
 
       await remoteStorageConfigurationProvider.setConfiguration(
         RemoteStorageConfigurations(
-          configurations: [git],
+          configurations: configurations,
         ),
       );
 
-      shouldCreateRemoteStorageFileUsecase.setFlag(event.needsCreateNewFile);
+      if (git != null) {
+        shouldCreateRemoteStorageFileUsecase.setFlag(git.shouldCreateNewFile);
+      }
 
-      emit(ConfigurationScreenState.saved(data: data));
+      emit(ConfigurationScreenState.common(data: data));
     } catch (e) {
       emit(ConfigurationScreenState.error(data: data, e: e));
     }
   }
+
+  void _onToggleConfigurationEvent(
+    ToggleConfigurationEvent event,
+    Emitter<ConfigurationScreenState> emit,
+  ) {
+    if (event.isOn) {
+      emit(ConfigurationScreenState.shouldSetup(data: data, type: event.type));
+    } else {
+      switch (event.type) {
+        case ConfigurationType.git:
+          emit(
+            ConfigurationScreenState.common(
+              data: data.copyWith(
+                git: ConfigurationScreenDataGitBox.initial(),
+              ),
+            ),
+          );
+          break;
+        case ConfigurationType.googleDrive:
+          emit(
+            ConfigurationScreenState.common(
+              data: data.copyWith(
+                googleDrive: ConfigurationScreenDataGoogleDriveBox.initial(),
+              ),
+            ),
+          );
+          break;
+      }
+    }
+  }
+
+  void _onUpdateStateEvent(
+    UpdateStateEvent event,
+    Emitter<ConfigurationScreenState> emit,
+  ) =>
+      emit(
+        ConfigurationScreenState.common(data: event.data ?? data),
+      );
 }

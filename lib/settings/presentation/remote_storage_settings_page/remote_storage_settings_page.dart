@@ -36,6 +36,7 @@ class RemoteStorageSettingsPage extends StatelessWidget
         body: BlocProvider(
           create: (_) => RemoteStorageSettingsPageBloc(
             pinUsecase: di.resolve(),
+            shouldCreateRemoteStorageFileUsecase: di.resolve(),
             remoteStorageConfigurationProvider: di.resolve(),
             notesRepository: di.resolve(),
           ),

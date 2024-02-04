@@ -1,4 +1,4 @@
-class ShouldCreateRemoteStorageFileUsecase {
+final class ShouldCreateRemoteStorageFileUsecase {
   static ShouldCreateRemoteStorageFileUsecase? _instance;
 
   ShouldCreateRemoteStorageFileUsecase._();
@@ -20,4 +20,6 @@ class ShouldCreateRemoteStorageFileUsecase {
   void setFlag(bool flag) {
     _value = flag;
   }
+
+  void dropFlag() => setFlag(false);
 }

@@ -1,25 +1,51 @@
 import 'package:equatable/equatable.dart';
 
 final class RemoteStorageConfigurations extends Equatable {
-  RemoteStorageConfigurations({required this.configurations})
-      : assert(Set.from(configurations).length == configurations.length);
+  final List<RemoteStorageConfiguration> configurations;
+  late final Map<ConfigurationType, int> _configurationIndexes;
+
+  RemoteStorageConfigurations({required this.configurations}) {
+    var configurationIndexes = <ConfigurationType, int>{};
+    for (int i = 0; i < configurations.length; i++) {
+      configurationIndexes[configurations[i].type] = i;
+    }
+
+    _configurationIndexes = configurationIndexes;
+
+    assert(Set.from(configurations).length == configurations.length);
+  }
+
+  factory RemoteStorageConfigurations.empty() =>
+      RemoteStorageConfigurations(configurations: const []);
+
+  bool get isValid => configurations.isNotEmpty;
+
+  bool hasConfiguration(ConfigurationType type) => withType(type) != null;
 
   @override
   List<Object?> get props => [configurations];
 
-  final List<RemoteStorageConfiguration> configurations;
+  RemoteStorageConfiguration? withType(ConfigurationType type) {
+    final index = _configurationIndexes[type];
 
-  bool get isValid => configurations.isNotEmpty;
+    if (index == null) {
+      return null;
+    }
 
-  factory RemoteStorageConfigurations.empty() =>
-      RemoteStorageConfigurations(configurations: const []);
+    final idValidIndex = index >= 0 && index < configurations.length;
+    assert(idValidIndex);
+
+    return idValidIndex ? configurations[index] : null;
+  }
+}
+
+enum ConfigurationType {
+  git,
+  googleDrive,
 }
 
 sealed class RemoteStorageConfiguration extends Equatable {
   const RemoteStorageConfiguration();
-
-  // const factory RemoteStorageConfiguration.empty() =
-  //     RemoteStorageConfigurationEmpty;
 
   const factory RemoteStorageConfiguration.git({
     required String token,
@@ -32,16 +58,14 @@ sealed class RemoteStorageConfiguration extends Equatable {
   const factory RemoteStorageConfiguration.google({
     required String filename,
   }) = GoogleDriveConfiguration;
+
+  ConfigurationType get type;
 }
 
-// final class RemoteStorageConfigurationEmpty extends RemoteStorageConfiguration {
-//   const RemoteStorageConfigurationEmpty();
-
-//   @override
-//   List<Object?> get props => [];
-// }
-
 final class GitConfiguration extends RemoteStorageConfiguration {
+  @override
+  final type = ConfigurationType.git;
+
   final String token;
   final String repo;
   final String owner;
@@ -70,6 +94,9 @@ final class GitConfiguration extends RemoteStorageConfiguration {
 }
 
 final class GoogleDriveConfiguration extends RemoteStorageConfiguration {
+  @override
+  final type = ConfigurationType.googleDrive;
+
   final String filename;
   final String realmFileName = 'realm_migration';
 

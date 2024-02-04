@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
 import 'configuration_screen_data.dart';
 
 sealed class ConfigurationScreenState extends Equatable {
@@ -22,9 +23,10 @@ sealed class ConfigurationScreenState extends Equatable {
     required Object e,
   }) = ErrorState;
 
-  const factory ConfigurationScreenState.saved({
+  const factory ConfigurationScreenState.shouldSetup({
     required ConfigurationScreenData data,
-  }) = SavedState;
+    required ConfigurationType type,
+  }) = ShouldSetupState;
 }
 
 final class CommonState extends ConfigurationScreenState {
@@ -43,6 +45,7 @@ final class ErrorState extends ConfigurationScreenState {
   });
 }
 
-final class SavedState extends ConfigurationScreenState {
-  const SavedState({required super.data});
+final class ShouldSetupState extends ConfigurationScreenState {
+  final ConfigurationType type;
+  const ShouldSetupState({required this.type, required super.data});
 }

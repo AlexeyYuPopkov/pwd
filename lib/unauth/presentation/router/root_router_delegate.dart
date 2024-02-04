@@ -6,8 +6,9 @@ import 'package:pwd/common/domain/usecases/user_session_provider_usecase.dart';
 import 'package:pwd/common/presentation/di/app_di_modules.dart';
 import 'package:pwd/common/presentation/router/base_router_delegate.dart';
 import 'package:pwd/home/presentation/home_tabbar_page.dart';
-import 'package:pwd/unauth/presentation/configuration_screen/configuration_screen.dart';
 import 'package:pwd/unauth/presentation/pin_page/pin_page.dart';
+
+import 'configuration_router_delegate.dart';
 
 final class RootRouterDelegatePath {
   static const root = '/';
@@ -57,9 +58,10 @@ extension on RootRouterDelegate {
     switch (userSession) {
       case UnconfiguredSession():
         return [
-          const MaterialPage(
-            child: ConfigurationScreen(),
-            name: RootRouterDelegatePath.configuration,
+          MaterialPage(
+            child: Router(
+              routerDelegate: ConfigurationRouterDelegate(),
+            ),
           ),
         ];
       case UnauthorizedSession():

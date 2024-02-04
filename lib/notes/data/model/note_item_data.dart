@@ -53,4 +53,3 @@ String _idFromJson(dynamic src) => src is String
 //       content: json['content'] as String? ?? '',
 //       timestamp: json['timestamp'] as int,
 //     );
-
