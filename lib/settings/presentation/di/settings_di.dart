@@ -12,6 +12,7 @@ final class SettingsDi extends DiModule {
         pinUsecase: di.resolve(),
         shouldCreateRemoteStorageFileUsecase: di.resolve(),
         localRepository: di.resolve(),
+        googleRepository: di.resolve(),
       ),
     );
   }

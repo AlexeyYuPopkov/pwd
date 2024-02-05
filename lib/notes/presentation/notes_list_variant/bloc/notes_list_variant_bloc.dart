@@ -8,7 +8,7 @@ import 'notes_list_variant_bloc_data.dart';
 import 'notes_list_variant_bloc_event.dart';
 import 'notes_list_variant_bloc_state.dart';
 
-class NotesListVariantBloc
+final class NotesListVariantBloc
     extends Bloc<NotesListVariantBlocEvent, NotesListVariantBlocState> {
   NotesListVariantBlocData get data => state.data;
 

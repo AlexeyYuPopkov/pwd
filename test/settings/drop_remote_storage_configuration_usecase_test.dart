@@ -6,6 +6,7 @@ import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
 import 'package:pwd/common/domain/remote_storage_configuration_provider.dart';
 import 'package:pwd/common/domain/usecases/pin_usecase.dart';
 import 'package:pwd/common/domain/usecases/should_create_remote_storage_file_usecase.dart';
+import 'package:pwd/notes/domain/google_repository.dart';
 import 'package:pwd/notes/domain/local_repository.dart';
 import 'package:pwd/notes/domain/notes_repository.dart';
 import 'package:pwd/settings/domain/drop_remote_storage_configuration_usecase.dart';
@@ -17,6 +18,7 @@ import 'package:pwd/settings/domain/drop_remote_storage_configuration_usecase.da
     MockSpec<PinUsecase>(),
     MockSpec<ShouldCreateRemoteStorageFileUsecase>(),
     MockSpec<LocalRepository>(),
+    MockSpec<GoogleRepository>(),
   ],
 )
 import 'drop_remote_storage_configuration_usecase_test.mocks.dart';
@@ -30,6 +32,8 @@ void main() {
       MockShouldCreateRemoteStorageFileUsecase();
 
   final localRepository = MockLocalRepository();
+
+  final googleRepository = MockGoogleRepository();
 
   group(
     'DropRemoteStorageConfigurationUsecaseTest',
@@ -60,6 +64,7 @@ void main() {
             shouldCreateRemoteStorageFileUsecase:
                 shouldCreateRemoteStorageFileUsecase,
             localRepository: localRepository,
+            googleRepository: googleRepository,
           );
 
           final configurations = RemoteStorageConfigurations(
@@ -86,6 +91,7 @@ void main() {
           verify(shouldCreateRemoteStorageFileUsecase.dropFlag());
           verifyNever(pinUsecase.getPinOrThrow());
           verifyNever(localRepository.deleteAll(key: pin.pinSha512));
+          verifyNever(googleRepository.logout());
           verify(pinUsecase.dropPin());
         },
       );
@@ -101,6 +107,7 @@ void main() {
             shouldCreateRemoteStorageFileUsecase:
                 shouldCreateRemoteStorageFileUsecase,
             localRepository: localRepository,
+            googleRepository: googleRepository,
           );
 
           final configurations = RemoteStorageConfigurations(
@@ -127,6 +134,7 @@ void main() {
           verifyNever(shouldCreateRemoteStorageFileUsecase.dropFlag());
           verify(pinUsecase.getPinOrThrow());
           verify(localRepository.deleteAll(key: pin.pinSha512));
+          verify(googleRepository.logout());
           verify(pinUsecase.dropPin());
         },
       );
@@ -142,6 +150,7 @@ void main() {
             shouldCreateRemoteStorageFileUsecase:
                 shouldCreateRemoteStorageFileUsecase,
             localRepository: localRepository,
+            googleRepository: googleRepository,
           );
 
           final configurations = RemoteStorageConfigurations(
@@ -169,6 +178,7 @@ void main() {
           verify(shouldCreateRemoteStorageFileUsecase.dropFlag());
           verify(pinUsecase.getPinOrThrow());
           verify(localRepository.deleteAll(key: pin.pinSha512));
+          verify(googleRepository.logout());
           verify(pinUsecase.dropPin());
         },
       );

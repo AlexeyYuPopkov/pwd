@@ -1,6 +1,7 @@
 import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
 import 'package:pwd/common/domain/usecases/pin_usecase.dart';
 import 'package:pwd/common/domain/usecases/should_create_remote_storage_file_usecase.dart';
+import 'package:pwd/notes/domain/google_repository.dart';
 import 'package:pwd/notes/domain/local_repository.dart';
 import 'package:pwd/notes/domain/notes_repository.dart';
 import 'package:pwd/common/domain/remote_storage_configuration_provider.dart';
@@ -12,6 +13,7 @@ final class DropRemoteStorageConfigurationUsecase {
   final ShouldCreateRemoteStorageFileUsecase
       shouldCreateRemoteStorageFileUsecase;
   final LocalRepository localRepository;
+  final GoogleRepository googleRepository;
 
   const DropRemoteStorageConfigurationUsecase({
     required this.remoteStorageConfigurationProvider,
@@ -19,6 +21,7 @@ final class DropRemoteStorageConfigurationUsecase {
     required this.pinUsecase,
     required this.shouldCreateRemoteStorageFileUsecase,
     required this.localRepository,
+    required this.googleRepository,
   });
 
   Future<void> execute() async {
@@ -47,6 +50,7 @@ final class DropRemoteStorageConfigurationUsecase {
     RemoteStorageConfigurations currentConfiguration,
   ) async {
     if (currentConfiguration.hasConfiguration(ConfigurationType.googleDrive)) {
+      await googleRepository.logout();
       final pin = pinUsecase.getPinOrThrow();
       await localRepository.deleteAll(key: pin.pinSha512);
     }

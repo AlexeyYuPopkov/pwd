@@ -94,6 +94,11 @@ final class GoogleRepositoryImpl implements GoogleRepository {
       throw const GoogleError.unspecified();
     }
   }
+
+  @override
+  Future<void> logout() async {
+    await googleSignIn.signOut();
+  }
 }
 
 // Private

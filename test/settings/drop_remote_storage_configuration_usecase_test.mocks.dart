@@ -16,7 +16,9 @@ import 'package:pwd/common/domain/remote_storage_configuration_provider.dart'
 import 'package:pwd/common/domain/usecases/pin_usecase.dart' as _i8;
 import 'package:pwd/common/domain/usecases/should_create_remote_storage_file_usecase.dart'
     as _i10;
+import 'package:pwd/notes/domain/google_repository.dart' as _i13;
 import 'package:pwd/notes/domain/local_repository.dart' as _i11;
+import 'package:pwd/notes/domain/model/google_file.dart' as _i14;
 import 'package:pwd/notes/domain/model/note_item.dart' as _i7;
 import 'package:pwd/notes/domain/notes_repository.dart' as _i6;
 
@@ -64,11 +66,11 @@ class MockRemoteStorageConfigurationProvider extends _i1.Mock
 
   @override
   _i5.Future<void> setConfigurations(
-          _i3.RemoteStorageConfigurations? configuration) =>
+          _i3.RemoteStorageConfigurations? configurations) =>
       (super.noSuchMethod(
         Invocation.method(
-          #setConfiguration,
-          [configuration],
+          #setConfigurations,
+          [configurations],
         ),
         returnValue: _i5.Future<void>.value(),
         returnValueForMissingStub: _i5.Future<void>.value(),
@@ -497,6 +499,67 @@ class MockLocalRepository extends _i1.Mock implements _i11.LocalRepository {
             #key: key,
             #deleted: deleted,
           },
+        ),
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
+}
+
+/// A class which mocks [GoogleRepository].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockGoogleRepository extends _i1.Mock implements _i13.GoogleRepository {
+  @override
+  _i5.Future<_i14.GoogleFile?> getFile() => (super.noSuchMethod(
+        Invocation.method(
+          #getFile,
+          [],
+        ),
+        returnValue: _i5.Future<_i14.GoogleFile?>.value(),
+        returnValueForMissingStub: _i5.Future<_i14.GoogleFile?>.value(),
+      ) as _i5.Future<_i14.GoogleFile?>);
+
+  @override
+  _i5.Future<_i5.Stream<List<int>>?> downloadFile(_i14.GoogleFile? file) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #downloadFile,
+          [file],
+        ),
+        returnValue: _i5.Future<_i5.Stream<List<int>>?>.value(),
+        returnValueForMissingStub: _i5.Future<_i5.Stream<List<int>>?>.value(),
+      ) as _i5.Future<_i5.Stream<List<int>>?>);
+
+  @override
+  _i5.Future<_i14.GoogleFile> updateRemote(_i12.Uint8List? data) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #updateRemote,
+          [data],
+        ),
+        returnValue:
+            _i5.Future<_i14.GoogleFile>.value(_i4.dummyValue<_i14.GoogleFile>(
+          this,
+          Invocation.method(
+            #updateRemote,
+            [data],
+          ),
+        )),
+        returnValueForMissingStub:
+            _i5.Future<_i14.GoogleFile>.value(_i4.dummyValue<_i14.GoogleFile>(
+          this,
+          Invocation.method(
+            #updateRemote,
+            [data],
+          ),
+        )),
+      ) as _i5.Future<_i14.GoogleFile>);
+
+  @override
+  _i5.Future<void> logout() => (super.noSuchMethod(
+        Invocation.method(
+          #logout,
+          [],
         ),
         returnValue: _i5.Future<void>.value(),
         returnValueForMissingStub: _i5.Future<void>.value(),

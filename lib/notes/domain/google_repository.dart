@@ -6,4 +6,6 @@ abstract interface class GoogleRepository {
   Future<Stream<List<int>>?> downloadFile(GoogleFile file);
 
   Future<GoogleFile> updateRemote(Uint8List data);
+
+  Future<void> logout();
 }

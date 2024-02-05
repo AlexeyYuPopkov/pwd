@@ -40,10 +40,6 @@ final class NotesListVariant extends StatelessWidget with ShowErrorDialogMixin {
               title: Text(context.pageTitle),
               actions: [
                 AppBarButton(
-                  iconData: Icons.get_app_outlined,
-                  onPressed: () => _onSqlToRealm(context),
-                ),
-                AppBarButton(
                   iconData: Icons.sync,
                   onPressed: () => _onSync(context),
                 ),
@@ -98,12 +94,6 @@ final class NotesListVariant extends StatelessWidget with ShowErrorDialogMixin {
   void _onSync(BuildContext context) => context
       .read<NotesListVariantBloc>()
       .add(const NotesListVariantBlocEvent.sync());
-
-  void _onSqlToRealm(BuildContext context) {
-    // context
-    //   .read<NotesListVariantBloc>()
-    //   .add(const NotesListVariantBlocEvent.sqlToRealm());
-  }
 
   void _onEdit(
     BuildContext context, {
