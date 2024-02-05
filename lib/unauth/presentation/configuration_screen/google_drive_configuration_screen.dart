@@ -83,23 +83,22 @@ final class __FormState extends State<_Form> {
                     validator: noEmptyValidator,
                     inputFormatter: null,
                   ),
+                  const SizedBox(height: CommonSize.indent2x),
                 ],
               ),
             ),
           ),
         ),
         SliverFillRemaining(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              const SizedBox(height: CommonSize.indent2x),
-              CupertinoButton(
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: CommonSize.indent2x),
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: CupertinoButton(
                 onPressed: isValidForm ? () => _onSave(context) : null,
                 child: Text(context.saveButtonTitle),
               ),
-              const SizedBox(height: CommonSize.indent2x),
-            ],
+            ),
           ),
         ),
       ],

@@ -70,116 +70,119 @@ final class _GitConfigurationFormState extends State<GitConfigurationForm>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return CustomScrollView(
-      slivers: [
-        SliverToBoxAdapter(
-          child: Padding(
+    return SingleChildScrollView(
+      child: Column(
+        // physics: const NeverScrollableScrollPhysics(),
+        children: [
+          Padding(
             padding: const EdgeInsets.all(CommonSize.indent2x),
-            child: Form(
-              key: formKey,
-              onChanged: () {
-                final isValid = checkIfFormValid();
-                if (isValidForm != isValid) {
-                  setState(() => isValidForm = isValid);
-                }
-              },
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SizedBox(height: CommonSize.indent2x),
-                  Text(
-                    context.description,
-                    style: theme.textTheme.bodyMedium,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: CommonSize.indent2x),
-                  CommonTextFieldRow(
-                    key: const Key('test_token_text_field'),
-                    hint: context.tokenTextFieldHint,
-                    tooltipMessage: context.tokenTooltip,
-                    controller: tokenController,
-                    validator: noEmptyValidator,
-                    inputFormatter: null,
-                  ),
-                  const SizedBox(height: CommonSize.indent2x),
-                  CommonTextFieldRow(
-                    key: const Key('test_repo_text_field'),
-                    hint: context.repoTextFieldHint,
-                    tooltipMessage: context.repoTooltip,
-                    controller: repoController,
-                    validator: remoteSettingsFieldValidator,
-                    inputFormatter: remoteSettingsFieldInputFormatter,
-                  ),
-                  const SizedBox(height: CommonSize.indent2x),
-                  CommonTextFieldRow(
-                    key: const Key('test_owner_text_field'),
-                    hint: context.ownerTextFieldHint,
-                    tooltipMessage: context.ownerTooltip,
-                    controller: ownerController,
-                    validator: remoteSettingsFieldValidator,
-                    inputFormatter: remoteSettingsFieldInputFormatter,
-                  ),
-                  const SizedBox(height: CommonSize.indent2x),
-                  CommonTextFieldRow(
-                    key: const Key('test_branch_text_field'),
-                    hint: context.branchTextFieldHint,
-                    tooltipMessage: context.branchTooltip,
-                    controller: branchController,
-                    validator: remoteSettingsFieldValidatorNotRequired,
-                    inputFormatter:
-                        remoteSettingsFieldNotRequiredInputFormatter,
-                  ),
-                  const SizedBox(height: CommonSize.indent2x),
-                  CommonTextFieldRow(
-                    key: const Key('test_file_name_text_field'),
-                    hint: context.fileNameTextFieldHint,
-                    tooltipMessage: context.fileTooltip,
-                    controller: fileNameController,
-                    validator: fileNameValidator,
-                    inputFormatter: remoteSettingsFileNameInputFormatter,
-                  ),
-                  const SizedBox(height: CommonSize.indent2x),
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: CommonSize.iconSize,
-                        height: CommonSize.iconSize,
-                        child: Checkbox(
-                          key: const Key('test_remote_configuration_checkbox'),
-                          value: checkBoxState,
-                          onChanged: (value) => _onCheckbox(
-                            context,
-                            newValue: value,
+            child: SizedBox(
+              child: Form(
+                key: formKey,
+                onChanged: () {
+                  final isValid = checkIfFormValid();
+                  if (isValidForm != isValid) {
+                    setState(() => isValidForm = isValid);
+                  }
+                },
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: CommonSize.indent2x),
+                    Text(
+                      context.description,
+                      style: theme.textTheme.bodyMedium,
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: CommonSize.indent2x),
+                    CommonTextFieldRow(
+                      key: const Key('test_token_text_field'),
+                      hint: context.tokenTextFieldHint,
+                      tooltipMessage: context.tokenTooltip,
+                      controller: tokenController,
+                      validator: noEmptyValidator,
+                      inputFormatter: null,
+                    ),
+                    const SizedBox(height: CommonSize.indent2x),
+                    CommonTextFieldRow(
+                      key: const Key('test_repo_text_field'),
+                      hint: context.repoTextFieldHint,
+                      tooltipMessage: context.repoTooltip,
+                      controller: repoController,
+                      validator: remoteSettingsFieldValidator,
+                      inputFormatter: remoteSettingsFieldInputFormatter,
+                    ),
+                    const SizedBox(height: CommonSize.indent2x),
+                    CommonTextFieldRow(
+                      key: const Key('test_owner_text_field'),
+                      hint: context.ownerTextFieldHint,
+                      tooltipMessage: context.ownerTooltip,
+                      controller: ownerController,
+                      validator: remoteSettingsFieldValidator,
+                      inputFormatter: remoteSettingsFieldInputFormatter,
+                    ),
+                    const SizedBox(height: CommonSize.indent2x),
+                    CommonTextFieldRow(
+                      key: const Key('test_branch_text_field'),
+                      hint: context.branchTextFieldHint,
+                      tooltipMessage: context.branchTooltip,
+                      controller: branchController,
+                      validator: remoteSettingsFieldValidatorNotRequired,
+                      inputFormatter:
+                          remoteSettingsFieldNotRequiredInputFormatter,
+                    ),
+                    const SizedBox(height: CommonSize.indent2x),
+                    CommonTextFieldRow(
+                      key: const Key('test_file_name_text_field'),
+                      hint: context.fileNameTextFieldHint,
+                      tooltipMessage: context.fileTooltip,
+                      controller: fileNameController,
+                      validator: fileNameValidator,
+                      inputFormatter: remoteSettingsFileNameInputFormatter,
+                    ),
+                    const SizedBox(height: CommonSize.indent2x),
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: CommonSize.iconSize,
+                          height: CommonSize.iconSize,
+                          child: Checkbox(
+                            key:
+                                const Key('test_remote_configuration_checkbox'),
+                            value: checkBoxState,
+                            onChanged: (value) => _onCheckbox(
+                              context,
+                              newValue: value,
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(width: CommonSize.indent2x),
-                      Expanded(
-                        child: Text(context.checkboxDescription),
-                      ),
-                    ],
-                  ),
-                ],
+                        const SizedBox(width: CommonSize.indent2x),
+                        Expanded(
+                          child: Text(context.checkboxDescription),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: CommonSize.indent2x),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-        SliverFillRemaining(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              const SizedBox(height: CommonSize.indent2x),
-              CupertinoButton(
-                key: const Key('test_on_enter_pin_page_button'),
-                onPressed: isValidForm ? () => _onSave(context) : null,
-                child: Text(context.saveButtonTitle),
+          SizedBox(
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: CommonSize.indent2x),
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: CupertinoButton(
+                  key: const Key('test_on_enter_pin_page_button'),
+                  onPressed: isValidForm ? () => _onSave(context) : null,
+                  child: Text(context.saveButtonTitle),
+                ),
               ),
-              const SizedBox(height: CommonSize.indent2x),
-            ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

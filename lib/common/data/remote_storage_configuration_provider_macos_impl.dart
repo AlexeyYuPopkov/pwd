@@ -35,7 +35,7 @@ final class RemoteStorageConfigurationProviderMacosImpl
   RemoteStorageConfigurations get currentConfiguration => _configuration.value;
 
   @override
-  Future<void> setConfiguration(
+  Future<void> setConfigurations(
     RemoteStorageConfigurations configurations,
   ) async {
     if (configurations.isValid) {

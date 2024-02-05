@@ -35,10 +35,8 @@ class RemoteStorageSettingsPage extends StatelessWidget
         appBar: AppBar(title: Text(context.pageTitle)),
         body: BlocProvider(
           create: (_) => RemoteStorageSettingsPageBloc(
-            pinUsecase: di.resolve(),
-            shouldCreateRemoteStorageFileUsecase: di.resolve(),
+            dropRemoteStorageConfigurationUsecase: di.resolve(),
             remoteStorageConfigurationProvider: di.resolve(),
-            notesRepository: di.resolve(),
           ),
           child: BlocConsumer<RemoteStorageSettingsPageBloc,
               RemoteStorageSettingsPageState>(

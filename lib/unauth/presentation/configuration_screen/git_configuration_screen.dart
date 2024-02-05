@@ -9,7 +9,7 @@ final class GitConfigurationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: const GitConfigurationForm(),
+      body: const SafeArea(child: GitConfigurationForm()),
     );
   }
 }

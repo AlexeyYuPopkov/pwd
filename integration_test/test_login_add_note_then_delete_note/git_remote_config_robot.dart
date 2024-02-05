@@ -1,11 +1,9 @@
 import 'package:flutter/widgets.dart';
-
 import 'package:flutter_test/flutter_test.dart';
+import 'remote_configurations_test_data.dart';
 
-import 'mock_remote_storage_configuration_provider.dart';
-
-class SetRemoteConfigRobot {
-  const SetRemoteConfigRobot(this.tester);
+final class GitRemoteConfigRobot {
+  const GitRemoteConfigRobot(this.tester);
   final WidgetTester tester;
 
   Future<void> fillRemoteStorageConfigurationForm() async {
@@ -42,7 +40,7 @@ class SetRemoteConfigRobot {
     expect(onEnterPinPageButton, findsOneWidget);
 
     final configuration =
-        MockRemoteStorageConfigurationProvider.createTestConfiguration();
+        RemoteConfigurationsTestData.createTestConfiguration();
 
     await tester.tap(tokenField);
     await tester.enterText(tokenField, configuration.token);
@@ -66,8 +64,9 @@ class SetRemoteConfigRobot {
 
     await tester.pumpAndSettle();
 
-    final confirmationDialogOkButton =
-        find.byKey(const Key('test_ok_cancel_dialog_ok_button'));
+    final confirmationDialogOkButton = find.byKey(
+      const Key('test_ok_cancel_dialog_ok_button'),
+    );
 
     await tester.ensureVisible(confirmationDialogOkButton);
 

@@ -1,24 +1,43 @@
 import 'package:flutter/material.dart';
-import 'package:pwd/home/presentation/home_tabbar_tab_model.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pwd/common/tools/di_storage/di_storage.dart';
+import 'package:pwd/home/presentation/home_tabbar/home_tabbar_tab_model.dart';
 import 'package:pwd/theme/common_size.dart';
+
+import 'bloc/home_tabbar_bloc.dart';
+import 'bloc/home_tabbar_bloc_state.dart';
 
 final class HomeTabbarPage extends StatelessWidget {
   const HomeTabbarPage({super.key});
 
+  void _listener(BuildContext context, HomeTabbarBlocState state) {}
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      if (constraints.maxWidth > constraints.maxHeight) {
-        return const HomeTabbarPageDesktopContent();
-      } else {
-        return const HomeTabbarPageMobileContent();
-      }
-    });
+    return BlocProvider(
+      create: (_) => HomeTabbarBloc(
+        remoteConfigurationsProvider: DiStorage.shared.resolve(),
+      ),
+      child: BlocConsumer<HomeTabbarBloc, HomeTabbarBlocState>(
+        listener: _listener,
+        builder: (context, state) {
+          return LayoutBuilder(builder: (context, constraints) {
+            if (constraints.maxWidth > constraints.maxHeight) {
+              return HomeTabbarPageDesktopContent(tabs: state.data.tabs);
+            } else {
+              return HomeTabbarPageMobileContent(
+                tabs: state.data.tabs,
+              );
+            }
+          });
+        },
+      ),
+    );
   }
 }
 
 final class HomeTabbarPageDesktopContent extends StatefulWidget {
-  const HomeTabbarPageDesktopContent({super.key});
+  final List<HomeTabbarTabModel> tabs;
+  const HomeTabbarPageDesktopContent({super.key, required this.tabs});
 
   @override
   State<HomeTabbarPageDesktopContent> createState() =>
@@ -28,7 +47,6 @@ final class HomeTabbarPageDesktopContent extends StatefulWidget {
 final class _HomeTabbarPageDesktopContentState
     extends State<HomeTabbarPageDesktopContent> {
   static const initialTabIndex = 0;
-  List<HomeTabbarTabModel> get tabs => HomeTabbarTabModel.tabs;
 
   int _selectedIndex = initialTabIndex;
 
@@ -41,7 +59,7 @@ final class _HomeTabbarPageDesktopContentState
             selectedIndex: _selectedIndex,
             onDestinationSelected: (index) => _onTap(index),
             destinations: [
-              for (final tab in tabs)
+              for (final tab in widget.tabs)
                 tab.buildNavigationRailDestination(context)
             ],
           ),
@@ -53,7 +71,7 @@ final class _HomeTabbarPageDesktopContentState
             child: IndexedStack(
               index: _selectedIndex,
               children: [
-                for (final tab in tabs) tab.buildRoute(context),
+                for (final tab in widget.tabs) tab.buildRoute(context),
               ],
             ),
           ),
@@ -70,7 +88,9 @@ final class _HomeTabbarPageDesktopContentState
 }
 
 final class HomeTabbarPageMobileContent extends StatefulWidget {
-  const HomeTabbarPageMobileContent({super.key});
+  final List<HomeTabbarTabModel> tabs;
+
+  const HomeTabbarPageMobileContent({super.key, required this.tabs});
 
   @override
   State<HomeTabbarPageMobileContent> createState() =>
@@ -81,8 +101,6 @@ final class _HomeTabbarPageMobileContentState
     extends State<HomeTabbarPageMobileContent> {
   static const initialTabIndex = 0;
 
-  List<HomeTabbarTabModel> get tabs => HomeTabbarTabModel.tabs;
-
   int _selectedIndex = initialTabIndex;
 
   @override
@@ -91,12 +109,12 @@ final class _HomeTabbarPageMobileContentState
       body: IndexedStack(
         index: _selectedIndex,
         children: [
-          for (final tab in tabs) tab.buildRoute(context),
+          for (final tab in widget.tabs) tab.buildRoute(context),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: [
-          for (final tab in tabs) tab.buildNavigationBarItem(context),
+          for (final tab in widget.tabs) tab.buildNavigationBarItem(context),
         ],
         currentIndex: _selectedIndex,
         onTap: _onTap,

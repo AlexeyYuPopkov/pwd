@@ -33,7 +33,7 @@ final class ConfigurationsScreen extends StatelessWidget
           OnSetupConfigurationRoute(state.type),
         ).then(
           (e) {
-            _updateState(context);
+            // _updateState(context);
             if (e == null) {
               return;
             } else if (e is GitConfigurationFormResult) {
@@ -60,49 +60,50 @@ final class ConfigurationsScreen extends StatelessWidget
         listener: _listener,
         builder: (context, state) {
           return Scaffold(
-            body: CustomScrollView(
-              slivers: [
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.all(CommonSize.indent4x),
-                    child: Text(
-                      context.headerText,
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    ),
-                  ),
-                ),
-                for (final item in state.data.configurationTypes)
+            body: SafeArea(
+              child: CustomScrollView(
+                slivers: [
                   SliverToBoxAdapter(
-                    child: _ConfigurationItem(
-                      title: item.itemTitle(context),
-                      subtitle: item.itemDescription(context),
-                      isOn: state.data.hasConfiguration(item),
-                      onChange: (e) => _onConfigurationAction(
-                        context,
-                        isOn: e,
-                        type: item,
+                    child: Padding(
+                      padding: const EdgeInsets.all(CommonSize.indent4x),
+                      child: Text(
+                        context.headerText,
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.bodyLarge,
                       ),
                     ),
                   ),
-                SliverFillRemaining(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      OutlinedButton(
-                        key: const Key(
-                          'configurations_screen_next_button',
+                  for (final item in state.data.configurationTypes)
+                    SliverToBoxAdapter(
+                      child: _ConfigurationItem(
+                        type: item,
+                        isOn: state.data.hasConfiguration(item),
+                        onChange: (e) => _onConfigurationAction(
+                          context,
+                          isOn: e,
+                          type: item,
                         ),
-                        onPressed: state.data.canContinue
-                            ? () => _onNext(context)
-                            : null,
-                        child: Text(context.nextButtonTitle),
                       ),
-                      const SizedBox(height: CommonSize.indent2x),
-                    ],
+                    ),
+                  SliverFillRemaining(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        OutlinedButton(
+                          key: const Key(
+                            'configurations_screen_next_button',
+                          ),
+                          onPressed: state.data.canContinue
+                              ? () => _onNext(context)
+                              : null,
+                          child: Text(context.nextButtonTitle),
+                        ),
+                        const SizedBox(height: CommonSize.indent2x),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           );
         },
@@ -120,11 +121,6 @@ final class ConfigurationsScreen extends StatelessWidget
               isOn: isOn,
               type: type,
             ),
-          );
-
-  void _updateState(BuildContext context) =>
-      context.read<ConfigurationScreenBloc>().add(
-            const ConfigurationScreenEvent.updateState(),
           );
 
   void _onGitConfiguration(
@@ -155,14 +151,13 @@ final class ConfigurationsScreen extends StatelessWidget
 }
 
 final class _ConfigurationItem extends StatelessWidget {
-  final String title;
-  final String subtitle;
+  final ConfigurationType type;
+
   final bool isOn;
   final Function(bool) onChange;
 
   const _ConfigurationItem({
-    required this.title,
-    required this.subtitle,
+    required this.type,
     required this.isOn,
     required this.onChange,
   });
@@ -170,8 +165,9 @@ final class _ConfigurationItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SwitchListTile(
-      title: Text(title),
-      subtitle: Text(subtitle),
+      key: Key('configurations_screen_switch_key_${type.toString()}'),
+      title: Text(type.itemTitle(context)),
+      subtitle: Text(type.itemDescription(context)),
       value: isOn,
       onChanged: onChange,
     );

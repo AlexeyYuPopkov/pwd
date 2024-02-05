@@ -7,8 +7,8 @@ final class ConfigurationScreenData extends Equatable {
   final ConfigurationScreenDataGoogleDriveBox googleDrive;
 
   final configurationTypes = const [
+    ConfigurationType.googleDrive,
     ConfigurationType.git,
-    ConfigurationType.googleDrive
   ];
 
   const ConfigurationScreenData._({

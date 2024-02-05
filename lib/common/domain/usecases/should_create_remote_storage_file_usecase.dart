@@ -1,4 +1,4 @@
-final class ShouldCreateRemoteStorageFileUsecase {
+class ShouldCreateRemoteStorageFileUsecase {
   static ShouldCreateRemoteStorageFileUsecase? _instance;
 
   ShouldCreateRemoteStorageFileUsecase._();

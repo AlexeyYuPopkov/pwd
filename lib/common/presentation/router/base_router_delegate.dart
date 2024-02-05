@@ -11,7 +11,7 @@ abstract base class BaseRouterDelegate extends RouterDelegate
       key: navigatorKey,
       pages: initialPages,
       onPopPage: (route, result) {
-        updateState();
+        // updateState();
         if (!route.didPop(result)) {
           return false;
         }

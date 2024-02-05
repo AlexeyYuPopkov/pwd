@@ -1,14 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
 
-import 'configuration_screen_data.dart';
-
 sealed class ConfigurationScreenEvent extends Equatable {
   const ConfigurationScreenEvent();
-
-  const factory ConfigurationScreenEvent.updateState({
-    ConfigurationScreenData? data,
-  }) = UpdateStateEvent;
 
   const factory ConfigurationScreenEvent.setGitConfiguration({
     required GitConfiguration configuration,
@@ -28,11 +22,6 @@ sealed class ConfigurationScreenEvent extends Equatable {
 
   @override
   List<Object?> get props => const [];
-}
-
-final class UpdateStateEvent extends ConfigurationScreenEvent {
-  final ConfigurationScreenData? data;
-  const UpdateStateEvent({this.data});
 }
 
 final class SetGitConfigurationEvent extends ConfigurationScreenEvent {

@@ -5,7 +5,8 @@ import 'package:pwd/common/domain/model/user_session.dart';
 import 'package:pwd/common/domain/usecases/user_session_provider_usecase.dart';
 import 'package:pwd/common/presentation/di/app_di_modules.dart';
 import 'package:pwd/common/presentation/router/base_router_delegate.dart';
-import 'package:pwd/home/presentation/home_tabbar_page.dart';
+import 'package:pwd/home/presentation/home_tabbar/home_tabbar_page.dart';
+
 import 'package:pwd/unauth/presentation/pin_page/pin_page.dart';
 
 import 'configuration_router_delegate.dart';

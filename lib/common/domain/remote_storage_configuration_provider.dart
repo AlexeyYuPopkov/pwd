@@ -4,6 +4,6 @@ abstract class RemoteStorageConfigurationProvider {
   RemoteStorageConfigurations get currentConfiguration;
   Stream<RemoteStorageConfigurations> get configuration;
 
-  Future<void> setConfiguration(RemoteStorageConfigurations configuration);
+  Future<void> setConfigurations(RemoteStorageConfigurations configurations);
   Future<void> dropConfiguration();
 }

@@ -37,6 +37,7 @@ mixin DialogHelper {
       showPlatformDialog(
         context: context,
         builder: (context) => PlatformAlertDialog(
+          key: const Key('test_ok_cancel_dialog'),
           title: title == null ? null : Text(title),
           content: message == null ? null : Text(message),
           actions: [

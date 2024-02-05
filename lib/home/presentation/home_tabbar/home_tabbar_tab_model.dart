@@ -9,7 +9,7 @@ final _settingsRouterKey = GlobalKey<NavigatorState>();
 
 sealed class HomeTabbarTabModel {
   const HomeTabbarTabModel();
-  Router buildRoute(BuildContext context);
+  Widget buildRoute(BuildContext context);
 
   BottomNavigationBarItem buildNavigationBarItem(BuildContext context);
 
@@ -21,6 +21,28 @@ sealed class HomeTabbarTabModel {
     GoogleTab(),
     SettingsTab(),
   ];
+}
+
+final class EmptyPlaceholderTab extends HomeTabbarTabModel {
+  const EmptyPlaceholderTab();
+  @override
+  Widget buildRoute(BuildContext context) => const SizedBox();
+
+  @override
+  BottomNavigationBarItem buildNavigationBarItem(BuildContext context) =>
+      const BottomNavigationBarItem(
+        icon: SizedBox(),
+        label: '',
+      );
+
+  @override
+  NavigationRailDestination buildNavigationRailDestination(
+    BuildContext context,
+  ) =>
+      const NavigationRailDestination(
+        icon: SizedBox(),
+        label: Text(''),
+      );
 }
 
 final class GitTab extends HomeTabbarTabModel {

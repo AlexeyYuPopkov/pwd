@@ -27,11 +27,40 @@ final class ConfigurationScreenBloc
   }
 
   void _setupHandlers() {
+    on<ToggleConfigurationEvent>(_onToggleConfigurationEvent);
     on<SetGitConfigurationEvent>(_onSetGitConfigurationEventEvent);
     on<SetGoogleDriveConfigurationEvent>(_onSetGoogleDriveConfigurationEvent);
-    on<ToggleConfigurationEvent>(_onToggleConfigurationEvent);
-    on<UpdateStateEvent>(_onUpdateStateEvent);
     on<NextEvent>(_onNextEvent);
+  }
+
+  void _onToggleConfigurationEvent(
+    ToggleConfigurationEvent event,
+    Emitter<ConfigurationScreenState> emit,
+  ) {
+    if (event.isOn) {
+      emit(ConfigurationScreenState.shouldSetup(data: data, type: event.type));
+    } else {
+      switch (event.type) {
+        case ConfigurationType.git:
+          emit(
+            ConfigurationScreenState.common(
+              data: data.copyWith(
+                git: ConfigurationScreenDataGitBox.initial(),
+              ),
+            ),
+          );
+          break;
+        case ConfigurationType.googleDrive:
+          emit(
+            ConfigurationScreenState.common(
+              data: data.copyWith(
+                googleDrive: ConfigurationScreenDataGoogleDriveBox.initial(),
+              ),
+            ),
+          );
+          break;
+      }
+    }
   }
 
   void _onSetGitConfigurationEventEvent(
@@ -76,16 +105,14 @@ final class ConfigurationScreenBloc
       final googleDrive = data.googleDrive.googleDrive;
 
       final configurations = [
-        if (git != null) git.configuration,
         if (googleDrive != null) googleDrive,
+        if (git != null) git.configuration,
       ];
 
       RemoteStorageConfigurations(configurations: configurations);
 
-      await remoteStorageConfigurationProvider.setConfiguration(
-        RemoteStorageConfigurations(
-          configurations: configurations,
-        ),
+      await remoteStorageConfigurationProvider.setConfigurations(
+        RemoteStorageConfigurations(configurations: configurations),
       );
 
       if (git != null) {
@@ -97,42 +124,4 @@ final class ConfigurationScreenBloc
       emit(ConfigurationScreenState.error(data: data, e: e));
     }
   }
-
-  void _onToggleConfigurationEvent(
-    ToggleConfigurationEvent event,
-    Emitter<ConfigurationScreenState> emit,
-  ) {
-    if (event.isOn) {
-      emit(ConfigurationScreenState.shouldSetup(data: data, type: event.type));
-    } else {
-      switch (event.type) {
-        case ConfigurationType.git:
-          emit(
-            ConfigurationScreenState.common(
-              data: data.copyWith(
-                git: ConfigurationScreenDataGitBox.initial(),
-              ),
-            ),
-          );
-          break;
-        case ConfigurationType.googleDrive:
-          emit(
-            ConfigurationScreenState.common(
-              data: data.copyWith(
-                googleDrive: ConfigurationScreenDataGoogleDriveBox.initial(),
-              ),
-            ),
-          );
-          break;
-      }
-    }
-  }
-
-  void _onUpdateStateEvent(
-    UpdateStateEvent event,
-    Emitter<ConfigurationScreenState> emit,
-  ) =>
-      emit(
-        ConfigurationScreenState.common(data: event.data ?? data),
-      );
 }
