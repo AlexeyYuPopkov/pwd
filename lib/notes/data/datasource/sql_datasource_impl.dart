@@ -10,7 +10,7 @@ import 'package:pwd/notes/domain/database_path_provider.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
 import 'package:pwd/notes/domain/notes_repository.dart';
 
-class SqlDatasourceImpl implements NotesRepository {
+final class SqlDatasourceImpl implements NotesRepository {
   final DatabasePathProvider databasePathProvider;
   Database? _db;
 
@@ -41,7 +41,7 @@ class SqlDatasourceImpl implements NotesRepository {
   }
 
   Future<Database> _openDb() async {
-    const currentDbVersion = 2;
+    const currentDbVersion = 3;
     const createRequest = DbRequest.createNotesTableIfAbsent();
     return openDatabase(
       await _databasePath,
@@ -91,7 +91,7 @@ class SqlDatasourceImpl implements NotesRepository {
 
           final existedId = result.firstOrNull?['id'];
 
-          if (existedId is int && existedId == noteItem.id) {
+          if (existedId is String && existedId == noteItem.id) {
             changes += await transaction.update(
               CreateNotesTableIfAbsent.tableName,
               where: 'id = ?',
@@ -114,7 +114,7 @@ class SqlDatasourceImpl implements NotesRepository {
   }
 
   @override
-  Future<int> delete(int id) async {
+  Future<int> delete(String id) async {
     return db.then(
       (db) => db.delete(
         CreateNotesTableIfAbsent.tableName,
@@ -125,7 +125,7 @@ class SqlDatasourceImpl implements NotesRepository {
   }
 
   @override
-  Future<NoteItem?> readNote(int id) async {
+  Future<NoteItem?> readNote(String id) async {
     final results = await db.then((db) => db.query(
           CreateNotesTableIfAbsent.tableName,
           where: 'id = ?',
@@ -142,7 +142,11 @@ class SqlDatasourceImpl implements NotesRepository {
   }
 
   @override
-  Future<List<NoteItem>> readNotes() async => _readNotesDataList();
+  Future<List<NoteItem>> readNotes() async => _readNotesDataList().then(
+        (items) => [
+          for (final item in items) mapper.toDomain(item),
+        ],
+      );
 
   @override
   Future<String> exportNotes() async {
@@ -179,7 +183,8 @@ class SqlDatasourceImpl implements NotesRepository {
             final timestamp = dbItemMap?['timestamp'];
             final id = dbItemMap?['id'];
 
-            if (dbItemMap != null && id is int && timestamp is int && id > 0) {
+            // if (dbItemMap != null && id is int && timestamp is int && id > 0) {
+            if (dbItemMap != null && timestamp is int) {
               if (timestamp < remoteItem.timestamp) {
                 final map = remoteItem.toJson();
                 changes += await transaction.update(
@@ -271,7 +276,7 @@ class CreateNotesTableIfAbsent extends DbRequest {
   @override
   String get query => 'CREATE TABLE $tableName'
       r'('
-      r'id INTEGER PRIMARY KEY,'
+      r'id VARCHAR PRIMARY KEY,'
       r'title TEXT,'
       r'description TEXT,'
       r'content TEXT,'

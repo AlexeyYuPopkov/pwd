@@ -1,78 +1,112 @@
-abstract class RemoteStorageConfiguration {
+import 'package:equatable/equatable.dart';
+
+final class RemoteStorageConfigurations extends Equatable {
+  final List<RemoteStorageConfiguration> configurations;
+  late final Map<ConfigurationType, int> _configurationIndexes;
+
+  RemoteStorageConfigurations({required this.configurations}) {
+    var configurationIndexes = <ConfigurationType, int>{};
+    for (int i = 0; i < configurations.length; i++) {
+      configurationIndexes[configurations[i].type] = i;
+    }
+
+    _configurationIndexes = configurationIndexes;
+
+    assert(Set.from(configurations).length == configurations.length);
+  }
+
+  factory RemoteStorageConfigurations.empty() =>
+      RemoteStorageConfigurations(configurations: const []);
+
+  bool get isValid => configurations.isNotEmpty;
+
+  bool hasConfiguration(ConfigurationType type) => withType(type) != null;
+
+  @override
+  List<Object?> get props => [configurations];
+
+  RemoteStorageConfiguration? withType(ConfigurationType type) {
+    final index = _configurationIndexes[type];
+
+    if (index == null) {
+      return null;
+    }
+
+    final idValidIndex = index >= 0 && index < configurations.length;
+    assert(idValidIndex);
+
+    return idValidIndex ? configurations[index] : null;
+  }
+}
+
+enum ConfigurationType {
+  git,
+  googleDrive,
+}
+
+sealed class RemoteStorageConfiguration extends Equatable {
   const RemoteStorageConfiguration();
-  String get token;
-  String get repo;
-  String get owner;
-  String? get branch;
-  String get fileName;
 
-  const factory RemoteStorageConfiguration.empty() =
-      RemoteStorageConfigurationEmpty;
-
-  const factory RemoteStorageConfiguration.configuration({
+  const factory RemoteStorageConfiguration.git({
     required String token,
     required String repo,
     required String owner,
     required String? branch,
     required String fileName,
-  }) = ValidConfiguration;
+  }) = GitConfiguration;
 
-  @override
-  bool operator ==(Object other) => other.hashCode == hashCode;
+  const factory RemoteStorageConfiguration.google({
+    required String filename,
+  }) = GoogleDriveConfiguration;
 
-  @override
-  int get hashCode => Object.hashAll({token, repo, owner, fileName});
-
-  @override
-  String toString() {
-    return 'type: $runtimeType\n'
-        'token: $token\n'
-        'repo: $repo\n'
-        'owner: $owner\n'
-        'branch: $branch\n'
-        'fileName: $fileName\n';
-  }
+  ConfigurationType get type;
 }
 
-class RemoteStorageConfigurationEmpty extends RemoteStorageConfiguration {
+final class GitConfiguration extends RemoteStorageConfiguration {
   @override
-  String get fileName => '';
+  final type = ConfigurationType.git;
 
-  @override
-  String get owner => '';
-
-  @override
-  String get repo => '';
-
-  @override
-  String get token => '';
-
-  @override
-  String? get branch => null;
-
-  const RemoteStorageConfigurationEmpty();
-}
-
-class ValidConfiguration extends RemoteStorageConfiguration {
-  @override
   final String token;
-  @override
   final String repo;
-  @override
   final String owner;
-  @override
   String? get branch => _branch?.trim().isNotEmpty == true ? _branch : null;
-
-  @override
   final String fileName;
-
   final String? _branch;
+  final String realmFileName = 'realm_migration';
 
-  const ValidConfiguration({
+  const GitConfiguration({
     required this.token,
     required this.repo,
     required this.owner,
     required String? branch,
     required this.fileName,
   }) : _branch = branch;
+
+  @override
+  List<Object?> get props => [
+        token,
+        repo,
+        owner,
+        branch,
+        branch,
+        realmFileName,
+      ];
+}
+
+final class GoogleDriveConfiguration extends RemoteStorageConfiguration {
+  @override
+  final type = ConfigurationType.googleDrive;
+
+  final String filename;
+  final String realmFileName = 'realm_migration';
+
+  const GoogleDriveConfiguration({
+    required this.filename,
+  });
+
+  @override
+  List<Object?> get props => [
+        filename,
+        realmFileName,
+      ];
 }

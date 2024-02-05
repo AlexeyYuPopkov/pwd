@@ -1,23 +1,22 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pwd/theme/common_theme.dart';
 
 class AppBarButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final IconData? iconData;
 
   const AppBarButton({
-    Key? key,
+    super.key,
     this.onPressed,
     required this.iconData,
-  }) : super(key: key);
-
-  Color get iconColor =>
-      onPressed == null ? Colors.white.withOpacity(0.4) : Colors.white;
+  });
 
   @override
-  Widget build(BuildContext context) => CupertinoButton(
-        padding: EdgeInsets.zero,
-        onPressed: onPressed,
-        child: Icon(iconData, color: iconColor),
-      );
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: onPressed,
+      icon: Icon(iconData),
+      style: CommonTheme.of(context).iconButtonStyle,
+    );
+  }
 }

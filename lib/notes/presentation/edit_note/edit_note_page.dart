@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rxdart/subjects.dart';
 import 'package:pwd/common/presentation/dialogs/dialog_helper.dart';
-
 import 'package:pwd/common/presentation/dialogs/show_error_dialog_mixin.dart';
-import 'package:pwd/common/tools/di_storage/di_storage.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
 import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
+import 'package:pwd/notes/domain/usecases/notes_provider_usecase.dart';
+import 'package:pwd/notes/domain/usecases/sync_data_usecase.dart';
 import 'package:pwd/notes/presentation/tools/crypt_error_message_provider.dart';
 import 'package:pwd/notes/presentation/tools/notes_provider_error_message_provider.dart';
 import 'package:pwd/notes/presentation/tools/sync_data_error_message_provider.dart';
 import 'package:pwd/theme/common_size.dart';
-import 'package:rxdart/subjects.dart';
 
 import 'bloc/edit_note_bloc.dart';
 
-abstract class EditNotePagePopResult {
+sealed class EditNotePagePopResult {
   const EditNotePagePopResult();
 
   const factory EditNotePagePopResult.didUpdate({required NoteItem noteItem}) =
@@ -23,56 +23,68 @@ abstract class EditNotePagePopResult {
   const factory EditNotePagePopResult.didDidDelete() = DidDeleteResult;
 }
 
-class DidUpdateResult extends EditNotePagePopResult {
+final class DidUpdateResult extends EditNotePagePopResult {
   final NoteItem noteItem;
 
   const DidUpdateResult({required this.noteItem});
 }
 
-class DidDeleteResult extends EditNotePagePopResult {
+final class DidDeleteResult extends EditNotePagePopResult {
   const DidDeleteResult();
 }
 
-class EditNotePage extends StatelessWidget
+final class EditNotePage extends StatelessWidget
     with ShowErrorDialogMixin, DialogHelper {
   final formKey = GlobalKey<_FormState>();
+
   final NoteItem noteItem;
+  final NotesProviderUsecase notesProviderUsecase;
+  final SyncDataUsecase syncDataUsecase;
 
   final Future Function(BuildContext, Object) onRoute;
 
   final isSubmitEnabledStream = BehaviorSubject.seeded(false);
 
   EditNotePage({
-    Key? key,
+    super.key,
     required this.noteItem,
     required this.onRoute,
-  }) : super(key: key);
+    required this.notesProviderUsecase,
+    required this.syncDataUsecase,
+  });
 
   void _listener(BuildContext context, EditNoteState state) async {
     BlockingLoadingIndicator.of(context).isLoading = state is LoadingState;
 
-    if (state is DidSaveState) {
-      await onRoute(
-        context,
-        EditNotePagePopResult.didUpdate(
-          noteItem: state.data.noteItem,
-        ),
-      );
-    } else if (state is DidDeleteState) {
-      await onRoute(
-        context,
-        const EditNotePagePopResult.didDidDelete(),
-      );
-    } else if (state is ErrorState) {
-      showError(
-        context,
-        state.error,
-        errorMessageProviders: [
-          const NotesProviderErrorMessageProvider(),
-          const SyncDataErrorMessageProvider(),
-          const CryptErrorMessageProvider(),
-        ],
-      );
+    switch (state) {
+      case LoadingState():
+      case CommonState():
+        break;
+      case DidSaveState():
+        await onRoute(
+          context,
+          EditNotePagePopResult.didUpdate(
+            noteItem: state.data.noteItem,
+          ),
+        );
+      case DidDeleteState():
+        await onRoute(
+          context,
+          const EditNotePagePopResult.didDidDelete(),
+        );
+        break;
+
+      case ErrorState(e: final e):
+        showError(
+          context,
+          e,
+          errorMessageProviders: [
+            const NotesProviderErrorMessageProvider().call,
+            const SyncDataErrorMessageProvider().call,
+            const CryptErrorMessageProvider().call,
+          ],
+        );
+        break;
     }
   }
 
@@ -86,8 +98,8 @@ class EditNotePage extends StatelessWidget
         ),
         body: BlocProvider(
           create: (context) => EditNoteBloc(
-            notesProviderUsecase: DiStorage.shared.resolve(),
-            syncDataUsecase: DiStorage.shared.resolve(),
+            notesProviderUsecase: notesProviderUsecase,
+            syncDataUsecase: syncDataUsecase,
             noteItem: noteItem,
           ),
           child: BlocConsumer<EditNoteBloc, EditNoteState>(
@@ -200,10 +212,10 @@ class _Form extends StatefulWidget {
   final BehaviorSubject isSubmitEnabledStream;
 
   const _Form({
-    Key? key,
+    super.key,
     required this.noteItem,
     required this.isSubmitEnabledStream,
-  }) : super(key: key);
+  });
 
   @override
   State<_Form> createState() => _FormState();
@@ -218,7 +230,7 @@ class _FormState extends State<_Form> {
     text: widget.noteItem.description,
   );
   late final contentController = TextEditingController(
-    text: widget.noteItem.content,
+    text: widget.noteItem.content.str,
   );
 
   @override
@@ -282,7 +294,7 @@ class _FormState extends State<_Form> {
   bool checkIsSubmitEnabled() =>
       widget.noteItem.title != titleController.text ||
       widget.noteItem.description != descriptionController.text ||
-      widget.noteItem.content != contentController.text;
+      widget.noteItem.content.str != contentController.text;
 
   int get calculatedMaxLines => contentController.text.split('\n').length;
 }

@@ -20,4 +20,6 @@ class ShouldCreateRemoteStorageFileUsecase {
   void setFlag(bool flag) {
     _value = flag;
   }
+
+  void dropFlag() => setFlag(false);
 }

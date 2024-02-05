@@ -17,3 +17,9 @@ Map<String, dynamic> _$GetDbResponseDataToJson(GetDbResponseData instance) =>
       'sha': instance.sha,
       'content': instance.content,
     };
+
+// **************************************************************************
+// RealmObjectGenerator
+// **************************************************************************
+
+// ignore_for_file: type=lint

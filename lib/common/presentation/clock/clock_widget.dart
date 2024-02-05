@@ -17,14 +17,14 @@ class ClockWidget extends StatelessWidget {
   final VoidCallback? onEdit;
 
   const ClockWidget({
-    Key? key,
+    super.key,
     this.foregroundColor = Colors.black87,
     this.backgroundColor = Colors.black54,
     required this.parameters,
     required this.formatter,
     required this.timerStream,
     required this.onEdit,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -1,7 +1,8 @@
 import 'package:pwd/common/presentation/di/network_di.dart';
 import 'package:pwd/common/tools/di_storage/di_storage.dart';
-import 'package:pwd/notes/presentation/di/notes_di.dart';
-import 'package:pwd/notes/presentation/di/sync_di.dart';
+import 'package:pwd/notes/presentation/di/git_and_sql_di.dart';
+import 'package:pwd/notes/presentation/di/google_and_realm_di.dart';
+import 'package:pwd/settings/presentation/di/settings_di.dart';
 
 import 'unauth_di_module.dart';
 
@@ -19,17 +20,20 @@ class AppDiModules {
     final di = DiStorage.shared;
 
     dropAuthModules();
-    NotesDi().bind(di);
+
     NetworkDiModule().bind(di);
-    SyncDi().bind(di);
+    GitAndSqlDi().bind(di);
+    GoogleAndRealmDi().bind(di);
+    SettingsDi().bind(di);
   }
 
   /// Drop auth DI modules
   static void dropAuthModules() {
     final di = DiStorage.shared;
 
-    di.removeScope<NotesDi>();
+    di.removeScope<GitAndSqlDi>();
     di.removeScope<NetworkDiModule>();
-    di.removeScope<SyncDi>();
+    di.removeScope<GoogleAndRealmDi>();
+    di.removeScope<SettingsDi>();
   }
 }

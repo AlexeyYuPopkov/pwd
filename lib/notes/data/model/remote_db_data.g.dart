@@ -19,3 +19,9 @@ Map<String, dynamic> _$RemoteDbDataToJson(RemoteDbData instance) =>
       'notes': instance.notes,
       'timestamp': instance.timestamp,
     };
+
+// **************************************************************************
+// RealmObjectGenerator
+// **************************************************************************
+
+// ignore_for_file: type=lint

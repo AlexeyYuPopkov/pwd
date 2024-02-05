@@ -1,4 +1,5 @@
 import 'dart:isolate';
+import 'package:pwd/notes/domain/model/note_item_content.dart';
 import 'package:rxdart/rxdart.dart';
 
 import 'package:pwd/common/domain/pin_repository.dart';
@@ -10,6 +11,8 @@ import 'package:pwd/notes/domain/notes_repository.dart';
 abstract class NotesProviderUsecase {
   Stream<List<NoteItem>> get noteStream;
 
+  List<NoteItem> get notes;
+
   Future<void> readNotes();
 
   Future<void> updateNoteItem(NoteItem noteItem);
@@ -17,7 +20,7 @@ abstract class NotesProviderUsecase {
   Future<void> deleteNoteItem(NoteItem noteItem);
 }
 
-class NotesProviderUsecaseImpl implements NotesProviderUsecase {
+final class NotesProviderUsecaseImpl implements NotesProviderUsecase {
   final NotesRepository repository;
   final HashUsecase hashUsecase;
   final PinRepository pinRepository;
@@ -31,7 +34,8 @@ class NotesProviderUsecaseImpl implements NotesProviderUsecase {
   late final _noteStream = BehaviorSubject<List<NoteItem>>();
 
   @override
-  Stream<List<NoteItem>> get noteStream => _noteStream.asyncMap(
+  Stream<List<NoteItem>> get noteStream => _noteStream
+      .asyncMap(
         (items) async {
           final pin = pinRepository.getPin();
           final port = ReceivePort();
@@ -51,7 +55,14 @@ class NotesProviderUsecaseImpl implements NotesProviderUsecase {
 
           return result;
         },
-      ).asBroadcastStream();
+      )
+      .doOnData(
+        (e) => notes = e,
+      )
+      .asBroadcastStream();
+
+  @override
+  List<NoteItem> notes = [];
 
   @override
   Future<void> readNotes() async {
@@ -71,7 +82,9 @@ class NotesProviderUsecaseImpl implements NotesProviderUsecase {
         id: noteItem.id,
         title: hashUsecase.encode(noteItem.title, pin),
         description: hashUsecase.encode(noteItem.description, pin),
-        content: hashUsecase.encode(noteItem.content, pin),
+        content: NoteStringContent(
+          str: hashUsecase.encode(noteItem.content.str, pin),
+        ),
       );
       await repository.updateNote(encoded);
       readNotes();
@@ -84,7 +97,7 @@ class NotesProviderUsecaseImpl implements NotesProviderUsecase {
   Future<void> deleteNoteItem(NoteItem noteItem) async {
     try {
       final id = noteItem.id;
-      if (id != null && id > 0) {
+      if (id.isNotEmpty) {
         await repository.delete(id);
         readNotes();
       }
@@ -102,25 +115,21 @@ class NotesProviderUsecaseImpl implements NotesProviderUsecase {
     NoteItem decryptedOrRaw(NoteItem item) {
       final title = hashUsecase.tryDecode(item.title, pin);
       final description = hashUsecase.tryDecode(item.description, pin);
-      final content = hashUsecase.tryDecode(item.content, pin);
+      final content = hashUsecase.tryDecode(item.content.str, pin);
 
-      if (title == null || description == null || content == null) {
-        return NoteItem(
-          id: item.id,
-          title: item.title,
-          description: item.description,
-          content: item.content,
-          timestamp: item.timestamp,
-        );
-      } else {
-        return NoteItem.decrypted(
-          id: item.id,
-          title: title,
-          description: description,
-          content: content,
-          timestamp: item.timestamp,
-        );
-      }
+      final isDecrypted =
+          title != null && description != null && content != null;
+
+      return isDecrypted
+          ? NoteItem(
+              id: item.id,
+              title: title,
+              description: description,
+              content: NoteStringContent(str: content),
+              timestamp: item.timestamp,
+              isDecrypted: isDecrypted,
+            )
+          : item.copyWith();
     }
 
     final result = [

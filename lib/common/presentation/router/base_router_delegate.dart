@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-abstract class BaseRouterDelegate extends RouterDelegate
+abstract base class BaseRouterDelegate extends RouterDelegate
     with ChangeNotifier, PopNavigatorRouterDelegateMixin {
   @override
   GlobalKey<NavigatorState> get navigatorKey;
@@ -11,7 +11,7 @@ abstract class BaseRouterDelegate extends RouterDelegate
       key: navigatorKey,
       pages: initialPages,
       onPopPage: (route, result) {
-        updateState();
+        // updateState();
         if (!route.didPop(result)) {
           return false;
         }
@@ -26,9 +26,7 @@ abstract class BaseRouterDelegate extends RouterDelegate
   }
 
   @override
-  Future<void> setNewRoutePath(configuration) {
-    return Future.value(null);
-  }
+  Future<void> setNewRoutePath(configuration) async {}
 
   void updateState() {
     notifyListeners();

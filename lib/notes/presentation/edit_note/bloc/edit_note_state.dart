@@ -1,6 +1,6 @@
 part of 'edit_note_bloc.dart';
 
-abstract class EditNoteState extends Equatable {
+sealed class EditNoteState extends Equatable {
   final EditNotePageData data;
 
   const EditNoteState({required this.data});
@@ -22,36 +22,36 @@ abstract class EditNoteState extends Equatable {
 
   const factory EditNoteState.error({
     required EditNotePageData data,
-    required Object error,
+    required Object e,
   }) = ErrorState;
 }
 
-class CommonState extends EditNoteState {
+final class CommonState extends EditNoteState {
   const CommonState({required super.data});
 }
 
-class DidSaveState extends EditNoteState {
+final class DidSaveState extends EditNoteState {
   const DidSaveState({required super.data});
 }
 
-class DidDeleteState extends EditNoteState {
+final class DidDeleteState extends EditNoteState {
   const DidDeleteState({required super.data});
 }
 
-class LoadingState extends EditNoteState {
+final class LoadingState extends EditNoteState {
   const LoadingState({required super.data});
 }
 
-class ErrorState extends EditNoteState {
-  final Object error;
+final class ErrorState extends EditNoteState {
+  final Object e;
   const ErrorState({
     required super.data,
-    required this.error,
+    required this.e,
   });
 }
 
 // Data
-class EditNotePageData extends Equatable {
+final class EditNotePageData extends Equatable {
   final NoteItem noteItem;
 
   const EditNotePageData({required this.noteItem});

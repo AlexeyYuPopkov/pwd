@@ -1,20 +1,16 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
-class FadeAnimationPage extends Page {
+class FadeAnimationPage extends Page implements Equatable {
   final Widget child;
 
   const FadeAnimationPage({
-    LocalKey? key,
+    super.key,
     required this.child,
-    String? name,
-    Object? arguments,
-    String? restorationId,
-  }) : super(
-          key: key,
-          name: name,
-          arguments: arguments,
-          restorationId: restorationId,
-        );
+    super.name,
+    super.arguments,
+    super.restorationId,
+  });
 
   @override
   Route createRoute(BuildContext context) {
@@ -30,4 +26,10 @@ class FadeAnimationPage extends Page {
       },
     );
   }
+
+  @override
+  List<Object?> get props => [name, arguments, child.runtimeType];
+
+  @override
+  bool? get stringify => null;
 }

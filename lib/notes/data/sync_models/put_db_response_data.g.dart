@@ -28,3 +28,9 @@ Map<String, dynamic> _$PutDbResponseDataContentToJson(
     <String, dynamic>{
       'sha': instance.sha,
     };
+
+// **************************************************************************
+// RealmObjectGenerator
+// **************************************************************************
+
+// ignore_for_file: type=lint

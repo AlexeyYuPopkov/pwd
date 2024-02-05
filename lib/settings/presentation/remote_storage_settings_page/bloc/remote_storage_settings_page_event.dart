@@ -1,6 +1,6 @@
 part of 'remote_storage_settings_page_bloc.dart';
 
-abstract class RemoteStorageSettingsPageEvent extends Equatable {
+sealed class RemoteStorageSettingsPageEvent extends Equatable {
   const RemoteStorageSettingsPageEvent();
 
   const factory RemoteStorageSettingsPageEvent.initial() = InitialEvent;
@@ -11,10 +11,10 @@ abstract class RemoteStorageSettingsPageEvent extends Equatable {
   List<Object?> get props => const [];
 }
 
-class InitialEvent extends RemoteStorageSettingsPageEvent {
+final class InitialEvent extends RemoteStorageSettingsPageEvent {
   const InitialEvent();
 }
 
-class DropEvent extends RemoteStorageSettingsPageEvent {
+final class DropEvent extends RemoteStorageSettingsPageEvent {
   const DropEvent();
 }

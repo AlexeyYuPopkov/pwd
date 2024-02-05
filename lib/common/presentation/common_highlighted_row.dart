@@ -1,9 +1,4 @@
-import 'dart:io';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
-final _isMaterial = kIsWeb || Platform.isAndroid;
 
 class CommonHighlightedRow extends StatelessWidget {
   final VoidCallback? onTap;
@@ -12,32 +7,24 @@ class CommonHighlightedRow extends StatelessWidget {
   final Color? highlightedColor;
 
   const CommonHighlightedRow({
-    Key? key,
+    super.key,
     this.onTap,
     this.color = Colors.transparent,
     this.highlightedColor,
     required this.child,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
-    return _isMaterial
-        ? Material(
-            color: color,
-            child: InkWell(
-              onTap: onTap,
-              splashColor: Colors.transparent,
-              highlightColor: highlightedColor,
-              child: child,
-            ),
-          )
-        : Material(
-            color: color,
-            child: InkWell(
-              onTap: onTap,
-              child: child,
-            ),
-          );
+    return Material(
+      color: color,
+      child: InkWell(
+        onTap: onTap,
+        splashColor: Colors.transparent,
+        highlightColor: highlightedColor,
+        child: child,
+      ),
+    );
   }
 }
 
@@ -76,42 +63,27 @@ class CommonHighlightedBackgroundRow extends StatelessWidget {
   final Color? highlightedColor;
 
   const CommonHighlightedBackgroundRow({
-    Key? key,
+    super.key,
     this.onTap,
     this.color = Colors.transparent,
     this.highlightedColor,
     required this.child,
-  }) : super(key: key);
+  });
 
   @override
-  Widget build(BuildContext context) => _isMaterial
-      ? Material(
-          color: color,
-          child: Stack(
-            children: [
-              Positioned.fill(
-                child: InkWell(
-                  onTap: onTap,
-                  splashColor: Colors.transparent,
-                  highlightColor: highlightedColor,
-                ),
+  Widget build(BuildContext context) => Material(
+        color: color,
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: InkWell(
+                onTap: onTap,
+                splashColor: Colors.transparent,
+                highlightColor: highlightedColor,
               ),
-              child,
-            ],
-          ),
-        )
-      : Material(
-          color: color,
-          child: Stack(
-            children: [
-              Positioned.fill(
-                child: InkWell(
-                  onTap: onTap,
-                  highlightColor: highlightedColor,
-                ),
-              ),
-              child,
-            ],
-          ),
-        );
+            ),
+            child,
+          ],
+        ),
+      );
 }

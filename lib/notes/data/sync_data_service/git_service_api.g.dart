@@ -3,6 +3,12 @@
 part of 'git_service_api.dart';
 
 // **************************************************************************
+// RealmObjectGenerator
+// **************************************************************************
+
+// ignore_for_file: type=lint
+
+// **************************************************************************
 // RetrofitGenerator
 // **************************************************************************
 
@@ -22,11 +28,11 @@ class _GitServiceApi implements GitServiceApi {
 
   @override
   Future<PutDbResponseData> putDb({
-    required owner,
-    required repo,
-    required filename,
-    required body,
-    required token,
+    required String owner,
+    required String repo,
+    required String filename,
+    required PutDbRequestData body,
+    required String token,
   }) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -50,18 +56,22 @@ class _GitServiceApi implements GitServiceApi {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = PutDbResponseData.fromJson(_result.data!);
     return value;
   }
 
   @override
   Future<GetDbResponseData> getDb({
-    required owner,
-    required repo,
-    required filename,
-    branch,
-    required token,
+    required String owner,
+    required String repo,
+    required String filename,
+    String? branch,
+    required String token,
   }) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{r'ref': branch};
@@ -72,7 +82,7 @@ class _GitServiceApi implements GitServiceApi {
       r'Authorization': token,
     };
     _headers.removeWhere((k, v) => v == null);
-    final _data = <String, dynamic>{};
+    final Map<String, dynamic>? _data = null;
     final _result = await _dio
         .fetch<Map<String, dynamic>>(_setStreamType<GetDbResponseData>(Options(
       method: 'GET',
@@ -85,7 +95,11 @@ class _GitServiceApi implements GitServiceApi {
               queryParameters: queryParameters,
               data: _data,
             )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = GetDbResponseData.fromJson(_result.data!);
     return value;
   }
@@ -101,5 +115,22 @@ class _GitServiceApi implements GitServiceApi {
       }
     }
     return requestOptions;
+  }
+
+  String _combineBaseUrls(
+    String dioBaseUrl,
+    String? baseUrl,
+  ) {
+    if (baseUrl == null || baseUrl.trim().isEmpty) {
+      return dioBaseUrl;
+    }
+
+    final url = Uri.parse(baseUrl);
+
+    if (url.isAbsolute) {
+      return url.toString();
+    }
+
+    return Uri.parse(dioBaseUrl).resolveUri(url).toString();
   }
 }

@@ -6,12 +6,12 @@ import 'package:pwd/theme/common_size.dart';
 
 import 'bloc/pin_page_bloc.dart';
 
-class PinPageEnterPinForm extends StatefulWidget {
+final class PinPageEnterPinForm extends StatefulWidget {
   final TimeFormatter timeFormatter;
   const PinPageEnterPinForm({
-    Key? key,
+    super.key,
     required this.timeFormatter,
-  }) : super(key: key);
+  });
 
   @override
   State<PinPageEnterPinForm> createState() => _PinPageEnterPinFormState();
@@ -46,9 +46,7 @@ class _PinPageEnterPinFormState extends State<PinPageEnterPinForm> {
                     SizedBox(
                       height: topSpace,
                       child: Center(
-                        child: RepaintBoundary(
-                          child: ClocksWidget(formatter: widget.timeFormatter),
-                        ),
+                        child: ClocksWidget(formatter: widget.timeFormatter),
                       ),
                     ),
                     ConstrainedBox(

@@ -1,14 +1,14 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:pwd/notes/domain/model/note_item.dart';
+import 'package:pwd/notes/domain/model/note_item_content.dart';
 import 'package:pwd/notes/domain/usecases/notes_provider_usecase.dart';
 import 'package:pwd/notes/domain/usecases/sync_data_usecase.dart';
 
 part 'edit_note_state.dart';
 part 'edit_note_event.dart';
 
-class EditNoteBloc extends Bloc<EditNoteEvent, EditNoteState> {
+final class EditNoteBloc extends Bloc<EditNoteEvent, EditNoteState> {
   final NotesProviderUsecase notesProviderUsecase;
   final SyncDataUsecase syncDataUsecase;
   EditNotePageData get data => state.data;
@@ -41,7 +41,7 @@ class EditNoteBloc extends Bloc<EditNoteEvent, EditNoteState> {
         id: data.noteItem.id,
         title: event.title,
         description: event.description,
-        content: event.content,
+        content: NoteStringContent(str: event.content),
       );
 
       await notesProviderUsecase.updateNoteItem(noteItem);
@@ -52,7 +52,7 @@ class EditNoteBloc extends Bloc<EditNoteEvent, EditNoteState> {
         ),
       );
     } catch (e) {
-      emit(EditNoteState.error(data: state.data, error: e));
+      emit(EditNoteState.error(data: state.data, e: e));
     }
   }
 
@@ -64,10 +64,10 @@ class EditNoteBloc extends Bloc<EditNoteEvent, EditNoteState> {
       emit(EditNoteState.loading(data: data));
 
       await notesProviderUsecase.deleteNoteItem(data.noteItem);
-      await syncDataUsecase.forcePushDb();
+      await syncDataUsecase.updateRemote();
       emit(EditNoteState.didDelete(data: data));
     } catch (e) {
-      emit(EditNoteState.error(data: state.data, error: e));
+      emit(EditNoteState.error(data: state.data, e: e));
     }
   }
 }

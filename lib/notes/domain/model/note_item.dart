@@ -1,11 +1,15 @@
 import 'package:equatable/equatable.dart';
+import 'package:uuid/uuid.dart';
+
+import 'note_item_content.dart';
 
 class NoteItem extends Equatable {
-  final int? id;
+  final String id;
   final String title;
   final String description;
-  final String content;
+  final NoteContentInterface content;
   final int timestamp;
+  final bool isDecrypted;
 
   const NoteItem({
     required this.id,
@@ -13,6 +17,7 @@ class NoteItem extends Equatable {
     required this.description,
     required this.content,
     required this.timestamp,
+    required this.isDecrypted,
   });
 
   @override
@@ -22,29 +27,43 @@ class NoteItem extends Equatable {
         description,
         content,
         timestamp,
+        isDecrypted,
       ];
 
-  factory NoteItem.newItem() = NewNoteItem;
+  factory NoteItem.newItem() => UpdatedNoteItem(
+        id: '',
+        title: '',
+        description: '',
+        content: const NoteStringContent(str: ''),
+      );
 
   factory NoteItem.updatedItem({
-    required int? id,
+    required String id,
     required String title,
     required String description,
-    required String content,
+    required NoteContentInterface content,
   }) = UpdatedNoteItem;
 
-  const factory NoteItem.decrypted({
-    required int? id,
+  factory NoteItem.decrypted({
+    required String id,
     required String title,
     required String description,
-    required String content,
+    required NoteContentInterface content,
     required int timestamp,
-  }) = DecryptedNoteItem;
+  }) =>
+      NoteItem(
+        id: id,
+        title: title,
+        description: description,
+        content: content,
+        timestamp: timestamp,
+        isDecrypted: true,
+      );
 
-  NoteItem copyWith({
+  NoteItem copyToUpdatedWith({
     String? title,
     String? description,
-    String? content,
+    NoteContentInterface? content,
   }) {
     return NoteItem.updatedItem(
       id: id,
@@ -53,36 +72,36 @@ class NoteItem extends Equatable {
       content: content ?? this.content,
     );
   }
+
+  NoteItem copyWith({
+    String? title,
+    String? description,
+    NoteContentInterface? content,
+    int? timestamp,
+    bool? isDecrypted,
+  }) {
+    return NoteItem(
+      id: id,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      content: content ?? this.content,
+      timestamp: timestamp ?? this.timestamp,
+      isDecrypted: isDecrypted ?? this.isDecrypted,
+    );
+  }
 }
 
-class DecryptedNoteItem extends NoteItem {
-  const DecryptedNoteItem({
-    required super.id,
-    required super.title,
-    required super.description,
-    required super.content,
-    required super.timestamp,
-  });
-}
-
-class NewNoteItem extends NoteItem {
-  NewNoteItem()
-      : super(
-          id: null,
-          title: '',
-          description: '',
-          content: '',
-          timestamp: DateTime.now().timestamp,
-        );
-}
-
-class UpdatedNoteItem extends NoteItem {
+final class UpdatedNoteItem extends NoteItem {
   UpdatedNoteItem({
-    required super.id,
+    required String id,
     required super.title,
     required super.description,
     required super.content,
-  }) : super(timestamp: DateTime.now().timestamp);
+  }) : super(
+          id: id.isEmpty ? const Uuid().v4() : id,
+          timestamp: DateTime.now().timestamp,
+          isDecrypted: true,
+        );
 }
 
 extension on DateTime {

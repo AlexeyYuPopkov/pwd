@@ -1,7 +1,9 @@
 import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
 
 abstract class RemoteStorageConfigurationProvider {
-  Future<RemoteStorageConfiguration> get configuration;
-  Future<void> setConfiguration(RemoteStorageConfiguration configuration);
+  RemoteStorageConfigurations get currentConfiguration;
+  Stream<RemoteStorageConfigurations> get configuration;
+
+  Future<void> setConfigurations(RemoteStorageConfigurations configurations);
   Future<void> dropConfiguration();
 }

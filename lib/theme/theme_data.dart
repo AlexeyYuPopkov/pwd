@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:pwd/theme/common_theme.dart';
+import 'package:pwd/theme/shimmer_theme.dart';
 import 'package:pwd/theme/text_sizes.dart';
 
 /// Colors.grey.shade800;
@@ -50,4 +52,8 @@ final lightThemeData = ThemeData.light().copyWith(
       color: _textColor,
     ),
   ),
+  extensions: [
+    CommonTheme.lightTheme(),
+    ShimmerTheme.lightTheme(),
+  ],
 );

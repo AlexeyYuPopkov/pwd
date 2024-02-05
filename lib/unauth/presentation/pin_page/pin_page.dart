@@ -7,11 +7,10 @@ import 'package:pwd/common/tools/di_storage/di_storage.dart';
 
 import 'bloc/pin_page_bloc.dart';
 import 'pin_page_enter_pin_form.dart';
-import 'pin_page_enter_configuration_form.dart';
 
-class PinPage extends StatelessWidget with ShowErrorDialogMixin {
+final class PinPage extends StatelessWidget with ShowErrorDialogMixin {
   final Future Function(BuildContext, Object) onRoute;
-  final _pageViewKey = GlobalKey<_PageViewState>();
+
   TimeFormatter get timeFormatter => DiStorage.shared.resolve();
 
   PinPage({super.key, required this.onRoute});
@@ -21,8 +20,6 @@ class PinPage extends StatelessWidget with ShowErrorDialogMixin {
 
     if (state is ErrorState) {
       showError(context, state.error);
-    } else if (state is ShouldEnterThePinState) {
-      _pageViewKey.currentState?.toPinPage();
     }
   }
 
@@ -33,21 +30,15 @@ class PinPage extends StatelessWidget with ShowErrorDialogMixin {
       child: Scaffold(
         body: BlocProvider(
           create: (context) => PinPageBloc(
-            remoteStorageConfigurationProvider: DiStorage.shared.resolve(),
             pinUsecase: DiStorage.shared.resolve(),
             hashUsecase: DiStorage.shared.resolve(),
-            shouldCreateRemoteStorageFileUsecase: DiStorage.shared.resolve(),
           ),
           child: BlocConsumer<PinPageBloc, PinPageBlocState>(
             listener: _listener,
             builder: (_, state) {
-              return state is InitializingState
-                  ? const Center(child: CircularProgressIndicator())
-                  : _PageView(
-                      key: _pageViewKey,
-                      initialPage: state.page,
-                      timeFormatter: timeFormatter,
-                    );
+              return _Content(
+                timeFormatter: timeFormatter,
+              );
             },
           ),
         ),
@@ -56,46 +47,15 @@ class PinPage extends StatelessWidget with ShowErrorDialogMixin {
   }
 }
 
-class _PageView extends StatefulWidget {
-  final int initialPage;
+final class _Content extends StatelessWidget {
   final TimeFormatter timeFormatter;
-  const _PageView({
-    super.key,
-    required this.initialPage,
-    required this.timeFormatter,
-  });
 
-  @override
-  State<_PageView> createState() => _PageViewState();
-}
-
-class _PageViewState extends State<_PageView> {
-  late final controller = PageController(initialPage: widget.initialPage);
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
-  void toPinPage() {
-    controller.nextPage(
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-    );
-  }
+  const _Content({required this.timeFormatter});
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: PageView(
-        controller: controller,
-        physics: const NeverScrollableScrollPhysics(),
-        children: [
-          const PinPageEnterConfigurationForm(),
-          PinPageEnterPinForm(timeFormatter: widget.timeFormatter),
-        ],
-      ),
+      child: PinPageEnterPinForm(timeFormatter: timeFormatter),
     );
   }
 }

@@ -1,7 +1,9 @@
 import 'dart:io';
+
 import 'package:dio/dio.dart';
-import 'package:dio/adapter.dart';
+import 'package:dio/io.dart';
 import 'package:flutter/foundation.dart';
+
 import 'package:pwd/common/data/network_error_mapper_impl.dart';
 import 'package:pwd/common/domain/app_configuration_provider.dart';
 import 'package:pwd/common/domain/errors/network_error_mapper.dart';
@@ -57,15 +59,15 @@ class NetworkDiModule extends DiModule {
   }
 
   BaseOptions _createDioOptions(DiStorage di) {
-    const connectTimeout = 60 * 1000;
-    const receiveTimeout = 60 * 1000;
-    const sendTimeout = 60 * 1000;
+    // const connectTimeout = 60 * 1000;
+    // const receiveTimeout = 60 * 1000;
+    // const sendTimeout = 60 * 1000;
 
     return BaseOptions(
-      connectTimeout: connectTimeout,
-      receiveTimeout: receiveTimeout,
-      sendTimeout: sendTimeout,
-    );
+        // connectTimeout:  connectTimeout,
+        // receiveTimeout: receiveTimeout,
+        // sendTimeout: sendTimeout,
+        );
   }
 
   Dio _adjustedDioProxyIfNeeded({
@@ -74,42 +76,60 @@ class NetworkDiModule extends DiModule {
     required String port,
   }) {
     if (!kIsWeb && kDebugMode) {
-      var adapter = dio.httpClientAdapter;
+      dio.httpClientAdapter = IOHttpClientAdapter(
+        createHttpClient: () {
+          final client = HttpClient();
 
-      if (adapter is DefaultHttpClientAdapter) {
-        adapter.onHttpClientCreate = _configureHttpClient(
-          allowHostsWithBadCertificates: const {},
-          proxyIp: proxy,
-          proxyPort: int.tryParse(port) ?? 0,
-        );
-      }
+          client.findProxy = (uri) {
+            if (kDebugMode) {
+              final proxyPort = int.tryParse(port) ?? 0;
+              final isProxyAvailable = proxy.isNotEmpty && proxyPort != 0;
+
+              final result =
+                  isProxyAvailable ? 'PROXY $proxy:$proxyPort' : 'DIRECT';
+
+              debugPrint('PROXY: $result');
+
+              return result;
+            } else {
+              return 'DIRECT';
+            }
+          };
+
+          client.badCertificateCallback =
+              (X509Certificate cert, String host, int port) => true;
+
+          return client;
+        },
+      );
     }
+
     return dio;
   }
 
-  dynamic _configureHttpClient({
-    required Set<String> allowHostsWithBadCertificates,
-    required String proxyIp,
-    required int proxyPort,
-  }) {
-    return (HttpClient httpClient) {
-      if (kDebugMode) {
-        final isProxyAvailable = proxyIp.isNotEmpty && proxyPort != 0;
-        httpClient.findProxy = isProxyAvailable
-            ? (url) => 'PROXY $proxyIp:$proxyPort;'
-            : (url) => 'DIRECT';
+  // dynamic _configureHttpClient({
+  //   required Set<String> allowHostsWithBadCertificates,
+  //   required String proxyIp,
+  //   required int proxyPort,
+  // }) {
+  //   return (HttpClient httpClient) {
+  //     if (kDebugMode) {
+  //       final isProxyAvailable = proxyIp.isNotEmpty && proxyPort != 0;
+  //       httpClient.findProxy = isProxyAvailable
+  //           ? (url) => 'PROXY $proxyIp:$proxyPort;'
+  //           : (url) => 'DIRECT';
 
-        debugPrint('PROXY: $proxyIp:$proxyPort;');
+  //       debugPrint('PROXY: $proxyIp:$proxyPort;');
 
-        httpClient.badCertificateCallback = (
-          X509Certificate cert,
-          String host,
-          int port,
-        ) =>
-            allowHostsWithBadCertificates.contains(host);
-      }
+  //       httpClient.badCertificateCallback = (
+  //         X509Certificate cert,
+  //         String host,
+  //         int port,
+  //       ) =>
+  //           allowHostsWithBadCertificates.contains(host);
+  //     }
 
-      return httpClient;
-    };
-  }
+  //     return httpClient;
+  //   };
+  // }
 }

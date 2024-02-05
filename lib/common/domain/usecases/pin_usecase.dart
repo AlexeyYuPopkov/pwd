@@ -1,4 +1,5 @@
 import 'package:pwd/common/domain/base_pin.dart';
+import 'package:pwd/common/domain/errors/app_error.dart';
 import 'package:pwd/common/domain/pin_repository.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -9,12 +10,14 @@ abstract class PinUsecase {
 
   BasePin getPin();
 
+  Pin getPinOrThrow();
+
   Future<void> setPin(Pin pin);
 
   bool get isValidPin;
 }
 
-class PinUsecaseImpl implements PinUsecase {
+final class PinUsecaseImpl implements PinUsecase {
   final PinRepository repository;
   final Duration validDuration;
 
@@ -55,4 +58,19 @@ class PinUsecaseImpl implements PinUsecase {
     return pin is Pin &&
         pin.creationDate.add(validDuration).isAfter(DateTime.now());
   }
+
+  @override
+  Pin getPinOrThrow() {
+    final pin = _pinStream.value;
+    switch (pin) {
+      case Pin():
+        return pin;
+      case EmptyPin():
+        throw const PinUsecaseError();
+    }
+  }
+}
+
+final class PinUsecaseError extends AppError {
+  const PinUsecaseError() : super(message: '');
 }
