@@ -37,8 +37,6 @@ final class NotesListVariantBloc
       cancelOnError: false,
     );
 
-    // add(const GetFileListEvent());
-
     notesProviderUsecase.readNotes();
 
     add(const NotesListVariantBlocEvent.sync());
