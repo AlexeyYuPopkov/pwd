@@ -5,7 +5,12 @@ import 'package:flutter/foundation.dart';
 import 'package:pwd/common/domain/base_pin.dart';
 import 'package:pwd/common/domain/errors/app_error.dart';
 
-final _iv = encrypt.IV.fromLength(16);
+// TODO: fix hardcoded iv
+final _iv = encrypt.IV(
+  Uint8List.fromList(
+    List.generate(16, (index) => 0),
+  ),
+);
 
 final class HashUsecase {
   const HashUsecase();
@@ -70,14 +75,14 @@ final class HashUsecase {
     }
   }
 
-  // static
   String pinHash(String pin) => md5.convert(utf8.encode(pin)).toString();
 
   List<int> pinHash512(String pin) {
+    final result = sha512.convert(utf8.encode(pin)).bytes;
     if (kDebugMode) {
       print('Key str:${sha512.convert(utf8.encode(pin))}');
     }
-    return sha512.convert(utf8.encode(pin)).bytes;
+    return result;
   }
 }
 

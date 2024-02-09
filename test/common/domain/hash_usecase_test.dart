@@ -1,10 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-// import 'package:mocktail/mocktail.dart';
 import 'package:pwd/common/domain/base_pin.dart';
-// import 'package:pwd/common/domain/pin_repository.dart';
 import 'package:pwd/common/domain/usecases/hash_usecase.dart';
-
-// class MockPinRepository extends Mock implements PinRepository {}
 
 void main() {
   void testIteration(String str, BasePin pin) {
