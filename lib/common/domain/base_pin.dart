@@ -3,9 +3,6 @@ sealed class BasePin {
 
   const factory BasePin.empty() = EmptyPin;
 
-  factory BasePin.pin({required String pin, required List<int> pinSha512}) =
-      Pin;
-
   @override
   bool operator ==(Object other) => throw UnimplementedError();
 
@@ -16,11 +13,12 @@ sealed class BasePin {
 final class Pin extends BasePin {
   final String pin;
   final List<int> pinSha512;
-  final DateTime creationDate = DateTime.now();
+  final DateTime creationDate;
 
-  Pin({
+  const Pin({
     required this.pin,
     required this.pinSha512,
+    required this.creationDate,
   });
 
   @override
@@ -31,7 +29,11 @@ final class Pin extends BasePin {
       other.creationDate == creationDate;
 
   @override
-  int get hashCode => Object.hashAll({pin, creationDate});
+  int get hashCode => Object.hashAll({
+        pin,
+        pinSha512,
+        creationDate,
+      });
 }
 
 final class EmptyPin extends BasePin {

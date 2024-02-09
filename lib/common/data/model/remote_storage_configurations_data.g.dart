@@ -24,9 +24,3 @@ Map<String, dynamic> _$RemoteStorageConfigurationsDataToJson(
       'git': instance.git,
       'googleDrive': instance.googleDrive,
     };
-
-// **************************************************************************
-// RealmObjectGenerator
-// **************************************************************************
-
-// ignore_for_file: type=lint

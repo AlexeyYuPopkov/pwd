@@ -45,6 +45,7 @@ void main() {
       final pin = Pin(
         pin: '',
         pinSha512: [],
+        creationDate: DateTime.now(),
       );
 
       const gitConfiguration = GitConfiguration(
@@ -99,7 +100,6 @@ void main() {
           verifyNever(localRepository.close());
           verifyNever(googleRepository.logout());
           verifyNever(checksumChecker.dropChecksum());
-
           verify(pinUsecase.dropPin());
         },
       );

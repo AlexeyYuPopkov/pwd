@@ -15,6 +15,11 @@ abstract class PinUsecase {
   Future<void> setPin(Pin pin);
 
   bool get isValidPin;
+
+  Pin createPin({
+    required String pin,
+    required List<int> pinSha512,
+  });
 }
 
 final class PinUsecaseImpl implements PinUsecase {
@@ -68,6 +73,18 @@ final class PinUsecaseImpl implements PinUsecase {
       case EmptyPin():
         throw const PinUsecaseError();
     }
+  }
+
+  @override
+  Pin createPin({
+    required String pin,
+    required List<int> pinSha512,
+  }) {
+    return Pin(
+      pin: pin,
+      pinSha512: pinSha512,
+      creationDate: DateTime.now(),
+    );
   }
 }
 

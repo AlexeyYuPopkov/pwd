@@ -30,8 +30,7 @@ final class PinPage extends StatelessWidget with ShowErrorDialogMixin {
       child: Scaffold(
         body: BlocProvider(
           create: (context) => PinPageBloc(
-            pinUsecase: DiStorage.shared.resolve(),
-            hashUsecase: DiStorage.shared.resolve(),
+            loginUsecase: DiStorage.shared.resolve(),
           ),
           child: BlocConsumer<PinPageBloc, PinPageBlocState>(
             listener: _listener,

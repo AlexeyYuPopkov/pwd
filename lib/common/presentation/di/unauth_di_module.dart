@@ -13,6 +13,7 @@ import 'package:pwd/common/domain/usecases/hash_usecase.dart';
 import 'package:pwd/common/domain/usecases/pin_usecase.dart';
 import 'package:pwd/common/domain/usecases/should_create_remote_storage_file_usecase.dart';
 import 'package:pwd/common/domain/usecases/user_session_provider_usecase.dart';
+import 'package:pwd/unauth/domain/usecases/login_usecase.dart';
 
 final class UnauthDiModule extends DiScope {
   @override
@@ -34,35 +35,15 @@ final class UnauthDiModule extends DiScope {
       lifeTime: const LifeTime.single(),
     );
 
-    di.bind<HashUsecase>(
-      module: this,
-      () => const HashUsecase(),
-    );
-
     di.bind<AppConfigurationProvider>(
       module: null,
       () => AppConfigurationProviderImpl(),
       lifeTime: const LifeTime.single(),
     );
 
-    di.bind<UserSessionProviderUsecase>(
-      module: null,
-      () => UserSessionProviderUsecase(
-        pinUsecase: di.resolve(),
-        remoteStorageConfigurationProvider: di.resolve(),
-      ),
-      lifeTime: const LifeTime.single(),
-    );
-
     di.bind<RemoteStorageConfigurationProvider>(
       module: null,
       () => RemoteStorageConfigurationProviderMacosImpl(),
-      lifeTime: const LifeTime.single(),
-    );
-
-    di.bind(
-      module: this,
-      () => ShouldCreateRemoteStorageFileUsecase(),
       lifeTime: const LifeTime.single(),
     );
 
@@ -85,6 +66,40 @@ final class UnauthDiModule extends DiScope {
       module: this,
       lifeTime: const LifeTime.single(),
     );
-    //
+
+    bindUsecases(di);
+  }
+}
+
+// Bind usecases
+extension on UnauthDiModule {
+  void bindUsecases(DiStorage di) {
+    di.bind<HashUsecase>(
+      module: this,
+      () => const HashUsecase(),
+    );
+
+    di.bind<LoginUsecase>(
+      module: this,
+      () => LoginUsecase(
+        pinUsecase: di.resolve(),
+        hashUsecase: di.resolve(),
+      ),
+    );
+
+    di.bind<UserSessionProviderUsecase>(
+      module: null,
+      () => UserSessionProviderUsecase(
+        pinUsecase: di.resolve(),
+        remoteStorageConfigurationProvider: di.resolve(),
+      ),
+      lifeTime: const LifeTime.single(),
+    );
+
+    di.bind(
+      module: this,
+      () => ShouldCreateRemoteStorageFileUsecase(),
+      lifeTime: const LifeTime.single(),
+    );
   }
 }

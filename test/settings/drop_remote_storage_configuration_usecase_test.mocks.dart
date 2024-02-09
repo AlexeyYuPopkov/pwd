@@ -313,6 +313,44 @@ class MockPinUsecase extends _i1.Mock implements _i8.PinUsecase {
         returnValue: _i5.Future<void>.value(),
         returnValueForMissingStub: _i5.Future<void>.value(),
       ) as _i5.Future<void>);
+
+  @override
+  _i9.Pin createPin({
+    required String? pin,
+    required List<int>? pinSha512,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #createPin,
+          [],
+          {
+            #pin: pin,
+            #pinSha512: pinSha512,
+          },
+        ),
+        returnValue: _i4.dummyValue<_i9.Pin>(
+          this,
+          Invocation.method(
+            #createPin,
+            [],
+            {
+              #pin: pin,
+              #pinSha512: pinSha512,
+            },
+          ),
+        ),
+        returnValueForMissingStub: _i4.dummyValue<_i9.Pin>(
+          this,
+          Invocation.method(
+            #createPin,
+            [],
+            {
+              #pin: pin,
+              #pinSha512: pinSha512,
+            },
+          ),
+        ),
+      ) as _i9.Pin);
 }
 
 /// A class which mocks [ShouldCreateRemoteStorageFileUsecase].

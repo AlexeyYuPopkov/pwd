@@ -29,9 +29,3 @@ Map<String, dynamic> _$ClockModelDataToJson(ClockModelData instance) =>
       'label': instance.label,
       'timezoneOffsetInSeconds': instance.timezoneOffsetInSeconds,
     };
-
-// **************************************************************************
-// RealmObjectGenerator
-// **************************************************************************
-
-// ignore_for_file: type=lint

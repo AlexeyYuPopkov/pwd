@@ -45,9 +45,3 @@ Map<String, dynamic> _$CommitterDataToJson(CommitterData instance) =>
       'name': instance.name,
       'email': instance.email,
     };
-
-// **************************************************************************
-// RealmObjectGenerator
-// **************************************************************************
-
-// ignore_for_file: type=lint

@@ -17,9 +17,3 @@ Map<String, dynamic> _$GoogleDriveConfigurationDataToJson(
     <String, dynamic>{
       'filename': instance.filename,
     };
-
-// **************************************************************************
-// RealmObjectGenerator
-// **************************************************************************
-
-// ignore_for_file: type=lint

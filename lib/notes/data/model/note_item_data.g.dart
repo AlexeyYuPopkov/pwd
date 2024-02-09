@@ -22,9 +22,3 @@ Map<String, dynamic> _$NoteItemDataToJson(NoteItemData instance) =>
       'content': instance.content,
       'timestamp': instance.timestamp,
     };
-
-// **************************************************************************
-// RealmObjectGenerator
-// **************************************************************************
-
-// ignore_for_file: type=lint

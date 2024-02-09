@@ -25,9 +25,3 @@ Map<String, dynamic> _$GitConfigurationDataToJson(
       'branch': instance.branch,
       'fileName': instance.fileName,
     };
-
-// **************************************************************************
-// RealmObjectGenerator
-// **************************************************************************
-
-// ignore_for_file: type=lint

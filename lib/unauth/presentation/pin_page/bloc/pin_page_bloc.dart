@@ -3,19 +3,19 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pwd/common/domain/base_pin.dart';
 import 'package:pwd/common/domain/usecases/hash_usecase.dart';
 import 'package:pwd/common/domain/usecases/pin_usecase.dart';
+import 'package:pwd/unauth/domain/usecases/login_usecase.dart';
 
 part 'pin_page_bloc_state.dart';
 part 'pin_page_bloc_event.dart';
 
 final class PinPageBloc extends Bloc<PinPageBlocEvent, PinPageBlocState> {
-  final PinUsecase pinUsecase;
-  final HashUsecase hashUsecase;
+  final LoginUsecase loginUsecase;
+  
 
   PinPageBlocData get data => state.data;
 
   PinPageBloc({
-    required this.pinUsecase,
-    required this.hashUsecase,
+    required this.loginUsecase,
   }) : super(
           const PinPageBlocState.initializing(
             data: PinPageBlocData(),
@@ -34,12 +34,7 @@ final class PinPageBloc extends Bloc<PinPageBlocEvent, PinPageBlocState> {
   ) async {
     emit(PinPageBlocState.loading(data: data));
 
-    await pinUsecase.setPin(
-      Pin(
-        pin: hashUsecase.pinHash(event.pin),
-        pinSha512: hashUsecase.pinHash512(event.pin),
-      ),
-    );
+    await loginUsecase.execute(event.pin);
 
     emit(PinPageBlocState.didLogin(data: data));
   }
