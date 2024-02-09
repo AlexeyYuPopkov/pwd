@@ -1,5 +1,4 @@
 import 'dart:core';
-import 'dart:developer';
 import 'dart:typed_data';
 import 'package:google_sign_in/google_sign_in.dart';
 // ignore: depend_on_referenced_packages

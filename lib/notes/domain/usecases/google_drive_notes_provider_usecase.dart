@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:pwd/common/domain/usecases/pin_usecase.dart';
 import 'package:pwd/notes/domain/checksum_checker.dart';
 import 'package:pwd/notes/domain/deleted_items_provider.dart';
