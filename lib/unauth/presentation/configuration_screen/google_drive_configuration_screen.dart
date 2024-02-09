@@ -112,7 +112,7 @@ final class __FormState extends State<_Form> {
 
         final result = GoogleDriveConfigurationFormResult(
           configuration: GoogleDriveConfiguration(
-            filename: filenameController.text,
+            fileName: filenameController.text,
           ),
         );
 

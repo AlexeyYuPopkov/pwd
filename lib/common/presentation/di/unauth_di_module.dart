@@ -1,3 +1,4 @@
+import 'package:di_storage/di_storage.dart';
 import 'package:pwd/common/data/app_configuration_provider_impl.dart';
 import 'package:pwd/common/data/clock_configuration_provider_impl.dart';
 import 'package:pwd/common/data/pin_repository_impl.dart';
@@ -12,9 +13,8 @@ import 'package:pwd/common/domain/usecases/hash_usecase.dart';
 import 'package:pwd/common/domain/usecases/pin_usecase.dart';
 import 'package:pwd/common/domain/usecases/should_create_remote_storage_file_usecase.dart';
 import 'package:pwd/common/domain/usecases/user_session_provider_usecase.dart';
-import 'package:pwd/common/tools/di_storage/di_storage.dart';
 
-final class UnauthDiModule extends DiModule {
+final class UnauthDiModule extends DiScope {
   @override
   void bind(DiStorage di) {
     final PinRepository pinRepository = PinRepositoryImpl();

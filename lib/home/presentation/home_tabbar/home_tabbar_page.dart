@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pwd/common/tools/di_storage/di_storage.dart';
+import 'package:di_storage/di_storage.dart';
 import 'package:pwd/home/presentation/home_tabbar/home_tabbar_tab_model.dart';
 import 'package:pwd/theme/common_size.dart';
 

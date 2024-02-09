@@ -1,25 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
 import 'package:pwd/common/presentation/fade_animation_page.dart';
 import 'package:pwd/common/presentation/router/base_router_delegate.dart';
-import 'package:pwd/common/tools/di_storage/di_storage.dart';
-import 'package:pwd/notes/domain/usecases/google_sync_usecase.dart';
-import 'package:pwd/notes/domain/usecases/notes_provider_usecase_variant.dart';
+import 'package:di_storage/di_storage.dart';
+import 'package:pwd/notes/domain/usecases/sync_google_drive_item_usecase.dart';
+import 'package:pwd/notes/domain/usecases/google_drive_notes_provider_usecase.dart';
 import 'package:pwd/notes/presentation/edit_note/edit_note_page.dart';
-import 'package:pwd/notes/presentation/note/note_page.dart';
 import 'package:pwd/notes/presentation/note/note_page_route.dart';
 import 'package:pwd/notes/presentation/note_details/note_details_page.dart';
-import 'package:pwd/notes/presentation/notes_list_variant/notes_list_variant.dart';
+import 'package:pwd/notes/presentation/notes_list_variant/google_drive_notes_list_screen.dart';
 
-abstract final class NoteRouterVariantPagePath {
-  static const noteList = 'note_list_variant';
-  // static const editNote = 'note/edit';
+abstract final class GoogleDriveItemRouterPagePath {
+  static const noteList = 'google_drive_item';
 }
 
-final class NoteRouterVariantDelegate extends BaseRouterDelegate {
+final class GoogleDriveItemRouterDelegate extends BaseRouterDelegate {
+  final GoogleDriveConfiguration configuration;
+
   @override
   final GlobalKey<NavigatorState> navigatorKey;
 
-  NoteRouterVariantDelegate({required this.navigatorKey});
+  GoogleDriveItemRouterDelegate({
+    required this.navigatorKey,
+    required this.configuration,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -27,8 +31,11 @@ final class NoteRouterVariantDelegate extends BaseRouterDelegate {
       key: navigatorKey,
       pages: [
         FadeAnimationPage(
-          child: NotesListVariant(onRoute: onRoute),
-          name: NoteRouterVariantPagePath.noteList,
+          child: GoogleDriveNotesListScreen(
+            configuration: configuration,
+            onRoute: onRoute,
+          ),
+          name: GoogleDriveItemRouterPagePath.noteList,
         )
       ],
       onPopPage: (route, result) {
@@ -49,8 +56,11 @@ final class NoteRouterVariantDelegate extends BaseRouterDelegate {
   @override
   List<Page> get initialPages => [
         FadeAnimationPage(
-          child: NotePage(onRoute: onRoute),
-          name: NoteRouterVariantPagePath.noteList,
+          child: GoogleDriveNotesListScreen(
+            onRoute: onRoute,
+            configuration: configuration,
+          ),
+          name: GoogleDriveItemRouterPagePath.noteList,
         ),
       ];
 
@@ -66,13 +76,14 @@ final class NoteRouterVariantDelegate extends BaseRouterDelegate {
           return context.navigator.push(
             MaterialPageRoute(
               builder: (_) {
+                final di = DiStorage.shared;
                 return EditNotePage(
+                  configuration: configuration,
                   noteItem: action.noteItem,
                   onRoute: onRoute,
                   notesProviderUsecase:
-                      DiStorage.shared.resolve<NotesProviderUsecaseVariant>(),
-                  syncDataUsecase:
-                      DiStorage.shared.resolve<GoogleSyncUsecase>(),
+                      di.resolve<GoogleDriveNotesProviderUsecase>(),
+                  syncDataUsecase: di.resolve<SyncGoogleDriveItemUsecase>(),
                 );
               },
             ),

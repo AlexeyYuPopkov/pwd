@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pwd/common/domain/usecases/user_session_provider_usecase.dart';
-import 'package:pwd/common/tools/di_storage/di_storage.dart';
+import 'package:di_storage/di_storage.dart';
 import 'package:pwd/theme/theme_data.dart';
 import 'package:pwd/common/presentation/di/app_di_modules.dart';
 import 'package:pwd/common/presentation/blocking_loading_indicator.dart';

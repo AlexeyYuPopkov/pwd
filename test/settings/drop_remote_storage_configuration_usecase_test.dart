@@ -6,6 +6,7 @@ import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
 import 'package:pwd/common/domain/remote_storage_configuration_provider.dart';
 import 'package:pwd/common/domain/usecases/pin_usecase.dart';
 import 'package:pwd/common/domain/usecases/should_create_remote_storage_file_usecase.dart';
+import 'package:pwd/notes/domain/checksum_checker.dart';
 import 'package:pwd/notes/domain/google_repository.dart';
 import 'package:pwd/notes/domain/local_repository.dart';
 import 'package:pwd/notes/domain/notes_repository.dart';
@@ -19,6 +20,7 @@ import 'package:pwd/settings/domain/drop_remote_storage_configuration_usecase.da
     MockSpec<ShouldCreateRemoteStorageFileUsecase>(),
     MockSpec<LocalRepository>(),
     MockSpec<GoogleRepository>(),
+    MockSpec<ChecksumChecker>(),
   ],
 )
 import 'drop_remote_storage_configuration_usecase_test.mocks.dart';
@@ -34,6 +36,8 @@ void main() {
   final localRepository = MockLocalRepository();
 
   final googleRepository = MockGoogleRepository();
+
+  final checksumChecker = MockChecksumChecker();
 
   group(
     'DropRemoteStorageConfigurationUsecaseTest',
@@ -51,7 +55,7 @@ void main() {
         fileName: '',
       );
 
-      const googleDriveConfiguration = GoogleDriveConfiguration(filename: '');
+      const googleDriveConfiguration = GoogleDriveConfiguration(fileName: '');
 
       test(
         'Verify git related methods called',
@@ -65,6 +69,7 @@ void main() {
                 shouldCreateRemoteStorageFileUsecase,
             localRepository: localRepository,
             googleRepository: googleRepository,
+            checksumChecker: checksumChecker,
           );
 
           final configurations = RemoteStorageConfigurations(
@@ -92,6 +97,8 @@ void main() {
           verifyNever(pinUsecase.getPinOrThrow());
           verifyNever(localRepository.deleteAll(key: pin.pinSha512));
           verifyNever(googleRepository.logout());
+          verifyNever(checksumChecker.dropChecksum());
+
           verify(pinUsecase.dropPin());
         },
       );
@@ -108,6 +115,7 @@ void main() {
                 shouldCreateRemoteStorageFileUsecase,
             localRepository: localRepository,
             googleRepository: googleRepository,
+            checksumChecker: checksumChecker,
           );
 
           final configurations = RemoteStorageConfigurations(
@@ -136,6 +144,7 @@ void main() {
           verify(localRepository.deleteAll(key: pin.pinSha512));
           verify(googleRepository.logout());
           verify(pinUsecase.dropPin());
+          verify(checksumChecker.dropChecksum());
         },
       );
 
@@ -151,6 +160,7 @@ void main() {
                 shouldCreateRemoteStorageFileUsecase,
             localRepository: localRepository,
             googleRepository: googleRepository,
+            checksumChecker: checksumChecker,
           );
 
           final configurations = RemoteStorageConfigurations(
@@ -180,6 +190,7 @@ void main() {
           verify(localRepository.deleteAll(key: pin.pinSha512));
           verify(googleRepository.logout());
           verify(pinUsecase.dropPin());
+          verify(checksumChecker.dropChecksum());
         },
       );
     },

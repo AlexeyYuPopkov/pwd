@@ -1,9 +1,9 @@
-final class GoogleFile {
+final class GoogleDriveFile {
   final String id;
   final String checksum;
   final String name;
 
-  const GoogleFile({
+  const GoogleDriveFile({
     required this.id,
     required this.checksum,
     required this.name,

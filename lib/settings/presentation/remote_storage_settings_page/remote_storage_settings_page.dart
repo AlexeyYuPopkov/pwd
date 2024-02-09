@@ -5,7 +5,7 @@ import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
 import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
 import 'package:pwd/common/presentation/dialogs/dialog_helper.dart';
 import 'package:pwd/common/presentation/dialogs/show_error_dialog_mixin.dart';
-import 'package:pwd/common/tools/di_storage/di_storage.dart';
+import 'package:di_storage/di_storage.dart';
 import 'package:pwd/theme/common_size.dart';
 
 import 'bloc/remote_storage_settings_page_bloc.dart';

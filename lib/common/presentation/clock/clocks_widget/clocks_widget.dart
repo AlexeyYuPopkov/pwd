@@ -1,11 +1,11 @@
 import 'dart:math' show min;
 
+import 'package:di_storage/di_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pwd/common/domain/model/clock_model.dart';
 import 'package:pwd/common/domain/time_formatter/time_formatter.dart';
-import 'package:pwd/common/tools/di_storage/di_storage.dart';
 import 'package:pwd/theme/common_size.dart';
 
 import '../clock_widget.dart';

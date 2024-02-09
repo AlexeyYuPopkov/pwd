@@ -1,36 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
 import 'package:pwd/common/presentation/app_bar_button.dart';
 import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
 import 'package:pwd/common/presentation/dialogs/show_error_dialog_mixin.dart';
 import 'package:pwd/common/presentation/shimmer/common_shimmer.dart';
-import 'package:pwd/common/tools/di_storage/di_storage.dart';
+import 'package:di_storage/di_storage.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
+import 'package:pwd/notes/domain/usecases/google_drive_notes_provider_usecase.dart';
 import 'package:pwd/notes/presentation/common/widgets/note_list_item_widget.dart';
 import 'package:pwd/notes/presentation/note/note_page_route.dart';
-import 'package:pwd/notes/presentation/tools/debug_error_message_provider.dart';
+import 'package:pwd/notes/presentation/tools/crypt_error_message_provider.dart';
+import 'package:pwd/notes/presentation/tools/notes_provider_error_message_provider.dart';
+import 'package:pwd/notes/presentation/tools/sync_data_error_message_provider.dart';
 import 'package:pwd/theme/common_size.dart';
 
-import 'bloc/notes_list_variant_bloc.dart';
-import 'bloc/notes_list_variant_bloc_event.dart';
-import 'bloc/notes_list_variant_bloc_state.dart';
+import 'bloc/google_drive_notes_list_bloc.dart';
+import 'bloc/google_drive_notes_list_event.dart';
+import 'bloc/google_drive_notes_list_state.dart';
 
-final class NotesListVariant extends StatelessWidget with ShowErrorDialogMixin {
+final class GoogleDriveNotesListScreen extends StatelessWidget
+    with ShowErrorDialogMixin {
+  final GoogleDriveConfiguration configuration;
   final Future Function(BuildContext, Object) onRoute;
 
-  const NotesListVariant({
+  const GoogleDriveNotesListScreen({
     super.key,
+    required this.configuration,
     required this.onRoute,
   });
 
   @override
   Widget build(BuildContext context) {
+    final di = DiStorage.shared;
     return BlocProvider(
-      create: (context) => NotesListVariantBloc(
-        notesProviderUsecase: DiStorage.shared.resolve(),
-        googleSyncUsecase: DiStorage.shared.resolve(),
+      create: (_) => GoogleDriveNotesListBloc(
+        configuration: configuration,
+        notesProviderUsecase: di.resolve<GoogleDriveNotesProviderUsecase>(),
+        googleSyncUsecase: di.resolve(),
       ),
-      child: BlocConsumer<NotesListVariantBloc, NotesListVariantBlocState>(
+      child: BlocConsumer<GoogleDriveNotesListBloc, GoogleDriveNotesListState>(
         listener: _listener,
         builder: (context, state) {
           return Scaffold(
@@ -55,6 +64,7 @@ final class NotesListVariant extends StatelessWidget with ShowErrorDialogMixin {
                 ? const _LoadingShimmer()
                 : _NotesList(
                     notes: state.data.notes,
+                    onRefresh: _onPullToRefresh,
                     onEdit: _onEdit,
                     onDetails: _onDetails,
                   ),
@@ -64,7 +74,7 @@ final class NotesListVariant extends StatelessWidget with ShowErrorDialogMixin {
     );
   }
 
-  void _listener(BuildContext context, NotesListVariantBlocState state) {
+  void _listener(BuildContext context, GoogleDriveNotesListState state) {
     BlockingLoadingIndicator.of(context).isLoading = state is LoadingState;
 
     switch (state) {
@@ -81,18 +91,20 @@ final class NotesListVariant extends StatelessWidget with ShowErrorDialogMixin {
           context,
           e,
           errorMessageProviders: [
-            const DebugErrorMessageProvider().call,
-            // const NotesProviderErrorMessageProvider().call,
-            // const SyncDataErrorMessageProvider().call,
-            // const CryptErrorMessageProvider().call,
+            // const DebugErrorMessageProvider().call,
+            const NotesProviderErrorMessageProvider().call,
+            const SyncDataErrorMessageProvider().call,
+            const CryptErrorMessageProvider().call,
           ],
         );
     }
   }
 
   void _onSync(BuildContext context) => context
-      .read<NotesListVariantBloc>()
-      .add(const NotesListVariantBlocEvent.sync());
+      .read<GoogleDriveNotesListBloc>()
+      .add(const GoogleDriveNotesListEvent.sync());
+
+  Future<void> _onPullToRefresh(BuildContext context) async => _onSync(context);
 
   void _onEdit(
     BuildContext context, {
@@ -104,8 +116,8 @@ final class NotesListVariant extends StatelessWidget with ShowErrorDialogMixin {
     ).then(
       (result) {
         if (result is NotePageShouldSync) {
-          context.read<NotesListVariantBloc>().add(
-                const NotesListVariantBlocEvent.sync(),
+          context.read<GoogleDriveNotesListBloc>().add(
+                const GoogleDriveNotesListEvent.sync(),
               );
         }
       },
@@ -126,28 +138,33 @@ final class NotesListVariant extends StatelessWidget with ShowErrorDialogMixin {
 
 final class _NotesList extends StatelessWidget {
   final List<NoteItem> notes;
+  final Future Function(BuildContext) onRefresh;
   final void Function(BuildContext, {required NoteItem note}) onEdit;
   final void Function(BuildContext, {required NoteItem note}) onDetails;
 
   const _NotesList({
     required this.notes,
+    required this.onRefresh,
     required this.onEdit,
     required this.onDetails,
   });
 
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      itemCount: notes.length,
-      itemBuilder: (context, index) {
-        return NoteListItemWidget(
-          note: notes[index],
-          onDetailsButton: onDetails,
-          onEditButton: onEdit,
-        );
-      },
-      separatorBuilder: (_, __) => const Divider(
-        height: CommonSize.thickness,
+    return RefreshIndicator(
+      onRefresh: () => onRefresh(context),
+      child: ListView.separated(
+        itemCount: notes.length,
+        itemBuilder: (context, index) {
+          return NoteListItemWidget(
+            note: notes[index],
+            onDetailsButton: onDetails,
+            onEditButton: onEdit,
+          );
+        },
+        separatorBuilder: (_, __) => const Divider(
+          height: CommonSize.thickness,
+        ),
       ),
     );
   }

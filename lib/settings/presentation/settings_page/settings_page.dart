@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
 import 'package:pwd/common/presentation/dialogs/show_error_dialog_mixin.dart';
-import 'package:pwd/common/tools/di_storage/di_storage.dart';
+import 'package:di_storage/di_storage.dart';
 import 'package:pwd/theme/common_size.dart';
 
 import 'bloc/settings_page_bloc.dart';

@@ -71,13 +71,13 @@ final class _GitConfigurationMapper {
 final class _GoogleDriveConfigurationMapper {
   static GoogleDriveConfigurationData toData(GoogleDriveConfiguration src) {
     return GoogleDriveConfigurationData(
-      filename: src.filename,
+      filename: src.fileName,
     );
   }
 
   static GoogleDriveConfiguration toDomain(GoogleDriveConfigurationData src) {
     return GoogleDriveConfiguration(
-      filename: src.filename,
+      fileName: src.filename,
     );
   }
 

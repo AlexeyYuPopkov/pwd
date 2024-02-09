@@ -1,13 +1,14 @@
 import 'dart:ui';
+import 'package:di_storage/di_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:pwd/common/domain/remote_storage_configuration_provider.dart';
-import 'package:pwd/common/tools/di_storage/di_storage.dart';
 import 'package:pwd/home/presentation/home_tabbar/home_tabbar_page.dart';
 import 'package:pwd/main.dart' as app;
 import 'package:pwd/notes/presentation/edit_note/edit_note_page.dart';
-import 'package:pwd/notes/presentation/note/note_page.dart';
+import 'package:pwd/notes/presentation/note/git_notes_list_screen.dart';
+
 import 'package:pwd/unauth/presentation/configuration_screen/git_configuration_form.dart';
 import 'package:pwd/unauth/presentation/pin_page/pin_page_enter_pin_form.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -62,7 +63,7 @@ void main() {
     await enterPinRobot.fillEnterPinForm();
 
     expect(find.byType(HomeTabbarPage), findsOneWidget);
-    expect(find.byType(NotePage), findsOneWidget);
+    expect(find.byType(GitNotesListScreen), findsOneWidget);
 
     await Future.delayed(const Duration(seconds: 1));
 
@@ -78,7 +79,7 @@ void main() {
     await addNoteRobot.fillAddNoteForm();
 
     expect(find.byType(HomeTabbarPage), findsOneWidget);
-    expect(find.byType(NotePage), findsOneWidget);
+    expect(find.byType(GitNotesListScreen), findsOneWidget);
     expect(find.text(addNoteRobot.titleText), findsOneWidget);
     expect(find.text(addNoteRobot.descriptionText), findsOneWidget);
 
@@ -90,7 +91,7 @@ void main() {
     await addNoteRobot.deleteNote();
 
     expect(find.byType(HomeTabbarPage), findsOneWidget);
-    expect(find.byType(NotePage), findsOneWidget);
+    expect(find.byType(GitNotesListScreen), findsOneWidget);
     expect(find.text(addNoteRobot.titleText), findsNothing);
     expect(find.text(addNoteRobot.descriptionText), findsNothing);
 

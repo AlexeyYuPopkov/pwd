@@ -1,17 +1,20 @@
 import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
 import 'package:pwd/common/domain/usecases/should_create_remote_storage_file_usecase.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
 import 'package:pwd/notes/domain/usecases/notes_provider_usecase.dart';
-import 'package:pwd/notes/domain/usecases/sync_data_usecase.dart';
+import 'package:pwd/notes/domain/usecases/sync_git_item_usecase.dart';
 
-part 'note_page_event.dart';
-part 'note_page_state.dart';
+part 'git_notes_list_event.dart';
+part 'git_notes_list_state.dart';
 
-class NotePageBloc extends Bloc<NotePageEvent, NotePageState> {
+final class GitNotesListBloc
+    extends Bloc<GitNotesListEvent, GitNotesListState> {
+  final GitConfiguration configuration;
   final NotesProviderUsecase notesProviderUsecase;
-  final SyncDataUsecase syncDataUsecase;
+  final SyncGitItemUsecase syncDataUsecase;
   final ShouldCreateRemoteStorageFileUsecase
       shouldCreateRemoteStorageFileUsecase;
 
@@ -19,12 +22,13 @@ class NotePageBloc extends Bloc<NotePageEvent, NotePageState> {
 
   Stream<List<NoteItem>> get noteStream => notesProviderUsecase.noteStream;
 
-  NotePageBloc({
+  GitNotesListBloc({
+    required this.configuration,
     required this.notesProviderUsecase,
     required this.syncDataUsecase,
     required this.shouldCreateRemoteStorageFileUsecase,
   }) : super(
-          NotePageState.common(
+          GitNotesListState.common(
             data: NotePageData.initial(),
           ),
         ) {
@@ -32,9 +36,9 @@ class NotePageBloc extends Bloc<NotePageEvent, NotePageState> {
 
     subscription = noteStream.listen(
       (notes) {
-        add(NotePageEvent.newData(notes: notes));
+        add(GitNotesListEvent.newData(notes: notes));
       },
-      onError: (e) => add(NotePageEvent.error(e)),
+      onError: (e) => add(GitNotesListEvent.error(e)),
       cancelOnError: false,
     );
 
@@ -43,11 +47,11 @@ class NotePageBloc extends Bloc<NotePageEvent, NotePageState> {
 
   void _initialActions() async {
     if (shouldCreateRemoteStorageFileUsecase.flag) {
-      add(const NotePageEvent.forceCreateRemoteSyncFile());
+      add(const GitNotesListEvent.forceCreateRemoteSyncFile());
     } else {
       await notesProviderUsecase.readNotes();
 
-      add(const NotePageEvent.sync());
+      add(const GitNotesListEvent.sync());
     }
   }
 
@@ -68,73 +72,73 @@ class NotePageBloc extends Bloc<NotePageEvent, NotePageState> {
 
   void _onForceCreateRemoteSyncFileEvent(
     ForceCreateRemoteSyncFileEvent event,
-    Emitter<NotePageState> emit,
+    Emitter<GitNotesListState> emit,
   ) async {
     try {
-      emit(NotePageState.loading(data: state.data));
-      await (syncDataUsecase as SyncDataUsecaseImpl).createOrOverrideDb();
-      emit(NotePageState.common(data: state.data));
+      emit(GitNotesListState.loading(data: state.data));
+      await syncDataUsecase.createOrOverrideDb(configuration: configuration);
+      emit(GitNotesListState.common(data: state.data));
       _initialActions();
     } catch (e) {
-      emit(NotePageState.error(data: state.data, error: e));
+      emit(GitNotesListState.error(data: state.data, error: e));
     }
   }
 
   void _onNewDataEvent(
     NewDataEvent event,
-    Emitter<NotePageState> emit,
+    Emitter<GitNotesListState> emit,
   ) {
     final newData = state.data.copyWith(notes: event.notes);
 
     if (state is DidSyncState) {
-      emit(NotePageState.didSync(data: newData));
+      emit(GitNotesListState.didSync(data: newData));
     } else {
-      emit(NotePageState.common(data: newData));
+      emit(GitNotesListState.common(data: newData));
     }
   }
 
   void _onErrorEvent(
     ErrorEvent event,
-    Emitter<NotePageState> emit,
+    Emitter<GitNotesListState> emit,
   ) =>
-      emit(NotePageState.error(data: state.data, error: event.error));
+      emit(GitNotesListState.error(data: state.data, error: event.error));
 
   void _onRefreshDataEvent(
     RefreshDataEvent event,
-    Emitter<NotePageState> emit,
+    Emitter<GitNotesListState> emit,
   ) async {
     try {
-      emit(NotePageState.loading(data: state.data));
+      emit(GitNotesListState.loading(data: state.data));
       await notesProviderUsecase.readNotes();
     } catch (e) {
-      emit(NotePageState.error(data: state.data, error: e));
+      emit(GitNotesListState.error(data: state.data, error: e));
     }
   }
 
   void _onShouldSyncEvent(
     ShouldSyncEvent event,
-    Emitter<NotePageState> emit,
+    Emitter<GitNotesListState> emit,
   ) async {
     try {
-      emit(NotePageState.common(data: state.data));
+      emit(GitNotesListState.common(data: state.data));
     } catch (e) {
-      emit(NotePageState.error(data: state.data, error: e));
+      emit(GitNotesListState.error(data: state.data, error: e));
     }
   }
 
   void _onSyncEvent(
     SyncEvent event,
-    Emitter<NotePageState> emit,
+    Emitter<GitNotesListState> emit,
   ) async {
     try {
-      emit(NotePageState.loading(data: state.data));
+      emit(GitNotesListState.loading(data: state.data));
 
-      await syncDataUsecase.sync();
+      await syncDataUsecase.sync(configuration: configuration);
 
-      emit(NotePageState.didSync(data: state.data));
+      emit(GitNotesListState.didSync(data: state.data));
     } catch (e) {
-      emit(NotePageState.error(data: state.data, error: e));
-      add(const NotePageEvent.refresh());
+      emit(GitNotesListState.error(data: state.data, error: e));
+      add(const GitNotesListEvent.refresh());
     }
   }
 }

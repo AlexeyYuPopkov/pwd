@@ -1,17 +1,17 @@
 import 'dart:core';
+import 'dart:developer';
 import 'dart:typed_data';
 import 'package:google_sign_in/google_sign_in.dart';
 // ignore: depend_on_referenced_packages
 import 'package:http/http.dart' as http;
 import 'package:googleapis/drive/v3.dart' as drive;
+import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
 import 'package:pwd/notes/data/mappers/google_file_mapper.dart';
 import 'package:pwd/notes/domain/google_repository.dart';
 import 'package:pwd/notes/domain/model/google_error.dart';
-import 'package:pwd/notes/domain/model/google_file.dart';
+import 'package:pwd/notes/domain/model/google_drive_file.dart';
 
 final class _Consts {
-  static const fileName = 'pwd_notes';
-  static const fileNameQ = 'name = \'${_Consts.fileName}\'';
   static const fields =
       'nextPageToken, files(id, name, md5Checksum, modifiedTime)';
   static const spaces = 'drive';
@@ -25,29 +25,32 @@ final class GoogleRepositoryImpl implements GoogleRepository {
   final googleSignIn = GoogleSignIn(scopes: _Consts.scopes);
 
   @override
-  Future<GoogleFile?> getFile() async {
-    return _getFile().then(
+  Future<GoogleDriveFile?> getFile({
+    required GoogleDriveConfiguration target,
+  }) async {
+    return _getFile(target: target).then(
       (e) => e == null ? null : GoogleFileMapper.toDomain(e),
     );
   }
 
   @override
-  Future<GoogleFile> updateRemote(
-    Uint8List data,
-  ) async {
+  Future<GoogleDriveFile> updateRemote(
+    Uint8List data, {
+    required GoogleDriveConfiguration target,
+  }) async {
     final api = await _getDriveApi();
 
-    final file = await _getFile();
+    final file = await _getFile(target: target);
     final fileId = file?.id;
 
     if (file == null || fileId == null || fileId.isEmpty) {
-      return createFileWithData(data);
+      return createFileWithData(data, target: target);
     }
 
 // https://github.com/google/google-api-objectivec-client/issues/145
     final newFile = await api.files.update(
       drive.File(
-        name: _Consts.fileName,
+        name: target.fileName,
         // parents: file.parents,
         // description: file.description,
       ),
@@ -70,7 +73,7 @@ final class GoogleRepositoryImpl implements GoogleRepository {
   }
 
   @override
-  Future<Stream<List<int>>?> downloadFile(GoogleFile file) async {
+  Future<Stream<List<int>>?> downloadFile(GoogleDriveFile file) async {
     final fileId = file.id;
     if (fileId.isEmpty) {
       throw const GoogleError.unspecified();
@@ -130,12 +133,14 @@ extension on GoogleRepositoryImpl {
     return drive.DriveApi(authClient);
   }
 
-  Future<drive.File?> _getFile() async {
+  Future<drive.File?> _getFile({
+    required GoogleDriveConfiguration target,
+  }) async {
     final api = await _getDriveApi();
 
     final first = await api.files
         .list(
-          q: _Consts.fileNameQ,
+          q: target.fileNameQuery,
           pageSize: 1,
           pageToken: null,
           spaces: _Consts.spaces,
@@ -148,10 +153,13 @@ extension on GoogleRepositoryImpl {
     return first;
   }
 
-  Future<GoogleFile> createFileWithData(Uint8List data) async {
+  Future<GoogleDriveFile> createFileWithData(
+    Uint8List data, {
+    required GoogleDriveConfiguration target,
+  }) async {
     final api = await _getDriveApi();
     final newFile = await api.files.create(
-      drive.File(name: _Consts.fileName),
+      drive.File(name: target.fileName),
       uploadMedia: drive.Media(
         Stream.value(
           List<int>.from(data),
@@ -181,4 +189,8 @@ final class _AuthClient extends http.BaseClient {
     request.headers.addAll(_headers);
     return _baseClient.send(request);
   }
+}
+
+extension on GoogleDriveConfiguration {
+  String get fileNameQuery => 'name = \'$fileName\'';
 }

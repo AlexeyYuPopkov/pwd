@@ -16,9 +16,10 @@ import 'package:pwd/common/domain/remote_storage_configuration_provider.dart'
 import 'package:pwd/common/domain/usecases/pin_usecase.dart' as _i8;
 import 'package:pwd/common/domain/usecases/should_create_remote_storage_file_usecase.dart'
     as _i10;
+import 'package:pwd/notes/domain/checksum_checker.dart' as _i15;
 import 'package:pwd/notes/domain/google_repository.dart' as _i13;
 import 'package:pwd/notes/domain/local_repository.dart' as _i11;
-import 'package:pwd/notes/domain/model/google_file.dart' as _i14;
+import 'package:pwd/notes/domain/model/google_drive_file.dart' as _i14;
 import 'package:pwd/notes/domain/model/note_item.dart' as _i7;
 import 'package:pwd/notes/domain/notes_repository.dart' as _i6;
 
@@ -510,17 +511,20 @@ class MockLocalRepository extends _i1.Mock implements _i11.LocalRepository {
 /// See the documentation for Mockito's code generation for more information.
 class MockGoogleRepository extends _i1.Mock implements _i13.GoogleRepository {
   @override
-  _i5.Future<_i14.GoogleFile?> getFile() => (super.noSuchMethod(
+  _i5.Future<_i14.GoogleDriveFile?> getFile(
+          {required _i3.GoogleDriveConfiguration? target}) =>
+      (super.noSuchMethod(
         Invocation.method(
           #getFile,
           [],
+          {#target: target},
         ),
-        returnValue: _i5.Future<_i14.GoogleFile?>.value(),
-        returnValueForMissingStub: _i5.Future<_i14.GoogleFile?>.value(),
-      ) as _i5.Future<_i14.GoogleFile?>);
+        returnValue: _i5.Future<_i14.GoogleDriveFile?>.value(),
+        returnValueForMissingStub: _i5.Future<_i14.GoogleDriveFile?>.value(),
+      ) as _i5.Future<_i14.GoogleDriveFile?>);
 
   @override
-  _i5.Future<_i5.Stream<List<int>>?> downloadFile(_i14.GoogleFile? file) =>
+  _i5.Future<_i5.Stream<List<int>>?> downloadFile(_i14.GoogleDriveFile? file) =>
       (super.noSuchMethod(
         Invocation.method(
           #downloadFile,
@@ -531,34 +535,75 @@ class MockGoogleRepository extends _i1.Mock implements _i13.GoogleRepository {
       ) as _i5.Future<_i5.Stream<List<int>>?>);
 
   @override
-  _i5.Future<_i14.GoogleFile> updateRemote(_i12.Uint8List? data) =>
+  _i5.Future<_i14.GoogleDriveFile> updateRemote(
+    _i12.Uint8List? data, {
+    required _i3.GoogleDriveConfiguration? target,
+  }) =>
       (super.noSuchMethod(
         Invocation.method(
           #updateRemote,
           [data],
+          {#target: target},
         ),
-        returnValue:
-            _i5.Future<_i14.GoogleFile>.value(_i4.dummyValue<_i14.GoogleFile>(
+        returnValue: _i5.Future<_i14.GoogleDriveFile>.value(
+            _i4.dummyValue<_i14.GoogleDriveFile>(
           this,
           Invocation.method(
             #updateRemote,
             [data],
+            {#target: target},
           ),
         )),
-        returnValueForMissingStub:
-            _i5.Future<_i14.GoogleFile>.value(_i4.dummyValue<_i14.GoogleFile>(
+        returnValueForMissingStub: _i5.Future<_i14.GoogleDriveFile>.value(
+            _i4.dummyValue<_i14.GoogleDriveFile>(
           this,
           Invocation.method(
             #updateRemote,
             [data],
+            {#target: target},
           ),
         )),
-      ) as _i5.Future<_i14.GoogleFile>);
+      ) as _i5.Future<_i14.GoogleDriveFile>);
 
   @override
   _i5.Future<void> logout() => (super.noSuchMethod(
         Invocation.method(
           #logout,
+          [],
+        ),
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
+}
+
+/// A class which mocks [ChecksumChecker].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockChecksumChecker extends _i1.Mock implements _i15.ChecksumChecker {
+  @override
+  _i5.Future<String?> getChecksum() => (super.noSuchMethod(
+        Invocation.method(
+          #getChecksum,
+          [],
+        ),
+        returnValue: _i5.Future<String?>.value(),
+        returnValueForMissingStub: _i5.Future<String?>.value(),
+      ) as _i5.Future<String?>);
+
+  @override
+  _i5.Future<void> setChecksum(String? checksum) => (super.noSuchMethod(
+        Invocation.method(
+          #setChecksum,
+          [checksum],
+        ),
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
+
+  @override
+  _i5.Future<void> dropChecksum() => (super.noSuchMethod(
+        Invocation.method(
+          #dropChecksum,
           [],
         ),
         returnValue: _i5.Future<void>.value(),

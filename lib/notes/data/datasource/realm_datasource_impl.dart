@@ -33,8 +33,10 @@ final class RealmDatasourceImpl implements LocalRepository {
     final realm = _getRealm(key: key);
 
     realm.write(
-      () => realm.deleteAll(),
+      () => realm.deleteAll<NoteItemRealm>(),
     );
+
+    assert(realm.all<NoteItemRealm>().isEmpty);
   }
 
   @override

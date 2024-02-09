@@ -56,7 +56,7 @@ sealed class RemoteStorageConfiguration extends Equatable {
   }) = GitConfiguration;
 
   const factory RemoteStorageConfiguration.google({
-    required String filename,
+    required String fileName,
   }) = GoogleDriveConfiguration;
 
   ConfigurationType get type;
@@ -97,16 +97,16 @@ final class GoogleDriveConfiguration extends RemoteStorageConfiguration {
   @override
   final type = ConfigurationType.googleDrive;
 
-  final String filename;
+  final String fileName;
   final String realmFileName = 'realm_migration';
 
   const GoogleDriveConfiguration({
-    required this.filename,
+    required this.fileName,
   });
 
   @override
   List<Object?> get props => [
-        filename,
+        fileName,
         realmFileName,
       ];
 }

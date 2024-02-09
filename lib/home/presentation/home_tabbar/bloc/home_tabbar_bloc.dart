@@ -39,9 +39,9 @@ final class HomeTabbarBloc
           (e) {
             switch (e) {
               case GitConfiguration():
-                return const GitTab();
+                return GitTab(configuration: e);
               case GoogleDriveConfiguration():
-                return const GoogleTab();
+                return GoogleDriveTab(configuration: e);
             }
           },
         ),

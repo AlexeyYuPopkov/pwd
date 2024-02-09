@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pwd/notes/presentation/common/widgets/note_list_item_widget.dart';
-import 'package:pwd/notes/presentation/note/note_page.dart';
+import 'package:pwd/notes/presentation/note/git_notes_list_screen.dart';
 
 class NotePageRobot {
   const NotePageRobot(this.tester);
@@ -10,7 +10,7 @@ class NotePageRobot {
   Future<void> toAddNotePage() async {
     await tester.pumpAndSettle();
 
-    final notePage = find.byType(NotePage);
+    final notePage = find.byType(GitNotesListScreen);
 
     await tester.ensureVisible(notePage);
 

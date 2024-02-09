@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:pwd/notes/presentation/router/note_router_delegate.dart';
-import 'package:pwd/notes/presentation/router/note_router_variant_delegate.dart';
+import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
+import 'package:pwd/notes/presentation/router/git_item_router_delegate.dart';
+import 'package:pwd/notes/presentation/router/google_drive_item_router_delegate.dart';
 import 'package:pwd/settings/presentation/router/settings_router_delegate.dart';
 
 final _noteRouterKey = GlobalKey<NavigatorState>();
@@ -14,13 +15,8 @@ sealed class HomeTabbarTabModel {
   BottomNavigationBarItem buildNavigationBarItem(BuildContext context);
 
   NavigationRailDestination buildNavigationRailDestination(
-      BuildContext context);
-
-  static List<HomeTabbarTabModel> tabs = const [
-    GitTab(),
-    GoogleTab(),
-    SettingsTab(),
-  ];
+    BuildContext context,
+  );
 }
 
 final class EmptyPlaceholderTab extends HomeTabbarTabModel {
@@ -46,11 +42,17 @@ final class EmptyPlaceholderTab extends HomeTabbarTabModel {
 }
 
 final class GitTab extends HomeTabbarTabModel {
-  const GitTab();
+  final GitConfiguration configuration;
+
+  const GitTab({required this.configuration});
+
   @override
   Router buildRoute(BuildContext context) {
     return Router(
-      routerDelegate: NoteRouterDelegate(navigatorKey: _noteRouterKey),
+      routerDelegate: GitItemRouterDelegate(
+        navigatorKey: _noteRouterKey,
+        configuration: configuration,
+      ),
     );
   }
 
@@ -72,13 +74,17 @@ final class GitTab extends HomeTabbarTabModel {
   }
 }
 
-final class GoogleTab extends HomeTabbarTabModel {
-  const GoogleTab();
+final class GoogleDriveTab extends HomeTabbarTabModel {
+  final GoogleDriveConfiguration configuration;
+
+  const GoogleDriveTab({required this.configuration});
+
   @override
   Router buildRoute(BuildContext context) {
     return Router(
-      routerDelegate: NoteRouterVariantDelegate(
+      routerDelegate: GoogleDriveItemRouterDelegate(
         navigatorKey: _notesListRouterKey,
+        configuration: configuration,
       ),
     );
   }

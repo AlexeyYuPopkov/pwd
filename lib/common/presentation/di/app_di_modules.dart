@@ -1,5 +1,5 @@
+import 'package:di_storage/di_storage.dart';
 import 'package:pwd/common/presentation/di/network_di.dart';
-import 'package:pwd/common/tools/di_storage/di_storage.dart';
 import 'package:pwd/notes/presentation/di/git_and_sql_di.dart';
 import 'package:pwd/notes/presentation/di/google_and_realm_di.dart';
 import 'package:pwd/settings/presentation/di/settings_di.dart';

@@ -2,56 +2,46 @@ import 'dart:convert';
 
 import 'package:pwd/common/domain/errors/network_error.dart';
 import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
-import 'package:pwd/common/domain/remote_storage_configuration_provider.dart';
 import 'package:pwd/notes/domain/remote_data_storage_repository.dart';
+import 'package:pwd/notes/domain/usecases/git_notes_provider_usecase.dart';
 import 'package:pwd/notes/domain/usecases/notes_provider_usecase.dart';
 import 'package:pwd/notes/domain/usecases/sync_data_usecases_errors.dart';
 import 'package:pwd/notes/domain/sync_requests_parameters/put_db_request.dart';
 import 'package:pwd/notes/domain/sync_requests_parameters/put_db_response.dart';
 import 'package:pwd/notes/domain/notes_repository.dart';
+import 'package:pwd/notes/domain/usecases/sync_usecase.dart';
 
-abstract interface class SyncDataUsecase {
-  Future<void> sync();
-  Future<void> updateRemote();
-}
-
-final class SyncDataUsecaseImpl implements SyncDataUsecase {
+final class SyncGitItemUsecase implements SyncUsecase {
   static const _commitMessage = 'Update notes';
   static const _committerName = 'Alekseii';
   static const _committerEmail = 'alexey.yu.popkov@gmail.com';
 
-  final RemoteStorageConfigurationProvider remoteStorageConfigurationProvider;
   final RemoteDataStorageRepository remoteStorageRepository;
   final NotesRepository notesRepository;
   final NotesProviderUsecase notesProvider;
 
   String? lastSha;
 
-  SyncDataUsecaseImpl({
-    required this.remoteStorageConfigurationProvider,
+  SyncGitItemUsecase({
     required this.remoteStorageRepository,
     required this.notesRepository,
     required this.notesProvider,
   });
 
   @override
-  Future<void> sync() async {
-    try {
-      final configurations =
-          remoteStorageConfigurationProvider.currentConfiguration;
-// TODO: refactor
-      final git = configurations.configurations
-          .whereType<GitConfiguration>()
-          .firstOrNull;
-
-      assert(git != null);
-
-      if (git == null) {
+  Future<void> sync({required RemoteStorageConfiguration configuration}) async {
+    // TODO: refactor
+    switch (configuration) {
+      case GitConfiguration():
+        break;
+      case GoogleDriveConfiguration():
+        assert(false);
         return;
-      }
+    }
 
+    try {
       final result = await remoteStorageRepository.getDb(
-        configuration: git,
+        configuration: configuration,
       );
 
       lastSha = result.sha;
@@ -81,10 +71,10 @@ final class SyncDataUsecaseImpl implements SyncDataUsecase {
       final remoteTimestamp = jsonMap['timestamp'];
 
       if (remoteTimestamp is! int) {
-        await updateRemote();
+        await updateRemote(configuration: configuration);
       } else {
         if (localTimestamp != remoteTimestamp) {
-          await updateRemote();
+          await updateRemote(configuration: configuration);
         }
       }
     } on NotFoundError catch (e) {
@@ -95,13 +85,28 @@ final class SyncDataUsecaseImpl implements SyncDataUsecase {
   }
 
   @override
-  Future<void> updateRemote() async {
+  Future<void> updateRemote({
+    required RemoteStorageConfiguration configuration,
+  }) async {
+    // TODO: refactor
+    switch (configuration) {
+      case GitConfiguration():
+        break;
+      case GoogleDriveConfiguration():
+        assert(false);
+        return;
+    }
+
     try {
       final notesStr = await notesRepository.exportNotes();
 
       if (notesStr.isNotEmpty) {
-        final sha = lastSha ?? await _getSha();
-        overrideDbWithContent(contentStr: notesStr, sha: sha);
+        final sha = lastSha ?? await _getSha(configuration: configuration);
+        overrideDbWithContent(
+          contentStr: notesStr,
+          sha: sha,
+          configuration: configuration,
+        );
       }
     } on NotFoundError catch (e) {
       throw SyncDataError.destinationNotFound(parentError: e);
@@ -110,15 +115,18 @@ final class SyncDataUsecaseImpl implements SyncDataUsecase {
     }
   }
 
-  Future<PutDbResponse?> createOrOverrideDb() async {
+  Future<PutDbResponse?> createOrOverrideDb({
+    required GitConfiguration configuration,
+  }) async {
     try {
-      final ssa = lastSha ?? await _getSha();
+      final ssa = lastSha ?? await _getSha(configuration: configuration);
 
       return overrideDbWithContent(
         contentStr: notesRepository.createEmptyDbContent(
           DateTime.now().timestamp,
         ),
         sha: ssa,
+        configuration: configuration,
       );
     } catch (e) {
       return overrideDbWithContent(
@@ -126,6 +134,7 @@ final class SyncDataUsecaseImpl implements SyncDataUsecase {
           DateTime.now().timestamp,
         ),
         sha: null,
+        configuration: configuration,
       );
     }
   }
@@ -133,25 +142,13 @@ final class SyncDataUsecaseImpl implements SyncDataUsecase {
   Future<PutDbResponse?> overrideDbWithContent({
     required String contentStr,
     required String? sha,
+    required GitConfiguration configuration,
   }) async {
     final bytes = utf8.encode(contentStr);
     final base64encoded = base64.encode(bytes);
 
-    final configurations =
-        remoteStorageConfigurationProvider.currentConfiguration;
-
-// TODO: refactor
-    final git =
-        configurations.configurations.whereType<GitConfiguration>().firstOrNull;
-
-    assert(git != null);
-
-    if (git == null) {
-      return null;
-    }
-
     return remoteStorageRepository.putDb(
-      configuration: git,
+      configuration: configuration,
       request: PutDbRequest(
         message: _commitMessage,
         content: base64encoded,
@@ -165,24 +162,10 @@ final class SyncDataUsecaseImpl implements SyncDataUsecase {
     );
   }
 
-  Future<String?> _getSha() async {
+  Future<String?> _getSha({required GitConfiguration configuration}) async {
     try {
-      final configurations =
-          remoteStorageConfigurationProvider.currentConfiguration;
-
-      // TODO: refactor
-      final git = configurations.configurations
-          .whereType<GitConfiguration>()
-          .firstOrNull;
-
-      assert(git != null);
-
-      if (git == null) {
-        return null;
-      }
-
       return await remoteStorageRepository
-          .getDb(configuration: git)
+          .getDb(configuration: configuration)
           .then((result) => result.sha);
     } on NotFoundError catch (e) {
       throw SyncDataError.destinationNotFound(parentError: e);

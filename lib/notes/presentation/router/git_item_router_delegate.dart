@@ -1,22 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
 import 'package:pwd/common/presentation/fade_animation_page.dart';
 import 'package:pwd/common/presentation/router/base_router_delegate.dart';
-import 'package:pwd/common/tools/di_storage/di_storage.dart';
+import 'package:di_storage/di_storage.dart';
+import 'package:pwd/notes/domain/usecases/git_notes_provider_usecase.dart';
+import 'package:pwd/notes/domain/usecases/sync_git_item_usecase.dart';
 import 'package:pwd/notes/presentation/edit_note/edit_note_page.dart';
-import 'package:pwd/notes/presentation/note/note_page.dart';
+import 'package:pwd/notes/presentation/note/git_notes_list_screen.dart';
 import 'package:pwd/notes/presentation/note/note_page_route.dart';
 import 'package:pwd/notes/presentation/note_details/note_details_page.dart';
 
-abstract final class MainRouterPagePath {
-  static const note = 'note';
-  static const editNote = 'note/edit';
+abstract final class GitItemRouterPagePath {
+  static const note = 'git_item';
 }
 
-final class NoteRouterDelegate extends BaseRouterDelegate {
+final class GitItemRouterDelegate extends BaseRouterDelegate {
+  final GitConfiguration configuration;
   @override
   final GlobalKey<NavigatorState> navigatorKey;
 
-  NoteRouterDelegate({required this.navigatorKey});
+  GitItemRouterDelegate({
+    required this.navigatorKey,
+    required this.configuration,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +30,11 @@ final class NoteRouterDelegate extends BaseRouterDelegate {
       key: navigatorKey,
       pages: [
         FadeAnimationPage(
-          child: NotePage(onRoute: onRoute),
-          name: MainRouterPagePath.note,
+          child: GitNotesListScreen(
+            configuration: configuration,
+            onRoute: onRoute,
+          ),
+          name: GitItemRouterPagePath.note,
         )
       ],
       onPopPage: (route, result) {
@@ -46,8 +55,11 @@ final class NoteRouterDelegate extends BaseRouterDelegate {
   @override
   List<Page> get initialPages => [
         FadeAnimationPage(
-          child: NotePage(onRoute: onRoute),
-          name: MainRouterPagePath.note,
+          child: GitNotesListScreen(
+            configuration: configuration,
+            onRoute: onRoute,
+          ),
+          name: GitItemRouterPagePath.note,
         ),
       ];
 
@@ -63,11 +75,13 @@ final class NoteRouterDelegate extends BaseRouterDelegate {
           return context.navigator.push(
             MaterialPageRoute(
               builder: (_) {
+                final di = DiStorage.shared;
                 return EditNotePage(
                   noteItem: action.noteItem,
+                  configuration: configuration,
                   onRoute: onRoute,
-                  notesProviderUsecase: DiStorage.shared.resolve(),
-                  syncDataUsecase: DiStorage.shared.resolve(),
+                  notesProviderUsecase: di.resolve<GitNotesProviderUsecase>(),
+                  syncDataUsecase: di.resolve<SyncGitItemUsecase>(),
                 );
               },
             ),

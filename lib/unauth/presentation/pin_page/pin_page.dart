@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pwd/common/domain/time_formatter/time_formatter.dart';
 import 'package:pwd/common/presentation/dialogs/show_error_dialog_mixin.dart';
 import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
-import 'package:pwd/common/tools/di_storage/di_storage.dart';
+import 'package:di_storage/di_storage.dart';
 
 import 'bloc/pin_page_bloc.dart';
 import 'pin_page_enter_pin_form.dart';

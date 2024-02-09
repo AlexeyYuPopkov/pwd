@@ -1,23 +1,23 @@
-part of 'note_page_bloc.dart';
+part of 'git_notes_list_bloc.dart';
 
-abstract class NotePageState extends Equatable {
+abstract class GitNotesListState extends Equatable {
   final NotePageData data;
 
-  const NotePageState({required this.data});
+  const GitNotesListState({required this.data});
 
   @override
   List<Object?> get props => [data, needsSync];
 
-  const factory NotePageState.common({required NotePageData data}) =
+  const factory GitNotesListState.common({required NotePageData data}) =
       CommonState;
 
-  const factory NotePageState.didSync({required NotePageData data}) =
+  const factory GitNotesListState.didSync({required NotePageData data}) =
       DidSyncState;
 
-  const factory NotePageState.loading({required NotePageData data}) =
+  const factory GitNotesListState.loading({required NotePageData data}) =
       LoadingState;
 
-  const factory NotePageState.error({
+  const factory GitNotesListState.error({
     required NotePageData data,
     required Object error,
   }) = ErrorState;
@@ -25,19 +25,19 @@ abstract class NotePageState extends Equatable {
   bool get needsSync => this is CommonState;
 }
 
-class CommonState extends NotePageState {
+class CommonState extends GitNotesListState {
   const CommonState({required super.data});
 }
 
-class DidSyncState extends NotePageState {
+class DidSyncState extends GitNotesListState {
   const DidSyncState({required super.data});
 }
 
-class LoadingState extends NotePageState {
+class LoadingState extends GitNotesListState {
   const LoadingState({required super.data});
 }
 
-class ErrorState extends NotePageState {
+class ErrorState extends GitNotesListState {
   final Object error;
   const ErrorState({
     required super.data,

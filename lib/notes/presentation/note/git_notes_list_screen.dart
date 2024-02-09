@@ -1,12 +1,13 @@
+import 'package:di_storage/di_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
 
 import 'package:pwd/common/presentation/app_bar_button.dart';
 import 'package:pwd/common/presentation/dialogs/show_error_dialog_mixin.dart';
-import 'package:pwd/common/tools/di_storage/di_storage.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
 import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
-import 'package:pwd/notes/domain/usecases/notes_provider_usecase.dart';
+import 'package:pwd/notes/domain/usecases/git_notes_provider_usecase.dart';
 import 'package:pwd/notes/presentation/common/widgets/note_list_item_widget.dart';
 import 'package:pwd/notes/presentation/note/note_page_route.dart';
 import 'package:pwd/notes/presentation/tools/crypt_error_message_provider.dart';
@@ -14,23 +15,27 @@ import 'package:pwd/notes/presentation/tools/notes_provider_error_message_provid
 import 'package:pwd/notes/presentation/tools/sync_data_error_message_provider.dart';
 import 'package:pwd/theme/common_size.dart';
 
-import 'bloc/note_page_bloc.dart';
+import 'bloc/git_notes_list_bloc.dart';
 
-class NotePage extends StatelessWidget with ShowErrorDialogMixin {
+final class GitNotesListScreen extends StatelessWidget
+    with ShowErrorDialogMixin {
+  final GitConfiguration configuration;
   final Future Function(BuildContext, Object) onRoute;
 
-  late final bloc = NotePageBloc(
-    notesProviderUsecase: DiStorage.shared.resolve<NotesProviderUsecase>(),
+  late final bloc = GitNotesListBloc(
+    configuration: configuration,
+    notesProviderUsecase: DiStorage.shared.resolve<GitNotesProviderUsecase>(),
     syncDataUsecase: DiStorage.shared.resolve(),
     shouldCreateRemoteStorageFileUsecase: DiStorage.shared.resolve(),
   );
 
-  NotePage({
+  GitNotesListScreen({
     super.key,
+    required this.configuration,
     required this.onRoute,
   });
 
-  void _listener(BuildContext context, NotePageState state) {
+  void _listener(BuildContext context, GitNotesListState state) {
     BlockingLoadingIndicator.of(context).isLoading = state is LoadingState;
 
     if (state is ErrorState) {
@@ -50,7 +55,7 @@ class NotePage extends StatelessWidget with ShowErrorDialogMixin {
   Widget build(BuildContext context) {
     return BlocProvider.value(
       value: bloc,
-      child: BlocConsumer<NotePageBloc, NotePageState>(
+      child: BlocConsumer<GitNotesListBloc, GitNotesListState>(
         listener: _listener,
         buildWhen: (old, current) => old.needsSync != current.needsSync,
         builder: (context, state) {
@@ -73,7 +78,7 @@ class NotePage extends StatelessWidget with ShowErrorDialogMixin {
               ],
             ),
             body: SafeArea(
-              child: BlocBuilder<NotePageBloc, NotePageState>(
+              child: BlocBuilder<GitNotesListBloc, GitNotesListState>(
                 buildWhen: (old, current) =>
                     old.data.notes != current.data.notes,
                 builder: (context, state) {
@@ -101,10 +106,11 @@ class NotePage extends StatelessWidget with ShowErrorDialogMixin {
     );
   }
 
-  void _onSync(BuildContext context) => bloc.add(const NotePageEvent.sync());
+  void _onSync(BuildContext context) =>
+      bloc.add(const GitNotesListEvent.sync());
 
   void _onPullToRefresh(BuildContext context) =>
-      bloc.add(const NotePageEvent.refresh());
+      bloc.add(const GitNotesListEvent.refresh());
 
   void _onDetailsButton(
     BuildContext context, {
@@ -126,7 +132,7 @@ class NotePage extends StatelessWidget with ShowErrorDialogMixin {
       (result) {
         if (result is NotePageShouldSync) {
           bloc.add(
-            const NotePageEvent.shouldSync(),
+            const GitNotesListEvent.shouldSync(),
           );
         }
       },

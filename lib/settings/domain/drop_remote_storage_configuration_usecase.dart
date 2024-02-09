@@ -1,6 +1,7 @@
 import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
 import 'package:pwd/common/domain/usecases/pin_usecase.dart';
 import 'package:pwd/common/domain/usecases/should_create_remote_storage_file_usecase.dart';
+import 'package:pwd/notes/domain/checksum_checker.dart';
 import 'package:pwd/notes/domain/google_repository.dart';
 import 'package:pwd/notes/domain/local_repository.dart';
 import 'package:pwd/notes/domain/notes_repository.dart';
@@ -14,6 +15,7 @@ final class DropRemoteStorageConfigurationUsecase {
       shouldCreateRemoteStorageFileUsecase;
   final LocalRepository localRepository;
   final GoogleRepository googleRepository;
+  final ChecksumChecker checksumChecker;
 
   const DropRemoteStorageConfigurationUsecase({
     required this.remoteStorageConfigurationProvider,
@@ -22,6 +24,7 @@ final class DropRemoteStorageConfigurationUsecase {
     required this.shouldCreateRemoteStorageFileUsecase,
     required this.localRepository,
     required this.googleRepository,
+    required this.checksumChecker,
   });
 
   Future<void> execute() async {
@@ -53,6 +56,7 @@ final class DropRemoteStorageConfigurationUsecase {
       await googleRepository.logout();
       final pin = pinUsecase.getPinOrThrow();
       await localRepository.deleteAll(key: pin.pinSha512);
+      checksumChecker.dropChecksum();
     }
   }
 }

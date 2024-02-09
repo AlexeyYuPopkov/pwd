@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
+import 'package:pwd/notes/domain/usecases/notes_provider_usecase.dart';
+import 'package:pwd/notes/domain/usecases/sync_usecase.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:pwd/common/presentation/dialogs/dialog_helper.dart';
 import 'package:pwd/common/presentation/dialogs/show_error_dialog_mixin.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
 import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
-import 'package:pwd/notes/domain/usecases/notes_provider_usecase.dart';
-import 'package:pwd/notes/domain/usecases/sync_data_usecase.dart';
 import 'package:pwd/notes/presentation/tools/crypt_error_message_provider.dart';
 import 'package:pwd/notes/presentation/tools/notes_provider_error_message_provider.dart';
 import 'package:pwd/notes/presentation/tools/sync_data_error_message_provider.dart';
@@ -38,8 +39,9 @@ final class EditNotePage extends StatelessWidget
   final formKey = GlobalKey<_FormState>();
 
   final NoteItem noteItem;
+  final RemoteStorageConfiguration configuration;
   final NotesProviderUsecase notesProviderUsecase;
-  final SyncDataUsecase syncDataUsecase;
+  final SyncUsecase syncDataUsecase;
 
   final Future Function(BuildContext, Object) onRoute;
 
@@ -48,6 +50,7 @@ final class EditNotePage extends StatelessWidget
   EditNotePage({
     super.key,
     required this.noteItem,
+    required this.configuration,
     required this.onRoute,
     required this.notesProviderUsecase,
     required this.syncDataUsecase,
@@ -98,6 +101,7 @@ final class EditNotePage extends StatelessWidget
         ),
         body: BlocProvider(
           create: (context) => EditNoteBloc(
+            configuration: configuration,
             notesProviderUsecase: notesProviderUsecase,
             syncDataUsecase: syncDataUsecase,
             noteItem: noteItem,

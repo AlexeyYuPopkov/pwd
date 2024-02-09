@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:di_storage/di_storage.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:flutter/foundation.dart';
@@ -7,12 +8,11 @@ import 'package:flutter/foundation.dart';
 import 'package:pwd/common/data/network_error_mapper_impl.dart';
 import 'package:pwd/common/domain/app_configuration_provider.dart';
 import 'package:pwd/common/domain/errors/network_error_mapper.dart';
-import 'package:pwd/common/tools/di_storage/di_storage.dart';
 
 typedef UnAuthDio = Dio;
 typedef AuthDio = Dio;
 
-class NetworkDiModule extends DiModule {
+class NetworkDiModule extends DiScope {
   @override
   void bind(DiStorage di) async {
     di.bind<NetworkErrorMapper>(
