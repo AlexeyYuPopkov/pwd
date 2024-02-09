@@ -1,11 +1,7 @@
-import 'dart:async';
-import 'dart:developer';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
-import 'package:pwd/notes/domain/model/note_item.dart';
 import 'package:pwd/notes/domain/usecases/notes_provider_usecase.dart';
 import 'package:pwd/notes/domain/usecases/sync_google_drive_item_usecase.dart';
-import 'package:pwd/notes/domain/usecases/google_drive_notes_provider_usecase.dart';
 
 import 'google_drive_notes_list_data.dart';
 import 'google_drive_notes_list_event.dart';

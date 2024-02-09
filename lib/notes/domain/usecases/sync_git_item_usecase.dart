@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:pwd/common/domain/errors/network_error.dart';
 import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
 import 'package:pwd/notes/domain/remote_data_storage_repository.dart';
-import 'package:pwd/notes/domain/usecases/git_notes_provider_usecase.dart';
 import 'package:pwd/notes/domain/usecases/notes_provider_usecase.dart';
 import 'package:pwd/notes/domain/usecases/sync_data_usecases_errors.dart';
 import 'package:pwd/notes/domain/sync_requests_parameters/put_db_request.dart';
