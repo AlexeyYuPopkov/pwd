@@ -96,6 +96,7 @@ void main() {
           verify(shouldCreateRemoteStorageFileUsecase.dropFlag());
           verifyNever(pinUsecase.getPinOrThrow());
           verifyNever(localRepository.deleteAll(key: pin.pinSha512));
+          verifyNever(localRepository.close());
           verifyNever(googleRepository.logout());
           verifyNever(checksumChecker.dropChecksum());
 
@@ -142,6 +143,7 @@ void main() {
           verifyNever(shouldCreateRemoteStorageFileUsecase.dropFlag());
           verify(pinUsecase.getPinOrThrow());
           verify(localRepository.deleteAll(key: pin.pinSha512));
+          verify(localRepository.close());
           verify(googleRepository.logout());
           verify(pinUsecase.dropPin());
           verify(checksumChecker.dropChecksum());
@@ -188,6 +190,7 @@ void main() {
           verify(shouldCreateRemoteStorageFileUsecase.dropFlag());
           verify(pinUsecase.getPinOrThrow());
           verify(localRepository.deleteAll(key: pin.pinSha512));
+          verify(localRepository.close());
           verify(googleRepository.logout());
           verify(pinUsecase.dropPin());
           verify(checksumChecker.dropChecksum());

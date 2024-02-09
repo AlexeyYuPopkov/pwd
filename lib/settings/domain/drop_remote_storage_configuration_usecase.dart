@@ -56,6 +56,7 @@ final class DropRemoteStorageConfigurationUsecase {
       await googleRepository.logout();
       final pin = pinUsecase.getPinOrThrow();
       await localRepository.deleteAll(key: pin.pinSha512);
+      await localRepository.close();
       checksumChecker.dropChecksum();
     }
   }
