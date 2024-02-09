@@ -12,7 +12,7 @@ final _iv = encrypt.IV(
   ),
 );
 
- class HashUsecase {
+class HashUsecase {
   const HashUsecase();
 
   String encode(String str, BasePin pin) {
