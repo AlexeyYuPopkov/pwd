@@ -16,7 +16,7 @@ final class _Consts {
   static const spaces = 'drive';
   static const scopes = [
     'email',
-    'https://www.googleapis.com/auth/drive',
+    'https://www.googleapis.com/auth/drive.file',
   ];
 }
 
