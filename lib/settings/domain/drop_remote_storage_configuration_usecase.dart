@@ -3,9 +3,9 @@ import 'package:pwd/common/domain/usecases/pin_usecase.dart';
 import 'package:pwd/common/domain/usecases/should_create_remote_storage_file_usecase.dart';
 import 'package:pwd/notes/domain/checksum_checker.dart';
 import 'package:pwd/notes/domain/google_repository.dart';
-import 'package:pwd/notes/domain/local_repository.dart';
 import 'package:pwd/notes/domain/notes_repository.dart';
 import 'package:pwd/common/domain/remote_storage_configuration_provider.dart';
+import 'package:pwd/notes/domain/realm_local_repository.dart';
 
 final class DropRemoteStorageConfigurationUsecase {
   final RemoteStorageConfigurationProvider remoteStorageConfigurationProvider;
@@ -13,7 +13,7 @@ final class DropRemoteStorageConfigurationUsecase {
   final PinUsecase pinUsecase;
   final ShouldCreateRemoteStorageFileUsecase
       shouldCreateRemoteStorageFileUsecase;
-  final LocalRepository localRepository;
+  final RealmLocalRepository localRepository;
   final GoogleRepository googleRepository;
   final ChecksumChecker checksumChecker;
 

@@ -6,21 +6,21 @@ import 'package:pwd/common/domain/usecases/pin_usecase.dart';
 import 'package:pwd/notes/domain/checksum_checker.dart';
 import 'package:pwd/notes/domain/deleted_items_provider.dart';
 import 'package:pwd/notes/domain/google_repository.dart';
-import 'package:pwd/notes/domain/local_repository.dart';
+import 'package:pwd/notes/domain/realm_local_repository.dart';
 import 'package:pwd/notes/domain/model/google_error.dart';
 import 'package:pwd/notes/domain/model/google_drive_file.dart';
 import 'package:pwd/notes/domain/usecases/sync_usecase.dart';
 
 final class SyncGoogleDriveItemUsecase implements SyncUsecase {
   final GoogleRepository googleRepository;
-  final LocalRepository repository;
+  final RealmLocalRepository realmRepository;
   final PinUsecase pinUsecase;
   final ChecksumChecker checksumChecker;
   final DeletedItemsProvider deletedItemsProvider;
 
   SyncGoogleDriveItemUsecase({
     required this.googleRepository,
-    required this.repository,
+    required this.realmRepository,
     required this.pinUsecase,
     required this.checksumChecker,
     required this.deletedItemsProvider,
@@ -91,7 +91,7 @@ final class SyncGoogleDriveItemUsecase implements SyncUsecase {
       final pin = pinUsecase.getPinOrThrow();
       final deleted = await deletedItemsProvider.getDeletedItems();
 
-      return repository.migrateWithDatabasePath(
+      return realmRepository.migrateWithDatabasePath(
         bytes: bytes,
         key: pin.pinSha512,
         deleted: deleted,
@@ -112,7 +112,6 @@ final class SyncGoogleDriveItemUsecase implements SyncUsecase {
 
   Future<Uint8List> _getLocalRealmAsData() async {
     final pin = pinUsecase.getPinOrThrow();
-    final path = await repository.getPath(key: pin.pinSha512);
-    return File(path).readAsBytes();
+    return realmRepository.readAsBytes(key: pin.pinSha512);
   }
 }

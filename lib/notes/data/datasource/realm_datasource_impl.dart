@@ -2,12 +2,12 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:pwd/notes/data/mappers/note_realm_mapper.dart';
 import 'package:pwd/notes/data/realm_model/note_item_realm.dart';
-import 'package:pwd/notes/domain/local_repository.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
+import 'package:pwd/notes/domain/realm_local_repository.dart';
 import 'package:realm/realm.dart';
 import 'package:path_provider/path_provider.dart';
 
-final class RealmDatasourceImpl implements LocalRepository {
+final class RealmDatasourceImpl implements RealmLocalRepository {
   static const _tempFileMame = 'temp.realm';
   Realm? realm;
   Realm? realmDecrypted;
@@ -105,9 +105,9 @@ final class RealmDatasourceImpl implements LocalRepository {
   }
 
   @override
-  Future<String> getPath({required List<int>? key}) async {
+  Future<Uint8List> readAsBytes({required List<int>? key}) async {
     final realm = _getRealm(key: key);
-    return realm.config.path;
+    return File(realm.config.path).readAsBytes();
   }
 
   @override

@@ -11,7 +11,7 @@ class SyncDataErrorMessageProvider {
         context,
         message: context.unkhown,
       );
-    } else if (e is DestinationNotFound) {
+    } else if (e is FileNotFound) {
       return ErrorMessage.common(
         context,
         message: context.destinationNotFound,

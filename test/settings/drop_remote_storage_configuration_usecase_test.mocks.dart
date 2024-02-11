@@ -18,10 +18,10 @@ import 'package:pwd/common/domain/usecases/should_create_remote_storage_file_use
     as _i10;
 import 'package:pwd/notes/domain/checksum_checker.dart' as _i15;
 import 'package:pwd/notes/domain/google_repository.dart' as _i13;
-import 'package:pwd/notes/domain/local_repository.dart' as _i11;
 import 'package:pwd/notes/domain/model/google_drive_file.dart' as _i14;
 import 'package:pwd/notes/domain/model/note_item.dart' as _i7;
 import 'package:pwd/notes/domain/notes_repository.dart' as _i6;
+import 'package:pwd/notes/domain/realm_local_repository.dart' as _i11;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -384,10 +384,11 @@ class MockShouldCreateRemoteStorageFileUsecase extends _i1.Mock
       );
 }
 
-/// A class which mocks [LocalRepository].
+/// A class which mocks [RealmLocalRepository].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockLocalRepository extends _i1.Mock implements _i11.LocalRepository {
+class MockRealmLocalRepository extends _i1.Mock
+    implements _i11.RealmLocalRepository {
   @override
   _i5.Future<void> close() => (super.noSuchMethod(
         Invocation.method(
@@ -498,30 +499,17 @@ class MockLocalRepository extends _i1.Mock implements _i11.LocalRepository {
       ) as _i5.Future<int>);
 
   @override
-  _i5.Future<String> getPath({required List<int>? key}) => (super.noSuchMethod(
+  _i5.Future<_i12.Uint8List> readAsBytes({required List<int>? key}) =>
+      (super.noSuchMethod(
         Invocation.method(
-          #getPath,
+          #readAsBytes,
           [],
           {#key: key},
         ),
-        returnValue: _i5.Future<String>.value(_i4.dummyValue<String>(
-          this,
-          Invocation.method(
-            #getPath,
-            [],
-            {#key: key},
-          ),
-        )),
+        returnValue: _i5.Future<_i12.Uint8List>.value(_i12.Uint8List(0)),
         returnValueForMissingStub:
-            _i5.Future<String>.value(_i4.dummyValue<String>(
-          this,
-          Invocation.method(
-            #getPath,
-            [],
-            {#key: key},
-          ),
-        )),
-      ) as _i5.Future<String>);
+            _i5.Future<_i12.Uint8List>.value(_i12.Uint8List(0)),
+      ) as _i5.Future<_i12.Uint8List>);
 
   @override
   _i5.Future<void> migrateWithDatabasePath({

@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
 
-abstract interface class LocalRepository {
+abstract interface class RealmLocalRepository {
   Future<void> close();
 
   Future<void> delete(String id, {required List<int>? key});
@@ -29,7 +29,7 @@ abstract interface class LocalRepository {
 
   Future<int> getTimestamp({required List<int>? key});
 
-  Future<String> getPath({required List<int>? key});
+  Future<Uint8List> readAsBytes({required List<int>? key});
 
   Future<void> migrateWithDatabasePath({
     required Uint8List bytes,

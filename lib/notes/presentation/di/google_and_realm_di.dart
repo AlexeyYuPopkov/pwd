@@ -5,15 +5,16 @@ import 'package:pwd/notes/data/datasource/realm_datasource_impl.dart';
 import 'package:pwd/notes/domain/checksum_checker.dart';
 import 'package:pwd/notes/domain/deleted_items_provider.dart';
 import 'package:pwd/notes/domain/google_repository.dart';
-import 'package:pwd/notes/domain/local_repository.dart';
+
 import 'package:pwd/notes/data/datasource/google_repository_impl.dart';
+import 'package:pwd/notes/domain/realm_local_repository.dart';
 import 'package:pwd/notes/domain/usecases/sync_google_drive_item_usecase.dart';
 import 'package:pwd/notes/domain/usecases/google_drive_notes_provider_usecase.dart';
 
 final class GoogleAndRealmDi extends DiScope {
   @override
   void bind(DiStorage di) {
-    di.bind<LocalRepository>(
+    di.bind<RealmLocalRepository>(
       module: this,
       () => RealmDatasourceImpl(),
     );
@@ -54,7 +55,7 @@ final class GoogleAndRealmDi extends DiScope {
       module: this,
       () => SyncGoogleDriveItemUsecase(
         googleRepository: di.resolve(),
-        repository: di.resolve(),
+        realmRepository: di.resolve(),
         pinUsecase: di.resolve(),
         checksumChecker: di.resolve(),
         deletedItemsProvider: di.resolve(),

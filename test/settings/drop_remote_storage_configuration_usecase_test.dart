@@ -8,8 +8,9 @@ import 'package:pwd/common/domain/usecases/pin_usecase.dart';
 import 'package:pwd/common/domain/usecases/should_create_remote_storage_file_usecase.dart';
 import 'package:pwd/notes/domain/checksum_checker.dart';
 import 'package:pwd/notes/domain/google_repository.dart';
-import 'package:pwd/notes/domain/local_repository.dart';
+
 import 'package:pwd/notes/domain/notes_repository.dart';
+import 'package:pwd/notes/domain/realm_local_repository.dart';
 import 'package:pwd/settings/domain/drop_remote_storage_configuration_usecase.dart';
 
 @GenerateNiceMocks(
@@ -18,7 +19,7 @@ import 'package:pwd/settings/domain/drop_remote_storage_configuration_usecase.da
     MockSpec<NotesRepository>(),
     MockSpec<PinUsecase>(),
     MockSpec<ShouldCreateRemoteStorageFileUsecase>(),
-    MockSpec<LocalRepository>(),
+    MockSpec<RealmLocalRepository>(),
     MockSpec<GoogleRepository>(),
     MockSpec<ChecksumChecker>(),
   ],
@@ -33,7 +34,7 @@ void main() {
   final shouldCreateRemoteStorageFileUsecase =
       MockShouldCreateRemoteStorageFileUsecase();
 
-  final localRepository = MockLocalRepository();
+  final localRepository = MockRealmLocalRepository();
 
   final googleRepository = MockGoogleRepository();
 

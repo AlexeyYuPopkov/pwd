@@ -39,47 +39,64 @@ final class SyncGitItemUsecase implements SyncUsecase {
     }
 
     try {
-      final result = await remoteStorageRepository.getDb(
-        configuration: configuration,
-      );
-
-      lastSha = result.sha;
-
-      final base64Str = result.content.replaceAll(RegExp(r'\s+'), '');
-
-      var jsonStr = utf8.decode(
-        base64Decode(base64Str),
-        allowMalformed: true,
-      );
-
-      if (jsonStr.trim().isEmpty) {
-        jsonStr = notesRepository.createEmptyDbContent(
-          DateTime.now().timestamp,
-        );
-      }
-
-      final jsonMap = jsonDecode(jsonStr);
-
-      await notesRepository.importNotes(
-        jsonMap: jsonMap,
-      );
-
-      await notesProvider.readNotes();
-
-      final localTimestamp = await notesRepository.lastRecordTimestamp();
-      final remoteTimestamp = jsonMap['timestamp'];
-
-      if (remoteTimestamp is! int) {
-        await updateRemote(configuration: configuration);
-      } else {
-        if (localTimestamp != remoteTimestamp) {
-          await updateRemote(configuration: configuration);
-        }
-      }
+      await _trySync(configuration: configuration);
     } on NotFoundError catch (e) {
-      throw SyncDataError.destinationNotFound(parentError: e);
+      throw SyncDataError.fileNotFound(parentError: e);
     } catch (e) {
       throw SyncDataError.unknown(parentError: e);
+    }
+  }
+
+
+
+  Future<void> _trySync({
+    required RemoteStorageConfiguration configuration,
+  }) async {
+    // TODO: refactor
+    switch (configuration) {
+      case GitConfiguration():
+        break;
+      case GoogleDriveConfiguration():
+        assert(false);
+        return;
+    }
+
+    final result = await remoteStorageRepository.getDb(
+      configuration: configuration,
+    );
+
+    lastSha = result.sha;
+
+    final base64Str = result.content.replaceAll(RegExp(r'\s+'), '');
+
+    var jsonStr = utf8.decode(
+      base64Decode(base64Str),
+      allowMalformed: true,
+    );
+
+    if (jsonStr.trim().isEmpty) {
+      jsonStr = notesRepository.createEmptyDbContent(
+        DateTime.now().timestamp,
+      );
+    }
+
+    final jsonMap = jsonDecode(jsonStr);
+
+    await notesRepository.importNotes(
+      jsonMap: jsonMap,
+    );
+
+    await notesProvider.readNotes();
+
+    final localTimestamp = await notesRepository.lastRecordTimestamp();
+    final remoteTimestamp = jsonMap['timestamp'];
+
+    if (remoteTimestamp is! int) {
+      await updateRemote(configuration: configuration);
+    } else {
+      if (localTimestamp != remoteTimestamp) {
+        await updateRemote(configuration: configuration);
+      }
     }
   }
 
@@ -108,7 +125,7 @@ final class SyncGitItemUsecase implements SyncUsecase {
         );
       }
     } on NotFoundError catch (e) {
-      throw SyncDataError.destinationNotFound(parentError: e);
+      throw SyncDataError.fileNotFound(parentError: e);
     } catch (e) {
       throw SyncDataError.unknown(parentError: e);
     }
@@ -167,7 +184,7 @@ final class SyncGitItemUsecase implements SyncUsecase {
           .getDb(configuration: configuration)
           .then((result) => result.sha);
     } on NotFoundError catch (e) {
-      throw SyncDataError.destinationNotFound(parentError: e);
+      throw SyncDataError.fileNotFound(parentError: e);
     } catch (e) {
       throw SyncDataError.unknown(parentError: e);
     }
