@@ -47,8 +47,6 @@ final class SyncGitItemUsecase implements SyncUsecase {
     }
   }
 
-
-
   Future<void> _trySync({
     required RemoteStorageConfiguration configuration,
   }) async {
