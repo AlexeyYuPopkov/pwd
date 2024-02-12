@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:googleapis/workflowexecutions/v1.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:pwd/common/domain/base_pin.dart';
@@ -93,15 +94,29 @@ void main() {
 
           await usecase.execute();
 
-          verify(remoteStorageConfigurationProvider.dropConfiguration());
-          verify(notesRepository.dropDb());
-          verify(shouldCreateRemoteStorageFileUsecase.dropFlag());
+          final veryficationsStart = verifyInOrder([
+            remoteStorageConfigurationProvider.currentConfiguration,
+            remoteStorageConfigurationProvider.dropConfiguration(),
+          ]);
+
+          final veryficationsGit = verifyInOrder([
+            notesRepository.dropDb(),
+            shouldCreateRemoteStorageFileUsecase.dropFlag(),
+          ]);
+
+          final veryficationsEnd = verifyInOrder([
+            pinUsecase.dropPin(),
+          ]);
+
+          expect(veryficationsStart.length, 2);
+          expect(veryficationsGit.length, 2);
+          expect(veryficationsEnd.length, 1);
+
           verifyNever(pinUsecase.getPinOrThrow());
           verifyNever(localRepository.deleteAll(key: pin.pinSha512));
           verifyNever(localRepository.close());
           verifyNever(googleRepository.logout());
           verifyNever(checksumChecker.dropChecksum());
-          verify(pinUsecase.dropPin());
         },
       );
 
@@ -139,15 +154,29 @@ void main() {
 
           await usecase.execute();
 
-          verify(remoteStorageConfigurationProvider.dropConfiguration());
+          final veryficationsStart = verifyInOrder([
+            remoteStorageConfigurationProvider.currentConfiguration,
+            remoteStorageConfigurationProvider.dropConfiguration(),
+          ]);
+
+          final veryficationsGoogleDrive = verifyInOrder([
+            googleRepository.logout(),
+            pinUsecase.getPinOrThrow(),
+            localRepository.deleteAll(key: pin.pinSha512),
+            localRepository.close(),
+            checksumChecker.dropChecksum(),
+          ]);
+
+          final veryficationsEnd = verifyInOrder([
+            pinUsecase.dropPin(),
+          ]);
+
+          expect(veryficationsStart.length, 2);
+          expect(veryficationsGoogleDrive.length, 5);
+          expect(veryficationsEnd.length, 1);
+
           verifyNever(notesRepository.dropDb());
           verifyNever(shouldCreateRemoteStorageFileUsecase.dropFlag());
-          verify(pinUsecase.getPinOrThrow());
-          verify(localRepository.deleteAll(key: pin.pinSha512));
-          verify(localRepository.close());
-          verify(googleRepository.logout());
-          verify(pinUsecase.dropPin());
-          verify(checksumChecker.dropChecksum());
         },
       );
 
@@ -186,17 +215,91 @@ void main() {
 
           await usecase.execute();
 
-          verify(remoteStorageConfigurationProvider.dropConfiguration());
-          verify(notesRepository.dropDb());
-          verify(shouldCreateRemoteStorageFileUsecase.dropFlag());
-          verify(pinUsecase.getPinOrThrow());
-          verify(localRepository.deleteAll(key: pin.pinSha512));
-          verify(localRepository.close());
-          verify(googleRepository.logout());
-          verify(pinUsecase.dropPin());
-          verify(checksumChecker.dropChecksum());
+          final veryficationsStart = verifyInOrder([
+            remoteStorageConfigurationProvider.currentConfiguration,
+            remoteStorageConfigurationProvider.dropConfiguration(),
+          ]);
+
+          final veryficationsGit = verifyInOrder([
+            notesRepository.dropDb(),
+            shouldCreateRemoteStorageFileUsecase.dropFlag(),
+          ]);
+
+          final veryficationsGoogleDrive = verifyInOrder([
+            googleRepository.logout(),
+            pinUsecase.getPinOrThrow(),
+            localRepository.deleteAll(key: pin.pinSha512),
+            localRepository.close(),
+            checksumChecker.dropChecksum(),
+          ]);
+
+          final veryficationsEnd = verifyInOrder([
+            pinUsecase.dropPin(),
+          ]);
+
+          expect(veryficationsStart.length, 2);
+          expect(veryficationsGit.length, 2);
+          expect(veryficationsGoogleDrive.length, 5);
+          expect(veryficationsEnd.length, 1);
+        },
+      );
+
+      test(
+        'verify throws',
+        () async {
+          final usecase = DropRemoteStorageConfigurationUsecase(
+            remoteStorageConfigurationProvider:
+                remoteStorageConfigurationProvider,
+            notesRepository: notesRepository,
+            pinUsecase: pinUsecase,
+            shouldCreateRemoteStorageFileUsecase:
+                shouldCreateRemoteStorageFileUsecase,
+            localRepository: localRepository,
+            googleRepository: googleRepository,
+            checksumChecker: checksumChecker,
+          );
+
+          final configurations = RemoteStorageConfigurations(
+            configurations: const [
+              gitConfiguration,
+              googleDriveConfiguration,
+            ],
+          );
+
+          provideDummy(configurations);
+          provideDummy(pin);
+
+          when(
+            remoteStorageConfigurationProvider.currentConfiguration,
+          ).thenReturn(configurations);
+
+          when(
+            pinUsecase.getPinOrThrow(),
+          ).thenThrow(_Exception());
+
+          final result = usecase.execute().then(
+            (value) {
+              final veryfications = verifyInOrder([
+                remoteStorageConfigurationProvider.dropConfiguration(),
+                notesRepository.dropDb(),
+                shouldCreateRemoteStorageFileUsecase.dropFlag(),
+                pinUsecase.getPinOrThrow(),
+                localRepository.deleteAll(key: pin.pinSha512),
+                localRepository.close(),
+                googleRepository.logout(),
+                pinUsecase.dropPin(),
+                checksumChecker.dropChecksum(),
+              ]);
+
+              expect(veryfications.length, 8);
+            },
+          );
+
+          expect(result, throwsA(isA<_Exception>()));
         },
       );
     },
   );
 }
+
+final class _Exception extends Exception {}

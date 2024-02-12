@@ -97,10 +97,6 @@ class DeveloperSettingsPageBloc
 
       final newData = data.copyWith(proxy: OptionalBox(proxy));
 
-      // await appConfigurationProvider.setEnvironment(newData.appConfiguration);
-
-      // await pinUsecase.dropPin();
-
       emit(DeveloperSettingsPageState.didSave(data: newData));
     } catch (e) {
       emit(DeveloperSettingsPageState.error(data: data, error: e));

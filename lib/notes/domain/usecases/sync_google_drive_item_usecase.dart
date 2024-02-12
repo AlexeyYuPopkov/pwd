@@ -55,10 +55,13 @@ final class SyncGoogleDriveItemUsecase implements SyncUsecase {
 
         await _updateFileWithData(configuration: configuration);
 
-        final newChecksum =
-            await googleRepository.getFile(target: configuration).then(
-                  (e) => e?.checksum,
-                );
+        final newChecksum = await googleRepository
+            .getFile(
+              target: configuration,
+            )
+            .then(
+              (e) => e?.checksum,
+            );
 
         checksumChecker.setChecksum(newChecksum ?? '');
       }
