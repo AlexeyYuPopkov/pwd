@@ -1,11 +1,13 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
+import 'package:realm/realm.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:pwd/common/domain/errors/app_error.dart';
 import 'package:pwd/notes/data/mappers/note_realm_mapper.dart';
 import 'package:pwd/notes/data/realm_model/note_item_realm.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
+import 'package:pwd/notes/domain/model/local_storage_error.dart';
 import 'package:pwd/notes/domain/realm_local_repository.dart';
-import 'package:realm/realm.dart';
-import 'package:path_provider/path_provider.dart';
 
 final class RealmDatasourceImpl implements RealmLocalRepository {
   static const _tempFileMame = 'temp.realm';
@@ -17,26 +19,34 @@ final class RealmDatasourceImpl implements RealmLocalRepository {
 
   @override
   Future<void> delete(String id, {required List<int>? key}) async {
-    final realm = _getRealm(key: key);
+    try {
+      final realm = _getRealm(key: key);
 
-    final obj = realm.find<NoteItemRealm>(id);
+      final obj = realm.find<NoteItemRealm>(id);
 
-    if (obj != null) {
-      realm.write(() {
-        realm.delete(obj);
-      });
+      if (obj != null) {
+        realm.write(() {
+          realm.delete(obj);
+        });
+      }
+    } catch (e) {
+      throw _ErrorMapper.toDomain(e);
     }
   }
 
   @override
   Future<void> deleteAll({required List<int>? key}) async {
-    final realm = _getRealm(key: key);
+    try {
+      final realm = _getRealm(key: key);
 
-    realm.write(
-      () => realm.deleteAll<NoteItemRealm>(),
-    );
+      realm.write(
+        () => realm.deleteAll<NoteItemRealm>(),
+      );
 
-    assert(realm.all<NoteItemRealm>().isEmpty);
+      assert(realm.all<NoteItemRealm>().isEmpty);
+    } catch (e) {
+      throw _ErrorMapper.toDomain(e);
+    }
   }
 
   @override
@@ -44,15 +54,19 @@ final class RealmDatasourceImpl implements RealmLocalRepository {
     required List<int>? key,
     required List<NoteItem> notes,
   }) async {
-    final realm = _getRealm(key: key);
-    final items = notes.map((e) => NoteRealmMapper.toData(e));
+    try {
+      final realm = _getRealm(key: key);
+      final items = notes.map((e) => NoteRealmMapper.toData(e));
 
-    realm.write(
-      () => realm.addAll(
-        items,
-        update: true,
-      ),
-    );
+      realm.write(
+        () => realm.addAll(
+          items,
+          update: true,
+        ),
+      );
+    } catch (e) {
+      throw _ErrorMapper.toDomain(e);
+    }
   }
 
   @override
@@ -60,20 +74,28 @@ final class RealmDatasourceImpl implements RealmLocalRepository {
     String id, {
     required List<int>? key,
   }) async {
-    final realm = _getRealm(key: key);
-    final obj = realm.find<NoteItemRealm>(id);
-    return obj == null ? null : NoteRealmMapper.toDomain(obj);
+    try {
+      final realm = _getRealm(key: key);
+      final obj = realm.find<NoteItemRealm>(id);
+      return obj == null ? null : NoteRealmMapper.toDomain(obj);
+    } catch (e) {
+      throw _ErrorMapper.toDomain(e);
+    }
   }
 
   @override
   Future<List<NoteItem>> readNotes({
     required List<int>? key,
   }) async {
-    final realm = _getRealm(key: key);
-    return realm
-        .all<NoteItemRealm>()
-        .map((e) => NoteRealmMapper.toDomain(e))
-        .toList();
+    try {
+      final realm = _getRealm(key: key);
+      return realm
+          .all<NoteItemRealm>()
+          .map((e) => NoteRealmMapper.toDomain(e))
+          .toList();
+    } catch (e) {
+      throw _ErrorMapper.toDomain(e);
+    }
   }
 
   @override
@@ -81,37 +103,48 @@ final class RealmDatasourceImpl implements RealmLocalRepository {
     NoteItem noteItem, {
     required List<int>? key,
   }) async {
-    final realm = _getRealm(key: key);
+    try {
+      final realm = _getRealm(key: key);
 
-    realm.write(
-      () => realm.add(
-        NoteRealmMapper.toData(noteItem),
-        update: true,
-      ),
-    );
-  }
-
-  @override
-  Future<int> getTimestamp({required List<int>? key}) async {
-    final realm = _getRealm(key: key);
-    return realm
-        .all<NoteItemRealm>()
-        .map(
-          (e) => e.timestamp,
-        )
-        .reduce(
-          (a, b) => a > b ? a : b,
-        );
+      realm.write(
+        () => realm.add(
+          NoteRealmMapper.toData(noteItem),
+          update: true,
+        ),
+      );
+    } catch (e) {
+      throw _ErrorMapper.toDomain(e);
+    }
   }
 
   @override
   Future<Uint8List> readAsBytes({required List<int>? key}) async {
-    final realm = _getRealm(key: key);
-    return File(realm.config.path).readAsBytes();
+    try {
+      final realm = _getRealm(key: key);
+      return File(realm.config.path).readAsBytes();
+    } catch (e) {
+      throw _ErrorMapper.toDomain(e);
+    }
   }
 
   @override
   Future<void> migrateWithDatabasePath({
+    required Uint8List bytes,
+    required List<int>? key,
+    required Set<String> deleted,
+  }) async {
+    try {
+      return _migrateWithDatabasePath(
+        bytes: bytes,
+        key: key,
+        deleted: deleted,
+      );
+    } catch (e) {
+      throw _ErrorMapper.toDomain(e);
+    }
+  }
+
+  Future<void> _migrateWithDatabasePath({
     required Uint8List bytes,
     required List<int>? key,
     required Set<String> deleted,
@@ -189,5 +222,16 @@ extension on RealmDatasourceImpl {
       print('Realm.config.path: ${realm.config.path}');
     }
     return realm;
+  }
+}
+
+final class _ErrorMapper {
+  static AppError toDomain(Object e) {
+    if (e is RealmException &&
+        e.message.contains('Realm file decryption failed')) {
+      return LocalStorageError.pinDoesNotMatch(parentError: e);
+    } else {
+      return LocalStorageError.unknown(parentError: e);
+    }
   }
 }

@@ -27,7 +27,7 @@ abstract interface class RealmLocalRepository {
     required List<int>? key,
   });
 
-  Future<int> getTimestamp({required List<int>? key});
+  // Future<int> getTimestamp({required List<int>? key});
 
   Future<Uint8List> readAsBytes({required List<int>? key});
 

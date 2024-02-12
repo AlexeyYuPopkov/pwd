@@ -487,18 +487,6 @@ class MockRealmLocalRepository extends _i1.Mock
       ) as _i5.Future<void>);
 
   @override
-  _i5.Future<int> getTimestamp({required List<int>? key}) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #getTimestamp,
-          [],
-          {#key: key},
-        ),
-        returnValue: _i5.Future<int>.value(0),
-        returnValueForMissingStub: _i5.Future<int>.value(0),
-      ) as _i5.Future<int>);
-
-  @override
   _i5.Future<_i12.Uint8List> readAsBytes({required List<int>? key}) =>
       (super.noSuchMethod(
         Invocation.method(
