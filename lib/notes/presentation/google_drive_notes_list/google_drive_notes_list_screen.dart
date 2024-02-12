@@ -9,7 +9,8 @@ import 'package:di_storage/di_storage.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
 import 'package:pwd/notes/domain/usecases/google_drive_notes_provider_usecase.dart';
 import 'package:pwd/notes/presentation/common/widgets/note_list_item_widget.dart';
-import 'package:pwd/notes/presentation/note/note_page_route.dart';
+import 'package:pwd/notes/presentation/git_notes_list/note_page_route.dart';
+
 import 'package:pwd/notes/presentation/tools/crypt_error_message_provider.dart';
 import 'package:pwd/notes/presentation/tools/local_storage_error_message_provider.dart';
 import 'package:pwd/notes/presentation/tools/notes_provider_error_message_provider.dart';
@@ -92,7 +93,6 @@ final class GoogleDriveNotesListScreen extends StatelessWidget
           context,
           e,
           errorMessageProviders: [
-            // const DebugErrorMessageProvider().call,
             const LocalStorageErrorMessageProvider().call,
             const NotesProviderErrorMessageProvider().call,
             const SyncDataErrorMessageProvider().call,

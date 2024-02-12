@@ -3,14 +3,14 @@ import 'package:pwd/theme/common_theme.dart';
 import 'package:pwd/theme/shimmer_theme.dart';
 import 'package:pwd/theme/text_sizes.dart';
 
-/// Colors.grey.shade800;
 const _textColor = Color.fromARGB(255, 66, 66, 66);
 
 final lightThemeData = ThemeData.light().copyWith(
-  appBarTheme: const AppBarTheme(elevation: 0),
-  colorScheme: ColorScheme.fromSeed(
-    seedColor: Colors.white,
+  appBarTheme: const AppBarTheme(
+    elevation: 0,
+    backgroundColor: Color(0xFFFFFFFF),
   ),
+  colorScheme: lightColorScheme,
   navigationRailTheme: const NavigationRailThemeData(
     backgroundColor: Colors.white,
   ),
@@ -56,4 +56,38 @@ final lightThemeData = ThemeData.light().copyWith(
     CommonTheme.lightTheme(),
     ShimmerTheme.lightTheme(),
   ],
+);
+
+const lightColorScheme = ColorScheme(
+  brightness: Brightness.light,
+  primary: Color(0xFF1D6D00),
+  onPrimary: Color(0xFFFFFFFF),
+  primaryContainer: Color(0xFFA0F87E),
+  onPrimaryContainer: Color(0xFF042100),
+  secondary: Color(0xFF54624D),
+  onSecondary: Color(0xFFFFFFFF),
+  secondaryContainer: Color(0xFFD8E7CC),
+  onSecondaryContainer: Color(0xFF131F0E),
+  tertiary: Color(0xFF386667),
+  onTertiary: Color(0xFFFFFFFF),
+  tertiaryContainer: Color(0xFFBCEBED),
+  onTertiaryContainer: Color(0xFF002021),
+  error: Color(0xFFBA1A1A),
+  errorContainer: Color(0xFFFFDAD6),
+  onError: Color(0xFFFFFFFF),
+  onErrorContainer: Color(0xFF410002),
+  background: Color(0xFFFFFFFF),
+  onBackground: Color(0xFF1A1C18),
+  surface: Color(0xFFFDFDF6),
+  onSurface: Color(0xFF1A1C18),
+  surfaceVariant: Color(0xFFDFE4D7),
+  onSurfaceVariant: Color(0xFF43483F),
+  outline: Color(0xFF73796E),
+  onInverseSurface: Color(0xFFF1F1EA),
+  inverseSurface: Color(0xFF2F312D),
+  inversePrimary: Color(0xFF85DB65),
+  shadow: Color(0xFF000000),
+  surfaceTint: Color(0xFF1D6D00),
+  outlineVariant: Color(0xFFC3C8BB),
+  scrim: Color(0xFF000000),
 );

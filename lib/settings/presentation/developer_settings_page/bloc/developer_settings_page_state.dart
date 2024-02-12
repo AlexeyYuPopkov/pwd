@@ -1,41 +1,44 @@
 part of 'developer_settings_page_bloc.dart';
 
-abstract class DeveloperSettingsPageState extends Equatable {
-  final AppConfiguration data;
+sealed class DeveloperSettingsPageState extends Equatable {
+  final DeveloperSettingsPageData data;
 
   const DeveloperSettingsPageState({required this.data});
 
   @override
   List<Object?> get props => [data];
 
+  bool get isSubmitEnabled =>
+      data.initialAppConfiguration.data != data.appConfiguration;
+
   const factory DeveloperSettingsPageState.common(
-      {required AppConfiguration data}) = CommonState;
+      {required DeveloperSettingsPageData data}) = CommonState;
 
   const factory DeveloperSettingsPageState.loading(
-      {required AppConfiguration data}) = LoadingState;
+      {required DeveloperSettingsPageData data}) = LoadingState;
 
   const factory DeveloperSettingsPageState.didSave(
-      {required AppConfiguration data}) = DidSaveState;
+      {required DeveloperSettingsPageData data}) = DidSaveState;
 
   const factory DeveloperSettingsPageState.error({
-    required AppConfiguration data,
+    required DeveloperSettingsPageData data,
     required Object error,
   }) = ErrorState;
 }
 
-class CommonState extends DeveloperSettingsPageState {
+final class CommonState extends DeveloperSettingsPageState {
   const CommonState({required super.data});
 }
 
-class DidSaveState extends DeveloperSettingsPageState {
+final class DidSaveState extends DeveloperSettingsPageState {
   const DidSaveState({required super.data});
 }
 
-class LoadingState extends DeveloperSettingsPageState {
+final class LoadingState extends DeveloperSettingsPageState {
   const LoadingState({required super.data});
 }
 
-class ErrorState extends DeveloperSettingsPageState {
+final class ErrorState extends DeveloperSettingsPageState {
   final Object error;
   const ErrorState({
     required super.data,

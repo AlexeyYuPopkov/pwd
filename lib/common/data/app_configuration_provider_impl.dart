@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:pwd/common/data/mappers/app_configuration_mapper.dart';
+import 'package:pwd/common/data/model/app_configuration_data.dart';
 import 'package:pwd/common/domain/app_configuration_provider.dart';
 import 'package:pwd/common/domain/model/app_configuration.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -9,54 +11,48 @@ class AppConfigurationProviderImpl implements AppConfigurationProvider {
 
   static AppConfigurationProviderImpl? _instance;
 
-  const AppConfigurationProviderImpl._();
+  AppConfigurationProviderImpl._() {
+    final _ = getAppConfiguration();
+  }
 
   factory AppConfigurationProviderImpl() =>
-      _instance ??= const AppConfigurationProviderImpl._();
+      _instance ??= AppConfigurationProviderImpl._();
 
   @override
-  Future<AppConfiguration> get appConfiguration async {
+  AppConfiguration currentConfiguration =
+      AppConfiguration.defaultConfiguration();
+
+  @override
+  Future<AppConfiguration> getAppConfiguration() async {
     final storage = await SharedPreferences.getInstance();
     final json = storage.getString(_jsonSharedPreferencesKey);
 
-    if (json == null || json.isEmpty) {
-      return const AppConfiguration(proxyIp: null, proxyPort: null);
-    } else {
-      final jsonMap = jsonDecode(json);
-      return _Tools.appConfigurationFromJson(jsonMap);
-    }
+    final result = json == null || json.isEmpty
+        ? AppConfiguration.defaultConfiguration()
+        : AppConfigurationMapper.toDomain(
+            AppConfigurationData.fromJson(
+              jsonDecode(json),
+            ),
+          );
+
+    currentConfiguration = result;
+
+    return result;
   }
 
   @override
   Future<void> setEnvironment(AppConfiguration enviroment) async {
-    final jsonMap = enviroment.toJson();
+    final jsonMap = AppConfigurationMapper.toData(enviroment).toJson();
     final jsonStr = jsonEncode(jsonMap);
     final storage = await SharedPreferences.getInstance();
     storage.setString(_jsonSharedPreferencesKey, jsonStr);
+    final _ = getAppConfiguration();
   }
 
-  @override
-  Future<void> resetEnvironment() async {
-    final storage = await SharedPreferences.getInstance();
-    storage.remove(_jsonSharedPreferencesKey);
-  }
-}
-
-// Tools
-extension _Tools on AppConfiguration {
-  Map<String, String> toJson() => {
-        if (proxyIp is String && proxyIp?.isNotEmpty == true) 'pxyIp': proxyIp!,
-        if (proxyPort is String && proxyPort?.isNotEmpty == true)
-          'pxyPort': proxyPort!,
-      };
-
-  static AppConfiguration appConfigurationFromJson(Map<String, dynamic> json) {
-    final proxyIp = json['pxyIp'];
-    final proxyPort = json['pxyPort'];
-
-    return AppConfiguration(
-      proxyIp: proxyIp is String && proxyIp.isNotEmpty ? proxyIp : null,
-      proxyPort: proxyPort is String && proxyPort.isNotEmpty ? proxyPort : null,
-    );
-  }
+  // @override
+  // Future<void> resetEnvironment() async {
+  //   final storage = await SharedPreferences.getInstance();
+  //   storage.remove(_jsonSharedPreferencesKey);
+  //   final _ = getAppConfiguration();
+  // }
 }

@@ -1,6 +1,9 @@
+import 'package:di_storage/di_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:pwd/common/domain/app_configuration_provider.dart';
 import 'package:pwd/common/domain/errors/app_error.dart';
 import 'package:pwd/common/domain/errors/network_error.dart';
+import 'package:pwd/notes/presentation/tools/debug_error_message_provider.dart';
 
 import 'dialog_helper.dart';
 
@@ -44,8 +47,17 @@ mixin ShowErrorDialogMixin implements ShowErrorDialogInterface {
         errorMessageProviders = const [],
     void Function(BuildContext)? handler,
   }) {
-    final message =
-        errorMessageProviders.compose(context, e) ?? errorMessage(context, e);
+    final AppConfigurationProvider appConfigurationProvider =
+        DiStorage.shared.resolve();
+
+    final showRawErrors =
+        appConfigurationProvider.currentConfiguration.showRawErrors;
+
+    final providers = showRawErrors
+        ? [const DebugErrorMessageProvider().call]
+        : errorMessageProviders;
+
+    final message = providers.compose(context, e) ?? errorMessage(context, e);
 
     switch (message.destination) {
       case ErrorMessageDestination.dialog:

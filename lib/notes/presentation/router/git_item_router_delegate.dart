@@ -6,8 +6,9 @@ import 'package:di_storage/di_storage.dart';
 import 'package:pwd/notes/domain/usecases/git_notes_provider_usecase.dart';
 import 'package:pwd/notes/domain/usecases/sync_git_item_usecase.dart';
 import 'package:pwd/notes/presentation/edit_note/edit_note_page.dart';
-import 'package:pwd/notes/presentation/note/git_notes_list_screen.dart';
-import 'package:pwd/notes/presentation/note/note_page_route.dart';
+import 'package:pwd/notes/presentation/git_notes_list/git_notes_list_screen.dart';
+import 'package:pwd/notes/presentation/git_notes_list/note_page_route.dart';
+
 import 'package:pwd/notes/presentation/note_details/note_details_page.dart';
 
 abstract final class GitItemRouterPagePath {

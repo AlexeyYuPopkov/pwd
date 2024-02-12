@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:pwd/notes/data/model/remote_db_data.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:collection/collection.dart';
-import 'package:pwd/common/data_tools/mapper.dart';
+import 'package:pwd/common/support/data_tools/mapper.dart';
 import 'package:pwd/notes/data/model/note_item_data.dart';
 import 'package:pwd/notes/domain/database_path_provider.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';

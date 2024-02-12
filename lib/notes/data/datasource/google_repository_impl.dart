@@ -4,6 +4,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 // ignore: depend_on_referenced_packages
 import 'package:http/http.dart' as http;
 import 'package:googleapis/drive/v3.dart' as drive;
+
 import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
 import 'package:pwd/notes/data/mappers/google_file_mapper.dart';
 import 'package:pwd/notes/domain/google_repository.dart';
@@ -60,7 +61,6 @@ final class GoogleRepositoryImpl implements GoogleRepository {
         ),
         data.length,
       ),
-      // uploadOptions:
     );
 
     final result = GoogleFileMapper.toDomain(newFile);
@@ -120,13 +120,13 @@ extension on GoogleRepositoryImpl {
   Future<drive.DriveApi> _getDriveApi() async {
     final user = await trySignIn();
 
-    final client = http.Client();
-
     final headers = await user.authHeaders;
 
     if (headers.isEmpty) {
       throw const GoogleError.canNotAuthorize();
     }
+
+    final client = http.Client();
 
     final authClient = _AuthClient(client, headers);
     return drive.DriveApi(authClient);

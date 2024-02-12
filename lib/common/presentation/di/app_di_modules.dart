@@ -6,7 +6,7 @@ import 'package:pwd/settings/presentation/di/settings_di.dart';
 
 import 'unauth_di_module.dart';
 
-class AppDiModules {
+final class AppDiModules {
   /// Bind unauth DI modules
   static void bindUnauthModules() {
     final di = DiStorage.shared;

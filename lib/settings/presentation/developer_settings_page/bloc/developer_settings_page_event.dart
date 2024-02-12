@@ -1,29 +1,50 @@
 part of 'developer_settings_page_bloc.dart';
 
-abstract class DeveloperSettingsPageEvent extends Equatable {
+sealed class DeveloperSettingsPageEvent extends Equatable {
   const DeveloperSettingsPageEvent();
 
   const factory DeveloperSettingsPageEvent.initial() = InitialEvent;
 
   const factory DeveloperSettingsPageEvent.save({
-    required String? proxy,
-    required String? port,
+    required ProxyAppConfiguration proxy,
   }) = SaveEvent;
+
+  const factory DeveloperSettingsPageEvent.formChanged({
+    required ProxyAppConfiguration proxy,
+  }) = FormChangedEvent;
+
+  const factory DeveloperSettingsPageEvent.showsRawErrorsFlagChanged({
+    required bool flag,
+  }) = ShowsRawErrorsFlagChangedEvent;
 
   @override
   List<Object?> get props => const [];
 }
 
-class InitialEvent extends DeveloperSettingsPageEvent {
+final class InitialEvent extends DeveloperSettingsPageEvent {
   const InitialEvent();
 }
 
-class SaveEvent extends DeveloperSettingsPageEvent {
-  final String? proxy;
-  final String? port;
+final class SaveEvent extends DeveloperSettingsPageEvent {
+  final ProxyAppConfiguration proxy;
 
   const SaveEvent({
     required this.proxy,
-    required this.port,
+  });
+}
+
+final class FormChangedEvent extends DeveloperSettingsPageEvent {
+  final ProxyAppConfiguration proxy;
+
+  const FormChangedEvent({
+    required this.proxy,
+  });
+}
+
+final class ShowsRawErrorsFlagChangedEvent extends DeveloperSettingsPageEvent {
+  final bool flag;
+
+  const ShowsRawErrorsFlagChangedEvent({
+    required this.flag,
   });
 }

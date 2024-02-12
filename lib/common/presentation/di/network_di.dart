@@ -4,10 +4,10 @@ import 'package:di_storage/di_storage.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:flutter/foundation.dart';
-
 import 'package:pwd/common/data/network_error_mapper_impl.dart';
 import 'package:pwd/common/domain/app_configuration_provider.dart';
 import 'package:pwd/common/domain/errors/network_error_mapper.dart';
+import 'package:pwd/common/domain/model/app_configuration.dart';
 
 typedef UnAuthDio = Dio;
 typedef AuthDio = Dio;
@@ -24,7 +24,10 @@ class NetworkDiModule extends DiScope {
 
     final AppConfigurationProvider appConfigurationProvider =
         di.resolve<AppConfigurationProvider>();
-    final appConfiguration = await appConfigurationProvider.appConfiguration;
+    final appConfiguration =
+        await appConfigurationProvider.getAppConfiguration();
+
+    _adjustHttpClientWithProxy(appConfiguration.proxyData);
 
     di.bind<UnAuthDio>(
       module: this,
@@ -32,12 +35,17 @@ class NetworkDiModule extends DiScope {
         final dio = Dio(dioOptions);
         return _adjustedDioProxyIfNeeded(
           dio: dio,
-          proxy: appConfiguration.proxyIp ?? '',
-          port: appConfiguration.proxyPort ?? '',
+          proxy: appConfiguration.proxyData?.ip ?? '',
+          port: appConfiguration.proxyData?.port ?? '',
         );
       },
       lifeTime: const LifeTime.single(),
     );
+
+    // di.bind<HttpClientBuilder>(
+    //   module: this,
+    //   () => HttpClientBuilder(),
+    // );
 
     // di.bind<AuthDio>(
     //   module: this,
@@ -132,4 +140,43 @@ class NetworkDiModule extends DiScope {
   //     return httpClient;
   //   };
   // }
+}
+
+void _adjustHttpClientWithProxy(ProxyAppConfiguration? proxy) {
+  if (proxy != null && !proxy.isEmpty) {
+    final httpProxy = _HttpProxy._(host: proxy.ip, port: proxy.port);
+    HttpOverrides.global = httpProxy;
+  } else {
+    HttpOverrides.global = null;
+  }
+}
+
+final class _HttpProxy extends HttpOverrides {
+  final String host;
+  final String port;
+
+  _HttpProxy._({required this.host, required this.port});
+
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    var client = super.createHttpClient(context);
+    client.badCertificateCallback =
+        (X509Certificate cert, String host, int port) => true;
+
+    return client;
+  }
+
+  @override
+  String findProxyFromEnvironment(Uri url, Map<String, String>? environment) {
+    if (host.isEmpty || port.isEmpty) {
+      return super.findProxyFromEnvironment(url, environment);
+    }
+
+    environment ??= {};
+
+    environment['http_proxy'] = '$host:$port';
+    environment['https_proxy'] = '$host:$port';
+
+    return super.findProxyFromEnvironment(url, environment);
+  }
 }

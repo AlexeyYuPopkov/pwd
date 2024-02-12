@@ -1,7 +1,7 @@
 import 'package:pwd/common/domain/model/app_configuration.dart';
 
 abstract class AppConfigurationProvider {
-  Future<AppConfiguration> get appConfiguration;
+  AppConfiguration get currentConfiguration;
+  Future<AppConfiguration> getAppConfiguration();
   Future<void> setEnvironment(AppConfiguration enviroment);
-  Future<void> resetEnvironment();
 }

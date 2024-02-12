@@ -7,7 +7,7 @@ import 'package:pwd/common/domain/remote_storage_configuration_provider.dart';
 import 'package:pwd/home/presentation/home_tabbar/home_tabbar_page.dart';
 import 'package:pwd/main.dart' as app;
 import 'package:pwd/notes/presentation/edit_note/edit_note_page.dart';
-import 'package:pwd/notes/presentation/note/git_notes_list_screen.dart';
+import 'package:pwd/notes/presentation/git_notes_list/git_notes_list_screen.dart';
 
 import 'package:pwd/unauth/presentation/configuration_screen/git_configuration_form.dart';
 import 'package:pwd/unauth/presentation/pin_page/pin_page_enter_pin_form.dart';

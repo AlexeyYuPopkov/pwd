@@ -1,34 +1,47 @@
 import 'package:di_storage/di_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:pwd/common/domain/model/app_configuration.dart';
 import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
 import 'package:pwd/common/presentation/dialogs/show_error_dialog_mixin.dart';
-import 'package:pwd/common/presentation/validators/ipv4_validator/didgits_only_validator.dart';
-import 'package:pwd/common/presentation/validators/ipv4_validator/ipv4_validator.dart';
 import 'package:pwd/theme/common_size.dart';
-import 'package:rxdart/rxdart.dart';
 
 import 'bloc/developer_settings_page_bloc.dart';
+import 'developer_settings_proxy_form.dart';
 
-class DeveloperSettingsPage extends StatelessWidget with ShowErrorDialogMixin {
-  final isSubmitEnabledStream = BehaviorSubject.seeded(false);
-  final formKey = GlobalKey<_FormState>();
+final class DeveloperSettingsPage extends StatelessWidget
+    with ShowErrorDialogMixin {
+  final formKey = GlobalKey<DeveloperSettingsProxyFormState>();
 
   DeveloperSettingsPage({super.key});
 
   void _listener(BuildContext context, DeveloperSettingsPageState state) {
     BlockingLoadingIndicator.of(context).isLoading = state is LoadingState;
 
-    if (state is ErrorState) {
-      showError(context, state.error);
+    switch (state) {
+      case DidSaveState():
+      case LoadingState():
+        break;
+      case CommonState():
+        formKey.currentState?.setDeveloperSettingsProxyFormData(
+          DeveloperSettingsProxyFormData(
+            ip: state.data.proxy.data?.ip ?? '',
+            port: state.data.proxy.data?.port ?? '',
+          ),
+        );
+        break;
+      case ErrorState():
+        showError(context, state.error);
+        break;
     }
+
+    // setDeveloperSettingsProxyFormData
   }
 
   @override
   Widget build(BuildContext context) {
     final di = DiStorage.shared;
+
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -41,31 +54,60 @@ class DeveloperSettingsPage extends StatelessWidget with ShowErrorDialogMixin {
           child: BlocConsumer<DeveloperSettingsPageBloc,
               DeveloperSettingsPageState>(
             listener: _listener,
-            builder: (_, state) => CustomScrollView(
+            builder: (context, state) => CustomScrollView(
               slivers: [
                 SliverToBoxAdapter(
-                  child: _Form(
-                    key: formKey,
-                    proxy: state.data.proxyIp ?? '',
-                    port: state.data.proxyPort ?? '',
-                    isSubmitEnabledStream: isSubmitEnabledStream,
+                  child: _Container(
+                    title: context.proxySectionLabelTitle,
+                    padding: const EdgeInsets.only(
+                      left: CommonSize.indent2x,
+                      right: CommonSize.indent2x,
+                      bottom: CommonSize.indent2x,
+                    ),
+                    child: DeveloperSettingsProxyForm(
+                      key: formKey,
+                      onSave: (formData) =>
+                          onFormChanged(context, formData: formData),
+                    ),
+                  ),
+                ),
+                SliverToBoxAdapter(
+                  child: _Container(
+                    title: context.otherLabelTitle,
+                    padding: EdgeInsets.zero,
+                    child: BlocBuilder<DeveloperSettingsPageBloc,
+                        DeveloperSettingsPageState>(
+                      buildWhen: (a, b) =>
+                          a.data.showRawErrors != b.data.showRawErrors,
+                      builder: (context, state) {
+                        return _ShowsRawErrors(
+                          value: state.data.showRawErrors,
+                          onChange: (e) => onShowsRawErrorsFlagChanged(
+                            context,
+                            value: e,
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ),
                 SliverFillRemaining(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      StreamBuilder<bool>(
-                        initialData: false,
-                        stream: isSubmitEnabledStream,
-                        builder: (context, snapshot) {
-                          return OutlinedButton(
-                            onPressed: snapshot.data ?? false
-                                ? () => formKey.currentState?.onSave(context)
-                                : null,
-                            child: Text(context.saveButtonTitle),
-                          );
-                        },
+                      OutlinedButton(
+                        onPressed: state.isSubmitEnabled
+                            ? () {
+                                final formData = formKey.currentState?.data;
+
+                                assert(formData != null);
+
+                                if (formData != null) {
+                                  onSave(context, formData: formData);
+                                }
+                              }
+                            : null,
+                        child: Text(context.saveButtonTitle),
                       ),
                       const SizedBox(height: CommonSize.indent2x),
                     ],
@@ -78,116 +120,108 @@ class DeveloperSettingsPage extends StatelessWidget with ShowErrorDialogMixin {
       ),
     );
   }
-}
 
-class _Form extends StatefulWidget {
-  final String proxy;
-  final String port;
-  final BehaviorSubject<bool> isSubmitEnabledStream;
+  void onShowsRawErrorsFlagChanged(
+    BuildContext context, {
+    required bool value,
+  }) =>
+      context.read<DeveloperSettingsPageBloc>().add(
+            DeveloperSettingsPageEvent.showsRawErrorsFlagChanged(flag: value),
+          );
 
-  const _Form({
-    super.key,
-    required this.proxy,
-    required this.port,
-    required this.isSubmitEnabledStream,
-  });
-
-  @override
-  State<_Form> createState() => _FormState();
-}
-
-class _FormState extends State<_Form> {
-  late final formKey = GlobalKey<FormState>();
-  late final proxyController = TextEditingController();
-  late final portController = TextEditingController();
-
-  final didgitsOnlyValidator = const DidgitsOnlyValidator(isRequired: false);
-  final didgitsOnlyInputFormatter = const DidgitsOnlyInputFormatter();
-
-  final ipValidator = const Ipv4Validator(isRequired: false);
-  final ipInputFormatter = const Ipv4InputFormatter();
-
-  @override
-  void dispose() {
-    proxyController.dispose();
-    portController.dispose();
-    super.dispose();
-  }
-
-  @override
-  void didUpdateWidget(covariant _Form oldWidget) {
-    super.didUpdateWidget(oldWidget);
-
-    if (widget.proxy != proxyController.text ||
-        widget.port != portController.text) {
-      SchedulerBinding.instance.addPostFrameCallback((_) {
-        proxyController.value = TextEditingValue(text: widget.proxy);
-        portController.value = TextEditingValue(text: widget.port);
-      });
+  void onFormChanged(
+    BuildContext context, {
+    required DeveloperSettingsProxyFormData formData,
+  }) {
+    if (formKey.currentState?.validate() == true) {
+      context.read<DeveloperSettingsPageBloc>().add(
+            DeveloperSettingsPageEvent.formChanged(
+              proxy: ProxyAppConfiguration(
+                ip: formData.ip,
+                port: formData.port,
+              ),
+            ),
+          );
     }
   }
+
+  void onSave(
+    BuildContext context, {
+    required DeveloperSettingsProxyFormData formData,
+  }) {
+    if (formKey.currentState?.validate() == true) {
+      context.read<DeveloperSettingsPageBloc>().add(
+            DeveloperSettingsPageEvent.save(
+              proxy: ProxyAppConfiguration(
+                ip: formData.ip,
+                port: formData.port,
+              ),
+            ),
+          );
+    }
+  }
+}
+
+final class _ShowsRawErrors extends StatelessWidget {
+  final bool value;
+  final ValueChanged<bool> onChange;
+  const _ShowsRawErrors({required this.onChange, required this.value});
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(CommonSize.indent2x),
-      child: Form(
-        key: formKey,
-        onChanged: _shouldChangeSubmitEnabledStatusIfNeeded,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const SizedBox(height: CommonSize.indent2x),
-            TextFormField(
-              controller: proxyController,
-              decoration: InputDecoration(
-                labelText: context.proxyLabelTitle,
-              ),
-              keyboardType: TextInputType.number,
-              validator: (str) => ipValidator(str)?.message(context),
-              inputFormatters: ipInputFormatter(),
-            ),
-            const SizedBox(height: CommonSize.indent2x),
-            TextFormField(
-              controller: portController,
-              decoration: InputDecoration(
-                labelText: context.portLabelTitle,
-              ),
-              keyboardType: TextInputType.number,
-              validator: (str) => didgitsOnlyValidator(str)?.message(context),
-              inputFormatters: didgitsOnlyInputFormatter(),
-            ),
-            const SizedBox(height: CommonSize.indent2x),
-          ],
-        ),
-      ),
+    return SwitchListTile(
+      title: Text(context.showRawErrorsSectionLabelTitle),
+      subtitle: Text(context.showRawErrorsSectionLabelDescription),
+      value: value,
+      onChanged: onChange,
     );
   }
+}
 
-  void _shouldChangeSubmitEnabledStatusIfNeeded() {
-    final checkResult = checkIsSubmitEnabled();
+final class _Container extends StatelessWidget {
+  final String title;
+  final Widget child;
+  final EdgeInsets padding;
 
-    if (checkResult != widget.isSubmitEnabledStream.value) {
-      widget.isSubmitEnabledStream.add(checkResult);
-    }
-  }
+  const _Container({
+    required this.title,
+    required this.child,
+    required this.padding,
+  });
 
-  bool checkIsSubmitEnabled() =>
-      (widget.proxy != proxyController.text ||
-          widget.port != portController.text) &&
-      ipValidator.isValid(proxyController.text) &&
-      didgitsOnlyValidator.isValid(portController.text);
-
-  void onSave(BuildContext context) {
-    if (formKey.currentState?.validate() == true) {
-      formKey.currentState?.save();
-      final String proxy = proxyController.text;
-      final String port = portController.text;
-
-      context.read<DeveloperSettingsPageBloc>().add(
-            DeveloperSettingsPageEvent.save(proxy: proxy, port: port),
-          );
-    }
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: CommonSize.indent,
+            vertical: CommonSize.indent,
+          ),
+          child: Text(
+            title,
+            style: theme.textTheme.titleMedium,
+          ),
+        ),
+        Container(
+          decoration: BoxDecoration(
+            color: theme.colorScheme.tertiaryContainer,
+            borderRadius: BorderRadius.circular(
+              CommonSize.borderRadius,
+            ),
+          ),
+          margin: const EdgeInsets.symmetric(
+            horizontal: CommonSize.indent2x,
+            vertical: CommonSize.indent,
+          ),
+          padding: padding,
+          child: child,
+        ),
+      ],
+    );
   }
 }
 
@@ -195,8 +229,12 @@ class _FormState extends State<_Form> {
 extension on BuildContext {
   String get pageTitle => 'Developer settings';
 
-  String get proxyLabelTitle => 'Proxy:';
-  String get portLabelTitle => 'Proxy port:';
+  String get proxySectionLabelTitle => 'Proxy';
+  String get otherLabelTitle => 'Other';
+
+  String get showRawErrorsSectionLabelTitle => 'Show raw errors';
+  String get showRawErrorsSectionLabelDescription =>
+      'If `true` ugly but informative errors will be shown';
 
   String get saveButtonTitle => 'Save';
 }

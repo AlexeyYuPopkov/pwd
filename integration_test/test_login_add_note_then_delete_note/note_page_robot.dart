@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pwd/notes/presentation/common/widgets/note_list_item_widget.dart';
-import 'package:pwd/notes/presentation/note/git_notes_list_screen.dart';
+import 'package:pwd/notes/presentation/git_notes_list/git_notes_list_screen.dart';
 
 class NotePageRobot {
   const NotePageRobot(this.tester);

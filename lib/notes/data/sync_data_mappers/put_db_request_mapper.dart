@@ -1,4 +1,4 @@
-import 'package:pwd/common/data_tools/mapper.dart';
+import 'package:pwd/common/support/data_tools/mapper.dart';
 import 'package:pwd/notes/data/sync_models/put_db_request_data.dart';
 import 'package:pwd/notes/domain/sync_requests_parameters/put_db_request.dart';
 

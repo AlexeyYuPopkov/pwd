@@ -55,4 +55,7 @@ class CommonSize {
 
   /// [rowHeight = 50.0]
   static const rowHeight = 50.0;
+
+  /// [borderRadius = 8.0]
+  static const borderRadius = 8.0;
 }

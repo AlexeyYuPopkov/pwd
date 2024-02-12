@@ -1,4 +1,4 @@
-import 'package:pwd/common/data_tools/mapper.dart';
+import 'package:pwd/common/support/data_tools/mapper.dart';
 import 'package:pwd/notes/data/model/note_item_data.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
 import 'package:pwd/notes/domain/model/note_item_content.dart';
