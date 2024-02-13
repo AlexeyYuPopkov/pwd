@@ -34,11 +34,18 @@ final class ConfigurationRouterDelegate extends BaseRouterDelegate {
         case OnSetupConfigurationRoute():
           switch (action.type) {
             case ConfigurationType.git:
-              return context.navigator.push(
-                MaterialPageRoute(
-                  builder: (_) => const GitConfigurationScreen(),
-                ),
+              final route = MaterialPageRoute(
+                builder: (_) => const GitConfigurationScreen(),
               );
+
+// final p =     MaterialPage(
+//       child: ConfigurationsScreen(onRoute: onRoute),
+//       name: ConfigurationRouterDelegatePath.configuration,
+//     );
+
+              // p.createRoute(context)
+
+              return context.navigator.push(route);
 
             case ConfigurationType.googleDrive:
               return context.navigator.push(
