@@ -9,13 +9,15 @@ final class ConfigurationRouterDelegatePath {
   static const configuration = 'configuration';
 }
 
+final _navigatorKey = GlobalKey<NavigatorState>();
+
 final class ConfigurationRouterDelegate extends BaseRouterDelegate {
   @override
   GlobalKey<NavigatorState> navigatorKey;
 
   ConfigurationRouterDelegate({
     GlobalKey<NavigatorState>? navigatorKey,
-  }) : navigatorKey = navigatorKey ?? GlobalKey<NavigatorState>();
+  }) : navigatorKey = navigatorKey ?? _navigatorKey;
 
   @override
   late List<Page> initialPages = [
@@ -34,18 +36,11 @@ final class ConfigurationRouterDelegate extends BaseRouterDelegate {
         case OnSetupConfigurationRoute():
           switch (action.type) {
             case ConfigurationType.git:
-              final route = MaterialPageRoute(
-                builder: (_) => const GitConfigurationScreen(),
+              return context.navigator.push(
+                MaterialPageRoute(
+                  builder: (_) => const GitConfigurationScreen(),
+                ),
               );
-
-// final p =     MaterialPage(
-//       child: ConfigurationsScreen(onRoute: onRoute),
-//       name: ConfigurationRouterDelegatePath.configuration,
-//     );
-
-              // p.createRoute(context)
-
-              return context.navigator.push(route);
 
             case ConfigurationType.googleDrive:
               return context.navigator.push(
