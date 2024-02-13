@@ -48,4 +48,10 @@ final class ErrorState extends ConfigurationScreenState {
 final class ShouldSetupState extends ConfigurationScreenState {
   final ConfigurationType type;
   const ShouldSetupState({required this.type, required super.data});
+
+  @override
+  bool operator ==(Object other) => identical(this, other);
+
+  @override
+  int get hashCode => Object.hashAll({super.hashCode, type, data});
 }

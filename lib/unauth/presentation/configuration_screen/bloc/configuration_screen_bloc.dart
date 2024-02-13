@@ -109,8 +109,6 @@ final class ConfigurationScreenBloc
         if (git != null) git.configuration,
       ];
 
-      RemoteStorageConfigurations(configurations: configurations);
-
       await remoteStorageConfigurationProvider.setConfigurations(
         RemoteStorageConfigurations(configurations: configurations),
       );

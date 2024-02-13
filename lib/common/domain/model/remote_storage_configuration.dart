@@ -72,7 +72,6 @@ final class GitConfiguration extends RemoteStorageConfiguration {
   String? get branch => _branch?.trim().isNotEmpty == true ? _branch : null;
   final String fileName;
   final String? _branch;
-  final String realmFileName = 'realm_migration';
 
   const GitConfiguration({
     required this.token,
@@ -88,8 +87,6 @@ final class GitConfiguration extends RemoteStorageConfiguration {
         repo,
         owner,
         branch,
-        branch,
-        realmFileName,
       ];
 }
 

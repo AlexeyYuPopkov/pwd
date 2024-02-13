@@ -48,7 +48,7 @@ final class ConfigurationScreenData extends Equatable {
   }
 }
 
-final class ConfigurationScreenDataGit {
+final class ConfigurationScreenDataGit extends Equatable {
   final bool shouldCreateNewFile;
   final GitConfiguration configuration;
 
@@ -56,9 +56,12 @@ final class ConfigurationScreenDataGit {
     required this.shouldCreateNewFile,
     required this.configuration,
   });
+
+  @override
+  List<Object?> get props => [shouldCreateNewFile, configuration];
 }
 
-final class ConfigurationScreenDataGitBox {
+final class ConfigurationScreenDataGitBox extends Equatable {
   final ConfigurationScreenDataGit? git;
 
   const ConfigurationScreenDataGitBox({
@@ -67,9 +70,12 @@ final class ConfigurationScreenDataGitBox {
 
   factory ConfigurationScreenDataGitBox.initial() =>
       const ConfigurationScreenDataGitBox(git: null);
+
+  @override
+  List<Object?> get props => [git];
 }
 
-final class ConfigurationScreenDataGoogleDriveBox {
+final class ConfigurationScreenDataGoogleDriveBox extends Equatable {
   final GoogleDriveConfiguration? googleDrive;
 
   const ConfigurationScreenDataGoogleDriveBox({
@@ -78,4 +84,7 @@ final class ConfigurationScreenDataGoogleDriveBox {
 
   factory ConfigurationScreenDataGoogleDriveBox.initial() =>
       const ConfigurationScreenDataGoogleDriveBox(googleDrive: null);
+
+  @override
+  List<Object?> get props => [googleDrive];
 }
