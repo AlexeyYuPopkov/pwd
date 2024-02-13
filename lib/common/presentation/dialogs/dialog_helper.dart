@@ -66,6 +66,7 @@ mixin DialogHelper {
       showPlatformDialog(
         context: context,
         builder: (context) => PlatformAlertDialog(
+          key: const Key('error_dialog_key'),
           title: title == null ? null : Text(title),
           content: message == null ? null : Text(message),
           actions: [

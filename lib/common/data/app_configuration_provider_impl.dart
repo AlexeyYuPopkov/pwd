@@ -49,10 +49,10 @@ class AppConfigurationProviderImpl implements AppConfigurationProvider {
     final _ = getAppConfiguration();
   }
 
-  // @override
-  // Future<void> resetEnvironment() async {
-  //   final storage = await SharedPreferences.getInstance();
-  //   storage.remove(_jsonSharedPreferencesKey);
-  //   final _ = getAppConfiguration();
-  // }
+  @override
+  Future<void> dropEnvironment() async {
+    final storage = await SharedPreferences.getInstance();
+    storage.remove(_jsonSharedPreferencesKey);
+    final _ = getAppConfiguration();
+  }
 }

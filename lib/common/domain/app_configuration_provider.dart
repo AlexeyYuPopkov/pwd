@@ -4,4 +4,5 @@ abstract class AppConfigurationProvider {
   AppConfiguration get currentConfiguration;
   Future<AppConfiguration> getAppConfiguration();
   Future<void> setEnvironment(AppConfiguration enviroment);
+  Future<void> dropEnvironment();
 }
