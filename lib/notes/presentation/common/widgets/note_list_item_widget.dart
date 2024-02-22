@@ -76,7 +76,7 @@ final class NoteListItemWidget extends StatelessWidget {
                 note: note,
               ),
               child: const Icon(
-                key: Key('test_npte_page_edit_icon'),
+                key: Key(NoteListItemWidgetTestHelper.editIconKey),
                 Icons.edit,
                 size: CommonSize.indent2x,
               ),
@@ -90,4 +90,8 @@ final class NoteListItemWidget extends StatelessWidget {
 
 extension on BuildContext {
   String get rawNoteTooltipMessage => 'Not Encrypted';
+}
+
+final class NoteListItemWidgetTestHelper {
+  static const editIconKey = 'NoteListItemWidget.EditIcon.Key';
 }

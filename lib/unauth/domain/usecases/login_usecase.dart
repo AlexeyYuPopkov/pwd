@@ -1,3 +1,4 @@
+import 'package:pwd/common/domain/base_pin.dart';
 import 'package:pwd/common/domain/usecases/hash_usecase.dart';
 import 'package:pwd/common/domain/usecases/pin_usecase.dart';
 
@@ -15,7 +16,7 @@ final class LoginUsecase {
     final pinList512 = hashUsecase.pinHash512(pin);
 
     return pinUsecase.setPin(
-      pinUsecase.createPin(
+      Pin(
         pin: pinString32,
         pinSha512: pinList512,
       ),

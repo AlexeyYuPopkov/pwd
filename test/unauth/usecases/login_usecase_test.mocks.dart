@@ -36,13 +36,6 @@ class MockPinUsecase extends _i1.Mock implements _i2.PinUsecase {
       ) as _i3.Stream<_i4.BasePin>);
 
   @override
-  bool get isValidPin => (super.noSuchMethod(
-        Invocation.getter(#isValidPin),
-        returnValue: false,
-        returnValueForMissingStub: false,
-      ) as bool);
-
-  @override
   _i3.Future<void> dropPin() => (super.noSuchMethod(
         Invocation.method(
           #dropPin,
@@ -105,44 +98,6 @@ class MockPinUsecase extends _i1.Mock implements _i2.PinUsecase {
         returnValue: _i3.Future<void>.value(),
         returnValueForMissingStub: _i3.Future<void>.value(),
       ) as _i3.Future<void>);
-
-  @override
-  _i4.Pin createPin({
-    required String? pin,
-    required List<int>? pinSha512,
-  }) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #createPin,
-          [],
-          {
-            #pin: pin,
-            #pinSha512: pinSha512,
-          },
-        ),
-        returnValue: _i5.dummyValue<_i4.Pin>(
-          this,
-          Invocation.method(
-            #createPin,
-            [],
-            {
-              #pin: pin,
-              #pinSha512: pinSha512,
-            },
-          ),
-        ),
-        returnValueForMissingStub: _i5.dummyValue<_i4.Pin>(
-          this,
-          Invocation.method(
-            #createPin,
-            [],
-            {
-              #pin: pin,
-              #pinSha512: pinSha512,
-            },
-          ),
-        ),
-      ) as _i4.Pin);
 }
 
 /// A class which mocks [HashUsecase].

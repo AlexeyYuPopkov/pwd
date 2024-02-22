@@ -46,6 +46,7 @@ final class SyncGoogleDriveItemUsecase implements SyncUsecase {
       final localChecksum = await checksumChecker.getChecksum().then(
             (str) => str ?? '',
           );
+
       final remoteChecksum = file.checksum;
 
       if (localChecksum.isNotEmpty && localChecksum == remoteChecksum) {

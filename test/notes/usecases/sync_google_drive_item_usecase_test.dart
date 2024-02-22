@@ -48,10 +48,9 @@ void main() {
 
   const configuration = GoogleDriveConfiguration(fileName: 'fileName');
 
-  final pin = Pin(
+  const pin = Pin(
     pin: '',
     pinSha512: [],
-    creationDate: DateTime.now(),
   );
 
   final realmDatabaseAsBytes = Uint8List.fromList([]);

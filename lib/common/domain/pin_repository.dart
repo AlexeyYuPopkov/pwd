@@ -1,7 +1,7 @@
 import 'base_pin.dart';
 
 abstract class PinRepository {
-  void dropPin();
+  // void dropPin();
 
   BasePin getPin();
 

@@ -17,6 +17,7 @@ import 'package:pwd/notes/presentation/tools/sync_data_error_message_provider.da
 import 'package:pwd/theme/common_size.dart';
 
 import 'bloc/git_notes_list_bloc.dart';
+import 'git_notes_list_screen_test_helper.dart';
 
 final class GitNotesListScreen extends StatelessWidget
     with ShowErrorDialogMixin {
@@ -69,7 +70,7 @@ final class GitNotesListScreen extends StatelessWidget
                   onPressed: state.needsSync ? () => _onSync(context) : null,
                 ),
                 AppBarButton(
-                  key: const Key('test_add_note_button'),
+                  key: const Key(GitNotesListScreenTestHelper.addNoteButtonKey),
                   iconData: Icons.add,
                   onPressed: () => _onEditButton(
                     context,

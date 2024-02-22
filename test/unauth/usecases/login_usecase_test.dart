@@ -30,12 +30,10 @@ void main() {
           );
 
           const pinStr = '';
-          final creationDate = DateTime.now();
 
-          final dummyPin = Pin(
+          const dummyPin = Pin(
             pin: pinStr,
             pinSha512: [],
-            creationDate: creationDate,
           );
 
           provideDummy(dummyPin);
@@ -48,24 +46,13 @@ void main() {
             hashUsecase.pinHash512(pinStr),
           ).thenReturn(dummyPin.pinSha512);
 
-          when(
-            pinUsecase.createPin(
-              pin: dummyPin.pin,
-              pinSha512: dummyPin.pinSha512,
-            ),
-          ).thenReturn(dummyPin);
-
           await usecase.execute(pinStr);
 
-          verify(hashUsecase.pinHash(pinStr));
-          verify(hashUsecase.pinHash512(pinStr));
-          verify(
-            pinUsecase.createPin(
-              pin: dummyPin.pin,
-              pinSha512: dummyPin.pinSha512,
-            ),
-          );
-          verify(pinUsecase.setPin(dummyPin));
+          verifyInOrder([
+            hashUsecase.pinHash(pinStr),
+            hashUsecase.pinHash512(pinStr),
+            pinUsecase.setPin(dummyPin)
+          ]);
         },
       );
     },

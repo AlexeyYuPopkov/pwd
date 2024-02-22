@@ -5,6 +5,7 @@ import 'package:pwd/common/presentation/clock/clocks_widget/clocks_widget.dart';
 import 'package:pwd/theme/common_size.dart';
 
 import 'bloc/pin_page_bloc.dart';
+import 'pin_screen_test_helper.dart';
 
 final class PinPageEnterPinForm extends StatefulWidget {
   final TimeFormatter timeFormatter;
@@ -52,7 +53,7 @@ class _PinPageEnterPinFormState extends State<PinPageEnterPinForm> {
                     ConstrainedBox(
                       constraints: const BoxConstraints(maxWidth: maxWidth),
                       child: TextFormField(
-                        key: const Key('test_pin_text_field_key'),
+                        key: const Key(PinScreenTestHelper.pinTextField),
                         controller: pinController,
                         decoration: InputDecoration(
                           labelText: context.pinTextFieldTitle,
@@ -76,7 +77,7 @@ class _PinPageEnterPinFormState extends State<PinPageEnterPinForm> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         OutlinedButton(
-                          key: const Key('test_on_auth_zone_button'),
+                          key: const Key(PinScreenTestHelper.nextButton),
                           onPressed: () => _onLogin(context),
                           child: Text(context.saveButtonTitle),
                         ),

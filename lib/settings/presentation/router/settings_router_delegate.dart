@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pwd/settings/presentation/developer_settings_page/developer_settings_page.dart';
-import 'package:pwd/settings/presentation/settings_page/settings_page.dart';
+import 'package:pwd/settings/presentation/settings_page/settings_screen.dart';
 
 import 'package:pwd/common/presentation/fade_animation_page.dart';
-import 'package:pwd/settings/presentation/remote_storage_settings_page/remote_storage_settings_page.dart';
+import 'package:pwd/unauth/presentation/router/configuration_router_delegate.dart';
 
 class SettingsRouterPagePath {
   static const settings = 'settings';
@@ -25,7 +25,7 @@ class SettingsRouterDelegate extends RouterDelegate
       key: navigatorKey,
       pages: [
         FadeAnimationPage(
-          child: SettingsPage(onRoute: _onRoute),
+          child: SettingsScreen(onRoute: _onRoute),
           name: SettingsRouterPagePath.settings,
         )
       ],
@@ -45,26 +45,27 @@ class SettingsRouterDelegate extends RouterDelegate
   }
 
   Future _onRoute(BuildContext context, SettingsRouteData action) async {
-    if (action is OnRemoteStorageSettingsPage) {
-      return context.navigator
-          .push(
-            MaterialPageRoute(
-              builder: (_) => const RemoteStorageSettingsPage(),
-            ),
-          )
-          .then(
-            (_) => updateState(),
-          );
-    } else if (action is OnDeveloperSettingsPage) {
-      return context.navigator
-          .push(
-            MaterialPageRoute(
-              builder: (_) => DeveloperSettingsPage(),
-            ),
-          )
-          .then(
-            (_) => updateState(),
-          );
+    switch (action) {
+      case RemoteConfigurationScreen():
+        return context.navigator
+            .push(
+              MaterialPageRoute(
+                builder: (_) => const ConfigurationsScreenRouterWidget(),
+              ),
+            )
+            .then(
+              (_) => updateState(),
+            );
+      case OnDeveloperSettingsPage():
+        return context.navigator
+            .push(
+              MaterialPageRoute(
+                builder: (_) => DeveloperSettingsPage(),
+              ),
+            )
+            .then(
+              (_) => updateState(),
+            );
     }
   }
 
@@ -76,6 +77,19 @@ class SettingsRouterDelegate extends RouterDelegate
   @override
   Future<void> setNewRoutePath(configuration) {
     return Future.value(null);
+  }
+}
+
+class ConfigurationsScreenRouterWidget extends StatelessWidget {
+  const ConfigurationsScreenRouterWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Router(
+      routerDelegate: ConfigurationRouterDelegate(
+        onPop: () => Navigator.of(context).maybePop(),
+      ),
+    );
   }
 }
 

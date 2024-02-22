@@ -1,6 +1,6 @@
 part of 'settings_page_bloc.dart';
 
-abstract class SettingsPageState extends Equatable {
+sealed class SettingsPageState extends Equatable {
   final SettingsPageData data;
 
   const SettingsPageState({required this.data});
@@ -23,15 +23,15 @@ abstract class SettingsPageState extends Equatable {
   }) = ErrorState;
 }
 
-class CommonState extends SettingsPageState {
+final class CommonState extends SettingsPageState {
   const CommonState({required super.data});
 }
 
-class DidLogoutState extends SettingsPageState {
+final class DidLogoutState extends SettingsPageState {
   const DidLogoutState({required super.data});
 }
 
-class LoadingState extends SettingsPageState {
+final class LoadingState extends SettingsPageState {
   const LoadingState({required super.data});
 }
 

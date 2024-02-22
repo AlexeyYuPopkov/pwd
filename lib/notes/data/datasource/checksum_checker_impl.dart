@@ -9,6 +9,7 @@ final class ChecksumCheckerImpl implements ChecksumChecker {
   @override
   Future<String?> getChecksum() async {
     final storage = await SharedPreferences.getInstance();
+
     return storage.getString(_sharedPreferencesKey);
   }
 

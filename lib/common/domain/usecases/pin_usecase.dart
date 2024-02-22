@@ -13,13 +13,6 @@ abstract class PinUsecase {
   Pin getPinOrThrow();
 
   Future<void> setPin(Pin pin);
-
-  bool get isValidPin;
-
-  Pin createPin({
-    required String pin,
-    required List<int> pinSha512,
-  });
 }
 
 final class PinUsecaseImpl implements PinUsecase {
@@ -32,13 +25,19 @@ final class PinUsecaseImpl implements PinUsecase {
 
   late final _timerStream = Stream.periodic(validDuration).asBroadcastStream();
 
+  static var i = 0;
   @override
-  Stream<BasePin> get pinStream => Rx.merge([
-        _pinStream,
-        _timerStream
-            .map((event) => const BasePin.empty())
-            .distinct((_, __) => repository.getPin() is EmptyPin),
-      ])
+  Stream<BasePin> get pinStream => Rx.merge(
+        [
+          _pinStream,
+          _timerStream
+              .map(
+                (_) => const BasePin.empty(),
+              )
+              .distinct(),
+        ],
+      )
+          .distinct()
           .doOnData(
             (e) => repository.setPin(e),
           )
@@ -50,18 +49,11 @@ final class PinUsecaseImpl implements PinUsecase {
   }
 
   @override
-  BasePin getPin() => repository.getPin();
+  BasePin getPin() => _pinStream.value;
 
   @override
   Future<void> setPin(Pin pin) async {
     _pinStream.add(pin);
-  }
-
-  @override
-  bool get isValidPin {
-    final pin = _pinStream.value;
-    return pin is Pin &&
-        pin.creationDate.add(validDuration).isAfter(DateTime.now());
   }
 
   @override
@@ -73,18 +65,6 @@ final class PinUsecaseImpl implements PinUsecase {
       case EmptyPin():
         throw const PinUsecaseError();
     }
-  }
-
-  @override
-  Pin createPin({
-    required String pin,
-    required List<int> pinSha512,
-  }) {
-    return Pin(
-      pin: pin,
-      pinSha512: pinSha512,
-      creationDate: DateTime.now(),
-    );
   }
 }
 

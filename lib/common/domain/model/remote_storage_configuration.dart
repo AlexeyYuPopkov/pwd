@@ -18,7 +18,8 @@ final class RemoteStorageConfigurations extends Equatable {
   factory RemoteStorageConfigurations.empty() =>
       RemoteStorageConfigurations(configurations: const []);
 
-  bool get isValid => configurations.isNotEmpty;
+  bool get isNotEmpty => configurations.isNotEmpty;
+  bool get isEmpty => configurations.isEmpty;
 
   bool hasConfiguration(ConfigurationType type) => withType(type) != null;
 
@@ -37,6 +38,37 @@ final class RemoteStorageConfigurations extends Equatable {
 
     return idValidIndex ? configurations[index] : null;
   }
+
+  RemoteStorageConfigurations copyRemovedType(ConfigurationType type) {
+    final index = _configurationIndexes[type];
+
+    if (index is! int) {
+      return this;
+    }
+    assert(index >= 0 && index < configurations.length);
+    if (index >= 0 && index < configurations.length) {
+      var newConfigurations = configurations;
+      newConfigurations.removeAt(index);
+
+      return RemoteStorageConfigurations(
+        configurations: newConfigurations,
+      );
+    } else {
+      return this;
+    }
+  }
+
+  RemoteStorageConfigurations copyAppendedType(
+    RemoteStorageConfiguration configuration,
+  ) =>
+      hasConfiguration(configuration.type)
+          ? this
+          : RemoteStorageConfigurations(
+              configurations: [
+                ...configurations,
+                configuration,
+              ],
+            );
 }
 
 enum ConfigurationType {

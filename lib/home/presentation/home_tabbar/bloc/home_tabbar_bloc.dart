@@ -35,16 +35,19 @@ final class HomeTabbarBloc
       final configuration = remoteConfigurationsProvider.currentConfiguration;
 
       final tabs = <HomeTabbarTabModel>[
-        ...configuration.configurations.map(
-          (e) {
-            switch (e) {
-              case GitConfiguration():
-                return GitTab(configuration: e);
-              case GoogleDriveConfiguration():
-                return GoogleDriveTab(configuration: e);
-            }
-          },
-        ),
+        if (configuration.configurations.isEmpty)
+          const ConfigurationUndefinedTab()
+        else
+          ...configuration.configurations.map(
+            (e) {
+              switch (e) {
+                case GitConfiguration():
+                  return GitTab(configuration: e);
+                case GoogleDriveConfiguration():
+                  return GoogleDriveTab(configuration: e);
+              }
+            },
+          ),
         const SettingsTab(),
       ];
 

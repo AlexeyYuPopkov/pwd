@@ -1,90 +1,79 @@
-// import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-// import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
-// import 'package:pwd/common/domain/remote_storage_configuration_provider.dart';
+import 'dart:convert';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:pwd/common/data/mappers/remote_configurations_mapper.dart';
+import 'package:pwd/common/data/model/remote_storage_configurations_data.dart';
+import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
+import 'package:pwd/common/domain/remote_storage_configuration_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-// const _tokenKey = 'RemoteStorageConfiguration.TokenKey';
-// const _repoKey = 'RemoteStorageConfiguration.RepoKey';
-// const _ownerKey = 'RemoteStorageConfiguration.OwnerKey';
-// const _branchKey = 'RemoteStorageConfiguration.BranchKey';
-// const _fileNameKey = 'RemoteStorageConfiguration.FileNameKey';
+final class RemoteStorageConfigurationProviderImpl
+    implements RemoteStorageConfigurationProvider {
+  static const String _jsonSharedPreferencesKey =
+      'RemoteStorageConfigurationProvider.RemoteStorageConfigurationKey';
 
-// class RemoteStorageConfigurationProviderImpl
-//     implements RemoteStorageConfigurationProvider {
-//   static const storage = FlutterSecureStorage();
+  static const storage = FlutterSecureStorage();
 
-//   RemoteStorageConfigurationProviderImpl();
+  RemoteStorageConfigurations _currentConfiguration =
+      RemoteStorageConfigurations.empty();
 
-//   RemoteStorageConfiguration _configuration =
-//       const RemoteStorageConfiguration.empty();
+  RemoteStorageConfigurationProviderImpl() {
+    _readConfiguration().then(
+      (e) => _currentConfiguration = e,
+    );
+  }
 
-//   @override
-//   Future<RemoteStorageConfiguration> get configuration async {
-//     if (_configuration is RemoteStorageConfigurationEmpty) {
-//       _configuration = await _readConfiguration();
-//       return _configuration;
-//     } else {
-//       return _configuration;
-//     }
-//   }
+  @override
+  RemoteStorageConfigurations get currentConfiguration => _currentConfiguration;
 
-//   @override
-//   Future<void> setConfiguration(
-//     RemoteStorageConfiguration configuration,
-//   ) async {
-//     return dropConfiguration().then(
-//       (_) => Future.wait([
-//         storage.write(key: _tokenKey, value: configuration.token),
-//         storage.write(key: _repoKey, value: configuration.repo),
-//         storage.write(key: _ownerKey, value: configuration.owner),
-//         storage.write(key: _branchKey, value: configuration.branch),
-//         storage.write(key: _fileNameKey, value: configuration.fileName),
-//       ]),
-//     );
-//   }
+  @override
+  Future<void> setConfigurations(
+    RemoteStorageConfigurations configurations,
+  ) async {
+    if (configurations.isNotEmpty) {
+      final data = RemoteConfigurationsMapper.toData(configurations);
 
-//   @override
-//   Future<void> dropConfiguration() => Future.wait([
-//         storage.delete(key: _tokenKey),
-//         storage.delete(key: _repoKey),
-//         storage.delete(key: _ownerKey),
-//         storage.delete(key: _branchKey),
-//         storage.delete(key: _fileNameKey),
-//       ]).then(
-//         (_) => _configuration = const RemoteStorageConfiguration.empty(),
-//       );
+      final jsonStr = jsonEncode(data.toJson());
+      final storage = await SharedPreferences.getInstance();
+      return storage.setString(_jsonSharedPreferencesKey, jsonStr).then(
+        (isSuccess) {
+          assert(isSuccess);
 
-//   Future<RemoteStorageConfiguration> _readConfiguration() async {
-//     final results = await Future.wait([
-//       storage.read(key: _tokenKey),
-//       storage.read(key: _repoKey),
-//       storage.read(key: _ownerKey),
-//       storage.read(key: _branchKey),
-//       storage.read(key: _fileNameKey),
-//     ]);
+          if (isSuccess) {
+            _currentConfiguration = configurations;
+          }
+        },
+      );
+    } else {
+      return dropConfiguration();
+    }
+  }
 
-//     final token = results[0];
-//     final repo = results[1];
-//     final owner = results[2];
-//     final branch = results[3];
-//     final fileName = results[4];
+  @override
+  Future<void> dropConfiguration() async {
+    final storage = await SharedPreferences.getInstance();
+    return storage.remove(_jsonSharedPreferencesKey).then(
+      (isSuccess) {
+        assert(isSuccess);
 
-//     if (token != null &&
-//         token.isNotEmpty &&
-//         repo != null &&
-//         repo.isNotEmpty &&
-//         owner != null &&
-//         owner.isNotEmpty &&
-//         fileName != null &&
-//         fileName.isNotEmpty) {
-//       return RemoteStorageConfiguration.configuration(
-//         token: token,
-//         repo: repo,
-//         owner: owner,
-//         branch: branch,
-//         fileName: fileName,
-//       );
-//     } else {
-//       return const RemoteStorageConfiguration.empty();
-//     }
-//   }
-// }
+        if (isSuccess) {
+          _currentConfiguration = RemoteStorageConfigurations.empty();
+        }
+      },
+    );
+  }
+
+// Private
+  Future<RemoteStorageConfigurations> _readConfiguration() async {
+    final storage = await SharedPreferences.getInstance();
+    final json = storage.getString(_jsonSharedPreferencesKey);
+
+    if (json == null || json.isEmpty) {
+      return RemoteStorageConfigurations.empty();
+    } else {
+      final jsonMap = jsonDecode(json);
+      final data = RemoteStorageConfigurationsData.fromJson(jsonMap);
+
+      return RemoteConfigurationsMapper.toDomain(data);
+    }
+  }
+}

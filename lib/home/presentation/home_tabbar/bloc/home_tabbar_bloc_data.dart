@@ -10,7 +10,7 @@ final class HomeTabbarBlocData extends Equatable {
   factory HomeTabbarBlocData.initial() {
     return const HomeTabbarBlocData._(
       tabs: [
-        EmptyPlaceholderTab(),
+        ConfigurationUndefinedTab(),
         SettingsTab(),
       ],
     );

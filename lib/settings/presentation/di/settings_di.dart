@@ -1,12 +1,12 @@
 import 'package:di_storage/di_storage.dart';
-import 'package:pwd/settings/domain/drop_remote_Storage_Configuration_usecase.dart';
+import 'package:pwd/settings/domain/save_configurations_usecase.dart';
 
 final class SettingsDi extends DiScope {
   @override
   void bind(DiStorage di) {
-    di.bind<DropRemoteStorageConfigurationUsecase>(
+    di.bind<SaveConfigurationsUsecase>(
       module: this,
-      () => DropRemoteStorageConfigurationUsecase(
+      () => SaveConfigurationsUsecase(
         remoteStorageConfigurationProvider: di.resolve(),
         notesRepository: di.resolve(),
         pinUsecase: di.resolve(),

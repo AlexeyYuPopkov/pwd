@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:pwd/theme/common_size.dart';
 
+typedef _TestKey = DialogHelperTestHelper;
 mixin DialogHelper {
   showMessage(
     BuildContext context, {
@@ -37,18 +38,18 @@ mixin DialogHelper {
       showPlatformDialog(
         context: context,
         builder: (context) => PlatformAlertDialog(
-          key: const Key('test_ok_cancel_dialog'),
+          key: const Key(_TestKey.okCancelDialog),
           title: title == null ? null : Text(title),
           content: message == null ? null : Text(message),
           actions: [
             PlatformDialogAction(
-              key: const Key('test_ok_cancel_dialog_ok_button'),
+              key: const Key(_TestKey.okCancelDialogOkButton),
               onPressed: () =>
                   onOk == null ? Navigator.pop(context) : onOk(context),
               child: Text(okButtonTitle ?? context.okButtonTitle),
             ),
             PlatformDialogAction(
-              key: const Key('test_ok_cancel_dialog_cancel_button'),
+              key: const Key(_TestKey.okCancelDialogCancelButton),
               onPressed: () =>
                   onCancel == null ? Navigator.pop(context) : onCancel(context),
               child: Text(cancelButtonTitle ?? context.cancelButtonTitle),
@@ -66,7 +67,7 @@ mixin DialogHelper {
       showPlatformDialog(
         context: context,
         builder: (context) => PlatformAlertDialog(
-          key: const Key('error_dialog_key'),
+          key: const Key(DialogHelperTestHelper.errorDialog),
           title: title == null ? null : Text(title),
           content: message == null ? null : Text(message),
           actions: [
@@ -98,4 +99,14 @@ mixin DialogHelper {
 extension on BuildContext {
   String get okButtonTitle => 'OK';
   String get cancelButtonTitle => 'Cancel';
+}
+
+final class DialogHelperTestHelper {
+  static const okCancelDialog = 'DialogHelperTestHelper.OkCancelDialog.TestKey';
+  static const okCancelDialogOkButton =
+      'DialogHelperTestHelper.test_ok_cancel_dialog_ok_button.TestKey';
+  static const okCancelDialogCancelButton =
+      'DialogHelperTestHelper.test_ok_cancel_dialog_cancel_button.TestKey';
+
+  static const errorDialog = 'DialogHelperTestHelper.errorDialog.TestKey';
 }

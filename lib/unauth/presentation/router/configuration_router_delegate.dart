@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
 import 'package:pwd/common/presentation/router/base_router_delegate.dart';
-import 'package:pwd/unauth/presentation/configuration_screen/configurations_screen.dart';
-import 'package:pwd/unauth/presentation/configuration_screen/git_configuration_screen.dart';
-import 'package:pwd/unauth/presentation/configuration_screen/google_drive_configuration_screen.dart';
+import 'package:pwd/settings/presentation/configuration_screen/configurations_screen.dart';
+import 'package:pwd/settings/presentation/configuration_screen/git_configuration_screen/git_configuration_screen.dart';
+import 'package:pwd/unauth/presentation/google_drive_configuration_screen/google_drive_configuration_screen.dart';
 
 final class ConfigurationRouterDelegatePath {
   static const configuration = 'configuration';
@@ -15,8 +15,11 @@ final class ConfigurationRouterDelegate extends BaseRouterDelegate {
   @override
   GlobalKey<NavigatorState> navigatorKey;
 
+  final VoidCallback? onPop;
+
   ConfigurationRouterDelegate({
     GlobalKey<NavigatorState>? navigatorKey,
+    this.onPop,
   }) : navigatorKey = navigatorKey ?? _navigatorKey;
 
   @override
@@ -34,21 +37,34 @@ final class ConfigurationRouterDelegate extends BaseRouterDelegate {
         case OnPinPageRoute():
           return;
         case OnSetupConfigurationRoute():
+          final configuration = action.configuration;
           switch (action.type) {
             case ConfigurationType.git:
+              final git =
+                  configuration is GitConfiguration ? configuration : null;
               return context.navigator.push(
                 MaterialPageRoute(
-                  builder: (_) => const GitConfigurationScreen(),
+                  builder: (_) => GitConfigurationScreen(
+                    initial: git,
+                  ),
                 ),
               );
 
             case ConfigurationType.googleDrive:
+              final googleDrive = configuration is GoogleDriveConfiguration
+                  ? configuration
+                  : null;
               return context.navigator.push(
                 MaterialPageRoute(
-                  builder: (_) => const GoogleDriveConfigurationScreen(),
+                  builder: (_) => GoogleDriveConfigurationScreen(
+                    initial: googleDrive,
+                  ),
                 ),
               );
           }
+        case MaybePopRoute():
+          onPop?.call();
+          break;
       }
     }
   }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:pwd/common/domain/usecases/user_session_provider_usecase.dart';
 import 'package:di_storage/di_storage.dart';
 import 'package:pwd/theme/theme_data.dart';
 import 'package:pwd/common/presentation/di/app_di_modules.dart';
@@ -12,6 +11,7 @@ void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
 
+// TODO: refactor
   AppDiModules.bindUnauthModules();
 
   runApp(MyApp());
@@ -20,8 +20,8 @@ void main() async {
 final class MyApp extends StatelessWidget {
   MyApp({super.key});
 
-  UserSessionProviderUsecase get userSessionProviderUsecase =>
-      DiStorage.shared.resolve();
+  // UserSessionProviderUsecase get userSessionProviderUsecase =>
+  //     DiStorage.shared.resolve();
 
   final rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -39,7 +39,7 @@ final class MyApp extends StatelessWidget {
         child: Router(
           routerDelegate: RootRouterDelegate(
             navigatorKey: rootNavigatorKey,
-            userSessionProviderUsecase: userSessionProviderUsecase,
+            pinUsecase: DiStorage.shared.resolve(),
           ),
         ),
       ),

@@ -26,13 +26,13 @@ Map<String, dynamic> _$AppConfigurationDataToJson(
 ProxyAppConfigurationData _$ProxyAppConfigurationDataFromJson(
         Map<String, dynamic> json) =>
     ProxyAppConfigurationData(
-      ip: json['proxyIp'] as String? ?? '',
-      port: json['proxyPort'] as String? ?? '',
+      ip: json['ip'] as String? ?? '',
+      port: json['port'] as String? ?? '',
     );
 
 Map<String, dynamic> _$ProxyAppConfigurationDataToJson(
         ProxyAppConfigurationData instance) =>
     <String, dynamic>{
-      'proxyIp': instance.ip,
-      'proxyPort': instance.port,
+      'ip': instance.ip,
+      'port': instance.port,
     };

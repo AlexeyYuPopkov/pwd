@@ -14,6 +14,7 @@ import 'package:pwd/notes/presentation/tools/sync_data_error_message_provider.da
 import 'package:pwd/theme/common_size.dart';
 
 import 'bloc/edit_note_bloc.dart';
+import 'edit_note_screen_test_helper.dart';
 
 sealed class EditNotePagePopResult {
   const EditNotePagePopResult();
@@ -33,6 +34,8 @@ final class DidUpdateResult extends EditNotePagePopResult {
 final class DidDeleteResult extends EditNotePagePopResult {
   const DidDeleteResult();
 }
+
+typedef _TestHelper = EditNoteScreenTestHelper;
 
 final class EditNotePage extends StatelessWidget
     with ShowErrorDialogMixin, DialogHelper {
@@ -140,7 +143,7 @@ final class EditNotePage extends StatelessWidget
                                     builder: (context, snapshot) {
                                       return OutlinedButton(
                                         key: const Key(
-                                          'test_edit_note_save_button_key',
+                                          _TestHelper.saveButtonKey,
                                         ),
                                         onPressed: snapshot.data ?? false
                                             ? () => _onSave(context)
@@ -154,7 +157,7 @@ final class EditNotePage extends StatelessWidget
                                 fit: FlexFit.tight,
                                 child: OutlinedButton(
                                   key: const Key(
-                                    'test_edit_note_delete_button_key',
+                                    _TestHelper.deleteButtonKey,
                                   ),
                                   onPressed: () => _onDelete(context),
                                   child: Text(context.deleteButtonTitle),
@@ -256,7 +259,7 @@ class _FormState extends State<_Form> {
           children: [
             const SizedBox(height: CommonSize.indent2x),
             TextFormField(
-              key: const Key('test_edit_note_title_key'),
+              key: const Key(_TestHelper.titleTextFieldKey),
               controller: titleController,
               decoration: InputDecoration(
                 labelText: context.titleTextFieldTitle,
@@ -264,7 +267,7 @@ class _FormState extends State<_Form> {
             ),
             const SizedBox(height: CommonSize.indent2x),
             TextFormField(
-              key: const Key('test_edit_note_description_key'),
+              key: const Key(_TestHelper.subtitleTextFieldKey),
               controller: descriptionController,
               decoration: InputDecoration(
                 labelText: context.descriptionTextFieldTitle,
@@ -272,7 +275,7 @@ class _FormState extends State<_Form> {
             ),
             const SizedBox(height: CommonSize.indent2x),
             TextFormField(
-              key: const Key('test_edit_note_content_key'),
+              key: const Key(_TestHelper.contentTextFieldKey),
               controller: contentController,
               decoration: InputDecoration.collapsed(
                 hintText: context.contentTextFieldTitle,
@@ -303,6 +306,7 @@ class _FormState extends State<_Form> {
   int get calculatedMaxLines => contentController.text.split('\n').length;
 }
 
+// Localization
 extension on BuildContext {
   String get pageTitle => 'Add/Edit note';
 
