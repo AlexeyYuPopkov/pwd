@@ -28,10 +28,12 @@ final class PinPageBloc extends Bloc<PinPageBlocEvent, PinPageBlocState> {
     LoginEvent event,
     Emitter<PinPageBlocState> emit,
   ) async {
-    emit(PinPageBlocState.loading(data: data));
-
-    await loginUsecase.execute(event.pin);
-
-    emit(PinPageBlocState.didLogin(data: data));
+    try {
+      emit(PinPageBlocState.loading(data: data));
+      await loginUsecase.execute(event.pin);
+      emit(PinPageBlocState.didLogin(data: data));
+    } catch (e) {
+      emit(PinPageBlocState.error(data: data, error: e));
+    }
   }
 }

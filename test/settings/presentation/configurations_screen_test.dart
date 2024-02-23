@@ -15,6 +15,7 @@ import 'package:pwd/settings/presentation/configuration_screen/git_configuration
 import 'package:pwd/settings/presentation/configuration_screen/google_drive_configuration_screen/google_drive_configuration_screen.dart';
 
 import '../../../integration_test/pages/configurations_screen/configurations_screen_finders.dart';
+import '../../test_tools/app_configuration_provider_tool.dart';
 
 class MockRemoteStorageConfigurationProvider extends Mock
     implements RemoteStorageConfigurationProvider {}
@@ -67,11 +68,7 @@ void main() {
 
   setUpAll(
     () {
-      DiStorage.shared.bind<AppConfigurationProvider>(
-        module: null,
-        () => CustomMockAppConfigurationProvider(),
-        lifeTime: const LifeTime.single(),
-      );
+      AppConfigurationProviderTool.bindAppConfigurationProvider();
 
       DiStorage.shared.bind<RemoteStorageConfigurationProvider>(
         module: null,

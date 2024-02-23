@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pwd/common/presentation/dialogs/dialog_helper.dart';
+import 'package:pwd/settings/presentation/configuration_screen/git_configuration_screen/git_configuration_form.dart';
 
 import 'git_configuration_screen_finders.dart';
 import 'git_configuration_test_data.dart';
@@ -59,6 +60,15 @@ final class GitConfigurationScreenRobot {
     await tester.tap(_finders.fileNameTextField);
     await tester.enterText(_finders.fileNameTextField, configuration.fileName);
 
+    await tester.tap(_finders.fileNameTextField);
+
+    final context = tester.element(find.byType(GitConfigurationForm));
+    FocusScope.of(context).unfocus();
+
+    await tester.pumpAndSettle();
+
+    await tester.ensureVisible(_finders.checkbox);
+
     await tester.tap(_finders.checkbox);
 
     await _tapConfirmationDialogOkButton();
@@ -77,6 +87,9 @@ final class GitConfigurationScreenRobot {
   }
 
   Future<void> save() async {
+    await tester.tap(find.byType(GitConfigurationForm));
+    final context = tester.element(find.byType(GitConfigurationForm));
+    FocusScope.of(context).unfocus();
     await tester.pumpAndSettle();
     await tester.tap(_finders.nextButton);
   }

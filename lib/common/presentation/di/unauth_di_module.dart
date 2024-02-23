@@ -49,7 +49,7 @@ final class UnauthDiModule extends DiScope {
     di.bind<TimeFormatter>(
       () => TimeFormatterImpl(),
       module: this,
-      lifeTime: const LifeTime.single(),
+      lifeTime: const LifeTime.prototype(),
     );
 
     di.bind<ClockConfigurationProvider>(

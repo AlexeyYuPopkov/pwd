@@ -62,8 +62,8 @@ extension on RootRouterDelegate {
         ];
       case EmptyPin():
         return [
-          MaterialPage(
-            child: PinScreen(onRoute: onRoute),
+          const MaterialPage(
+            child: PinScreen(),
             name: RootRouterDelegatePath.pin,
           ),
         ];

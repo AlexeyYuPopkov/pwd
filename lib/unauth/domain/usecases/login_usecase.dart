@@ -2,7 +2,7 @@ import 'package:pwd/common/domain/base_pin.dart';
 import 'package:pwd/common/domain/usecases/hash_usecase.dart';
 import 'package:pwd/common/domain/usecases/pin_usecase.dart';
 
-final class LoginUsecase {
+class LoginUsecase {
   final PinUsecase pinUsecase;
   final HashUsecase hashUsecase;
 

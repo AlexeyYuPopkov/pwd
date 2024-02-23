@@ -6,20 +6,25 @@ import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
 import 'package:di_storage/di_storage.dart';
 
 import 'bloc/pin_page_bloc.dart';
-import 'pin_page_enter_pin_form.dart';
+import 'pin_screen_enter_pin_form.dart';
+import 'pin_screen_test_helper.dart';
 
 final class PinScreen extends StatelessWidget with ShowErrorDialogMixin {
-  final Future Function(BuildContext, Object) onRoute;
-
   TimeFormatter get timeFormatter => DiStorage.shared.resolve();
 
-  PinScreen({super.key, required this.onRoute});
+  const PinScreen({super.key});
 
   void _listener(BuildContext context, PinPageBlocState state) async {
     BlockingLoadingIndicator.of(context).isLoading = state is LoadingState;
 
-    if (state is ErrorState) {
-      showError(context, state.error);
+    switch (state) {
+      case InitializingState():
+      case DidLoginState():
+      case LoadingState():
+        break;
+      case ErrorState():
+        showError(context, state.error);
+        break;
     }
   }
 
@@ -33,6 +38,7 @@ final class PinScreen extends StatelessWidget with ShowErrorDialogMixin {
             loginUsecase: DiStorage.shared.resolve(),
           ),
           child: BlocConsumer<PinPageBloc, PinPageBlocState>(
+            key: const Key(PinScreenTestHelper.blocConsumer),
             listener: _listener,
             builder: (_, state) {
               return _Content(
@@ -54,7 +60,7 @@ final class _Content extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: PinPageEnterPinForm(timeFormatter: timeFormatter),
+      child: PinScreenEnterPinForm(timeFormatter: timeFormatter),
     );
   }
 }

@@ -7,20 +7,21 @@ import 'package:pwd/theme/common_size.dart';
 import 'bloc/pin_page_bloc.dart';
 import 'pin_screen_test_helper.dart';
 
-final class PinPageEnterPinForm extends StatefulWidget {
+final class PinScreenEnterPinForm extends StatefulWidget {
   final TimeFormatter timeFormatter;
-  const PinPageEnterPinForm({
+  const PinScreenEnterPinForm({
     super.key,
     required this.timeFormatter,
   });
 
   @override
-  State<PinPageEnterPinForm> createState() => _PinPageEnterPinFormState();
+  State<PinScreenEnterPinForm> createState() => PinScreenEnterPinFormState();
 }
 
-class _PinPageEnterPinFormState extends State<PinPageEnterPinForm> {
+final class PinScreenEnterPinFormState extends State<PinScreenEnterPinForm> {
   late final formKey = GlobalKey<FormState>();
   late final pinController = TextEditingController();
+  bool isPinVisible = false;
 
   @override
   void dispose() {
@@ -37,7 +38,7 @@ class _PinPageEnterPinFormState extends State<PinPageEnterPinForm> {
       child: Form(
         key: formKey,
         child: LayoutBuilder(builder: (context, constraints) {
-          final topSpace = (constraints.maxHeight ~/ 3).toDouble();
+          final topSpace = (constraints.maxHeight ~/ 3).round().toDouble();
           return CustomScrollView(
             slivers: [
               SliverToBoxAdapter(
@@ -56,8 +57,25 @@ class _PinPageEnterPinFormState extends State<PinPageEnterPinForm> {
                         key: const Key(PinScreenTestHelper.pinTextField),
                         controller: pinController,
                         decoration: InputDecoration(
+                          suffixIcon: IconButton(
+                            key: const Key(
+                              PinScreenTestHelper.pinVisibilityButtonKey,
+                            ),
+                            icon: Icon(
+                              isPinVisible
+                                  ? Icons.visibility_off_outlined
+                                  : Icons.visibility,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                isPinVisible = !isPinVisible;
+                              });
+                            },
+                          ),
                           labelText: context.pinTextFieldTitle,
                         ),
+                        keyboardType: TextInputType.visiblePassword,
+                        obscureText: !isPinVisible,
                       ),
                     ),
                     const SizedBox(height: CommonSize.indent2x),

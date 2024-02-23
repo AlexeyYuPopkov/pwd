@@ -9,10 +9,13 @@ final class GitConfigurationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: SafeArea(
-        child: GitConfigurationForm(initial: initial),
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus,
+      child: Scaffold(
+        appBar: AppBar(),
+        body: SafeArea(
+          child: GitConfigurationForm(initial: initial),
+        ),
       ),
     );
   }

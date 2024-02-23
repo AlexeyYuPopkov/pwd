@@ -20,9 +20,12 @@ final class GoogleDriveConfigurationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: _Form(initial: initial),
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus,
+      child: Scaffold(
+        appBar: AppBar(),
+        body: _Form(initial: initial),
+      ),
     );
   }
 }

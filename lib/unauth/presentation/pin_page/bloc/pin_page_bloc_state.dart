@@ -1,6 +1,6 @@
 part of 'pin_page_bloc.dart';
 
-abstract class PinPageBlocState extends Equatable {
+sealed class PinPageBlocState extends Equatable {
   final PinPageBlocData data;
 
   const PinPageBlocState({required this.data});
@@ -10,12 +10,6 @@ abstract class PinPageBlocState extends Equatable {
 
   const factory PinPageBlocState.initializing({required PinPageBlocData data}) =
       InitializingState;
-
-  const factory PinPageBlocState.shouldFillConfiguration(
-      {required PinPageBlocData data}) = ShouldFillConfigurationState;
-
-  const factory PinPageBlocState.shouldEnterThePin(
-      {required PinPageBlocData data}) = ShouldEnterThePinState;
 
   const factory PinPageBlocState.loading({required PinPageBlocData data}) =
       LoadingState;
@@ -27,27 +21,17 @@ abstract class PinPageBlocState extends Equatable {
     required PinPageBlocData data,
     required Object error,
   }) = ErrorState;
-
-  int get page => this is ShouldEnterThePinState ? 1 : 0;
 }
 
-class InitializingState extends PinPageBlocState {
+final class InitializingState extends PinPageBlocState {
   const InitializingState({required super.data});
 }
 
-class ShouldFillConfigurationState extends PinPageBlocState {
-  const ShouldFillConfigurationState({required super.data});
-}
-
-class ShouldEnterThePinState extends PinPageBlocState {
-  const ShouldEnterThePinState({required super.data});
-}
-
-class DidLoginState extends PinPageBlocState {
+final class DidLoginState extends PinPageBlocState {
   const DidLoginState({required super.data});
 }
 
-class LoadingState extends PinPageBlocState {
+final class LoadingState extends PinPageBlocState {
   const LoadingState({required super.data});
 }
 
