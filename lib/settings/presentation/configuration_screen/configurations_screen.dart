@@ -6,12 +6,12 @@ import 'package:pwd/common/presentation/dialogs/show_error_dialog_mixin.dart';
 import 'package:di_storage/di_storage.dart';
 import 'package:pwd/theme/common_size.dart';
 import 'package:pwd/settings/presentation/configuration_screen/git_configuration_screen/git_configuration_form.dart';
+import 'package:pwd/settings/presentation/configuration_screen/google_drive_configuration_screen/google_drive_configuration_screen.dart';
 
 import 'bloc/configuration_screen_bloc.dart';
 import 'bloc/configuration_screen_event.dart';
 import 'bloc/configuration_screen_state.dart';
 import 'configurations_screen_test_helper.dart';
-import '../../../unauth/presentation/google_drive_configuration_screen/google_drive_configuration_screen.dart';
 
 final class ConfigurationsScreen extends StatelessWidget
     with ShowErrorDialogMixin {
@@ -189,7 +189,7 @@ final class _ConfigurationItem extends StatelessWidget {
 // Localization
 extension on BuildContext {
   String get headerText => 'Setup synchronisation method';
-  String get nextButtonTitle => 'Next';
+  String get nextButtonTitle => 'Save';
 }
 
 // Tools

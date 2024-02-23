@@ -25,10 +25,10 @@ final class GoogleAndRealmDi extends DiScope {
       // lifeTime: const LifeTime.single(),
     );
 
-    _bindUsecases(di);
+    bindUsecases(di);
   }
 
-  void _bindUsecases(DiStorage di) async {
+  void bindUsecases(DiStorage di) async {
     di.bind<ChecksumChecker>(
       module: this,
       () => const ChecksumCheckerImpl(),

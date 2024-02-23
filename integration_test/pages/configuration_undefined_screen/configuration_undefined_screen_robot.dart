@@ -19,4 +19,10 @@ final class ConfigurationUndefinedScreenRobot {
     expect(_finders.label, findsOneWidget);
     expect(_finders.button, findsOneWidget);
   }
+
+  Future<void> tapButton() async {
+    await tester.pumpAndSettle();
+    await tester.tap(_finders.button);
+    await tester.pumpAndSettle();
+  }
 }

@@ -11,6 +11,10 @@ final class HomeTabbarFinders {
     const Key(HomeTabbarScreenTestKey.gitTabIcon),
   );
 
+  final googleDriveItemIcon = find.byKey(
+    const Key(HomeTabbarScreenTestKey.googleDriveTabIcon),
+  );
+
   final settingsItemIcon = find.byKey(
     const Key(HomeTabbarScreenTestKey.settingsTabIcon),
   );

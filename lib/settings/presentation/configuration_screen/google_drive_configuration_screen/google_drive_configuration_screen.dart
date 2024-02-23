@@ -1,9 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
 import 'package:pwd/common/presentation/validators/noEmpty/no_empty_validator.dart';
 import 'package:pwd/common/presentation/widgets/common_text_field_row.dart';
 import 'package:pwd/theme/common_size.dart';
+
+import 'google_drive_configuration_screen_test_helper.dart';
 
 final class GoogleDriveConfigurationFormResult {
   final GoogleDriveConfiguration configuration;
@@ -80,7 +81,10 @@ final class __FormState extends State<_Form> {
                   ),
                   const SizedBox(height: CommonSize.indent2x),
                   CommonTextFieldRow(
-                    // key: const Key('google_drive_configuration_screen_filename_text_field_key'),
+                    key: const Key(
+                      GoogleDriveConfigurationScreenTestHelper
+                          .filenameTextFieldKey,
+                    ),
                     hint: context.fileNameTextFieldHint,
                     tooltipMessage: context.fileNameTooltip,
                     controller: filenameController,
@@ -98,7 +102,10 @@ final class __FormState extends State<_Form> {
             padding: const EdgeInsets.only(bottom: CommonSize.indent2x),
             child: Align(
               alignment: Alignment.bottomCenter,
-              child: CupertinoButton(
+              child: OutlinedButton(
+                key: const Key(
+                  GoogleDriveConfigurationScreenTestHelper.saveButton,
+                ),
                 onPressed: isValidForm ? () => _onSave(context) : null,
                 child: Text(context.saveButtonTitle),
               ),

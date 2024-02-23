@@ -37,6 +37,18 @@ final class HomeTabbarRobot {
     expect(_finders.settingsItemIcon, findsOneWidget);
   }
 
+  Future<void> checkGoogleDriveEnabledState() async {
+    await tester.pumpAndSettle();
+
+    await Future.wait([
+      tester.ensureVisible(_finders.googleDriveItemIcon),
+      tester.ensureVisible(_finders.settingsItemIcon),
+    ]);
+
+    expect(_finders.googleDriveItemIcon, findsOneWidget);
+    expect(_finders.settingsItemIcon, findsOneWidget);
+  }
+
   Future<void> tapSettings() async {
     await tester.pumpAndSettle();
     await tester.tap(_finders.settingsItemIcon);

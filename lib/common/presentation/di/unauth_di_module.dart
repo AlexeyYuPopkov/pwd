@@ -40,14 +40,6 @@ final class UnauthDiModule extends DiScope {
       lifeTime: const LifeTime.single(),
     );
 
-    //     httpClientProvider: () {
-    //   final appConfiguration =
-    //       di.resolve<AppConfigurationProvider>().currentConfiguration;
-    //   final HttpClientBuilder httpClientBuilder = di.resolve();
-
-    //   return httpClientBuilder.build(appConfiguration.proxyData);
-    // },
-
     di.bind<RemoteStorageConfigurationProvider>(
       module: this,
       () => RemoteStorageConfigurationProviderImpl(),

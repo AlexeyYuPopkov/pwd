@@ -28,8 +28,6 @@ final class PinScreenRobot {
 
     await tester.tap(_finders.nextButton);
 
-    await Future<void>.delayed(const Duration(milliseconds: 500));
-
     await tester.pumpAndSettle();
   }
 }

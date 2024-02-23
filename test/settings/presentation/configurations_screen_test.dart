@@ -12,7 +12,7 @@ import 'package:pwd/common/presentation/dialogs/dialog_helper.dart';
 import 'package:pwd/settings/domain/save_configurations_usecase.dart';
 import 'package:pwd/settings/presentation/configuration_screen/configurations_screen.dart';
 import 'package:pwd/settings/presentation/configuration_screen/git_configuration_screen/git_configuration_form.dart';
-import 'package:pwd/unauth/presentation/google_drive_configuration_screen/google_drive_configuration_screen.dart';
+import 'package:pwd/settings/presentation/configuration_screen/google_drive_configuration_screen/google_drive_configuration_screen.dart';
 
 import '../../../integration_test/pages/configurations_screen/configurations_screen_finders.dart';
 

@@ -29,10 +29,20 @@ final class ConfigurationsScreenRobot {
   }
 
   Future<void> toggleGitConfiguration() async {
+    // ??
     // await tester.pumpAndSettle();
     await tester.ensureVisible(_finders.gitSwitch);
     expect(_finders.gitSwitch, findsOneWidget);
     await tester.tap(_finders.gitSwitch);
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> toggleGoogleDriveConfiguration() async {
+    // ??
+    // await tester.pumpAndSettle();
+    await tester.ensureVisible(_finders.googleDriveSwitch);
+    expect(_finders.googleDriveSwitch, findsOneWidget);
+    await tester.tap(_finders.googleDriveSwitch);
     await tester.pumpAndSettle();
   }
 

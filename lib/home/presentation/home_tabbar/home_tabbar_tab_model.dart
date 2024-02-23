@@ -120,7 +120,10 @@ final class GoogleDriveTab extends HomeTabbarTabModel {
   @override
   BottomNavigationBarItem buildNavigationBarItem(BuildContext context) {
     return BottomNavigationBarItem(
-      icon: const Icon(Icons.list),
+      icon: const Icon(
+        Icons.list,
+        key: Key(HomeTabbarScreenTestKey.googleDriveTabIcon),
+      ),
       label: context.googleTabName,
     );
   }
@@ -129,7 +132,10 @@ final class GoogleDriveTab extends HomeTabbarTabModel {
   NavigationRailDestination buildNavigationRailDestination(
       BuildContext context) {
     return NavigationRailDestination(
-      icon: const Icon(Icons.list),
+      icon: const Icon(
+        Icons.list,
+        key: Key(HomeTabbarScreenTestKey.googleDriveTabIcon),
+      ),
       label: Text(context.googleTabName),
     );
   }

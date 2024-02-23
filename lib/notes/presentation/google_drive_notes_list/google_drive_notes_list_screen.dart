@@ -20,6 +20,7 @@ import 'package:pwd/theme/common_size.dart';
 import 'bloc/google_drive_notes_list_bloc.dart';
 import 'bloc/google_drive_notes_list_event.dart';
 import 'bloc/google_drive_notes_list_state.dart';
+import 'google_drive_notes_list_screen_test_helper.dart';
 
 final class GoogleDriveNotesListScreen extends StatelessWidget
     with ShowErrorDialogMixin {
@@ -53,7 +54,9 @@ final class GoogleDriveNotesListScreen extends StatelessWidget
                   onPressed: () => _onSync(context),
                 ),
                 AppBarButton(
-                  key: const Key('test_add_note_button'),
+                  key: const Key(
+                    GoogleDriveNotesListScreenTestHelper.addNoteButtonKey,
+                  ),
                   iconData: Icons.add,
                   onPressed: () => _onEdit(
                     context,

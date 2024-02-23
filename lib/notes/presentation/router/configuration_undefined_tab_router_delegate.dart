@@ -4,7 +4,7 @@ import 'package:pwd/common/presentation/router/base_router_delegate.dart';
 import 'package:pwd/home/presentation/configuration_undefined_screen/configuration_undefined_screen.dart';
 import 'package:pwd/settings/presentation/configuration_screen/configurations_screen.dart';
 import 'package:pwd/settings/presentation/configuration_screen/git_configuration_screen/git_configuration_screen.dart';
-import 'package:pwd/unauth/presentation/google_drive_configuration_screen/google_drive_configuration_screen.dart';
+import 'package:pwd/settings/presentation/configuration_screen/google_drive_configuration_screen/google_drive_configuration_screen.dart';
 
 abstract final class ConfigurationUndefinedTabPagePath {
   static const home = 'home';
