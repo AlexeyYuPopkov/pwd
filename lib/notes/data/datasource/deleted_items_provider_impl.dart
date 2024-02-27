@@ -1,39 +1,47 @@
+import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
 import 'package:pwd/notes/domain/deleted_items_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final class DeletedItemsProviderImpl implements DeletedItemsProvider {
-  static const String _sharedPreferencesKey =
-      'DeletedItemsProviderImpl.DeletedItemsKey';
+  static String _sharedPreferencesKey(RemoteConfiguration configuration) =>
+      'DeletedItemsProviderImpl.DeletedItemsKey.${configuration.type.toString()}.${configuration.localCacheFileName}';
 
   const DeletedItemsProviderImpl();
 
   @override
-  Future<Set<String>> getDeletedItems() async {
+  Future<Set<String>> getDeletedItems({
+    required RemoteConfiguration configuration,
+  }) async {
     final storage = await SharedPreferences.getInstance();
 
     return storage
-            .getStringList(_sharedPreferencesKey)
+            .getStringList(_sharedPreferencesKey(configuration))
             ?.whereType<String>()
             .toSet() ??
         {};
   }
 
   @override
-  Future<void> addDeletedItems(Set<String> items) async {
+  Future<void> addDeletedItems(
+    Set<String> items, {
+    required RemoteConfiguration configuration,
+  }) async {
     final storage = await SharedPreferences.getInstance();
 
-    var deleted = await getDeletedItems();
+    var deleted = await getDeletedItems(configuration: configuration);
     deleted.addAll(items);
 
     storage.setStringList(
-      _sharedPreferencesKey,
+      _sharedPreferencesKey(configuration),
       deleted.toList(),
     );
   }
 
   @override
-  Future<void> dropDeletedItems() async {
+  Future<void> dropDeletedItems({
+    required RemoteConfiguration configuration,
+  }) async {
     final storage = await SharedPreferences.getInstance();
-    storage.remove(_sharedPreferencesKey);
+    storage.remove(_sharedPreferencesKey(configuration));
   }
 }

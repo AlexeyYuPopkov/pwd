@@ -40,7 +40,8 @@ void main() {
     await dbDataSource.dropDb();
   });
 
-  testWidgets('Test Login and add note, then delete note', (tester) async {
+  testWidgets('Test Login and add note, then delete note with Git',
+      (tester) async {
     app.main();
 
     await tester.pumpAndSettle();

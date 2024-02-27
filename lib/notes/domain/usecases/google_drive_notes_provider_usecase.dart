@@ -48,7 +48,9 @@ final class GoogleDriveNotesProviderUsecase implements NotesProviderUsecase {
       noteItem,
       target: configuration.getTarget(pin: pin),
     );
-    await checksumChecker.dropChecksum();
+    await checksumChecker.dropChecksum(
+      configuration: configuration,
+    );
     readNotes(configuration: configuration);
   }
 
@@ -66,8 +68,13 @@ final class GoogleDriveNotesProviderUsecase implements NotesProviderUsecase {
             id,
             target: configuration.getTarget(pin: pin),
           ),
-          deletedItemsProvider.addDeletedItems({id}),
-          checksumChecker.dropChecksum(),
+          deletedItemsProvider.addDeletedItems(
+            {id},
+            configuration: configuration,
+          ),
+          checksumChecker.dropChecksum(
+            configuration: configuration,
+          ),
         ],
       );
 

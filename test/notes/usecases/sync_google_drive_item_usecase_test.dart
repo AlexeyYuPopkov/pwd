@@ -163,6 +163,7 @@ void main() {
           when(
             () => checksumChecker.setChecksum(
               googleDriveFile.checksum,
+              configuration: configuration,
             ),
           ).thenAnswer((invocation) async {});
 
@@ -178,7 +179,10 @@ void main() {
                     realmDatabaseAsBytes,
                     target: configuration,
                   ),
-              () => checksumChecker.setChecksum(googleDriveFile.checksum),
+              () => checksumChecker.setChecksum(
+                    googleDriveFile.checksum,
+                    configuration: configuration,
+                  ),
             ],
           );
 
@@ -213,6 +217,7 @@ void main() {
           when(
             () => checksumChecker.setChecksum(
               googleDriveFile.checksum,
+              configuration: configuration,
             ),
           ).thenThrow(_Exception());
 
@@ -237,7 +242,9 @@ void main() {
           );
 
           when(
-            () => checksumChecker.getChecksum(),
+            () => checksumChecker.getChecksum(
+              configuration: configuration,
+            ),
           ).thenAnswer(
             (_) async => 'not empty',
           );
@@ -247,7 +254,9 @@ void main() {
           final verification = verifyInOrder(
             [
               () => googleRepository.getFile(target: configuration),
-              () => checksumChecker.getChecksum(),
+              () => checksumChecker.getChecksum(
+                    configuration: configuration,
+                  ),
             ],
           );
 
@@ -255,7 +264,9 @@ void main() {
 
           verifyNever(() => googleRepository.downloadFile(googleDriveFile));
           verifyNever(() => pinUsecase.getPinOrThrow());
-          verifyNever(() => deletedItemsProvider.getDeletedItems());
+          verifyNever(() => deletedItemsProvider.getDeletedItems(
+                configuration: configuration,
+              ));
           verifyNever(
             () => repository.migrateWithDatabasePath(
               bytes: realmDatabaseAsBytes,
@@ -279,6 +290,7 @@ void main() {
           verifyNever(
             () => checksumChecker.setChecksum(
               googleDriveFile.checksum,
+              configuration: configuration,
             ),
           );
         },
@@ -299,7 +311,9 @@ void main() {
           );
 
           when(
-            () => checksumChecker.getChecksum(),
+            () => checksumChecker.getChecksum(
+              configuration: configuration,
+            ),
           ).thenAnswer(
             (_) async => 'not equal to remote checksum',
           );
@@ -313,7 +327,9 @@ void main() {
           when(() => pinUsecase.getPinOrThrow()).thenReturn(pin);
 
           when(
-            () => deletedItemsProvider.getDeletedItems(),
+            () => deletedItemsProvider.getDeletedItems(
+              configuration: configuration,
+            ),
           ).thenAnswer(
             (_) async => deletedItems,
           );
@@ -354,6 +370,7 @@ void main() {
           when(
             () => checksumChecker.setChecksum(
               googleDriveFile.checksum,
+              configuration: configuration,
             ),
           ).thenAnswer((invocation) async {});
 
@@ -362,10 +379,14 @@ void main() {
           final verification = verifyInOrder(
             [
               () => googleRepository.getFile(target: configuration),
-              () => checksumChecker.getChecksum(),
+              () => checksumChecker.getChecksum(
+                    configuration: configuration,
+                  ),
               () => googleRepository.downloadFile(googleDriveFile),
               () => pinUsecase.getPinOrThrow(),
-              () => deletedItemsProvider.getDeletedItems(),
+              () => deletedItemsProvider.getDeletedItems(
+                    configuration: configuration,
+                  ),
               () => repository.migrateWithDatabasePath(
                     bytes: realmDatabaseAsBytes,
                     target: configuration.getTarget(pin: pin),
@@ -382,6 +403,7 @@ void main() {
               () => googleRepository.getFile(target: configuration),
               () => checksumChecker.setChecksum(
                     googleDriveFile.checksum,
+                    configuration: configuration,
                   ),
             ],
           );
@@ -404,7 +426,9 @@ void main() {
           );
 
           when(
-            () => checksumChecker.getChecksum(),
+            () => checksumChecker.getChecksum(
+              configuration: configuration,
+            ),
           ).thenAnswer(
             (_) async => 'not equal to remote checksum',
           );
@@ -418,7 +442,9 @@ void main() {
           when(() => pinUsecase.getPinOrThrow()).thenReturn(pin);
 
           when(
-            () => deletedItemsProvider.getDeletedItems(),
+            () => deletedItemsProvider.getDeletedItems(
+              configuration: configuration,
+            ),
           ).thenAnswer(
             (_) async => deletedItems,
           );
@@ -459,6 +485,7 @@ void main() {
           when(
             () => checksumChecker.setChecksum(
               googleDriveFile.checksum,
+              configuration: configuration,
             ),
           ).thenThrow(_Exception());
 
@@ -467,10 +494,14 @@ void main() {
               final verification = verifyInOrder(
                 [
                   () => googleRepository.getFile(target: configuration),
-                  () => checksumChecker.getChecksum(),
+                  () => checksumChecker.getChecksum(
+                        configuration: configuration,
+                      ),
                   () => googleRepository.downloadFile(googleDriveFile),
                   () => pinUsecase.getPinOrThrow(),
-                  () => deletedItemsProvider.getDeletedItems(),
+                  () => deletedItemsProvider.getDeletedItems(
+                        configuration: configuration,
+                      ),
                   () => repository.migrateWithDatabasePath(
                         bytes: realmDatabaseAsBytes,
                         target: configuration.getTarget(pin: pin),

@@ -62,7 +62,9 @@ class SaveConfigurationsUsecase {
         shouldCreateRemoteStorageFileUsecase.dropFlag();
         break;
       case ConfigurationType.googleDrive:
-        await checksumChecker.dropChecksum();
+        await checksumChecker.dropChecksum(
+          configuration: configuration,
+        );
         await googleRepository.logout();
         final pin = pinUsecase.getPinOrThrow();
         await localRepository.deleteAll(

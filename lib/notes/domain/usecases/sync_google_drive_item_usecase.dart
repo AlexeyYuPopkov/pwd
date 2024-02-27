@@ -41,9 +41,16 @@ final class SyncGoogleDriveItemUsecase implements SyncUsecase {
     if (file == null) {
       final newFile = await _updateFileWithData(configuration: configuration);
 
-      checksumChecker.setChecksum(newFile.checksum);
+      checksumChecker.setChecksum(
+        newFile.checksum,
+        configuration: configuration,
+      );
     } else {
-      final localChecksum = await checksumChecker.getChecksum().then(
+      final localChecksum = await checksumChecker
+          .getChecksum(
+            configuration: configuration,
+          )
+          .then(
             (str) => str ?? '',
           );
 
@@ -64,7 +71,10 @@ final class SyncGoogleDriveItemUsecase implements SyncUsecase {
               (e) => e?.checksum,
             );
 
-        checksumChecker.setChecksum(newChecksum ?? '');
+        checksumChecker.setChecksum(
+          newChecksum ?? '',
+          configuration: configuration,
+        );
       }
     }
   }
@@ -95,7 +105,9 @@ final class SyncGoogleDriveItemUsecase implements SyncUsecase {
     } else {
       final bytes = await collectBytes(stream);
       final pin = pinUsecase.getPinOrThrow();
-      final deleted = await deletedItemsProvider.getDeletedItems();
+      final deleted = await deletedItemsProvider.getDeletedItems(
+        configuration: configuration,
+      );
 
       return realmRepository.migrateWithDatabasePath(
         bytes: bytes,

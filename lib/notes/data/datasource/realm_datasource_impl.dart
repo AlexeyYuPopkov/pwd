@@ -11,12 +11,18 @@ import 'package:pwd/notes/domain/model/local_storage_error.dart';
 import 'package:pwd/notes/domain/realm_local_repository.dart';
 
 final class RealmDatasourceImpl implements RealmLocalRepository {
+  String? _appDirPath;
+
+  Future<String> getAppDirPath() async =>
+      _appDirPath ??
+      await getApplicationDocumentsDirectory().then((e) => e.path);
+
   @override
   Future<void> delete(
     String id, {
     required LocalStorageTarget target,
   }) async {
-    final realm = _getRealm(target: target);
+    final realm = await _getRealm(target: target);
     try {
       final obj = realm.find<NoteItemRealm>(id);
 
@@ -36,7 +42,7 @@ final class RealmDatasourceImpl implements RealmLocalRepository {
   Future<void> deleteAll({
     required LocalStorageTarget target,
   }) async {
-    final realm = _getRealm(target: target);
+    final realm = await _getRealm(target: target);
     try {
       realm.write(
         () => realm.deleteAll<NoteItemRealm>(),
@@ -55,7 +61,7 @@ final class RealmDatasourceImpl implements RealmLocalRepository {
     required LocalStorageTarget target,
     required List<NoteItem> notes,
   }) async {
-    final realm = _getRealm(target: target);
+    final realm = await _getRealm(target: target);
     try {
       final items = notes.map((e) => NoteRealmMapper.toData(e));
 
@@ -77,7 +83,7 @@ final class RealmDatasourceImpl implements RealmLocalRepository {
     String id, {
     required LocalStorageTarget target,
   }) async {
-    final realm = _getRealm(target: target);
+    final realm = await _getRealm(target: target);
     try {
       final obj = realm.find<NoteItemRealm>(id);
       return obj == null ? null : NoteRealmMapper.toDomain(obj);
@@ -92,7 +98,7 @@ final class RealmDatasourceImpl implements RealmLocalRepository {
   Future<List<NoteItem>> readNotes({
     required LocalStorageTarget target,
   }) async {
-    final realm = _getRealm(target: target);
+    final realm = await _getRealm(target: target);
     try {
       return realm
           .all<NoteItemRealm>()
@@ -110,7 +116,7 @@ final class RealmDatasourceImpl implements RealmLocalRepository {
     NoteItem noteItem, {
     required LocalStorageTarget target,
   }) async {
-    final realm = _getRealm(target: target);
+    final realm = await _getRealm(target: target);
     try {
       realm.write(
         () => realm.add(
@@ -129,7 +135,7 @@ final class RealmDatasourceImpl implements RealmLocalRepository {
   Future<Uint8List> readAsBytes({
     required LocalStorageTarget target,
   }) async {
-    final realm = _getRealm(target: target);
+    final realm = await _getRealm(target: target);
     try {
       return File(realm.config.path).readAsBytes();
     } catch (e) {
@@ -161,10 +167,11 @@ final class RealmDatasourceImpl implements RealmLocalRepository {
     required LocalStorageTarget target,
     required Set<String> deleted,
   }) async {
-    final realm = _getRealm(target: target);
+    final realm = await _getRealm(target: target);
     assert(realm.config.path.isNotEmpty);
     final tempFile = await _createTempFile(bytes: bytes, target: target);
-    final tempRealm = _createRealm(target: target, path: tempFile.uri.path);
+    final tempRealm = _getTempRealm(target: target, path: tempFile.path);
+    // _createRealm(target: target, path: tempFile.path);
 
     try {
       await realm.writeAsync(
@@ -212,12 +219,29 @@ final class RealmDatasourceImpl implements RealmLocalRepository {
 }
 
 extension on RealmDatasourceImpl {
-  Realm _getRealm({
+  Future<Realm> _getRealm({
     required LocalStorageTarget target,
-  }) =>
-      _createRealm(target: target);
+  }) async {
+    final path = await getAppDirPath();
+    return _createRealm(
+      target: target,
+      path: '$path/${target.cacheFileName}',
+    );
+  }
 
-  Realm _createRealm({required LocalStorageTarget target, String? path}) {
+  Realm _getTempRealm({
+    required LocalStorageTarget target,
+    required String path,
+  }) =>
+      _createRealm(
+        target: target,
+        path: path,
+      );
+
+  Realm _createRealm({
+    required LocalStorageTarget target,
+    required String path,
+  }) {
     try {
       final config = Configuration.local(
         [
@@ -225,7 +249,7 @@ extension on RealmDatasourceImpl {
           NoteItemContentRealm.schema,
         ],
         encryptionKey: target.key,
-        path: path,
+        path: '${path.replaceAll('.realm', '')}.realm',
       );
 
       final realm = Realm(config);

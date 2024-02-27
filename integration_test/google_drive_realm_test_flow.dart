@@ -40,7 +40,8 @@ void main() {
     pinSubscription?.cancel();
   });
 
-  testWidgets('Test Login and add note, then delete note', (tester) async {
+  testWidgets('Test Login and add note, then delete note with Google Drive',
+      (tester) async {
     app.main();
 
     await tester.pumpAndSettle();
@@ -48,6 +49,7 @@ void main() {
     // Enter pin
     final enterPinRobot = PinScreenRobot(tester);
     await enterPinRobot.checkInitialState();
+
     await enterPinRobot.fillFormAndLogin();
 
     // Home Tabbar tap Settings
@@ -130,7 +132,9 @@ void main() {
 
     // Edit note screen
     final editNoteScreenRobot = EditNoteScreenRobot(tester);
+
     await editNoteScreenRobot.checkInitialState();
+
     await editNoteScreenRobot.fillFormAndSave();
 
     expect(find.text(editNoteScreenRobot.titleText), findsOneWidget);
