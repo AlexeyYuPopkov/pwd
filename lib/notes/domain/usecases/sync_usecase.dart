@@ -1,8 +1,8 @@
-import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
+import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
 
 abstract interface class SyncUsecase {
-  Future<void> sync({required RemoteStorageConfiguration configuration});
+  Future<void> sync({required RemoteConfiguration configuration});
   Future<void> updateRemote({
-    required RemoteStorageConfiguration configuration,
+    required RemoteConfiguration configuration,
   });
 }

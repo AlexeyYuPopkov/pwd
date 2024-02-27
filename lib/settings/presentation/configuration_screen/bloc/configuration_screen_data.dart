@@ -1,12 +1,13 @@
 import 'package:equatable/equatable.dart';
 
-import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
+import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
+import 'package:pwd/common/domain/model/remote_configuration/remote_configurations.dart';
 import 'package:pwd/common/support/optional_box.dart';
 
 final class ConfigurationScreenData extends Equatable {
   final OptionalBox<ConfigurationScreenDataGit> git;
   final OptionalBox<GoogleDriveConfiguration> googleDrive;
-  final RemoteStorageConfigurations _initial;
+  final RemoteConfigurations _initial;
 
   final configurationTypes = const [
     ConfigurationType.googleDrive,
@@ -20,7 +21,7 @@ final class ConfigurationScreenData extends Equatable {
   });
 
   factory ConfigurationScreenData.initial({
-    required RemoteStorageConfigurations configurations,
+    required RemoteConfigurations configurations,
   }) {
     final maybeGit = configurations.withType(ConfigurationType.git);
     final git = (maybeGit is GitConfiguration) ? maybeGit : null;
@@ -48,11 +49,11 @@ final class ConfigurationScreenData extends Equatable {
   @override
   List<Object?> get props => [git, googleDrive];
 
-  RemoteStorageConfigurations createRemoteStorageConfigurations() {
+  RemoteConfigurations createRemoteStorageConfigurations() {
     final git = this.git.data;
     final googleDrive = this.googleDrive.data;
 
-    return RemoteStorageConfigurations(
+    return RemoteConfigurations(
       configurations: [
         if (googleDrive != null) googleDrive,
         if (git != null) git.configuration,

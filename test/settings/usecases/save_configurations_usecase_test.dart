@@ -1,7 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
-import 'package:pwd/common/domain/remote_storage_configuration_provider.dart';
+import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
+import 'package:pwd/common/domain/model/remote_configuration/remote_configurations.dart';
+import 'package:pwd/common/domain/remote_configuration_provider.dart';
 import 'package:pwd/common/domain/usecases/pin_usecase.dart';
 import 'package:pwd/common/domain/usecases/should_create_remote_storage_file_usecase.dart';
 import 'package:pwd/notes/domain/checksum_checker.dart';
@@ -11,7 +12,7 @@ import 'package:pwd/notes/domain/realm_local_repository.dart';
 import 'package:pwd/settings/domain/save_configurations_usecase.dart';
 
 class MockRemoteStorageConfigurationProvider extends Mock
-    implements RemoteStorageConfigurationProvider {}
+    implements RemoteConfigurationProvider {}
 
 class MockNotesRepository extends Mock implements NotesRepository {}
 
@@ -62,9 +63,9 @@ void main() {
 
   group('SaveConfigurationsUsecase', () {
     test('save all', () async {
-      final oldConfigurations = RemoteStorageConfigurations.empty();
+      final oldConfigurations = RemoteConfigurations.empty();
 
-      final newConfigurations = RemoteStorageConfigurations(
+      final newConfigurations = RemoteConfigurations(
         configurations: const [
           gitConfiguration,
           googleDriveConfiguration,

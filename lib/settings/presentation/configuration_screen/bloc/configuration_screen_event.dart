@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
+import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
 
 sealed class ConfigurationScreenEvent extends Equatable {
   const ConfigurationScreenEvent();

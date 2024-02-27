@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
+import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
 import 'package:pwd/common/presentation/validators/noEmpty/no_empty_validator.dart';
 import 'package:pwd/common/presentation/widgets/common_text_field_row.dart';
 import 'package:pwd/theme/common_size.dart';

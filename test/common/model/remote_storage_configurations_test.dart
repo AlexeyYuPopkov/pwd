@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
+import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
+import 'package:pwd/common/domain/model/remote_configuration/remote_configurations.dart';
 
 const _gitConfiguration = GitConfiguration(
   token: '',
@@ -14,7 +15,7 @@ const _googleDriveConfiguration = GoogleDriveConfiguration(fileName: '');
 void main() {
   group('RemoteStorageConfigurations', () {
     test('Test empty state', () {
-      var configuration = RemoteStorageConfigurations.empty();
+      var configuration = RemoteConfigurations.empty();
 
       expect(configuration.isNotEmpty, false);
       expect(configuration.isEmpty, true);
@@ -33,7 +34,7 @@ void main() {
     test(
       'Test add then remove',
       () {
-        var configuration = RemoteStorageConfigurations.empty();
+        var configuration = RemoteConfigurations.empty();
 
         // Add Git
         configuration = configuration.copyAppendedType(_gitConfiguration);
@@ -115,12 +116,12 @@ void main() {
           null,
         );
 
-        expect(configuration, RemoteStorageConfigurations.empty());
+        expect(configuration, RemoteConfigurations.empty());
       },
     );
 
     test('Multiple add protection', () {
-      var configuration = RemoteStorageConfigurations.empty();
+      var configuration = RemoteConfigurations.empty();
       configuration = configuration.copyAppendedType(_gitConfiguration);
       configuration = configuration.copyAppendedType(
         _googleDriveConfiguration,

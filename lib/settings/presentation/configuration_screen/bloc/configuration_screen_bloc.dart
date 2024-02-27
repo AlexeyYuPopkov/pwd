@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
-import 'package:pwd/common/domain/remote_storage_configuration_provider.dart';
+import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
+import 'package:pwd/common/domain/model/remote_configuration/remote_configurations.dart';
+import 'package:pwd/common/domain/remote_configuration_provider.dart';
 import 'package:pwd/common/support/optional_box.dart';
 import 'package:pwd/settings/domain/save_configurations_usecase.dart';
 
@@ -10,7 +11,7 @@ import 'configuration_screen_state.dart';
 
 final class ConfigurationScreenBloc
     extends Bloc<ConfigurationScreenEvent, ConfigurationScreenState> {
-  final RemoteStorageConfigurationProvider remoteStorageConfigurationProvider;
+  final RemoteConfigurationProvider remoteStorageConfigurationProvider;
 
   final SaveConfigurationsUsecase saveConfigurationsUsecase;
 
@@ -22,7 +23,7 @@ final class ConfigurationScreenBloc
   }) : super(
           ConfigurationScreenState.common(
             data: ConfigurationScreenData.initial(
-              configurations: RemoteStorageConfigurations.empty(),
+              configurations: RemoteConfigurations.empty(),
             ),
           ),
         ) {

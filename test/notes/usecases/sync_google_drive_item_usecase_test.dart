@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:googleapis/workflowexecutions/v1.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:pwd/common/domain/base_pin.dart';
-import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
+import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
 import 'package:pwd/common/domain/usecases/pin_usecase.dart';
 import 'package:pwd/notes/domain/checksum_checker.dart';
 import 'package:pwd/notes/domain/deleted_items_provider.dart';
@@ -53,6 +53,10 @@ void main() {
     pinSha512: [],
   );
 
+  final target = configuration.getTarget(
+    pin: pin,
+  );
+
   final realmDatabaseAsBytes = Uint8List.fromList([]);
 
   final googleDriveFile = GoogleDriveFile(
@@ -68,7 +72,11 @@ void main() {
         'SyncGoogleDriveItemUsecase: updateRemote check all methods called',
         () async {
           when(() => pinUsecase.getPinOrThrow()).thenReturn(pin);
-          when(() => repository.readAsBytes(key: pin.pinSha512)).thenAnswer(
+          when(
+            () => repository.readAsBytes(
+              target: target,
+            ),
+          ).thenAnswer(
             (_) async => realmDatabaseAsBytes,
           );
           when(
@@ -85,7 +93,9 @@ void main() {
           final verification = verifyInOrder(
             [
               () => pinUsecase.getPinOrThrow(),
-              () => repository.readAsBytes(key: pin.pinSha512),
+              () => repository.readAsBytes(
+                    target: target,
+                  ),
               () => googleRepository.updateRemote(
                     realmDatabaseAsBytes,
                     target: configuration,
@@ -101,7 +111,9 @@ void main() {
         'SyncGoogleDriveItemUsecase: updateRemote check all methods called and throws',
         () async {
           when(() => pinUsecase.getPinOrThrow()).thenReturn(pin);
-          when(() => repository.readAsBytes(key: pin.pinSha512)).thenAnswer(
+          when(() => repository.readAsBytes(
+                target: configuration.getTarget(pin: pin),
+              )).thenAnswer(
             (_) async => realmDatabaseAsBytes,
           );
           when(
@@ -134,7 +146,9 @@ void main() {
           );
 
           when(() => pinUsecase.getPinOrThrow()).thenReturn(pin);
-          when(() => repository.readAsBytes(key: pin.pinSha512)).thenAnswer(
+          when(() => repository.readAsBytes(
+                target: configuration.getTarget(pin: pin),
+              )).thenAnswer(
             (_) async => realmDatabaseAsBytes,
           );
           when(
@@ -157,7 +171,9 @@ void main() {
           final verification = verifyInOrder(
             [
               () => pinUsecase.getPinOrThrow(),
-              () => repository.readAsBytes(key: pin.pinSha512),
+              () => repository.readAsBytes(
+                    target: configuration.getTarget(pin: pin),
+                  ),
               () => googleRepository.updateRemote(
                     realmDatabaseAsBytes,
                     target: configuration,
@@ -180,7 +196,9 @@ void main() {
           );
 
           when(() => pinUsecase.getPinOrThrow()).thenReturn(pin);
-          when(() => repository.readAsBytes(key: pin.pinSha512)).thenAnswer(
+          when(() => repository.readAsBytes(
+                target: configuration.getTarget(pin: pin),
+              )).thenAnswer(
             (_) async => realmDatabaseAsBytes,
           );
           when(
@@ -241,11 +259,13 @@ void main() {
           verifyNever(
             () => repository.migrateWithDatabasePath(
               bytes: realmDatabaseAsBytes,
-              key: pin.pinSha512,
+              target: configuration.getTarget(pin: pin),
               deleted: const {},
             ),
           );
-          verifyNever(() => repository.readAsBytes(key: pin.pinSha512));
+          verifyNever(() => repository.readAsBytes(
+                target: configuration.getTarget(pin: pin),
+              ));
 
           verifyNever(
             () => googleRepository.updateRemote(
@@ -301,7 +321,7 @@ void main() {
           when(
             () => repository.migrateWithDatabasePath(
               bytes: downloadedBytes,
-              key: pin.pinSha512,
+              target: configuration.getTarget(pin: pin),
               deleted: deletedItems,
             ),
           ).thenAnswer(
@@ -310,7 +330,9 @@ void main() {
 
           when(() => pinUsecase.getPinOrThrow()).thenReturn(pin);
 
-          when(() => repository.readAsBytes(key: pin.pinSha512)).thenAnswer(
+          when(() => repository.readAsBytes(
+                target: configuration.getTarget(pin: pin),
+              )).thenAnswer(
             (_) async => realmDatabaseAsBytes,
           );
 
@@ -346,11 +368,13 @@ void main() {
               () => deletedItemsProvider.getDeletedItems(),
               () => repository.migrateWithDatabasePath(
                     bytes: realmDatabaseAsBytes,
-                    key: pin.pinSha512,
+                    target: configuration.getTarget(pin: pin),
                     deleted: deletedItems,
                   ),
               () => pinUsecase.getPinOrThrow(),
-              () => repository.readAsBytes(key: pin.pinSha512),
+              () => repository.readAsBytes(
+                    target: configuration.getTarget(pin: pin),
+                  ),
               () => googleRepository.updateRemote(
                     realmDatabaseAsBytes,
                     target: configuration,
@@ -402,7 +426,7 @@ void main() {
           when(
             () => repository.migrateWithDatabasePath(
               bytes: downloadedBytes,
-              key: pin.pinSha512,
+              target: configuration.getTarget(pin: pin),
               deleted: deletedItems,
             ),
           ).thenAnswer(
@@ -411,7 +435,9 @@ void main() {
 
           when(() => pinUsecase.getPinOrThrow()).thenReturn(pin);
 
-          when(() => repository.readAsBytes(key: pin.pinSha512)).thenAnswer(
+          when(() => repository.readAsBytes(
+                target: configuration.getTarget(pin: pin),
+              )).thenAnswer(
             (_) async => realmDatabaseAsBytes,
           );
 
@@ -447,11 +473,13 @@ void main() {
                   () => deletedItemsProvider.getDeletedItems(),
                   () => repository.migrateWithDatabasePath(
                         bytes: realmDatabaseAsBytes,
-                        key: pin.pinSha512,
+                        target: configuration.getTarget(pin: pin),
                         deleted: deletedItems,
                       ),
                   () => pinUsecase.getPinOrThrow(),
-                  () => repository.readAsBytes(key: pin.pinSha512),
+                  () => repository.readAsBytes(
+                        target: configuration.getTarget(pin: pin),
+                      ),
                   () => googleRepository.updateRemote(
                         realmDatabaseAsBytes,
                         target: configuration,

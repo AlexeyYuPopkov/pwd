@@ -1,39 +1,38 @@
 import 'package:flutter/foundation.dart';
+import 'package:pwd/common/domain/model/remote_configuration/local_storage_target.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
 
 abstract interface class RealmLocalRepository {
-  Future<void> close();
+  Future<void> delete(String id, {required LocalStorageTarget target});
 
-  Future<void> delete(String id, {required List<int>? key});
-
-  Future<void> deleteAll({required List<int>? key});
+  Future<void> deleteAll({required LocalStorageTarget target});
 
   Future<void> saveNotes({
-    required List<int>? key,
+    required LocalStorageTarget target,
     required List<NoteItem> notes,
   });
 
   Future<NoteItem?> readNote(
     String id, {
-    required List<int>? key,
+    required LocalStorageTarget target,
   });
 
   Future<List<NoteItem>> readNotes({
-    required List<int>? key,
+    required LocalStorageTarget target,
   });
 
   Future<void> updateNote(
     NoteItem noteItem, {
-    required List<int>? key,
+    required LocalStorageTarget target,
   });
 
-  // Future<int> getTimestamp({required List<int>? key});
-
-  Future<Uint8List> readAsBytes({required List<int>? key});
+  Future<Uint8List> readAsBytes({
+    required LocalStorageTarget target,
+  });
 
   Future<void> migrateWithDatabasePath({
     required Uint8List bytes,
-    required List<int>? key,
+    required LocalStorageTarget target,
     required Set<String> deleted,
   });
 }

@@ -1,3 +1,4 @@
+import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:pwd/common/domain/usecases/pin_usecase.dart';
 import 'package:pwd/notes/domain/checksum_checker.dart';
@@ -25,36 +26,52 @@ final class GoogleDriveNotesProviderUsecase implements NotesProviderUsecase {
   Stream<List<NoteItem>> get noteStream => _noteStream;
 
   @override
-  Future<List<NoteItem>> readNotes() async {
+  Future<List<NoteItem>> readNotes({
+    required RemoteConfiguration configuration,
+  }) async {
     final pin = pinUsecase.getPinOrThrow();
-    final notes = await repository.readNotes(key: pin.pinSha512);
+    final notes = await repository.readNotes(
+      target: configuration.getTarget(pin: pin),
+    );
     _noteStream.add(notes);
 
     return notes;
   }
 
   @override
-  Future<void> updateNoteItem(NoteItem noteItem) async {
+  Future<void> updateNoteItem(
+    NoteItem noteItem, {
+    required RemoteConfiguration configuration,
+  }) async {
     final pin = pinUsecase.getPinOrThrow();
-    await repository.updateNote(noteItem, key: pin.pinSha512);
+    await repository.updateNote(
+      noteItem,
+      target: configuration.getTarget(pin: pin),
+    );
     await checksumChecker.dropChecksum();
-    readNotes();
+    readNotes(configuration: configuration);
   }
 
   @override
-  Future<void> deleteNoteItem(NoteItem noteItem) async {
+  Future<void> deleteNoteItem(
+    NoteItem noteItem, {
+    required RemoteConfiguration configuration,
+  }) async {
     final pin = pinUsecase.getPinOrThrow();
     final id = noteItem.id;
     if (id.isNotEmpty) {
       await Future.wait(
         [
-          repository.delete(id, key: pin.pinSha512),
+          repository.delete(
+            id,
+            target: configuration.getTarget(pin: pin),
+          ),
           deletedItemsProvider.addDeletedItems({id}),
           checksumChecker.dropChecksum(),
         ],
       );
 
-      await readNotes();
+      await readNotes(configuration: configuration);
     }
   }
 }

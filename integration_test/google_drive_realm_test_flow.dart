@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'dart:ui';
 import 'package:di_storage/di_storage.dart';
 import 'package:flutter/material.dart';
@@ -8,9 +9,7 @@ import 'package:pwd/common/domain/base_pin.dart';
 import 'package:pwd/common/domain/usecases/pin_usecase.dart';
 import 'package:pwd/home/presentation/home_tabbar/home_tabbar_page.dart';
 import 'package:pwd/main.dart' as app;
-import 'package:pwd/notes/data/datasource/realm_datasource_impl.dart';
 import 'package:pwd/notes/domain/google_repository.dart';
-import 'package:pwd/notes/domain/realm_local_repository.dart';
 import 'package:pwd/notes/presentation/di/google_and_realm_di.dart';
 import 'package:pwd/notes/presentation/edit_note/edit_note_page.dart';
 import 'pages/configuration_undefined_screen/configuration_undefined_screen_robot.dart';
@@ -34,6 +33,7 @@ void main() {
 
   setUp(() async {
     TestTools.setProxyEnabled(false);
+    // TODO: probably realm db should be cleaned at this point
   });
 
   tearDown(() {
@@ -75,6 +75,10 @@ void main() {
     // Save configurations
     await configurationsScreenRobot.saveConfigurations();
     final mockGoogleRepository = MockGoogleRepository();
+
+    // final RemoteConfigurationProvider configurationProvider =
+    //     DiStorage.shared.resolve();
+
     pinSubscription =
         DiStorage.shared.resolve<PinUsecase>().pinStream.listen((e) async {
       // Work around of google auth
@@ -90,15 +94,28 @@ void main() {
             GoogleAndRealmDi().bindUsecases(DiStorage.shared);
           });
 
-          final RealmLocalRepository db = RealmDatasourceImpl();
-          await db.deleteAll(key: e.pinSha512);
+          // final configurations = configurationProvider.currentConfiguration;
+
+          // final configuration =
+          //     configurations.withType(ConfigurationType.googleDrive);
+
+          // expect(configuration != null, true);
+
+          // if (configuration == null) {
+          //   return;
+          // }
+
+          // final RealmLocalRepository db = RealmDatasourceImpl();
+          // await db.deleteAll(target: configuration.getTarget(pin: e));
           break;
         case EmptyPin():
           break;
       }
     });
+
     // Check return on Pin screen
     await enterPinRobot.checkInitialState();
+
     await enterPinRobot.fillFormAndLogin();
 
     // Check home screen with git enabled

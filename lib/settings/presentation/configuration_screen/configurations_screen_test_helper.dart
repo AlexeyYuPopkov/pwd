@@ -1,4 +1,4 @@
-import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
+import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
 
 final class ConfigurationsScreenTestHelper {
   static const nextButtonKey = 'ConfigurationsScreenNextButton.TestKey';

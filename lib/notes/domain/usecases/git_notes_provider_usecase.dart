@@ -1,4 +1,5 @@
 import 'dart:isolate';
+import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
 import 'package:pwd/notes/domain/model/note_item_content.dart';
 import 'package:pwd/notes/domain/usecases/notes_provider_usecase.dart';
 import 'package:rxdart/rxdart.dart';
@@ -46,7 +47,9 @@ final class GitNotesProviderUsecase implements NotesProviderUsecase {
       ).asBroadcastStream();
 
   @override
-  Future<List<NoteItem>> readNotes() async {
+  Future<List<NoteItem>> readNotes({
+    required RemoteConfiguration configuration,
+  }) async {
     try {
       final notes = await repository.readNotes();
       _noteStream.add(notes);
@@ -57,7 +60,10 @@ final class GitNotesProviderUsecase implements NotesProviderUsecase {
   }
 
   @override
-  Future<void> updateNoteItem(NoteItem noteItem) async {
+  Future<void> updateNoteItem(
+    NoteItem noteItem, {
+    required RemoteConfiguration configuration,
+  }) async {
     try {
       final pin = pinRepository.getPin();
       final encoded = NoteItem.updatedItem(
@@ -69,19 +75,22 @@ final class GitNotesProviderUsecase implements NotesProviderUsecase {
         ),
       );
       await repository.updateNote(encoded);
-      readNotes();
+      readNotes(configuration: configuration);
     } catch (e) {
       throw NotesProviderError.updated(parentError: e);
     }
   }
 
   @override
-  Future<void> deleteNoteItem(NoteItem noteItem) async {
+  Future<void> deleteNoteItem(
+    NoteItem noteItem, {
+    required RemoteConfiguration configuration,
+  }) async {
     try {
       final id = noteItem.id;
       if (id.isNotEmpty) {
         await repository.delete(id);
-        readNotes();
+        readNotes(configuration: configuration);
       }
     } catch (e) {
       throw NotesProviderError.updated(parentError: e);

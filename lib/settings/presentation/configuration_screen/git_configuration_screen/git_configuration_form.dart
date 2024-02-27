@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
+import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
 import 'package:pwd/common/presentation/dialogs/dialog_helper.dart';
 import 'package:pwd/common/presentation/validators/noEmpty/no_empty_validator.dart';
 import 'package:pwd/common/presentation/validators/remote_settings_field_validator/file_name_validator.dart';

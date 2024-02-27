@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
+import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
 import 'package:pwd/notes/domain/usecases/notes_provider_usecase.dart';
 import 'package:pwd/notes/domain/usecases/sync_google_drive_item_usecase.dart';
 
@@ -41,7 +41,9 @@ final class GoogleDriveNotesListBloc
     try {
       emit(GoogleDriveNotesListState.loading(data: data));
 
-      final notes = await notesProviderUsecase.readNotes();
+      final notes = await notesProviderUsecase.readNotes(
+        configuration: configuration,
+      );
 
       emit(
         GoogleDriveNotesListState.common(
@@ -63,7 +65,9 @@ final class GoogleDriveNotesListBloc
       emit(GoogleDriveNotesListState.loading(data: data));
 
       await googleSyncUsecase.sync(configuration: configuration);
-      final notes = await notesProviderUsecase.readNotes();
+      final notes = await notesProviderUsecase.readNotes(
+        configuration: configuration,
+      );
 
       emit(
         GoogleDriveNotesListState.common(

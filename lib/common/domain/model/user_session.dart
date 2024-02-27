@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:pwd/common/domain/base_pin.dart';
-import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
+import 'package:pwd/common/domain/model/remote_configuration/remote_configurations.dart';
 
 sealed class UserSession extends Equatable {
   const UserSession();
@@ -21,7 +21,7 @@ final class UnconfiguredSession extends UserSession {
 }
 
 final class UnauthorizedSession extends UserSession {
-  final RemoteStorageConfigurations appConfiguration;
+  final RemoteConfigurations appConfiguration;
   const UnauthorizedSession({
     required this.appConfiguration,
   });
@@ -31,7 +31,7 @@ final class UnauthorizedSession extends UserSession {
 }
 
 final class ValidSession extends UserSession {
-  final RemoteStorageConfigurations appConfiguration;
+  final RemoteConfigurations appConfiguration;
   final Pin pin;
 
   const ValidSession({

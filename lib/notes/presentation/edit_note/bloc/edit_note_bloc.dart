@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
+import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
 import 'package:pwd/notes/domain/model/note_item_content.dart';
 import 'package:pwd/notes/domain/usecases/notes_provider_usecase.dart';
@@ -10,7 +10,7 @@ part 'edit_note_state.dart';
 part 'edit_note_event.dart';
 
 final class EditNoteBloc extends Bloc<EditNoteEvent, EditNoteState> {
-  final RemoteStorageConfiguration configuration;
+  final RemoteConfiguration configuration;
   final NotesProviderUsecase notesProviderUsecase;
   final SyncUsecase syncDataUsecase;
   EditNotePageData get data => state.data;
@@ -47,7 +47,10 @@ final class EditNoteBloc extends Bloc<EditNoteEvent, EditNoteState> {
         content: NoteStringContent(str: event.content),
       );
 
-      await notesProviderUsecase.updateNoteItem(noteItem);
+      await notesProviderUsecase.updateNoteItem(
+        noteItem,
+        configuration: configuration,
+      );
 
       emit(
         EditNoteState.didSave(
@@ -66,7 +69,10 @@ final class EditNoteBloc extends Bloc<EditNoteEvent, EditNoteState> {
     try {
       emit(EditNoteState.loading(data: data));
 
-      await notesProviderUsecase.deleteNoteItem(data.noteItem);
+      await notesProviderUsecase.deleteNoteItem(
+        data.noteItem,
+        configuration: configuration,
+      );
       await syncDataUsecase.updateRemote(configuration: configuration);
       emit(EditNoteState.didDelete(data: data));
     } catch (e) {

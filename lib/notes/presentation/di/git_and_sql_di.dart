@@ -3,7 +3,7 @@ import 'package:pwd/common/presentation/di/network_di.dart';
 import 'package:pwd/notes/data/datasource/database_path_provider_impl.dart';
 import 'package:pwd/notes/data/datasource/sql_datasource_impl.dart';
 import 'package:pwd/notes/data/mappers/db_note_mapper.dart';
-import 'package:pwd/notes/data/remote_data_storage_repository_impl.dart';
+import 'package:pwd/notes/data/datasource/remote_data_storage_repository_impl.dart';
 import 'package:pwd/notes/data/sync_data_mappers/put_db_request_mapper.dart';
 import 'package:pwd/notes/data/sync_data_service/git_service_api.dart';
 import 'package:pwd/notes/domain/database_path_provider.dart';

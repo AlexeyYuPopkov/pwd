@@ -1,11 +1,12 @@
 import 'package:pwd/common/data/model/git_configuration_data.dart';
 import 'package:pwd/common/data/model/google_drive_configuration_data.dart';
 import 'package:pwd/common/data/model/remote_storage_configurations_data.dart';
-import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
+import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
+import 'package:pwd/common/domain/model/remote_configuration/remote_configurations.dart';
 
 final class RemoteConfigurationsMapper {
   static RemoteStorageConfigurationsData toData(
-    RemoteStorageConfigurations src,
+    RemoteConfigurations src,
   ) {
     final configurations = src.configurations.map(
       (e) {
@@ -25,14 +26,14 @@ final class RemoteConfigurationsMapper {
     );
   }
 
-  static RemoteStorageConfigurations toDomain(
+  static RemoteConfigurations toDomain(
     RemoteStorageConfigurationsData src,
   ) {
     final git = _GitConfigurationMapper.toDomainOrNull(src.git);
     final googleDrive =
         _GoogleDriveConfigurationMapper.toDomainOrNull(src.googleDrive);
 
-    return RemoteStorageConfigurations(
+    return RemoteConfigurations(
       configurations: [
         if (git != null) git,
         if (googleDrive != null) googleDrive,

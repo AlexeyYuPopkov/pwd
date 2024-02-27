@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
+import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
 
 import 'git_configuration_form.dart';
 

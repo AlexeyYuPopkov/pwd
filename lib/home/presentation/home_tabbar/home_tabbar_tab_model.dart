@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
+import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
 import 'package:pwd/notes/presentation/router/configuration_undefined_tab_router_delegate.dart';
 import 'package:pwd/notes/presentation/router/git_item_router_delegate.dart';
 import 'package:pwd/notes/presentation/router/google_drive_item_router_delegate.dart';

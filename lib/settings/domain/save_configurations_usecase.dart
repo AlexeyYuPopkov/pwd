@@ -1,5 +1,6 @@
-import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
-import 'package:pwd/common/domain/remote_storage_configuration_provider.dart';
+import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
+import 'package:pwd/common/domain/model/remote_configuration/remote_configurations.dart';
+import 'package:pwd/common/domain/remote_configuration_provider.dart';
 import 'package:pwd/common/domain/usecases/pin_usecase.dart';
 import 'package:pwd/common/domain/usecases/should_create_remote_storage_file_usecase.dart';
 import 'package:pwd/notes/domain/checksum_checker.dart';
@@ -8,7 +9,7 @@ import 'package:pwd/notes/domain/notes_repository.dart';
 import 'package:pwd/notes/domain/realm_local_repository.dart';
 
 class SaveConfigurationsUsecase {
-  final RemoteStorageConfigurationProvider remoteStorageConfigurationProvider;
+  final RemoteConfigurationProvider remoteStorageConfigurationProvider;
   final NotesRepository notesRepository;
   final PinUsecase pinUsecase;
   final ShouldCreateRemoteStorageFileUsecase
@@ -28,7 +29,7 @@ class SaveConfigurationsUsecase {
   });
 
   Future<void> execute({
-    required RemoteStorageConfigurations configuration,
+    required RemoteConfigurations configuration,
     required bool shouldCreateNewGitFile,
   }) async {
     final old = remoteStorageConfigurationProvider.currentConfiguration;
@@ -37,9 +38,9 @@ class SaveConfigurationsUsecase {
       final newItem = configuration.withType(oldItem.type);
 
       if (newItem == null) {
-        await _drop(oldItem.type);
+        await _drop(oldItem);
       } else if (newItem != oldItem) {
-        await _drop(oldItem.type);
+        await _drop(oldItem);
       }
     }
 
@@ -54,8 +55,8 @@ class SaveConfigurationsUsecase {
     await pinUsecase.dropPin();
   }
 
-  Future<void> _drop(ConfigurationType type) async {
-    switch (type) {
+  Future<void> _drop(RemoteConfiguration configuration) async {
+    switch (configuration.type) {
       case ConfigurationType.git:
         await notesRepository.dropDb();
         shouldCreateRemoteStorageFileUsecase.dropFlag();
@@ -64,8 +65,9 @@ class SaveConfigurationsUsecase {
         await checksumChecker.dropChecksum();
         await googleRepository.logout();
         final pin = pinUsecase.getPinOrThrow();
-        await localRepository.deleteAll(key: pin.pinSha512);
-        await localRepository.close();
+        await localRepository.deleteAll(
+          target: configuration.getTarget(pin: pin),
+        );
         break;
     }
   }

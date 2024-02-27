@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:pwd/common/domain/errors/network_error.dart';
-import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
+import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
 import 'package:pwd/notes/domain/remote_data_storage_repository.dart';
 import 'package:pwd/notes/domain/usecases/notes_provider_usecase.dart';
 import 'package:pwd/notes/domain/usecases/sync_data_usecases_errors.dart';
@@ -28,7 +28,7 @@ final class SyncGitItemUsecase implements SyncUsecase {
   });
 
   @override
-  Future<void> sync({required RemoteStorageConfiguration configuration}) async {
+  Future<void> sync({required RemoteConfiguration configuration}) async {
     // TODO: refactor
     switch (configuration) {
       case GitConfiguration():
@@ -48,7 +48,7 @@ final class SyncGitItemUsecase implements SyncUsecase {
   }
 
   Future<void> _trySync({
-    required RemoteStorageConfiguration configuration,
+    required RemoteConfiguration configuration,
   }) async {
     // TODO: refactor
     switch (configuration) {
@@ -84,7 +84,7 @@ final class SyncGitItemUsecase implements SyncUsecase {
       jsonMap: jsonMap,
     );
 
-    await notesProvider.readNotes();
+    await notesProvider.readNotes(configuration: configuration);
 
     final localTimestamp = await notesRepository.lastRecordTimestamp();
     final remoteTimestamp = jsonMap['timestamp'];
@@ -100,7 +100,7 @@ final class SyncGitItemUsecase implements SyncUsecase {
 
   @override
   Future<void> updateRemote({
-    required RemoteStorageConfiguration configuration,
+    required RemoteConfiguration configuration,
   }) async {
     // TODO: refactor
     switch (configuration) {

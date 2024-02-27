@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
+import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
 import 'package:pwd/notes/domain/usecases/notes_provider_usecase.dart';
 import 'package:pwd/notes/domain/usecases/sync_usecase.dart';
 import 'package:rxdart/subjects.dart';
@@ -42,7 +42,7 @@ final class EditNotePage extends StatelessWidget
   final formKey = GlobalKey<_FormState>();
 
   final NoteItem noteItem;
-  final RemoteStorageConfiguration configuration;
+  final RemoteConfiguration configuration;
   final NotesProviderUsecase notesProviderUsecase;
   final SyncUsecase syncDataUsecase;
 

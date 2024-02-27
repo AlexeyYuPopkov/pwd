@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
+import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
 import 'package:pwd/common/domain/usecases/should_create_remote_storage_file_usecase.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
 import 'package:pwd/notes/domain/usecases/notes_provider_usecase.dart';
@@ -49,7 +49,7 @@ final class GitNotesListBloc
     if (shouldCreateRemoteStorageFileUsecase.flag) {
       add(const GitNotesListEvent.forceCreateRemoteSyncFile());
     } else {
-      await notesProviderUsecase.readNotes();
+      await notesProviderUsecase.readNotes(configuration: configuration);
 
       add(const GitNotesListEvent.sync());
     }
@@ -109,7 +109,7 @@ final class GitNotesListBloc
   ) async {
     try {
       emit(GitNotesListState.loading(data: state.data));
-      await notesProviderUsecase.readNotes();
+      await notesProviderUsecase.readNotes(configuration: configuration);
     } catch (e) {
       emit(GitNotesListState.error(data: state.data, error: e));
     }

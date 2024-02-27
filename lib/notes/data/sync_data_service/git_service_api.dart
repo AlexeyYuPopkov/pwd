@@ -36,3 +36,36 @@ abstract class GitServiceApi {
     @Header('Authorization') required String token,
   });
 }
+
+// class GetFileServiceApi {
+//   GetFileServiceApi(this._dio);
+
+//   final Dio _dio;
+
+//   Future<List<int>> getFile(String urlStr) async {
+//     final options = Options(
+//       method: 'GET',
+//       responseType: ResponseType.bytes,
+//     ).compose(_dio.options, '').copyWith(baseUrl: urlStr);
+
+//     final result = await _dio.fetch<List<dynamic>>(
+//       _setStreamType<List<int>>(options),
+//     );
+
+//     final value = result.data!.cast<int>();
+//     return value;
+//   }
+
+//   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
+//     if (T != dynamic &&
+//         !(requestOptions.responseType == ResponseType.bytes ||
+//             requestOptions.responseType == ResponseType.stream)) {
+//       if (T == String) {
+//         requestOptions.responseType = ResponseType.plain;
+//       } else {
+//         requestOptions.responseType = ResponseType.json;
+//       }
+//     }
+//     return requestOptions;
+//   }
+// }

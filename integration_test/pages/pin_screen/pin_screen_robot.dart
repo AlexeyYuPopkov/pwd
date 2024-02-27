@@ -24,6 +24,7 @@ final class PinScreenRobot {
     await tester.pumpAndSettle();
 
     await tester.tap(_finders.pinField);
+    await tester.pumpAndSettle();
     await tester.enterText(_finders.pinField, '3333');
 
     await tester.tap(_finders.nextButton);

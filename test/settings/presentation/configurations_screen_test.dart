@@ -5,8 +5,9 @@ import 'package:mocktail/mocktail.dart';
 import 'package:pwd/common/domain/app_configuration_provider.dart';
 import 'package:pwd/common/domain/errors/app_error.dart';
 import 'package:pwd/common/domain/model/app_configuration.dart';
-import 'package:pwd/common/domain/model/remote_storage_configuration.dart';
-import 'package:pwd/common/domain/remote_storage_configuration_provider.dart';
+import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
+import 'package:pwd/common/domain/model/remote_configuration/remote_configurations.dart';
+import 'package:pwd/common/domain/remote_configuration_provider.dart';
 import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
 import 'package:pwd/common/presentation/dialogs/dialog_helper.dart';
 import 'package:pwd/settings/domain/save_configurations_usecase.dart';
@@ -18,7 +19,7 @@ import '../../../integration_test/pages/configurations_screen/configurations_scr
 import '../../test_tools/app_configuration_provider_tool.dart';
 
 class MockRemoteStorageConfigurationProvider extends Mock
-    implements RemoteStorageConfigurationProvider {}
+    implements RemoteConfigurationProvider {}
 
 class MockSaveConfigurationsUsecase extends Mock
     implements SaveConfigurationsUsecase {}
@@ -54,15 +55,14 @@ void main() {
     fileName: 'fileName',
   );
 
-  final remoteStorageConfigurations = RemoteStorageConfigurations(
+  final remoteStorageConfigurations = RemoteConfigurations(
     configurations: const [
       googleDriveConfiguration,
       gitConfiguration,
     ],
   );
 
-  late final RemoteStorageConfigurationProvider
-      remoteStorageConfigurationProvider;
+  late final RemoteConfigurationProvider remoteStorageConfigurationProvider;
 
   late final SaveConfigurationsUsecase saveConfigurationsUsecase;
 
@@ -70,7 +70,7 @@ void main() {
     () {
       AppConfigurationProviderTool.bindAppConfigurationProvider();
 
-      DiStorage.shared.bind<RemoteStorageConfigurationProvider>(
+      DiStorage.shared.bind<RemoteConfigurationProvider>(
         module: null,
         () => MockRemoteStorageConfigurationProvider(),
         lifeTime: const LifeTime.single(),
@@ -178,7 +178,7 @@ void main() {
           when(
             () => remoteStorageConfigurationProvider.currentConfiguration,
           ).thenReturn(
-            RemoteStorageConfigurations.empty(),
+            RemoteConfigurations.empty(),
           );
 
           final finders = ConfigurationsScreenFinders();
