@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
 import 'package:pwd/notes/presentation/router/configuration_undefined_tab_router_delegate.dart';
-import 'package:pwd/notes/presentation/router/git_item_router_delegate.dart';
 import 'package:pwd/notes/presentation/router/google_drive_item_router_delegate.dart';
 import 'package:pwd/settings/presentation/router/settings_router_delegate.dart';
 
 import 'home_tabbar_screen_test_helper.dart';
 
-final _noteRouterKey = GlobalKey<NavigatorState>();
+// final _noteRouterKey = GlobalKey<NavigatorState>();
 final _notesListRouterKey = GlobalKey<NavigatorState>();
 final _settingsRouterKey = GlobalKey<NavigatorState>();
 
@@ -63,15 +62,25 @@ final class ConfigurationUndefinedTab extends HomeTabbarTabModel {
 
 // Git tab
 final class GitTab extends HomeTabbarTabModel {
-  final GitConfiguration configuration;
+  final RemoteConfiguration configuration;
 
   const GitTab({required this.configuration});
+
+  // @override
+  // Router buildRoute(BuildContext context) {
+  //   return Router(
+  //     routerDelegate: GitItemRouterDelegate(
+  //       navigatorKey: _noteRouterKey,
+  //       configuration: configuration,
+  //     ),
+  //   );
+  // }
 
   @override
   Router buildRoute(BuildContext context) {
     return Router(
-      routerDelegate: GitItemRouterDelegate(
-        navigatorKey: _noteRouterKey,
+      routerDelegate: GoogleDriveItemRouterDelegate(
+        navigatorKey: _notesListRouterKey,
         configuration: configuration,
       ),
     );

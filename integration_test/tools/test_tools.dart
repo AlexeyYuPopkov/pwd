@@ -4,16 +4,19 @@ import 'package:pwd/common/data/model/app_configuration_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final class TestTools {
-  static void setProxyEnabled(bool isEnabled) {
-    final jsonStr = isEnabled
-        ? jsonEncode(
-            const AppConfigurationData(
-              proxyData:
-                  ProxyAppConfigurationData(ip: '127.0.0.1', port: '8888'),
-              showRawErrors: false,
-            ).toJson(),
-          )
-        : '';
+  static void setDeveloperSettings(
+      {required bool isProxyEnabled, required bool showRawErrors}) {
+    final jsonStr = jsonEncode(
+      AppConfigurationData(
+        proxyData: isProxyEnabled
+            ? const ProxyAppConfigurationData(
+                ip: '127.0.0.1',
+                port: '8888',
+              )
+            : null,
+        showRawErrors: showRawErrors,
+      ).toJson(),
+    );
 
     SharedPreferences.setMockInitialValues({
       'AppConfigurationProvider.AppConfigurationKey': jsonStr,

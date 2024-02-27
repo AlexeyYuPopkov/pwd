@@ -26,10 +26,12 @@ class _GitServiceApi implements GitServiceApi {
     required String repo,
     required String filename,
     required PutDbRequestData body,
+    String? branch,
     required String token,
   }) async {
     final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'ref': branch};
+    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{
       r'Accept': 'application/vnd.github+json',
       r'X-GitHub-Api-Version': '2022-11-28',

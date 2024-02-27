@@ -10,7 +10,7 @@ class PutDbRequestData {
   final String message;
   @JsonKey(name: 'content')
   final String content;
-  @JsonKey(name: 'sha', defaultValue: null)
+  @JsonKey(name: 'sha', includeIfNull: false)
   final String? sha;
   @JsonKey(name: 'committer')
   final CommitterData committer;

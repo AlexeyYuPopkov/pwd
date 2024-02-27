@@ -1,15 +1,16 @@
+import 'package:pwd/common/domain/errors/network_error.dart';
 import 'package:pwd/common/support/data_tools/mapper.dart';
 import 'package:pwd/common/domain/errors/network_error_mapper.dart';
 import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
 import 'package:pwd/notes/data/sync_data_service/git_service_api.dart';
 import 'package:pwd/notes/data/sync_models/put_db_request_data.dart';
-import 'package:pwd/notes/domain/remote_data_storage_repository.dart';
+import 'package:pwd/notes/domain/git_data_storage_repository.dart';
 
 import 'package:pwd/notes/domain/sync_requests_parameters/get_db_response.dart';
 import 'package:pwd/notes/domain/sync_requests_parameters/put_db_request.dart';
 import 'package:pwd/notes/domain/sync_requests_parameters/put_db_response.dart';
 
-class RemoteDataStorageRepositoryImpl implements RemoteDataStorageRepository {
+class RemoteDataStorageRepositoryImpl implements GitDataStorageRepository {
   final GitServiceApi service;
 
   final Mapper<PutDbRequestData, PutDbRequest> putDbRequestMapper;
@@ -23,7 +24,7 @@ class RemoteDataStorageRepositoryImpl implements RemoteDataStorageRepository {
   });
 
   @override
-  Future<PutDbResponse> putDb({
+  Future<PutDbResponse> updateRemote({
     required PutDbRequest request,
     required GitConfiguration configuration,
   }) async {
@@ -44,6 +45,7 @@ class RemoteDataStorageRepositoryImpl implements RemoteDataStorageRepository {
           filename: configuration.fileName,
           body: putDbRequestMapper.toData(adjustedWithBranch(request)),
           token: _adjustedToken(configuration.token),
+          branch: configuration.branch,
         )
         .catchError(
           (e) => throw errorMapper(e),
@@ -51,64 +53,29 @@ class RemoteDataStorageRepositoryImpl implements RemoteDataStorageRepository {
   }
 
   @override
-  Future<GetDbResponse> getDb({
+  Future<GetDbResponse?> getFile({
     required GitConfiguration configuration,
-  }) =>
-      service
-          .getDb(
-            token: _adjustedToken(configuration.token),
-            owner: configuration.owner,
-            repo: configuration.repo,
-            filename: configuration.fileName,
-            branch: configuration.branch,
-          )
-          .catchError(
-            (e) => throw errorMapper(e),
-          );
+  }) async {
+    try {
+      final result = await service.getDb(
+        token: _adjustedToken(configuration.token),
+        owner: configuration.owner,
+        repo: configuration.repo,
+        filename: configuration.fileName,
+        branch: configuration.branch,
+      );
 
-  // @override
-  // Future<PutDbResponse> putRealmDb({
-  //   required PutDbRequest request,
-  //   required RemoteStorageConfiguration configuration,
-  // }) async {
-  //   PutDbRequest adjustedWithBranch(PutDbRequest request) {
-  //     final branch = configuration.branch;
+      return result;
+    } catch (e) {
+      final error = errorMapper(e);
 
-  //     if (branch != null && branch.trim().isNotEmpty) {
-  //       return request.copyWithBranch(branch: branch);
-  //     }
-
-  //     return request;
-  //   }
-
-  //   return service
-  //       .putDb(
-  //         owner: configuration.owner,
-  //         repo: configuration.repo,
-  //         filename: configuration.realmFileName,
-  //         body: putDbRequestMapper.toData(adjustedWithBranch(request)),
-  //         token: _adjustedToken(configuration.token),
-  //       )
-  //       .catchError(
-  //         (e) => throw errorMapper(e),
-  //       );
-  // }
-
-  // @override
-  // Future<GetDbResponse> getRealmDb({
-  //   required RemoteStorageConfiguration configuration,
-  // }) =>
-  //     service
-  //         .getDb(
-  //           token: _adjustedToken(configuration.token),
-  //           owner: configuration.owner,
-  //           repo: configuration.repo,
-  //           filename: configuration.realmFileName,
-  //           branch: configuration.branch,
-  //         )
-  //         .catchError(
-  //           (e) => throw errorMapper(e),
-  //         );
+      if (error is NotFoundError) {
+        return null;
+      } else {
+        throw error;
+      }
+    }
+  }
 
   String _adjustedToken(String str) => 'Bearer $str';
 }

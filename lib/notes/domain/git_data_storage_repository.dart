@@ -3,18 +3,13 @@ import 'package:pwd/notes/domain/sync_requests_parameters/get_db_response.dart';
 import 'package:pwd/notes/domain/sync_requests_parameters/put_db_request.dart';
 import 'package:pwd/notes/domain/sync_requests_parameters/put_db_response.dart';
 
-abstract class RemoteDataStorageRepository {
-  Future<PutDbResponse> putDb({
-    required PutDbRequest request,
+abstract class GitDataStorageRepository {
+  Future<GetDbResponse?> getFile({
     required GitConfiguration configuration,
   });
 
-  // Future<PutDbResponse> putRealmDb({
-  //   required PutDbRequest request,
-  //   required GitConfiguration configuration,
-  // });
-
-  Future<GetDbResponse> getDb({
+  Future<PutDbResponse> updateRemote({
+    required PutDbRequest request,
     required GitConfiguration configuration,
   });
 }

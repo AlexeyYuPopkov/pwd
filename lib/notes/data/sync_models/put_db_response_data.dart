@@ -19,6 +19,9 @@ class PutDbResponseData implements PutDbResponse {
       _$PutDbResponseDataFromJson(json);
 
   Map<String, dynamic> toJson() => _$PutDbResponseDataToJson(this);
+
+  @override
+  String get checksum => content.checksum;
 }
 
 @immutable
@@ -36,4 +39,7 @@ class PutDbResponseDataContent implements PutDbResponseContent {
       _$PutDbResponseDataContentFromJson(json);
 
   Map<String, dynamic> toJson() => _$PutDbResponseDataContentToJson(this);
+
+  @override
+  String get checksum => sha;
 }

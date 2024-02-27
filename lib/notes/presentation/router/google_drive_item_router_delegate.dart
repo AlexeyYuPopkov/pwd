@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
 import 'package:pwd/common/presentation/fade_animation_page.dart';
 import 'package:pwd/common/presentation/router/base_router_delegate.dart';
-import 'package:di_storage/di_storage.dart';
-import 'package:pwd/notes/domain/usecases/sync_google_drive_item_usecase.dart';
-import 'package:pwd/notes/domain/usecases/google_drive_notes_provider_usecase.dart';
 import 'package:pwd/notes/presentation/edit_note/edit_note_page.dart';
 import 'package:pwd/notes/presentation/git_notes_list/note_page_route.dart';
 
@@ -16,7 +13,7 @@ abstract final class GoogleDriveItemRouterPagePath {
 }
 
 final class GoogleDriveItemRouterDelegate extends BaseRouterDelegate {
-  final GoogleDriveConfiguration configuration;
+  final RemoteConfiguration configuration;
 
   @override
   final GlobalKey<NavigatorState> navigatorKey;
@@ -77,14 +74,10 @@ final class GoogleDriveItemRouterDelegate extends BaseRouterDelegate {
           return context.navigator.push(
             MaterialPageRoute(
               builder: (_) {
-                final di = DiStorage.shared;
                 return EditNotePage(
                   configuration: configuration,
                   noteItem: action.noteItem,
                   onRoute: onRoute,
-                  notesProviderUsecase:
-                      di.resolve<GoogleDriveNotesProviderUsecase>(),
-                  syncDataUsecase: di.resolve<SyncGoogleDriveItemUsecase>(),
                 );
               },
             ),

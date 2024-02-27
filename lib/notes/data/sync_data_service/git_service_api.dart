@@ -20,6 +20,7 @@ abstract class GitServiceApi {
     @Path('repo') required String repo,
     @Path('filename') required String filename,
     @Body() required PutDbRequestData body,
+    @Query('ref') String? branch,
     @Header('Authorization') required String token,
   });
 
@@ -37,35 +38,35 @@ abstract class GitServiceApi {
   });
 }
 
-// class GetFileServiceApi {
-//   GetFileServiceApi(this._dio);
+class GetFileServiceApi {
+  GetFileServiceApi(this._dio);
 
-//   final Dio _dio;
+  final Dio _dio;
 
-//   Future<List<int>> getFile(String urlStr) async {
-//     final options = Options(
-//       method: 'GET',
-//       responseType: ResponseType.bytes,
-//     ).compose(_dio.options, '').copyWith(baseUrl: urlStr);
+  Future<List<int>> getFile(String urlStr) async {
+    final options = Options(
+      method: 'GET',
+      responseType: ResponseType.bytes,
+    ).compose(_dio.options, '').copyWith(baseUrl: urlStr);
 
-//     final result = await _dio.fetch<List<dynamic>>(
-//       _setStreamType<List<int>>(options),
-//     );
+    final result = await _dio.fetch<List<dynamic>>(
+      _setStreamType<List<int>>(options),
+    );
 
-//     final value = result.data!.cast<int>();
-//     return value;
-//   }
+    final value = result.data!.cast<int>();
+    return value;
+  }
 
-//   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
-//     if (T != dynamic &&
-//         !(requestOptions.responseType == ResponseType.bytes ||
-//             requestOptions.responseType == ResponseType.stream)) {
-//       if (T == String) {
-//         requestOptions.responseType = ResponseType.plain;
-//       } else {
-//         requestOptions.responseType = ResponseType.json;
-//       }
-//     }
-//     return requestOptions;
-//   }
-// }
+  RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
+    if (T != dynamic &&
+        !(requestOptions.responseType == ResponseType.bytes ||
+            requestOptions.responseType == ResponseType.stream)) {
+      if (T == String) {
+        requestOptions.responseType = ResponseType.plain;
+      } else {
+        requestOptions.responseType = ResponseType.json;
+      }
+    }
+    return requestOptions;
+  }
+}

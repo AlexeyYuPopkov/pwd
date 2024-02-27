@@ -38,7 +38,7 @@ void main() {
     deletedItemsProvider = MockDeletedItemsProvider();
 
     usecase = SyncGoogleDriveItemUsecase(
-      googleRepository: googleRepository,
+      remoteRepository: googleRepository,
       realmRepository: repository,
       pinUsecase: pinUsecase,
       checksumChecker: checksumChecker,
@@ -82,7 +82,7 @@ void main() {
           when(
             () => googleRepository.updateRemote(
               realmDatabaseAsBytes,
-              target: configuration,
+              configuration: configuration,
             ),
           ).thenAnswer(
             (_) async => googleDriveFile,
@@ -98,7 +98,7 @@ void main() {
                   ),
               () => googleRepository.updateRemote(
                     realmDatabaseAsBytes,
-                    target: configuration,
+                    configuration: configuration,
                   ),
             ],
           );
@@ -119,7 +119,7 @@ void main() {
           when(
             () => googleRepository.updateRemote(
               realmDatabaseAsBytes,
-              target: configuration,
+              configuration: configuration,
             ),
           ).thenAnswer(
             (_) => Future.error(_Exception()),
@@ -154,7 +154,7 @@ void main() {
           when(
             () => googleRepository.updateRemote(
               realmDatabaseAsBytes,
-              target: configuration,
+              configuration: configuration,
             ),
           ).thenAnswer(
             (_) async => googleDriveFile,
@@ -177,7 +177,7 @@ void main() {
                   ),
               () => googleRepository.updateRemote(
                     realmDatabaseAsBytes,
-                    target: configuration,
+                    configuration: configuration,
                   ),
               () => checksumChecker.setChecksum(
                     googleDriveFile.checksum,
@@ -208,7 +208,7 @@ void main() {
           when(
             () => googleRepository.updateRemote(
               realmDatabaseAsBytes,
-              target: configuration,
+              configuration: configuration,
             ),
           ).thenAnswer(
             (_) async => googleDriveFile,
@@ -281,7 +281,7 @@ void main() {
           verifyNever(
             () => googleRepository.updateRemote(
               realmDatabaseAsBytes,
-              target: configuration,
+              configuration: configuration,
             ),
           );
 
@@ -355,7 +355,7 @@ void main() {
           when(
             () => googleRepository.updateRemote(
               realmDatabaseAsBytes,
-              target: configuration,
+              configuration: configuration,
             ),
           ).thenAnswer(
             (_) async => googleDriveFile,
@@ -398,7 +398,7 @@ void main() {
                   ),
               () => googleRepository.updateRemote(
                     realmDatabaseAsBytes,
-                    target: configuration,
+                    configuration: configuration,
                   ),
               () => googleRepository.getFile(target: configuration),
               () => checksumChecker.setChecksum(
@@ -470,7 +470,7 @@ void main() {
           when(
             () => googleRepository.updateRemote(
               realmDatabaseAsBytes,
-              target: configuration,
+              configuration: configuration,
             ),
           ).thenAnswer(
             (_) async => googleDriveFile,
@@ -513,7 +513,7 @@ void main() {
                       ),
                   () => googleRepository.updateRemote(
                         realmDatabaseAsBytes,
-                        target: configuration,
+                        configuration: configuration,
                       ),
                   () => googleRepository.getFile(target: configuration),
                 ],

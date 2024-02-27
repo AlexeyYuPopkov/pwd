@@ -54,7 +54,7 @@ final class GoogleAndRealmDi extends DiScope {
     di.bind<SyncGoogleDriveItemUsecase>(
       module: this,
       () => SyncGoogleDriveItemUsecase(
-        googleRepository: di.resolve(),
+        remoteRepository: di.resolve(),
         realmRepository: di.resolve(),
         pinUsecase: di.resolve(),
         checksumChecker: di.resolve(),

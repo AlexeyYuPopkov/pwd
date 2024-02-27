@@ -20,8 +20,6 @@ Map<String, dynamic> _$PutDbRequestDataToJson(PutDbRequestData instance) {
   final val = <String, dynamic>{
     'message': instance.message,
     'content': instance.content,
-    'sha': instance.sha,
-    'committer': instance.committer,
   };
 
   void writeNotNull(String key, dynamic value) {
@@ -30,6 +28,8 @@ Map<String, dynamic> _$PutDbRequestDataToJson(PutDbRequestData instance) {
     }
   }
 
+  writeNotNull('sha', instance.sha);
+  val['committer'] = instance.committer;
   writeNotNull('branch', instance.branch);
   return val;
 }

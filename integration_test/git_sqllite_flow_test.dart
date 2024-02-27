@@ -11,7 +11,7 @@ import 'package:pwd/notes/presentation/edit_note/edit_note_page.dart';
 import 'pages/configurations_screen/configurations_screen_robot.dart';
 import 'pages/edit_note_screen/edit_note_screen_robot.dart';
 import 'pages/configurations_screen/git_configuration_screen/git_configuration_screen_robot.dart';
-import 'pages/git_notes_list_screen/git_notes_list_screen_robot.dart';
+import 'pages/google_drive_notes_list_screen/google_drive_notes_list_screen_robot.dart';
 import 'pages/home_tabbar_screen/home_tabbar_robot.dart';
 import 'pages/pin_screen/pin_screen_robot.dart';
 import 'pages/settings_screen/settings_robot.dart';
@@ -29,7 +29,8 @@ void main() {
     );
     await dbDataSource.dropDb();
 
-    TestTools.setProxyEnabled(false);
+    // TestTools.setDeveloperSettings(isProxyEnabled: true, showRawErrors: true);
+    TestTools.setDeveloperSettings(isProxyEnabled: false, showRawErrors: false);
   });
 
   tearDown(() async {
@@ -83,10 +84,10 @@ void main() {
     // Check home screen with git enabled
     await homeTabbarRobot.checkGitEnabledState();
 
-    // Git notes screen - goto add note
-    final gitNotesListScreenRobot = GitNotesListScreenRobot(tester);
-    await gitNotesListScreenRobot.checkEmptyPageState();
-    await gitNotesListScreenRobot.goToAddNotePage();
+    // Notes list screen
+    final notesListScreenRobot = GoogleDriveNotesListScreenRobot(tester);
+    await notesListScreenRobot.checkEmptyPageState();
+    await notesListScreenRobot.goToAddNotePage();
 
     // Edit note screen
     final editNoteScreenRobot = EditNoteScreenRobot(tester);
@@ -97,7 +98,7 @@ void main() {
     expect(find.text(editNoteScreenRobot.descriptionText), findsOneWidget);
 
     // Go to edit note and delete note
-    await gitNotesListScreenRobot.goToEditNoteScreenWithTitle(
+    await notesListScreenRobot.goToEditNoteScreenWithTitle(
       editNoteScreenRobot.titleText,
     );
 
@@ -108,7 +109,7 @@ void main() {
     await editNoteScreenRobot.deleteNote();
 
     // Check note deleted
-    await gitNotesListScreenRobot.checkEmptyPageState();
+    await notesListScreenRobot.checkEmptyPageState();
 
     // Go to settings
     await homeTabbarRobot.tapSettings();

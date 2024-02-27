@@ -8,6 +8,9 @@ import 'package:pwd/common/presentation/shimmer/common_shimmer.dart';
 import 'package:di_storage/di_storage.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
 import 'package:pwd/notes/domain/usecases/google_drive_notes_provider_usecase.dart';
+import 'package:pwd/notes/domain/usecases/sync_git_item_usecase.dart';
+import 'package:pwd/notes/domain/usecases/sync_google_drive_item_usecase.dart';
+import 'package:pwd/notes/domain/usecases/sync_usecase.dart';
 import 'package:pwd/notes/presentation/common/widgets/note_list_item_widget.dart';
 import 'package:pwd/notes/presentation/git_notes_list/note_page_route.dart';
 
@@ -24,7 +27,7 @@ import 'google_drive_notes_list_screen_test_helper.dart';
 
 final class GoogleDriveNotesListScreen extends StatelessWidget
     with ShowErrorDialogMixin {
-  final GoogleDriveConfiguration configuration;
+  final RemoteConfiguration configuration;
   final Future Function(BuildContext, Object) onRoute;
 
   const GoogleDriveNotesListScreen({
@@ -33,6 +36,15 @@ final class GoogleDriveNotesListScreen extends StatelessWidget
     required this.onRoute,
   });
 
+  SyncUsecase get syncUsecase {
+    switch (configuration) {
+      case GoogleDriveConfiguration():
+        return DiStorage.shared.resolve<SyncGoogleDriveItemUsecase>();
+      case GitConfiguration():
+        return DiStorage.shared.resolve<SyncGitItemUsecase>();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final di = DiStorage.shared;
@@ -40,7 +52,7 @@ final class GoogleDriveNotesListScreen extends StatelessWidget
       create: (_) => GoogleDriveNotesListBloc(
         configuration: configuration,
         notesProviderUsecase: di.resolve<GoogleDriveNotesProviderUsecase>(),
-        googleSyncUsecase: di.resolve(),
+        syncUsecase: syncUsecase,
       ),
       child: BlocConsumer<GoogleDriveNotesListBloc, GoogleDriveNotesListState>(
         listener: _listener,

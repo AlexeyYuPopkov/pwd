@@ -1,5 +1,8 @@
-final class GoogleDriveFile {
+import 'remote_file.dart';
+
+final class GoogleDriveFile implements RemoteFile {
   final String id;
+  @override
   final String checksum;
   final String name;
 

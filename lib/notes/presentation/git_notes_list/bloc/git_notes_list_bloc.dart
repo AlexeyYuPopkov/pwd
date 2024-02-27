@@ -76,7 +76,7 @@ final class GitNotesListBloc
   ) async {
     try {
       emit(GitNotesListState.loading(data: state.data));
-      await syncDataUsecase.createOrOverrideDb(configuration: configuration);
+      // await syncDataUsecase.createOrOverrideDb(configuration: configuration);
       emit(GitNotesListState.common(data: state.data));
       _initialActions();
     } catch (e) {

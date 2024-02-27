@@ -36,21 +36,21 @@ final class GoogleRepositoryImpl implements GoogleRepository {
   @override
   Future<GoogleDriveFile> updateRemote(
     Uint8List data, {
-    required GoogleDriveConfiguration target,
+    required GoogleDriveConfiguration configuration,
   }) async {
     final api = await _getDriveApi();
 
-    final file = await _getFile(target: target);
+    final file = await _getFile(target: configuration);
     final fileId = file?.id;
 
     if (file == null || fileId == null || fileId.isEmpty) {
-      return createFileWithData(data, target: target);
+      return createFileWithData(data, target: configuration);
     }
 
 // https://github.com/google/google-api-objectivec-client/issues/145
     final newFile = await api.files.update(
       drive.File(
-        name: target.fileName,
+        name: configuration.fileName,
         // parents: file.parents,
         // description: file.description,
       ),

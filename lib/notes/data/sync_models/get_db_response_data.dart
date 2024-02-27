@@ -14,13 +14,21 @@ class GetDbResponseData implements GetDbResponse {
   @JsonKey(name: 'content', defaultValue: '')
   final String content;
 
+  @override
+  @JsonKey(name: 'download_url', defaultValue: '')
+  final String downloadUrl;
+
   const GetDbResponseData({
     required this.sha,
     required this.content,
+    required this.downloadUrl,
   });
 
   factory GetDbResponseData.fromJson(Map<String, dynamic> json) =>
       _$GetDbResponseDataFromJson(json);
 
   Map<String, dynamic> toJson() => _$GetDbResponseDataToJson(this);
+
+  @override
+  String get checksum => sha;
 }

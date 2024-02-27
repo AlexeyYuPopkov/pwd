@@ -32,7 +32,7 @@ void main() {
   late StreamSubscription? pinSubscription;
 
   setUp(() async {
-    TestTools.setProxyEnabled(false);
+    TestTools.setDeveloperSettings(isProxyEnabled: false, showRawErrors: false);
     // TODO: probably realm db should be cleaned at this point
   });
 
@@ -123,12 +123,11 @@ void main() {
     // Check home screen with git enabled
     await homeTabbarRobot.checkGoogleDriveEnabledState();
 
-    //
-    final googleDriveNotesListScreenRobot =
-        GoogleDriveNotesListScreenRobot(tester);
+    // Notes list screen
+    final notesListScreenRobot = GoogleDriveNotesListScreenRobot(tester);
 
-    await googleDriveNotesListScreenRobot.checkEmptyPageState();
-    await googleDriveNotesListScreenRobot.goToAddNotePage();
+    await notesListScreenRobot.checkEmptyPageState();
+    await notesListScreenRobot.goToAddNotePage();
 
     // Edit note screen
     final editNoteScreenRobot = EditNoteScreenRobot(tester);
@@ -141,7 +140,7 @@ void main() {
     expect(find.text(editNoteScreenRobot.descriptionText), findsOneWidget);
 
     // Go to edit note and delete note
-    await googleDriveNotesListScreenRobot.goToEditNoteScreenWithTitle(
+    await notesListScreenRobot.goToEditNoteScreenWithTitle(
       editNoteScreenRobot.titleText,
     );
 
@@ -152,7 +151,7 @@ void main() {
     await editNoteScreenRobot.deleteNote();
 
     // Check note deleted
-    await googleDriveNotesListScreenRobot.checkEmptyPageState();
+    await notesListScreenRobot.checkEmptyPageState();
 
     // Go to settings
 

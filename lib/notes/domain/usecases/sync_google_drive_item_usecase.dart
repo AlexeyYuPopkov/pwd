@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 import 'package:async/async.dart';
 import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
 import 'package:pwd/common/domain/usecases/pin_usecase.dart';
@@ -8,17 +7,20 @@ import 'package:pwd/notes/domain/google_repository.dart';
 import 'package:pwd/notes/domain/realm_local_repository.dart';
 import 'package:pwd/notes/domain/model/google_error.dart';
 import 'package:pwd/notes/domain/model/google_drive_file.dart';
+import 'package:pwd/notes/domain/usecases/sync_helper.dart';
 import 'package:pwd/notes/domain/usecases/sync_usecase.dart';
 
-final class SyncGoogleDriveItemUsecase implements SyncUsecase {
-  final GoogleRepository googleRepository;
+final class SyncGoogleDriveItemUsecase with SyncHelper implements SyncUsecase {
+  final GoogleRepository remoteRepository;
+  @override
   final RealmLocalRepository realmRepository;
+  @override
   final PinUsecase pinUsecase;
   final ChecksumChecker checksumChecker;
   final DeletedItemsProvider deletedItemsProvider;
 
   SyncGoogleDriveItemUsecase({
-    required this.googleRepository,
+    required this.remoteRepository,
     required this.realmRepository,
     required this.pinUsecase,
     required this.checksumChecker,
@@ -36,7 +38,7 @@ final class SyncGoogleDriveItemUsecase implements SyncUsecase {
         break;
     }
 
-    final file = await googleRepository.getFile(target: configuration);
+    final file = await remoteRepository.getFile(target: configuration);
 
     if (file == null) {
       final newFile = await _updateFileWithData(configuration: configuration);
@@ -63,7 +65,7 @@ final class SyncGoogleDriveItemUsecase implements SyncUsecase {
 
         await _updateFileWithData(configuration: configuration);
 
-        final newChecksum = await googleRepository
+        final newChecksum = await remoteRepository
             .getFile(
               target: configuration,
             )
@@ -98,7 +100,7 @@ final class SyncGoogleDriveItemUsecase implements SyncUsecase {
     GoogleDriveFile file, {
     required RemoteConfiguration configuration,
   }) async {
-    final stream = await googleRepository.downloadFile(file);
+    final stream = await remoteRepository.downloadFile(file);
 
     if (stream == null) {
       throw const GoogleError.unspecified();
@@ -120,22 +122,13 @@ final class SyncGoogleDriveItemUsecase implements SyncUsecase {
   Future<GoogleDriveFile> _updateFileWithData({
     required GoogleDriveConfiguration configuration,
   }) async {
-    final localRealmAsData = await _getLocalRealmAsData(
+    final localRealmAsData = await getLocalRealmAsData(
       configuration: configuration,
     );
 
-    return googleRepository.updateRemote(
+    return remoteRepository.updateRemote(
       localRealmAsData,
-      target: configuration,
-    );
-  }
-
-  Future<Uint8List> _getLocalRealmAsData({
-    required RemoteConfiguration configuration,
-  }) async {
-    final pin = pinUsecase.getPinOrThrow();
-    return realmRepository.readAsBytes(
-      target: configuration.getTarget(pin: pin),
+      configuration: configuration,
     );
   }
 }

@@ -80,7 +80,7 @@ final class MockGoogleRepository implements GoogleRepository {
   @override
   Future<GoogleDriveFile> updateRemote(
     Uint8List data, {
-    required GoogleDriveConfiguration target,
+    required GoogleDriveConfiguration configuration,
   }) async {
     final result = GoogleDriveFile(
       id: '123',
@@ -91,7 +91,7 @@ final class MockGoogleRepository implements GoogleRepository {
     calls.add(
       MockCall(
         mathodName: 'updateRemote',
-        parameters: [data, target],
+        parameters: [data, configuration],
         result: result,
       ),
     );

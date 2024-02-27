@@ -8,6 +8,7 @@ import 'package:pwd/common/data/network_error_mapper_impl.dart';
 import 'package:pwd/common/domain/app_configuration_provider.dart';
 import 'package:pwd/common/domain/errors/network_error_mapper.dart';
 import 'package:pwd/common/domain/model/app_configuration.dart';
+import 'package:pwd/notes/data/sync_data_service/git_service_api.dart';
 
 typedef UnAuthDio = Dio;
 typedef AuthDio = Dio;
@@ -29,10 +30,11 @@ class NetworkDiModule extends DiScope {
 
     _adjustHttpClientWithProxy(appConfiguration.proxyData);
 
+    final dio = Dio(dioOptions);
+
     di.bind<UnAuthDio>(
       module: this,
       () {
-        final dio = Dio(dioOptions);
         return _adjustedDioProxyIfNeeded(
           dio: dio,
           proxy: appConfiguration.proxyData?.ip ?? '',
@@ -40,6 +42,13 @@ class NetworkDiModule extends DiScope {
         );
       },
       lifeTime: const LifeTime.single(),
+    );
+
+    di.bind<GetFileServiceApi>(
+      module: this,
+      () {
+        return GetFileServiceApi(dio);
+      },
     );
 
     // di.bind<HttpClientBuilder>(

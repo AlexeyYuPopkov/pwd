@@ -7,6 +7,6 @@ final class GitConfigurationTestData {
         repo: 'notes_storage_test',
         owner: 'AlexeyYuPopkov',
         branch: 'main',
-        fileName: 'notes.json',
+        fileName: 'test_file',
       );
 }

@@ -22,8 +22,9 @@ final class AppDiModules {
     dropAuthModules();
 
     NetworkDiModule().bind(di);
-    GitAndSqlDi().bind(di);
     GoogleAndRealmDi().bind(di);
+    GitAndSqlDi().bind(di);
+
     SettingsDi().bind(di);
   }
 
@@ -31,9 +32,9 @@ final class AppDiModules {
   static void dropAuthModules() {
     final di = DiStorage.shared;
 
-    di.removeScope<GitAndSqlDi>();
     di.removeScope<NetworkDiModule>();
     di.removeScope<GoogleAndRealmDi>();
+    di.removeScope<GitAndSqlDi>();
     di.removeScope<SettingsDi>();
   }
 }

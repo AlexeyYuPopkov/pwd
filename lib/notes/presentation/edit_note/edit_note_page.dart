@@ -1,7 +1,10 @@
+import 'package:di_storage/di_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
-import 'package:pwd/notes/domain/usecases/notes_provider_usecase.dart';
+import 'package:pwd/notes/domain/usecases/google_drive_notes_provider_usecase.dart';
+import 'package:pwd/notes/domain/usecases/sync_git_item_usecase.dart';
+import 'package:pwd/notes/domain/usecases/sync_google_drive_item_usecase.dart';
 import 'package:pwd/notes/domain/usecases/sync_usecase.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:pwd/common/presentation/dialogs/dialog_helper.dart';
@@ -43,20 +46,25 @@ final class EditNotePage extends StatelessWidget
 
   final NoteItem noteItem;
   final RemoteConfiguration configuration;
-  final NotesProviderUsecase notesProviderUsecase;
-  final SyncUsecase syncDataUsecase;
 
   final Future Function(BuildContext, Object) onRoute;
 
   final isSubmitEnabledStream = BehaviorSubject.seeded(false);
+
+  SyncUsecase get syncUsecase {
+    switch (configuration) {
+      case GoogleDriveConfiguration():
+        return DiStorage.shared.resolve<SyncGoogleDriveItemUsecase>();
+      case GitConfiguration():
+        return DiStorage.shared.resolve<SyncGitItemUsecase>();
+    }
+  }
 
   EditNotePage({
     super.key,
     required this.noteItem,
     required this.configuration,
     required this.onRoute,
-    required this.notesProviderUsecase,
-    required this.syncDataUsecase,
   });
 
   void _listener(BuildContext context, EditNoteState state) async {
@@ -105,8 +113,9 @@ final class EditNotePage extends StatelessWidget
         body: BlocProvider(
           create: (context) => EditNoteBloc(
             configuration: configuration,
-            notesProviderUsecase: notesProviderUsecase,
-            syncDataUsecase: syncDataUsecase,
+            notesProviderUsecase:
+                DiStorage.shared.resolve<GoogleDriveNotesProviderUsecase>(),
+            syncDataUsecase: syncUsecase,
             noteItem: noteItem,
           ),
           child: BlocConsumer<EditNoteBloc, EditNoteState>(

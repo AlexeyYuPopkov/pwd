@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// TODO: remove inhetitance
 abstract base class BaseRouterDelegate extends RouterDelegate
     with ChangeNotifier, PopNavigatorRouterDelegateMixin {
   @override
