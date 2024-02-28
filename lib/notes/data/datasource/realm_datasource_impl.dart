@@ -273,6 +273,7 @@ extension _CreateRealm on RealmDatasourceImpl {
     required String path,
   }) {
     try {
+      const int schemaVersion = 2;
       final config = Configuration.local(
         [
           NoteItemRealm.schema,
@@ -280,6 +281,17 @@ extension _CreateRealm on RealmDatasourceImpl {
         ],
         encryptionKey: target.key,
         path: '${path.replaceAll('.realm', '')}.realm',
+        schemaVersion: schemaVersion,
+        migrationCallback: (migration, oldSchemaVersion) {
+          if (schemaVersion != oldSchemaVersion) {
+            final schema = migration.newRealm.schema;
+            schema.whereType<NoteItemRealm>().forEach(
+              (e) {
+                e.deleted = false;
+              },
+            );
+          }
+        },
       );
 
       final realm = Realm(config);
