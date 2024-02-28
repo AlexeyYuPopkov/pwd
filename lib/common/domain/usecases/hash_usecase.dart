@@ -75,7 +75,7 @@ class HashUsecase {
   //   }
   // }
 
-  String pinHash(String pin) => md5.convert(utf8.encode(pin)).toString();
+  // String pinHash(String pin) => md5.convert(utf8.encode(pin)).toString();
 
   List<int> pinHash512(String pin) {
     final result = sha512.convert(utf8.encode(pin)).bytes;

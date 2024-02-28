@@ -11,21 +11,24 @@ sealed class BasePin {
 }
 
 final class Pin extends BasePin {
-  final String pin;
+  // final String pin;
   final List<int> pinSha512;
 
   const Pin({
-    required this.pin,
+    // required this.pin,
     required this.pinSha512,
   });
 
   @override
   bool operator ==(Object other) =>
-      other is Pin && other.pin == pin && other.pinSha512 == pinSha512;
+      other is Pin
+      // && other.pin == pin
+      &&
+      other.pinSha512 == pinSha512;
 
   @override
   int get hashCode => Object.hashAll({
-        pin,
+        // pin,
         pinSha512,
       });
 }

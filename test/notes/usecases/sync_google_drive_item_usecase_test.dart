@@ -49,7 +49,6 @@ void main() {
   const configuration = GoogleDriveConfiguration(fileName: 'fileName');
 
   const pin = Pin(
-    pin: '',
     pinSha512: [],
   );
 

@@ -32,15 +32,10 @@ void main() {
           const pinStr = '';
 
           const dummyPin = Pin(
-            pin: pinStr,
             pinSha512: [],
           );
 
           provideDummy(dummyPin);
-
-          when(
-            hashUsecase.pinHash(pinStr),
-          ).thenReturn(dummyPin.pin);
 
           when(
             hashUsecase.pinHash512(pinStr),
@@ -49,9 +44,8 @@ void main() {
           await usecase.execute(pinStr);
 
           verifyInOrder([
-            hashUsecase.pinHash(pinStr),
             hashUsecase.pinHash512(pinStr),
-            pinUsecase.setPin(dummyPin)
+            pinUsecase.setPin(dummyPin),
           ]);
         },
       );

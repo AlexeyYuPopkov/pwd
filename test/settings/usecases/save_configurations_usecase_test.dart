@@ -115,7 +115,7 @@ void main() {
         ],
       );
 
-      const pin = Pin(pin: '', pinSha512: []);
+      const pin = Pin(pinSha512: []);
 
       when(
         () => remoteStorageConfigurationProvider.currentConfiguration,
@@ -217,7 +217,7 @@ void main() {
 
       final newConfigurations = RemoteConfigurations.empty();
 
-      const pin = Pin(pin: '', pinSha512: []);
+      const pin = Pin(pinSha512: []);
 
       when(
         () => remoteStorageConfigurationProvider.currentConfiguration,

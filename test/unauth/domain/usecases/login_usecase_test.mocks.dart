@@ -105,28 +105,6 @@ class MockPinUsecase extends _i1.Mock implements _i2.PinUsecase {
 /// See the documentation for Mockito's code generation for more information.
 class MockHashUsecase extends _i1.Mock implements _i6.HashUsecase {
   @override
-  String pinHash(String? pin) => (super.noSuchMethod(
-        Invocation.method(
-          #pinHash,
-          [pin],
-        ),
-        returnValue: _i5.dummyValue<String>(
-          this,
-          Invocation.method(
-            #pinHash,
-            [pin],
-          ),
-        ),
-        returnValueForMissingStub: _i5.dummyValue<String>(
-          this,
-          Invocation.method(
-            #pinHash,
-            [pin],
-          ),
-        ),
-      ) as String);
-
-  @override
   List<int> pinHash512(String? pin) => (super.noSuchMethod(
         Invocation.method(
           #pinHash512,

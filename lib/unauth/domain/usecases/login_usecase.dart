@@ -12,12 +12,12 @@ class LoginUsecase {
   });
 
   Future<void> execute(String pin) {
-    final pinString32 = hashUsecase.pinHash(pin);
+    // final pinString32 = hashUsecase.pinHash(pin);
     final pinList512 = hashUsecase.pinHash512(pin);
 
     return pinUsecase.setPin(
       Pin(
-        pin: pinString32,
+        // pin: pinString32,
         pinSha512: pinList512,
       ),
     );

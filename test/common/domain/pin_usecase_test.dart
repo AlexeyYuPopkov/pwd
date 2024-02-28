@@ -44,7 +44,7 @@ void main() {
     Future<Pin> testSetValidPin() async {
       testInitialState();
 
-      const pin = Pin(pin: '123', pinSha512: []);
+      const pin = Pin(pinSha512: []);
 
       await usecase.setPin(pin);
 
@@ -72,7 +72,7 @@ void main() {
     test('Test drop pin', () async {
       testInitialState();
 
-      const pin = Pin(pin: '123', pinSha512: []);
+      const pin = Pin(pinSha512: []);
 
       await usecase.setPin(pin);
 

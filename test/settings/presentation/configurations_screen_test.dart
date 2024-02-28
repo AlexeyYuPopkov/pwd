@@ -164,7 +164,9 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(
-        tester.widget<SwitchListTile>(finders.googleDriveSwitch).value, true);
+      tester.widget<SwitchListTile>(finders.googleDriveSwitch).value,
+      true,
+    );
     expect(tester.widget<SwitchListTile>(finders.gitSwitch).value, true);
   }
 
