@@ -58,9 +58,9 @@ final class RealmDatasourceImpl
     final realm = await _getRealm(target: target);
     try {
       final timestamp = timestampForDate(DateTime.now());
-      final items = realm
-          .all<NoteItemRealm>()
-          .where((e) => e.deleted == true && e.timestamp < timestamp);
+      final items = realm.all<NoteItemRealm>().where((e) {
+        return e.deleted == true && e.timestamp < timestamp;
+      });
 
       if (items.isNotEmpty) {
         realm.write(
@@ -235,8 +235,6 @@ extension _Migration on RealmDatasourceImpl {
           );
         },
       );
-
-      tempRealm.close();
     } catch (e) {
       throw _ErrorMapper.toDomain(e);
     } finally {
@@ -280,7 +278,7 @@ extension _CreateRealm on RealmDatasourceImpl {
           NoteItemContentRealm.schema,
         ],
         encryptionKey: target.key,
-        path: '${path.replaceAll('.realm', '')}.realm',
+        path: path,
         schemaVersion: schemaVersion,
         migrationCallback: (migration, oldSchemaVersion) {
           if (schemaVersion != oldSchemaVersion) {
