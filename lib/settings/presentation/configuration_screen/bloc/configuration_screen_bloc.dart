@@ -102,10 +102,7 @@ final class ConfigurationScreenBloc
         ConfigurationScreenState.common(
           data: data.copyWith(
             git: OptionalBox(
-              ConfigurationScreenDataGit(
-                configuration: event.configuration,
-                shouldCreateNewFile: event.needsCreateNewFile,
-              ),
+              event.configuration,
             ),
           ),
         ),
@@ -132,13 +129,8 @@ final class ConfigurationScreenBloc
     try {
       emit(ConfigurationScreenState.loading(data: data));
 
-      final git = data.git.data;
-      final shouldCreateNewGitFile =
-          git != null ? git.shouldCreateNewFile : false;
-
       await saveConfigurationsUsecase.execute(
         configuration: data.createRemoteStorageConfigurations(),
-        shouldCreateNewGitFile: shouldCreateNewGitFile,
       );
 
       emit(ConfigurationScreenState.common(data: data));

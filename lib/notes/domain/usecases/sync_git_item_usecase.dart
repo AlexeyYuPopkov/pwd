@@ -5,7 +5,7 @@ import 'package:pwd/common/domain/usecases/pin_usecase.dart';
 import 'package:pwd/notes/data/sync_data_service/git_service_api.dart';
 import 'package:pwd/notes/domain/checksum_checker.dart';
 import 'package:pwd/notes/domain/deleted_items_provider.dart';
-import 'package:pwd/notes/domain/git_data_storage_repository.dart';
+import 'package:pwd/notes/domain/git_repository.dart';
 import 'package:pwd/notes/domain/realm_local_repository.dart';
 import 'package:pwd/notes/domain/sync_requests_parameters/get_db_response.dart';
 import 'package:pwd/notes/domain/sync_requests_parameters/put_db_request.dart';
@@ -32,7 +32,7 @@ final class SyncGitItemUsecaseShaMap {
 }
 
 final class SyncGitItemUsecase with SyncHelper implements SyncUsecase {
-  final GitDataStorageRepository remoteRepository;
+  final GitRepository remoteRepository;
   @override
   final RealmLocalRepository realmRepository;
   @override

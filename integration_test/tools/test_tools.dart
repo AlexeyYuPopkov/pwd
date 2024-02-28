@@ -3,8 +3,18 @@ import 'dart:convert';
 import 'package:pwd/common/data/model/app_configuration_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-final class TestTools {
-  static void setDeveloperSettings(
+final class DeveloperSettings {
+  static const isProxyEnabled = false;
+  static const showRawErrors = false;
+
+  static void applay() {
+    _setDeveloperSettings(
+      isProxyEnabled: isProxyEnabled,
+      showRawErrors: showRawErrors,
+    );
+  }
+
+  static void _setDeveloperSettings(
       {required bool isProxyEnabled, required bool showRawErrors}) {
     final jsonStr = jsonEncode(
       AppConfigurationData(

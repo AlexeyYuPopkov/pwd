@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:pwd/common/presentation/dialogs/dialog_helper.dart';
 import 'package:pwd/settings/presentation/configuration_screen/git_configuration_screen/git_configuration_form.dart';
 
 import 'git_configuration_screen_finders.dart';
@@ -19,7 +18,6 @@ final class GitConfigurationScreenRobot {
       tester.ensureVisible(_finders.ownerTextField),
       tester.ensureVisible(_finders.branchTextField),
       tester.ensureVisible(_finders.fileNameTextField),
-      tester.ensureVisible(_finders.checkbox),
       tester.ensureVisible(_finders.nextButton),
     ]);
 
@@ -28,7 +26,6 @@ final class GitConfigurationScreenRobot {
     expect(_finders.ownerTextField, findsOneWidget);
     expect(_finders.branchTextField, findsOneWidget);
     expect(_finders.fileNameTextField, findsOneWidget);
-    expect(_finders.checkbox, findsOneWidget);
     expect(_finders.nextButton, findsOneWidget);
 
     expect(
@@ -66,24 +63,6 @@ final class GitConfigurationScreenRobot {
     FocusScope.of(context).unfocus();
 
     await tester.pumpAndSettle();
-
-    await tester.ensureVisible(_finders.checkbox);
-
-    await tester.tap(_finders.checkbox);
-
-    await _tapConfirmationDialogOkButton();
-  }
-
-  Future<void> _tapConfirmationDialogOkButton() async {
-    await tester.pumpAndSettle();
-
-    final confirmationDialogOkButton = find.byKey(
-      const Key(DialogHelperTestHelper.okCancelDialogOkButton),
-    );
-
-    await tester.ensureVisible(confirmationDialogOkButton);
-
-    await tester.tap(confirmationDialogOkButton);
   }
 
   Future<void> save() async {

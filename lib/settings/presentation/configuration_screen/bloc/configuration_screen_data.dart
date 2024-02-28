@@ -5,7 +5,7 @@ import 'package:pwd/common/domain/model/remote_configuration/remote_configuratio
 import 'package:pwd/common/support/optional_box.dart';
 
 final class ConfigurationScreenData extends Equatable {
-  final OptionalBox<ConfigurationScreenDataGit> git;
+  final OptionalBox<GitConfiguration> git;
   final OptionalBox<GoogleDriveConfiguration> googleDrive;
   final RemoteConfigurations _initial;
 
@@ -34,14 +34,7 @@ final class ConfigurationScreenData extends Equatable {
 
     return ConfigurationScreenData._(
       configurations,
-      git: OptionalBox<ConfigurationScreenDataGit>(
-        git == null
-            ? null
-            : ConfigurationScreenDataGit(
-                configuration: git,
-                shouldCreateNewFile: false,
-              ),
-      ),
+      git: OptionalBox<GitConfiguration>(git),
       googleDrive: OptionalBox(googleDrive),
     );
   }
@@ -56,7 +49,7 @@ final class ConfigurationScreenData extends Equatable {
     return RemoteConfigurations(
       configurations: [
         if (googleDrive != null) googleDrive,
-        if (git != null) git.configuration,
+        if (git != null) git,
       ],
     );
   }
@@ -73,7 +66,7 @@ final class ConfigurationScreenData extends Equatable {
   }
 
   ConfigurationScreenData copyWith({
-    OptionalBox<ConfigurationScreenDataGit>? git,
+    OptionalBox<GitConfiguration>? git,
     OptionalBox<GoogleDriveConfiguration>? googleDrive,
   }) {
     return ConfigurationScreenData._(
@@ -84,43 +77,43 @@ final class ConfigurationScreenData extends Equatable {
   }
 }
 
-final class ConfigurationScreenDataGit extends Equatable {
-  final bool shouldCreateNewFile;
-  final GitConfiguration configuration;
+// final class ConfigurationScreenDataGit extends Equatable {
+//   final bool shouldCreateNewFile;
+//   final GitConfiguration configuration;
 
-  const ConfigurationScreenDataGit({
-    required this.shouldCreateNewFile,
-    required this.configuration,
-  });
+//   const ConfigurationScreenDataGit({
+//     required this.shouldCreateNewFile,
+//     required this.configuration,
+//   });
 
-  @override
-  List<Object?> get props => [shouldCreateNewFile, configuration];
-}
+//   @override
+//   List<Object?> get props => [shouldCreateNewFile, configuration];
+// }
 
-final class ConfigurationScreenDataGitBox extends Equatable {
-  final ConfigurationScreenDataGit? git;
+// final class ConfigurationScreenDataGitBox extends Equatable {
+//   final ConfigurationScreenDataGit? git;
 
-  const ConfigurationScreenDataGitBox({
-    required this.git,
-  });
+//   const ConfigurationScreenDataGitBox({
+//     required this.git,
+//   });
 
-  factory ConfigurationScreenDataGitBox.initial() =>
-      const ConfigurationScreenDataGitBox(git: null);
+//   factory ConfigurationScreenDataGitBox.initial() =>
+//       const ConfigurationScreenDataGitBox(git: null);
 
-  @override
-  List<Object?> get props => [git];
-}
+//   @override
+//   List<Object?> get props => [git];
+// }
 
-final class ConfigurationScreenDataGoogleDriveBox extends Equatable {
-  final GoogleDriveConfiguration? googleDrive;
+// final class ConfigurationScreenDataGoogleDriveBox extends Equatable {
+//   final GoogleDriveConfiguration? googleDrive;
 
-  const ConfigurationScreenDataGoogleDriveBox({
-    required this.googleDrive,
-  });
+//   const ConfigurationScreenDataGoogleDriveBox({
+//     required this.googleDrive,
+//   });
 
-  factory ConfigurationScreenDataGoogleDriveBox.initial() =>
-      const ConfigurationScreenDataGoogleDriveBox(googleDrive: null);
+//   factory ConfigurationScreenDataGoogleDriveBox.initial() =>
+//       const ConfigurationScreenDataGoogleDriveBox(googleDrive: null);
 
-  @override
-  List<Object?> get props => [googleDrive];
-}
+//   @override
+//   List<Object?> get props => [googleDrive];
+// }

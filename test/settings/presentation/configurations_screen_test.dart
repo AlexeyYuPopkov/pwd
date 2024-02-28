@@ -97,7 +97,6 @@ void main() {
         case ConfigurationType.git:
           return const GitConfigurationFormResult(
             configuration: gitConfiguration,
-            needsCreateNewFile: false,
           );
         case ConfigurationType.googleDrive:
           return const GoogleDriveConfigurationFormResult(
@@ -205,7 +204,6 @@ void main() {
           when(
             () => saveConfigurationsUsecase.execute(
               configuration: remoteStorageConfigurations,
-              shouldCreateNewGitFile: false,
             ),
           ).thenAnswer((_) => Future.value());
 
@@ -216,7 +214,6 @@ void main() {
           verify(
             () => saveConfigurationsUsecase.execute(
               configuration: remoteStorageConfigurations,
-              shouldCreateNewGitFile: false,
             ),
           );
         },
@@ -248,7 +245,6 @@ void main() {
           when(
             () => saveConfigurationsUsecase.execute(
               configuration: remoteStorageConfigurations,
-              shouldCreateNewGitFile: false,
             ),
           ).thenThrow(TestException());
 
@@ -266,7 +262,6 @@ void main() {
           verify(
             () => saveConfigurationsUsecase.execute(
               configuration: remoteStorageConfigurations,
-              shouldCreateNewGitFile: false,
             ),
           );
         },

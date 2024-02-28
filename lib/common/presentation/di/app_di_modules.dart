@@ -1,6 +1,6 @@
 import 'package:di_storage/di_storage.dart';
 import 'package:pwd/common/presentation/di/network_di.dart';
-import 'package:pwd/notes/presentation/di/git_and_sql_di.dart';
+import 'package:pwd/notes/presentation/di/git_relatedl_di.dart';
 import 'package:pwd/notes/presentation/di/google_and_realm_di.dart';
 import 'package:pwd/settings/presentation/di/settings_di.dart';
 
@@ -23,7 +23,7 @@ final class AppDiModules {
 
     NetworkDiModule().bind(di);
     GoogleAndRealmDi().bind(di);
-    GitAndSqlDi().bind(di);
+    GitRelatedlDi().bind(di);
 
     SettingsDi().bind(di);
   }
@@ -34,7 +34,7 @@ final class AppDiModules {
 
     di.removeScope<NetworkDiModule>();
     di.removeScope<GoogleAndRealmDi>();
-    di.removeScope<GitAndSqlDi>();
+    di.removeScope<GitRelatedlDi>();
     di.removeScope<SettingsDi>();
   }
 }

@@ -8,9 +8,7 @@ final class SettingsDi extends DiScope {
       module: this,
       () => SaveConfigurationsUsecase(
         remoteStorageConfigurationProvider: di.resolve(),
-        notesRepository: di.resolve(),
         pinUsecase: di.resolve(),
-        shouldCreateRemoteStorageFileUsecase: di.resolve(),
         localRepository: di.resolve(),
         googleRepository: di.resolve(),
         checksumChecker: di.resolve(),

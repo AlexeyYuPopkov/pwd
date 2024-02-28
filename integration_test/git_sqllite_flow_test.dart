@@ -4,9 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:pwd/home/presentation/home_tabbar/home_tabbar_page.dart';
 import 'package:pwd/main.dart' as app;
-import 'package:pwd/notes/data/datasource/database_path_provider_impl.dart';
-import 'package:pwd/notes/data/datasource/sql_datasource_impl.dart';
-import 'package:pwd/notes/data/mappers/db_note_mapper.dart';
+
 import 'package:pwd/notes/presentation/edit_note/edit_note_page.dart';
 import 'pages/configurations_screen/configurations_screen_robot.dart';
 import 'pages/edit_note_screen/edit_note_screen_robot.dart';
@@ -23,22 +21,7 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
   setUp(() async {
-    final dbDataSource = SqlDatasourceImpl(
-      databasePathProvider: DatabasePathProviderImpl(),
-      mapper: DbNoteMapper(),
-    );
-    await dbDataSource.dropDb();
-
-    // TestTools.setDeveloperSettings(isProxyEnabled: true, showRawErrors: true);
-    TestTools.setDeveloperSettings(isProxyEnabled: false, showRawErrors: false);
-  });
-
-  tearDown(() async {
-    final dbDataSource = SqlDatasourceImpl(
-      databasePathProvider: DatabasePathProviderImpl(),
-      mapper: DbNoteMapper(),
-    );
-    await dbDataSource.dropDb();
+    DeveloperSettings.applay();
   });
 
   testWidgets('Test Login and add note, then delete note with Git',

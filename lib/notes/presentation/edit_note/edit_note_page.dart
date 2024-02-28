@@ -11,8 +11,6 @@ import 'package:pwd/common/presentation/dialogs/dialog_helper.dart';
 import 'package:pwd/common/presentation/dialogs/show_error_dialog_mixin.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
 import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
-import 'package:pwd/notes/presentation/tools/crypt_error_message_provider.dart';
-import 'package:pwd/notes/presentation/tools/notes_provider_error_message_provider.dart';
 import 'package:pwd/notes/presentation/tools/sync_data_error_message_provider.dart';
 import 'package:pwd/theme/common_size.dart';
 
@@ -93,9 +91,7 @@ final class EditNotePage extends StatelessWidget
           context,
           e,
           errorMessageProviders: [
-            const NotesProviderErrorMessageProvider().call,
             const SyncDataErrorMessageProvider().call,
-            const CryptErrorMessageProvider().call,
           ],
         );
         break;

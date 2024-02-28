@@ -11,7 +11,6 @@ import 'package:pwd/common/domain/time_formatter/time_formatter.dart';
 import 'package:pwd/common/domain/usecases/clock_usecase.dart';
 import 'package:pwd/common/domain/usecases/hash_usecase.dart';
 import 'package:pwd/common/domain/usecases/pin_usecase.dart';
-import 'package:pwd/common/domain/usecases/should_create_remote_storage_file_usecase.dart';
 import 'package:pwd/unauth/domain/usecases/login_usecase.dart';
 
 final class UnauthDiModule extends DiScope {
@@ -84,12 +83,6 @@ extension on UnauthDiModule {
         pinUsecase: di.resolve(),
         hashUsecase: di.resolve(),
       ),
-    );
-
-    di.bind(
-      module: this,
-      () => ShouldCreateRemoteStorageFileUsecase(),
-      lifeTime: const LifeTime.single(),
     );
   }
 }

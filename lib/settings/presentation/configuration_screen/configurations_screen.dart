@@ -142,7 +142,6 @@ final class ConfigurationsScreen extends StatelessWidget
       context.read<ConfigurationScreenBloc>().add(
             ConfigurationScreenEvent.setGitConfiguration(
               configuration: result.configuration,
-              needsCreateNewFile: result.needsCreateNewFile,
             ),
           );
 

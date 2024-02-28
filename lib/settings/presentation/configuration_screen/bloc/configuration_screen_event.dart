@@ -8,7 +8,6 @@ sealed class ConfigurationScreenEvent extends Equatable {
 
   const factory ConfigurationScreenEvent.setGitConfiguration({
     required GitConfiguration configuration,
-    required bool needsCreateNewFile,
   }) = SetGitConfigurationEvent;
 
   const factory ConfigurationScreenEvent.setGoogleDriveConfiguration({
@@ -32,11 +31,9 @@ final class InitialEvent extends ConfigurationScreenEvent {
 
 final class SetGitConfigurationEvent extends ConfigurationScreenEvent {
   final GitConfiguration configuration;
-  final bool needsCreateNewFile;
 
   const SetGitConfigurationEvent({
     required this.configuration,
-    required this.needsCreateNewFile,
   });
 }
 

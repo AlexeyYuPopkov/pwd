@@ -13,11 +13,9 @@ import 'git_configuration_screen_test_helper.dart';
 
 final class GitConfigurationFormResult {
   final GitConfiguration configuration;
-  final bool needsCreateNewFile;
 
   const GitConfigurationFormResult({
     required this.configuration,
-    required this.needsCreateNewFile,
   });
 }
 
@@ -157,29 +155,6 @@ final class _GitConfigurationFormState extends State<GitConfigurationForm>
                       inputFormatter: remoteSettingsFileNameInputFormatter,
                     ),
                     const SizedBox(height: CommonSize.indent2x),
-                    Row(
-                      children: [
-                        SizedBox(
-                          width: CommonSize.iconSize,
-                          height: CommonSize.iconSize,
-                          child: Checkbox(
-                            key: const Key(
-                              _TestHelper.checkbox,
-                            ),
-                            value: checkBoxState,
-                            onChanged: (value) => _onCheckbox(
-                              context,
-                              newValue: value,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: CommonSize.indent2x),
-                        Expanded(
-                          child: Text(context.checkboxDescription),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: CommonSize.indent2x),
                   ],
                 ),
               ),
@@ -211,29 +186,6 @@ final class _GitConfigurationFormState extends State<GitConfigurationForm>
         remoteSettingsFileNameValidator(fileNameController.text),
       ].where((e) => e != null).isEmpty;
 
-  void _onCheckbox(
-    BuildContext context, {
-    required bool? newValue,
-  }) {
-    if (newValue == true) {
-      showOkCancelDialog(
-        context,
-        title: context.createNewFileDialogPrompt,
-        onOk: (dialogContext) {
-          if (checkBoxState != newValue) {
-            setState(() => checkBoxState = newValue ?? false);
-          }
-
-          Navigator.of(dialogContext).pop();
-        },
-      );
-    } else {
-      if (checkBoxState != newValue) {
-        setState(() => checkBoxState = false);
-      }
-    }
-  }
-
   void _onSave(BuildContext context) {
     if (formKey.currentState?.validate() == true) {
       if (isValidForm) {
@@ -247,7 +199,6 @@ final class _GitConfigurationFormState extends State<GitConfigurationForm>
             branch: branchController.text,
             fileName: fileNameController.text,
           ),
-          needsCreateNewFile: checkBoxState,
         );
 
         Navigator.of(context).pop(result);
@@ -276,12 +227,6 @@ extension on BuildContext {
   String get fileNameTextFieldHint => 'File name';
   String get fileTooltip => 'Create {your repo}/{your brunch}/{file_name} '
       'then paste {file_name}.';
-
-  String get checkboxDescription =>
-      'Create new file. Overrides the old one, if present';
-
-  String get createNewFileDialogPrompt =>
-      'Do you shure whant override old file, if presents?';
 
   String get saveButtonTitle => 'Save';
 }

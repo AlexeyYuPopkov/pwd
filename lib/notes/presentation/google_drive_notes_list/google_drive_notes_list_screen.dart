@@ -12,11 +12,7 @@ import 'package:pwd/notes/domain/usecases/sync_git_item_usecase.dart';
 import 'package:pwd/notes/domain/usecases/sync_google_drive_item_usecase.dart';
 import 'package:pwd/notes/domain/usecases/sync_usecase.dart';
 import 'package:pwd/notes/presentation/common/widgets/note_list_item_widget.dart';
-import 'package:pwd/notes/presentation/git_notes_list/note_page_route.dart';
-
-import 'package:pwd/notes/presentation/tools/crypt_error_message_provider.dart';
 import 'package:pwd/notes/presentation/tools/local_storage_error_message_provider.dart';
-import 'package:pwd/notes/presentation/tools/notes_provider_error_message_provider.dart';
 import 'package:pwd/notes/presentation/tools/sync_data_error_message_provider.dart';
 import 'package:pwd/theme/common_size.dart';
 
@@ -24,6 +20,7 @@ import 'bloc/google_drive_notes_list_bloc.dart';
 import 'bloc/google_drive_notes_list_event.dart';
 import 'bloc/google_drive_notes_list_state.dart';
 import 'google_drive_notes_list_screen_test_helper.dart';
+import 'note_page_route.dart';
 
 final class GoogleDriveNotesListScreen extends StatelessWidget
     with ShowErrorDialogMixin {
@@ -109,9 +106,7 @@ final class GoogleDriveNotesListScreen extends StatelessWidget
           e,
           errorMessageProviders: [
             const LocalStorageErrorMessageProvider().call,
-            const NotesProviderErrorMessageProvider().call,
             const SyncDataErrorMessageProvider().call,
-            const CryptErrorMessageProvider().call,
           ],
         );
     }

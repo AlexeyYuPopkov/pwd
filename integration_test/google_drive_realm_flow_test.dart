@@ -32,7 +32,7 @@ void main() {
   late StreamSubscription? pinSubscription;
 
   setUp(() async {
-    TestTools.setDeveloperSettings(isProxyEnabled: false, showRawErrors: false);
+    DeveloperSettings.applay();
     // TODO: probably realm db should be cleaned at this point
   });
 

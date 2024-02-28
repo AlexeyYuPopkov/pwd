@@ -18,9 +18,6 @@ final class GitConfigurationScreenFinders {
   final fileNameTextField = find.byKey(
     const Key(GitConfigurationScreenTestHelper.fileNameTextField),
   );
-  final checkbox = find.byKey(
-    const Key(GitConfigurationScreenTestHelper.checkbox),
-  );
 
   final nextButton = find.byKey(
     const Key(GitConfigurationScreenTestHelper.nextButton),
