@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
 import 'package:pwd/notes/presentation/router/configuration_undefined_tab_router_delegate.dart';
-import 'package:pwd/notes/presentation/router/google_drive_item_router_delegate.dart';
+import 'package:pwd/notes/presentation/router/notes_router_delegate.dart';
+
 import 'package:pwd/settings/presentation/router/settings_router_delegate.dart';
 
 import 'home_tabbar_screen_test_helper.dart';
@@ -79,7 +80,7 @@ final class GitTab extends HomeTabbarTabModel {
   @override
   Router buildRoute(BuildContext context) {
     return Router(
-      routerDelegate: GoogleDriveItemRouterDelegate(
+      routerDelegate: NotesRouterDelegate(
         navigatorKey: _notesListRouterKey,
         configuration: configuration,
       ),
@@ -119,7 +120,7 @@ final class GoogleDriveTab extends HomeTabbarTabModel {
   @override
   Router buildRoute(BuildContext context) {
     return Router(
-      routerDelegate: GoogleDriveItemRouterDelegate(
+      routerDelegate: NotesRouterDelegate(
         navigatorKey: _notesListRouterKey,
         configuration: configuration,
       ),

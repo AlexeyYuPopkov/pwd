@@ -3,22 +3,24 @@ import 'package:uuid/uuid.dart';
 
 import 'note_item_content.dart';
 
-class NoteItem extends Equatable {
-  final String id;
-  final String title;
-  final String description;
-  final NoteContentInterface content;
-  final int timestamp;
-  final bool isDecrypted;
+sealed class BaseNoteItem extends Equatable {
+  const BaseNoteItem();
 
-  const NoteItem({
-    required this.id,
-    required this.title,
-    required this.description,
-    required this.content,
-    required this.timestamp,
-    required this.isDecrypted,
-  });
+  String get id;
+  String get title;
+  String get description;
+  NoteContentInterface get content;
+  int get timestamp;
+  bool get isDeleted;
+
+  factory BaseNoteItem.newItem() => UpdatedNoteItem.empty();
+
+  factory BaseNoteItem.updatedItem({
+    required String id,
+    required String title,
+    required String description,
+    required NoteContentInterface content,
+  }) = UpdatedNoteItem;
 
   @override
   List<Object?> get props => [
@@ -27,45 +29,39 @@ class NoteItem extends Equatable {
         description,
         content,
         timestamp,
-        isDecrypted,
+        isDeleted,
       ];
+}
 
-  factory NoteItem.newItem() => UpdatedNoteItem(
-        id: '',
-        title: '',
-        description: '',
-        content: const NoteStringContent(str: ''),
-      );
+class NoteItem extends BaseNoteItem {
+  @override
+  final String id;
+  @override
+  final String title;
+  @override
+  final String description;
+  @override
+  final NoteContentInterface content;
+  @override
+  final int timestamp;
+  @override
+  final bool isDeleted;
 
-  factory NoteItem.updatedItem({
-    required String id,
-    required String title,
-    required String description,
-    required NoteContentInterface content,
-  }) = UpdatedNoteItem;
+  const NoteItem({
+    required this.id,
+    required this.title,
+    required this.description,
+    required this.content,
+    required this.timestamp,
+    required this.isDeleted,
+  });
 
-  factory NoteItem.decrypted({
-    required String id,
-    required String title,
-    required String description,
-    required NoteContentInterface content,
-    required int timestamp,
-  }) =>
-      NoteItem(
-        id: id,
-        title: title,
-        description: description,
-        content: content,
-        timestamp: timestamp,
-        isDecrypted: true,
-      );
-
-  NoteItem copyToUpdatedWith({
+  BaseNoteItem copyToUpdatedWith({
     String? title,
     String? description,
     NoteContentInterface? content,
   }) {
-    return NoteItem.updatedItem(
+    return BaseNoteItem.updatedItem(
       id: id,
       title: title ?? this.title,
       description: description ?? this.description,
@@ -78,7 +74,7 @@ class NoteItem extends Equatable {
     String? description,
     NoteContentInterface? content,
     int? timestamp,
-    bool? isDecrypted,
+    bool? isDeleted,
   }) {
     return NoteItem(
       id: id,
@@ -86,22 +82,60 @@ class NoteItem extends Equatable {
       description: description ?? this.description,
       content: content ?? this.content,
       timestamp: timestamp ?? this.timestamp,
-      isDecrypted: isDecrypted ?? this.isDecrypted,
+      isDeleted: isDeleted ?? this.isDeleted,
     );
   }
 }
 
-final class UpdatedNoteItem extends NoteItem {
-  UpdatedNoteItem({
+final class UpdatedNoteItem extends BaseNoteItem {
+  @override
+  final String id;
+  @override
+  final String title;
+  @override
+  final String description;
+  @override
+  final NoteContentInterface content;
+  @override
+  final int timestamp;
+  @override
+  final bool isDeleted;
+
+  const UpdatedNoteItem._({
+    required this.id,
+    required this.title,
+    required this.description,
+    required this.content,
+    required this.timestamp,
+    required this.isDeleted,
+  });
+
+  factory UpdatedNoteItem({
     required String id,
-    required super.title,
-    required super.description,
-    required super.content,
-  }) : super(
-          id: id.isEmpty ? const Uuid().v4() : id,
-          timestamp: DateTime.now().timestamp,
-          isDecrypted: true,
-        );
+    required String title,
+    required String description,
+    required NoteContentInterface content,
+  }) {
+    return UpdatedNoteItem._(
+      id: id.isEmpty ? const Uuid().v4() : id,
+      title: title,
+      description: description,
+      content: content,
+      timestamp: DateTime.now().timestamp,
+      isDeleted: false,
+    );
+  }
+
+  factory UpdatedNoteItem.empty() {
+    return const UpdatedNoteItem._(
+      id: '',
+      title: '',
+      description: '',
+      content: NoteStringContent(str: ''),
+      timestamp: 0,
+      isDeleted: false,
+    );
+  }
 }
 
 extension on DateTime {

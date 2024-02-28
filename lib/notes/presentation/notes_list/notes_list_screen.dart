@@ -7,10 +7,7 @@ import 'package:pwd/common/presentation/dialogs/show_error_dialog_mixin.dart';
 import 'package:pwd/common/presentation/shimmer/common_shimmer.dart';
 import 'package:di_storage/di_storage.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
-import 'package:pwd/notes/domain/usecases/google_drive_notes_provider_usecase.dart';
-import 'package:pwd/notes/domain/usecases/sync_git_item_usecase.dart';
-import 'package:pwd/notes/domain/usecases/sync_google_drive_item_usecase.dart';
-import 'package:pwd/notes/domain/usecases/sync_usecase.dart';
+import 'package:pwd/notes/domain/usecases/notes_provider_usecase.dart';
 import 'package:pwd/notes/presentation/common/widgets/note_list_item_widget.dart';
 import 'package:pwd/notes/presentation/tools/local_storage_error_message_provider.dart';
 import 'package:pwd/notes/presentation/tools/sync_data_error_message_provider.dart';
@@ -19,28 +16,18 @@ import 'package:pwd/theme/common_size.dart';
 import 'bloc/google_drive_notes_list_bloc.dart';
 import 'bloc/google_drive_notes_list_event.dart';
 import 'bloc/google_drive_notes_list_state.dart';
-import 'google_drive_notes_list_screen_test_helper.dart';
+import 'notes_list_screen_test_helper.dart';
 import 'note_page_route.dart';
 
-final class GoogleDriveNotesListScreen extends StatelessWidget
-    with ShowErrorDialogMixin {
+final class NotesListScreen extends StatelessWidget with ShowErrorDialogMixin {
   final RemoteConfiguration configuration;
   final Future Function(BuildContext, Object) onRoute;
 
-  const GoogleDriveNotesListScreen({
+  const NotesListScreen({
     super.key,
     required this.configuration,
     required this.onRoute,
   });
-
-  SyncUsecase get syncUsecase {
-    switch (configuration) {
-      case GoogleDriveConfiguration():
-        return DiStorage.shared.resolve<SyncGoogleDriveItemUsecase>();
-      case GitConfiguration():
-        return DiStorage.shared.resolve<SyncGitItemUsecase>();
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,8 +35,8 @@ final class GoogleDriveNotesListScreen extends StatelessWidget
     return BlocProvider(
       create: (_) => GoogleDriveNotesListBloc(
         configuration: configuration,
-        notesProviderUsecase: di.resolve<GoogleDriveNotesProviderUsecase>(),
-        syncUsecase: syncUsecase,
+        notesProviderUsecase: di.resolve<NotesProviderUsecase>(),
+        syncUsecase: di.resolve(),
       ),
       child: BlocConsumer<GoogleDriveNotesListBloc, GoogleDriveNotesListState>(
         listener: _listener,
@@ -64,12 +51,12 @@ final class GoogleDriveNotesListScreen extends StatelessWidget
                 ),
                 AppBarButton(
                   key: const Key(
-                    GoogleDriveNotesListScreenTestHelper.addNoteButtonKey,
+                    NotesListScreenTestHelper.addNoteButtonKey,
                   ),
                   iconData: Icons.add,
                   onPressed: () => _onEdit(
                     context,
-                    note: NoteItem.newItem(),
+                    note: BaseNoteItem.newItem(),
                   ),
                 ),
               ],
@@ -120,7 +107,7 @@ final class GoogleDriveNotesListScreen extends StatelessWidget
 
   void _onEdit(
     BuildContext context, {
-    required NoteItem note,
+    required BaseNoteItem note,
   }) {
     onRoute(
       context,

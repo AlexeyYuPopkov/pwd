@@ -4,7 +4,7 @@ import 'package:pwd/common/domain/model/remote_configuration/remote_configuratio
 import 'package:pwd/common/domain/usecases/pin_usecase.dart';
 import 'package:pwd/notes/data/sync_data_service/git_service_api.dart';
 import 'package:pwd/notes/domain/checksum_checker.dart';
-import 'package:pwd/notes/domain/deleted_items_provider.dart';
+
 import 'package:pwd/notes/domain/git_repository.dart';
 import 'package:pwd/notes/domain/realm_local_repository.dart';
 import 'package:pwd/notes/domain/sync_requests_parameters/get_db_response.dart';
@@ -38,7 +38,6 @@ final class SyncGitItemUsecase with SyncHelper implements SyncUsecase {
   @override
   final PinUsecase pinUsecase;
   final ChecksumChecker checksumChecker;
-  final DeletedItemsProvider deletedItemsProvider;
 
   final SyncGitItemUsecaseShaMap syncGitItemUsecaseShaMap;
   final GetFileServiceApi getFileServiceApi;
@@ -48,7 +47,6 @@ final class SyncGitItemUsecase with SyncHelper implements SyncUsecase {
     required this.realmRepository,
     required this.pinUsecase,
     required this.checksumChecker,
-    required this.deletedItemsProvider,
     required this.syncGitItemUsecaseShaMap,
     required this.getFileServiceApi,
   });
@@ -187,15 +185,18 @@ extension on SyncGitItemUsecase {
     final bytes = await getFileServiceApi.getFile(file.downloadUrl);
     // final bytes = base64.decode(file.content);
     final pin = pinUsecase.getPinOrThrow();
-    final deleted = await deletedItemsProvider.getDeletedItems(
-      configuration: configuration,
+    // final deleted = await deletedItemsProvider.getDeletedItems(
+    //   configuration: configuration,
+    // );
+
+    final target = configuration.getTarget(pin: pin);
+
+    await realmRepository.mergeWithDatabasePath(
+      bytes: Uint8List.fromList(bytes),
+      target: target,
     );
 
-    return realmRepository.migrateWithDatabasePath(
-      bytes: Uint8List.fromList(bytes),
-      target: configuration.getTarget(pin: pin),
-      deleted: deleted,
-    );
+    return realmRepository.creanDeletedIfNeeded(target: target);
     // }
   }
 }

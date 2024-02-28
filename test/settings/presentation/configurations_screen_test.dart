@@ -2,9 +2,7 @@ import 'package:di_storage/di_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:pwd/common/domain/app_configuration_provider.dart';
 import 'package:pwd/common/domain/errors/app_error.dart';
-import 'package:pwd/common/domain/model/app_configuration.dart';
 import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
 import 'package:pwd/common/domain/model/remote_configuration/remote_configurations.dart';
 import 'package:pwd/common/domain/remote_configuration_provider.dart';
@@ -23,24 +21,6 @@ class MockRemoteStorageConfigurationProvider extends Mock
 
 class MockSaveConfigurationsUsecase extends Mock
     implements SaveConfigurationsUsecase {}
-
-class CustomMockAppConfigurationProvider extends AppConfigurationProvider {
-  @override
-  AppConfiguration get currentConfiguration => const AppConfiguration(
-        proxyData: null,
-        showRawErrors: false,
-      );
-
-  @override
-  Future<void> dropEnvironment() => throw UnimplementedError();
-
-  @override
-  Future<AppConfiguration> getAppConfiguration() => throw UnimplementedError();
-
-  @override
-  Future<void> setEnvironment(AppConfiguration enviroment) =>
-      throw UnimplementedError();
-}
 
 void main() {
   const gitConfiguration = GitConfiguration(
@@ -92,6 +72,7 @@ void main() {
   );
 
   Future dummyOnRoute(BuildContext context, Object route) async {
+    // TODO: check if code bellow needed
     if (route is OnSetupConfigurationRoute) {
       switch (route.type) {
         case ConfigurationType.git:

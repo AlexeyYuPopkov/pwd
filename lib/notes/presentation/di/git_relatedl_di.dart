@@ -33,7 +33,6 @@ final class GitRelatedlDi extends DiScope {
         realmRepository: di.resolve(),
         pinUsecase: di.resolve(),
         checksumChecker: di.resolve(),
-        deletedItemsProvider: di.resolve(),
         syncGitItemUsecaseShaMap: di.resolve(),
         getFileServiceApi: di.resolve(),
       ),

@@ -1,12 +1,10 @@
 import 'package:di_storage/di_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
-import 'package:pwd/notes/domain/usecases/google_drive_notes_provider_usecase.dart';
-import 'package:pwd/notes/domain/usecases/sync_git_item_usecase.dart';
-import 'package:pwd/notes/domain/usecases/sync_google_drive_item_usecase.dart';
-import 'package:pwd/notes/domain/usecases/sync_usecase.dart';
 import 'package:rxdart/subjects.dart';
+import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
+import 'package:pwd/notes/domain/usecases/notes_provider_usecase.dart';
+
 import 'package:pwd/common/presentation/dialogs/dialog_helper.dart';
 import 'package:pwd/common/presentation/dialogs/show_error_dialog_mixin.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
@@ -17,48 +15,20 @@ import 'package:pwd/theme/common_size.dart';
 import 'bloc/edit_note_bloc.dart';
 import 'edit_note_screen_test_helper.dart';
 
-sealed class EditNotePagePopResult {
-  const EditNotePagePopResult();
+part 'edit_note_page_results_part.dart';
 
-  const factory EditNotePagePopResult.didUpdate({required NoteItem noteItem}) =
-      DidUpdateResult;
-
-  const factory EditNotePagePopResult.didDidDelete() = DidDeleteResult;
-}
-
-final class DidUpdateResult extends EditNotePagePopResult {
-  final NoteItem noteItem;
-
-  const DidUpdateResult({required this.noteItem});
-}
-
-final class DidDeleteResult extends EditNotePagePopResult {
-  const DidDeleteResult();
-}
-
-typedef _TestHelper = EditNoteScreenTestHelper;
-
-final class EditNotePage extends StatelessWidget
+final class EditNoteScreen extends StatelessWidget
     with ShowErrorDialogMixin, DialogHelper {
   final formKey = GlobalKey<_FormState>();
 
-  final NoteItem noteItem;
+  final BaseNoteItem noteItem;
   final RemoteConfiguration configuration;
 
   final Future Function(BuildContext, Object) onRoute;
 
   final isSubmitEnabledStream = BehaviorSubject.seeded(false);
 
-  SyncUsecase get syncUsecase {
-    switch (configuration) {
-      case GoogleDriveConfiguration():
-        return DiStorage.shared.resolve<SyncGoogleDriveItemUsecase>();
-      case GitConfiguration():
-        return DiStorage.shared.resolve<SyncGitItemUsecase>();
-    }
-  }
-
-  EditNotePage({
+  EditNoteScreen({
     super.key,
     required this.noteItem,
     required this.configuration,
@@ -110,11 +80,12 @@ final class EditNotePage extends StatelessWidget
           create: (context) => EditNoteBloc(
             configuration: configuration,
             notesProviderUsecase:
-                DiStorage.shared.resolve<GoogleDriveNotesProviderUsecase>(),
-            syncDataUsecase: syncUsecase,
+                DiStorage.shared.resolve<NotesProviderUsecase>(),
+            deleteNoteUsecase: DiStorage.shared.resolve(),
             noteItem: noteItem,
           ),
           child: BlocConsumer<EditNoteBloc, EditNoteState>(
+            key: const Key(_TestHelper.blocConsumerKey),
             listener: _listener,
             builder: (context, state) => CustomScrollView(
               slivers: [
@@ -122,7 +93,7 @@ final class EditNotePage extends StatelessWidget
                   child: _Form(
                     key: formKey,
                     noteItem: state.data.noteItem,
-                    isSubmitEnabledStream: isSubmitEnabledStream,
+                    isSaveEnabledStream: isSubmitEnabledStream,
                   ),
                 ),
                 SliverFillRemaining(
@@ -164,7 +135,9 @@ final class EditNotePage extends StatelessWidget
                                   key: const Key(
                                     _TestHelper.deleteButtonKey,
                                   ),
-                                  onPressed: () => _onDelete(context),
+                                  onPressed: noteItem is UpdatedNoteItem
+                                      ? null
+                                      : () => _onDelete(context),
                                   child: Text(context.deleteButtonTitle),
                                 ),
                               ),
@@ -220,13 +193,13 @@ final class EditNotePage extends StatelessWidget
 }
 
 class _Form extends StatefulWidget {
-  final NoteItem noteItem;
-  final BehaviorSubject isSubmitEnabledStream;
+  final BaseNoteItem noteItem;
+  final BehaviorSubject isSaveEnabledStream;
 
   const _Form({
     super.key,
     required this.noteItem,
-    required this.isSubmitEnabledStream,
+    required this.isSaveEnabledStream,
   });
 
   @override
@@ -298,8 +271,8 @@ class _FormState extends State<_Form> {
   void _shouldChangeSubmitEnabledStatusIfNeeded() {
     final checkResult = checkIsSubmitEnabled();
 
-    if (checkResult != widget.isSubmitEnabledStream.value) {
-      widget.isSubmitEnabledStream.add(checkResult);
+    if (checkResult != widget.isSaveEnabledStream.value) {
+      widget.isSaveEnabledStream.add(checkResult);
     }
   }
 

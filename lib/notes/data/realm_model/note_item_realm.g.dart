@@ -13,13 +13,15 @@ class NoteItemRealm extends _NoteItemRealm
     String id,
     String title,
     String description,
-    int timestamp, {
+    int timestamp,
+    bool deleted, {
     Iterable<NoteItemContentRealm> content = const [],
   }) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'title', title);
     RealmObjectBase.set(this, 'description', description);
     RealmObjectBase.set(this, 'timestamp', timestamp);
+    RealmObjectBase.set(this, 'deleted', deleted);
     RealmObjectBase.set<RealmList<NoteItemContentRealm>>(
         this, 'content', RealmList<NoteItemContentRealm>(content));
   }
@@ -57,6 +59,11 @@ class NoteItemRealm extends _NoteItemRealm
   set timestamp(int value) => RealmObjectBase.set(this, 'timestamp', value);
 
   @override
+  bool get deleted => RealmObjectBase.get<bool>(this, 'deleted') as bool;
+  @override
+  set deleted(bool value) => RealmObjectBase.set(this, 'deleted', value);
+
+  @override
   Stream<RealmObjectChanges<NoteItemRealm>> get changes =>
       RealmObjectBase.getChanges<NoteItemRealm>(this);
 
@@ -76,6 +83,7 @@ class NoteItemRealm extends _NoteItemRealm
           linkTarget: 'NoteItemContentRealm',
           collectionType: RealmCollectionType.list),
       SchemaProperty('timestamp', RealmPropertyType.int),
+      SchemaProperty('deleted', RealmPropertyType.bool),
     ]);
   }
 }

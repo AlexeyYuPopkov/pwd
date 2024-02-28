@@ -3,8 +3,8 @@ import 'package:pwd/common/domain/model/remote_configuration/local_storage_targe
 import 'package:pwd/notes/domain/model/note_item.dart';
 
 abstract interface class RealmLocalRepository {
-  Future<void> delete(String id, {required LocalStorageTarget target});
-
+  Future<void> markDeleted(String id, {required LocalStorageTarget target});
+  Future<void> creanDeletedIfNeeded({required LocalStorageTarget target});
   Future<void> deleteAll({required LocalStorageTarget target});
 
   Future<void> saveNotes({
@@ -22,7 +22,7 @@ abstract interface class RealmLocalRepository {
   });
 
   Future<void> updateNote(
-    NoteItem noteItem, {
+    BaseNoteItem noteItem, {
     required LocalStorageTarget target,
   });
 
@@ -30,9 +30,8 @@ abstract interface class RealmLocalRepository {
     required LocalStorageTarget target,
   });
 
-  Future<void> migrateWithDatabasePath({
+  Future<void> mergeWithDatabasePath({
     required Uint8List bytes,
     required LocalStorageTarget target,
-    required Set<String> deleted,
   });
 }

@@ -14,16 +14,17 @@ final class NoteRealmMapper {
         ],
       ),
       timestamp: src.timestamp,
-      isDecrypted: true,
+      isDeleted: true,
     );
   }
 
-  static NoteItemRealm toData(NoteItem src) {
+  static NoteItemRealm toData(BaseNoteItem src) {
     return NoteItemRealm(
       src.id,
       src.title,
       src.description,
       src.timestamp,
+      src.isDeleted,
       content: [
         for (final item in src.content.items) NoteItemContentRealm(item.text),
       ],

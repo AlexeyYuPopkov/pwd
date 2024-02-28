@@ -8,7 +8,7 @@ import 'package:pwd/notes/domain/model/note_item.dart';
 import 'package:pwd/theme/common_size.dart';
 
 class NoteDetailsPage extends StatelessWidget with ShowErrorDialogMixin {
-  final NoteItem noteItem;
+  final BaseNoteItem noteItem;
 
   const NoteDetailsPage({
     super.key,
@@ -84,7 +84,7 @@ class NoteDetailsPage extends StatelessWidget with ShowErrorDialogMixin {
     );
   }
 
-  List<_ListItem> _createModels(NoteItem noteItem) => [
+  List<_ListItem> _createModels(BaseNoteItem noteItem) => [
         if (noteItem.title.isNotEmpty) _TitleItem(text: noteItem.title),
         if (noteItem.description.isNotEmpty)
           _SubtitleItem(text: noteItem.description),

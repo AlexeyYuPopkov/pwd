@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
 import 'package:pwd/notes/domain/model/note_item_content.dart';
+import 'package:pwd/notes/domain/usecases/delete_note_usecase.dart';
 import 'package:pwd/notes/domain/usecases/notes_provider_usecase.dart';
-import 'package:pwd/notes/domain/usecases/sync_usecase.dart';
 
 part 'edit_note_state.dart';
 part 'edit_note_event.dart';
@@ -12,14 +12,14 @@ part 'edit_note_event.dart';
 final class EditNoteBloc extends Bloc<EditNoteEvent, EditNoteState> {
   final RemoteConfiguration configuration;
   final NotesProviderUsecase notesProviderUsecase;
-  final SyncUsecase syncDataUsecase;
+  final DeleteNoteUsecase deleteNoteUsecase;
   EditNotePageData get data => state.data;
 
   EditNoteBloc({
     required this.configuration,
     required this.notesProviderUsecase,
-    required this.syncDataUsecase,
-    required NoteItem noteItem,
+    required this.deleteNoteUsecase,
+    required BaseNoteItem noteItem,
   }) : super(
           EditNoteState.common(
             data: EditNotePageData(noteItem: noteItem),
@@ -40,7 +40,7 @@ final class EditNoteBloc extends Bloc<EditNoteEvent, EditNoteState> {
     try {
       emit(EditNoteState.loading(data: data));
 
-      final noteItem = NoteItem.updatedItem(
+      final noteItem = BaseNoteItem.updatedItem(
         id: data.noteItem.id,
         title: event.title,
         description: event.description,
@@ -69,11 +69,11 @@ final class EditNoteBloc extends Bloc<EditNoteEvent, EditNoteState> {
     try {
       emit(EditNoteState.loading(data: data));
 
-      await notesProviderUsecase.deleteNoteItem(
-        data.noteItem,
+      await deleteNoteUsecase.execute(
+        id: data.noteItem.id,
         configuration: configuration,
       );
-      await syncDataUsecase.updateRemote(configuration: configuration);
+
       emit(EditNoteState.didDelete(data: data));
     } catch (e) {
       emit(EditNoteState.error(data: state.data, e: e));

@@ -60,14 +60,6 @@ final class NoteListItemWidget extends StatelessWidget {
                 ),
               ),
             ),
-            if (!note.isDecrypted)
-              Tooltip(
-                message: context.rawNoteTooltipMessage,
-                child: const Icon(
-                  Icons.warning,
-                  size: CommonSize.indent2x,
-                ),
-              ),
             CupertinoButton(
               alignment: Alignment.centerRight,
               padding: const EdgeInsets.only(left: CommonSize.indent2x),
@@ -86,10 +78,6 @@ final class NoteListItemWidget extends StatelessWidget {
       ),
     );
   }
-}
-
-extension on BuildContext {
-  String get rawNoteTooltipMessage => 'Not Encrypted';
 }
 
 final class NoteListItemWidgetTestHelper {

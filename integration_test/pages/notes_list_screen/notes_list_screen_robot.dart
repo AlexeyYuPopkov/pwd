@@ -1,12 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'google_drive_notes_list_screen_finders.dart';
+import 'notes_list_screen_finders.dart';
 
-final class GoogleDriveNotesListScreenRobot {
-  GoogleDriveNotesListScreenRobot(this.tester);
+final class NotesListScreenRobot {
+  NotesListScreenRobot(this.tester);
   final WidgetTester tester;
 
-  late final _finders = GoogleDriveNotesListScreenFinders();
+  late final _finders = NotesListScreenFinders();
 
   Future<void> checkEmptyPageState() async {
     await tester.pumpAndSettle();

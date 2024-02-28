@@ -6,7 +6,6 @@ import 'package:pwd/common/domain/base_pin.dart';
 import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
 import 'package:pwd/common/domain/usecases/pin_usecase.dart';
 import 'package:pwd/notes/domain/checksum_checker.dart';
-import 'package:pwd/notes/domain/deleted_items_provider.dart';
 import 'package:pwd/notes/domain/google_repository.dart';
 import 'package:pwd/notes/domain/model/google_drive_file.dart';
 import 'package:pwd/notes/domain/realm_local_repository.dart';
@@ -20,14 +19,11 @@ class MockPinUsecase extends Mock implements PinUsecase {}
 
 class MockChecksumChecker extends Mock implements ChecksumChecker {}
 
-class MockDeletedItemsProvider extends Mock implements DeletedItemsProvider {}
-
 void main() {
   late MockGoogleRepository googleRepository;
   late MockRealmLocalRepository repository;
   late MockPinUsecase pinUsecase;
   late MockChecksumChecker checksumChecker;
-  late MockDeletedItemsProvider deletedItemsProvider;
   late SyncGoogleDriveItemUsecase usecase;
 
   setUp(() {
@@ -35,14 +31,12 @@ void main() {
     repository = MockRealmLocalRepository();
     pinUsecase = MockPinUsecase();
     checksumChecker = MockChecksumChecker();
-    deletedItemsProvider = MockDeletedItemsProvider();
 
     usecase = SyncGoogleDriveItemUsecase(
       remoteRepository: googleRepository,
       realmRepository: repository,
       pinUsecase: pinUsecase,
       checksumChecker: checksumChecker,
-      deletedItemsProvider: deletedItemsProvider,
     );
   });
 
@@ -136,7 +130,7 @@ void main() {
     'SyncGoogleDriveItemUsecase: sync, new file should create',
     () {
       test(
-        'check all methods called',
+        'check all methods called, file == null',
         () async {
           when(
             () => googleRepository.getFile(target: configuration),
@@ -168,7 +162,7 @@ void main() {
 
           await usecase.sync(configuration: configuration);
 
-          final verification = verifyInOrder(
+          verifyInOrder(
             [
               () => pinUsecase.getPinOrThrow(),
               () => repository.readAsBytes(
@@ -184,13 +178,11 @@ void main() {
                   ),
             ],
           );
-
-          expect(verification.length, 4);
         },
       );
 
       test(
-        'check all methods called, new file should create',
+        'check all methods called, file == null, throw',
         () async {
           when(
             () => googleRepository.getFile(target: configuration),
@@ -263,14 +255,11 @@ void main() {
 
           verifyNever(() => googleRepository.downloadFile(googleDriveFile));
           verifyNever(() => pinUsecase.getPinOrThrow());
-          verifyNever(() => deletedItemsProvider.getDeletedItems(
-                configuration: configuration,
-              ));
+
           verifyNever(
-            () => repository.migrateWithDatabasePath(
+            () => repository.mergeWithDatabasePath(
               bytes: realmDatabaseAsBytes,
               target: configuration.getTarget(pin: pin),
-              deleted: const {},
             ),
           );
           verifyNever(() => repository.readAsBytes(
@@ -298,7 +287,6 @@ void main() {
       test(
         'check all methods called',
         () async {
-          const Set<String> deletedItems = {};
           final downloadStream = Stream.value(const <int>[]);
 
           final downloadedBytes = Uint8List.fromList(const []);
@@ -326,22 +314,17 @@ void main() {
           when(() => pinUsecase.getPinOrThrow()).thenReturn(pin);
 
           when(
-            () => deletedItemsProvider.getDeletedItems(
-              configuration: configuration,
-            ),
-          ).thenAnswer(
-            (_) async => deletedItems,
-          );
-
-          when(
-            () => repository.migrateWithDatabasePath(
+            () => repository.mergeWithDatabasePath(
               bytes: downloadedBytes,
               target: configuration.getTarget(pin: pin),
-              deleted: deletedItems,
             ),
-          ).thenAnswer(
-            (_) async => {},
-          );
+          ).thenAnswer((_) => Future.value());
+
+          when(
+            () => repository.creanDeletedIfNeeded(
+              target: configuration.getTarget(pin: pin),
+            ),
+          ).thenAnswer((_) => Future.value());
 
           when(() => pinUsecase.getPinOrThrow()).thenReturn(pin);
 
@@ -383,13 +366,12 @@ void main() {
                   ),
               () => googleRepository.downloadFile(googleDriveFile),
               () => pinUsecase.getPinOrThrow(),
-              () => deletedItemsProvider.getDeletedItems(
-                    configuration: configuration,
-                  ),
-              () => repository.migrateWithDatabasePath(
+              () => repository.mergeWithDatabasePath(
                     bytes: realmDatabaseAsBytes,
                     target: configuration.getTarget(pin: pin),
-                    deleted: deletedItems,
+                  ),
+              () => repository.creanDeletedIfNeeded(
+                    target: configuration.getTarget(pin: pin),
                   ),
               () => pinUsecase.getPinOrThrow(),
               () => repository.readAsBytes(
@@ -413,7 +395,6 @@ void main() {
       test(
         'check all methods called, throws',
         () async {
-          const Set<String> deletedItems = {};
           final downloadStream = Stream.value(const <int>[]);
 
           final downloadedBytes = Uint8List.fromList(const []);
@@ -441,22 +422,19 @@ void main() {
           when(() => pinUsecase.getPinOrThrow()).thenReturn(pin);
 
           when(
-            () => deletedItemsProvider.getDeletedItems(
-              configuration: configuration,
-            ),
-          ).thenAnswer(
-            (_) async => deletedItems,
-          );
-
-          when(
-            () => repository.migrateWithDatabasePath(
+            () => repository.mergeWithDatabasePath(
               bytes: downloadedBytes,
               target: configuration.getTarget(pin: pin),
-              deleted: deletedItems,
             ),
           ).thenAnswer(
             (_) async => {},
           );
+
+          when(
+            () => repository.creanDeletedIfNeeded(
+              target: configuration.getTarget(pin: pin),
+            ),
+          ).thenAnswer((_) => Future.value());
 
           when(() => pinUsecase.getPinOrThrow()).thenReturn(pin);
 
@@ -498,14 +476,11 @@ void main() {
                       ),
                   () => googleRepository.downloadFile(googleDriveFile),
                   () => pinUsecase.getPinOrThrow(),
-                  () => deletedItemsProvider.getDeletedItems(
-                        configuration: configuration,
-                      ),
-                  () => repository.migrateWithDatabasePath(
+                  () => repository.mergeWithDatabasePath(
                         bytes: realmDatabaseAsBytes,
                         target: configuration.getTarget(pin: pin),
-                        deleted: deletedItems,
                       ),
+                  () => repository.creanDeletedIfNeeded(target: target),
                   () => pinUsecase.getPinOrThrow(),
                   () => repository.readAsBytes(
                         target: configuration.getTarget(pin: pin),

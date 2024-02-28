@@ -4,7 +4,7 @@ sealed class NotePageRoute {
   const NotePageRoute();
 
   const factory NotePageRoute.onEdit({
-    required NoteItem noteItem,
+    required BaseNoteItem noteItem,
   }) = NotePageOnEdit;
 
   const factory NotePageRoute.onDetails({
@@ -15,7 +15,7 @@ sealed class NotePageRoute {
 }
 
 final class NotePageOnEdit extends NotePageRoute {
-  final NoteItem noteItem;
+  final BaseNoteItem noteItem;
 
   const NotePageOnEdit({
     required this.noteItem,
@@ -23,7 +23,7 @@ final class NotePageOnEdit extends NotePageRoute {
 }
 
 final class NotePageOnDetails extends NotePageRoute {
-  final NoteItem noteItem;
+  final BaseNoteItem noteItem;
 
   const NotePageOnDetails({
     required this.noteItem,

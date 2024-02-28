@@ -3,6 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'pin_screen_finders.dart';
 
 final class PinScreenRobot {
+  static const pinStr = '3333';
+
   PinScreenRobot(this.tester);
   final WidgetTester tester;
 
@@ -25,7 +27,7 @@ final class PinScreenRobot {
 
     await tester.tap(_finders.pinField);
     await tester.pumpAndSettle();
-    await tester.enterText(_finders.pinField, '3333');
+    await tester.enterText(_finders.pinField, pinStr);
 
     await tester.tap(_finders.nextButton);
 

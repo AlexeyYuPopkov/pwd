@@ -96,7 +96,7 @@ void main() {
         when(
           () => usecase.execute('1234'),
         ).thenAnswer(
-          (invocation) => Future.value(),
+          (_) => Future.value(),
         );
 
         await tester.tap(finders.nextButton);

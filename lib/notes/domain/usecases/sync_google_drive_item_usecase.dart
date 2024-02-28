@@ -2,7 +2,6 @@ import 'package:async/async.dart';
 import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
 import 'package:pwd/common/domain/usecases/pin_usecase.dart';
 import 'package:pwd/notes/domain/checksum_checker.dart';
-import 'package:pwd/notes/domain/deleted_items_provider.dart';
 import 'package:pwd/notes/domain/google_repository.dart';
 import 'package:pwd/notes/domain/realm_local_repository.dart';
 import 'package:pwd/notes/domain/model/google_error.dart';
@@ -17,14 +16,12 @@ final class SyncGoogleDriveItemUsecase with SyncHelper implements SyncUsecase {
   @override
   final PinUsecase pinUsecase;
   final ChecksumChecker checksumChecker;
-  final DeletedItemsProvider deletedItemsProvider;
 
   SyncGoogleDriveItemUsecase({
     required this.remoteRepository,
     required this.realmRepository,
     required this.pinUsecase,
     required this.checksumChecker,
-    required this.deletedItemsProvider,
   });
 
   @override
@@ -107,15 +104,18 @@ final class SyncGoogleDriveItemUsecase with SyncHelper implements SyncUsecase {
     } else {
       final bytes = await collectBytes(stream);
       final pin = pinUsecase.getPinOrThrow();
-      final deleted = await deletedItemsProvider.getDeletedItems(
-        configuration: configuration,
+      // final deleted = await deletedItemsProvider.getDeletedItems(
+      //   configuration: configuration,
+      // );
+
+      final target = configuration.getTarget(pin: pin);
+
+      await realmRepository.mergeWithDatabasePath(
+        bytes: bytes,
+        target: target,
       );
 
-      return realmRepository.migrateWithDatabasePath(
-        bytes: bytes,
-        target: configuration.getTarget(pin: pin),
-        deleted: deleted,
-      );
+      return realmRepository.creanDeletedIfNeeded(target: target);
     }
   }
 

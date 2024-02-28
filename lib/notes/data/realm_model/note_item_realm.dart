@@ -10,9 +10,23 @@ class _NoteItemRealm {
   late String description;
   late List<_NoteItemContentRealm> content;
   late int timestamp;
+  late bool deleted;
 }
 
 @RealmModel(ObjectType.embeddedObject)
 class _NoteItemContentRealm {
   late String text;
+}
+
+extension MarkDeleted on NoteItemRealm {
+  NoteItemRealm deletedCopy({required int timestamp}) {
+    return NoteItemRealm(
+      id,
+      '',
+      '',
+      timestamp,
+      true,
+      content: [],
+    );
+  }
 }
