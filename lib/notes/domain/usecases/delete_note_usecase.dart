@@ -23,6 +23,6 @@ class DeleteNoteUsecase {
       id,
       target: configuration.getTarget(pin: pin),
     );
-    await syncUsecase.sync(configuration: configuration);
+    await syncUsecase.execute(configuration: configuration);
   }
 }

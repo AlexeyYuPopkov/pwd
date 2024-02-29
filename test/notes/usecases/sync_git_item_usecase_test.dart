@@ -5,14 +5,17 @@ import 'package:mocktail/mocktail.dart';
 import 'package:pwd/common/domain/base_pin.dart';
 import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
 import 'package:pwd/common/domain/usecases/pin_usecase.dart';
+import 'package:pwd/notes/data/sync_data_service/git_service_api.dart';
 import 'package:pwd/notes/domain/checksum_checker.dart';
-import 'package:pwd/notes/domain/google_repository.dart';
-import 'package:pwd/notes/domain/model/google_drive_file.dart';
+import 'package:pwd/notes/domain/git_repository.dart';
 import 'package:pwd/notes/domain/realm_local_repository.dart';
+import 'package:pwd/notes/domain/sync_requests_parameters/get_db_response.dart';
+import 'package:pwd/notes/domain/sync_requests_parameters/put_db_request.dart';
+import 'package:pwd/notes/domain/sync_requests_parameters/put_db_response.dart';
 import 'package:pwd/notes/domain/usecases/sync_data_usecases_errors.dart';
-import 'package:pwd/notes/domain/usecases/sync_google_drive_item_usecase.dart';
+import 'package:pwd/notes/domain/usecases/sync_git_item_usecase.dart';
 
-class MockGoogleRepository extends Mock implements GoogleRepository {}
+class MockGitRepository extends Mock implements GitRepository {}
 
 class MockRealmLocalRepository extends Mock implements RealmLocalRepository {}
 
@@ -20,53 +23,74 @@ class MockPinUsecase extends Mock implements PinUsecase {}
 
 class MockChecksumChecker extends Mock implements ChecksumChecker {}
 
+class MockGetFileServiceApi extends Mock implements GetFileServiceApi {}
+
 void main() {
-  late MockGoogleRepository googleRepository;
+  late MockGitRepository gitRepository;
   late MockRealmLocalRepository repository;
   late MockPinUsecase pinUsecase;
   late MockChecksumChecker checksumChecker;
-  late SyncGoogleDriveItemUsecase usecase;
+  late SyncGitItemUsecase usecase;
+  late SyncGitItemUsecaseShaMap shaMap;
+  late GetFileServiceApi getFileServiceApi;
 
   setUp(() {
-    googleRepository = MockGoogleRepository();
+    gitRepository = MockGitRepository();
     repository = MockRealmLocalRepository();
     pinUsecase = MockPinUsecase();
     checksumChecker = MockChecksumChecker();
+    shaMap = SyncGitItemUsecaseShaMap();
+    getFileServiceApi = MockGetFileServiceApi();
 
-    usecase = SyncGoogleDriveItemUsecase(
-      remoteRepository: googleRepository,
+    usecase = SyncGitItemUsecase(
+      remoteRepository: gitRepository,
       realmRepository: repository,
       pinUsecase: pinUsecase,
       checksumChecker: checksumChecker,
+      syncGitItemUsecaseShaMap: shaMap,
+      getFileServiceApi: getFileServiceApi,
     );
   });
 
-  const configuration = GoogleDriveConfiguration(fileName: 'fileName');
+  const configuration = GitConfiguration(
+    token: '',
+    repo: '',
+    owner: '',
+    branch: '',
+    fileName: 'fileName',
+  );
 
   const pin = Pin(
     pinSha512: [],
   );
 
-  final target = configuration.getTarget(
-    pin: pin,
-  );
-
   final realmDatabaseAsBytes = Uint8List.fromList([]);
 
-  final googleDriveFile = GoogleDriveFile(
-    id: '',
-    checksum: 'not empty',
-    name: configuration.fileName,
+  const sha = '123';
+
+  const gitFilePutResponse =
+      PutDbResponse(content: PutDbResponseContent(sha: sha));
+  const gitFileGetResponse = GetDbResponse(
+    sha: sha,
+    content: '',
+    downloadUrl: '',
   );
 
+  final request = PutDbRequest(
+    message: SyncGitItemUsecase.commitMessage,
+    content: '',
+    sha: null,
+    committer: SyncGitItemUsecase.committer,
+    branch: configuration.branch,
+  );
   group(
-    'SyncGoogleDriveItemUsecase: sync, new file should create',
+    'SyncGitItemUsecase: sync, new file should create',
     () {
       test(
         'check all methods called, file == null',
         () async {
           when(
-            () => googleRepository.getFile(target: configuration),
+            () => gitRepository.getFile(configuration: configuration),
           ).thenAnswer(
             (_) => Future.value(null),
           );
@@ -77,21 +101,30 @@ void main() {
               )).thenAnswer(
             (_) async => realmDatabaseAsBytes,
           );
+
+          final request = PutDbRequest(
+            message: SyncGitItemUsecase.commitMessage,
+            content: '',
+            sha: null,
+            committer: SyncGitItemUsecase.committer,
+            branch: configuration.branch,
+          );
+
           when(
-            () => googleRepository.updateRemote(
-              realmDatabaseAsBytes,
+            () => gitRepository.updateRemote(
+              request: request,
               configuration: configuration,
             ),
           ).thenAnswer(
-            (_) async => googleDriveFile,
+            (_) async => gitFilePutResponse,
           );
 
           when(
             () => checksumChecker.setChecksum(
-              googleDriveFile.checksum,
+              sha,
               configuration: configuration,
             ),
-          ).thenAnswer((invocation) async {});
+          ).thenAnswer((_) async {});
 
           await usecase.execute(configuration: configuration);
 
@@ -101,12 +134,12 @@ void main() {
               () => repository.readAsBytes(
                     target: configuration.getTarget(pin: pin),
                   ),
-              () => googleRepository.updateRemote(
-                    realmDatabaseAsBytes,
+              () => gitRepository.updateRemote(
+                    request: request,
                     configuration: configuration,
                   ),
               () => checksumChecker.setChecksum(
-                    googleDriveFile.checksum,
+                    sha,
                     configuration: configuration,
                   ),
             ],
@@ -118,7 +151,7 @@ void main() {
         'check all methods called, file == null, throw',
         () async {
           when(
-            () => googleRepository.getFile(target: configuration),
+            () => gitRepository.getFile(configuration: configuration),
           ).thenAnswer(
             (_) => Future.value(null),
           );
@@ -129,18 +162,10 @@ void main() {
               )).thenAnswer(
             (_) async => realmDatabaseAsBytes,
           );
-          when(
-            () => googleRepository.updateRemote(
-              realmDatabaseAsBytes,
-              configuration: configuration,
-            ),
-          ).thenAnswer(
-            (_) async => googleDriveFile,
-          );
 
           when(
-            () => checksumChecker.setChecksum(
-              googleDriveFile.checksum,
+            () => gitRepository.updateRemote(
+              request: request,
               configuration: configuration,
             ),
           ).thenThrow(_Exception());
@@ -154,15 +179,15 @@ void main() {
   );
 
   group(
-    'SyncGoogleDriveItemUsecase: sync, new file should not create',
+    'SyncGitItemUsecase: sync, file != null, localChecksum == remoteChecksum',
     () {
       test(
         'sync not needed, check all methods called',
         () async {
           when(
-            () => googleRepository.getFile(target: configuration),
+            () => gitRepository.getFile(configuration: configuration),
           ).thenAnswer(
-            (_) async => googleDriveFile,
+            (_) async => gitFileGetResponse,
           );
 
           when(
@@ -170,23 +195,21 @@ void main() {
               configuration: configuration,
             ),
           ).thenAnswer(
-            (_) async => 'not empty',
+            (_) async => sha,
           );
 
           await usecase.execute(configuration: configuration);
 
-          final verification = verifyInOrder(
+          verifyInOrder(
             [
-              () => googleRepository.getFile(target: configuration),
+              () => gitRepository.getFile(configuration: configuration),
               () => checksumChecker.getChecksum(
                     configuration: configuration,
                   ),
             ],
           );
 
-          expect(verification.length, 2);
-
-          verifyNever(() => googleRepository.downloadFile(googleDriveFile));
+          verifyNever(() => getFileServiceApi.getFile(''));
           verifyNever(() => pinUsecase.getPinOrThrow());
 
           verifyNever(
@@ -195,22 +218,25 @@ void main() {
               target: configuration.getTarget(pin: pin),
             ),
           );
-          verifyNever(() => repository.readAsBytes(
-                target: configuration.getTarget(pin: pin),
-              ));
+          verifyNever(
+            () => repository.readAsBytes(
+              target: configuration.getTarget(pin: pin),
+            ),
+          );
 
           verifyNever(
-            () => googleRepository.updateRemote(
-              realmDatabaseAsBytes,
+            () => gitRepository.updateRemote(
+              request: request,
               configuration: configuration,
             ),
           );
 
-          verifyNever(() => googleRepository.getFile(target: configuration));
+          verifyNever(
+              () => gitRepository.getFile(configuration: configuration));
 
           verifyNever(
             () => checksumChecker.setChecksum(
-              googleDriveFile.checksum,
+              sha,
               configuration: configuration,
             ),
           );
@@ -218,16 +244,12 @@ void main() {
       );
 
       test(
-        'check all methods called',
+        'file != null, localChecksum != remoteChecksum',
         () async {
-          final downloadStream = Stream.value(const <int>[]);
-
-          final downloadedBytes = Uint8List.fromList(const []);
-
           when(
-            () => googleRepository.getFile(target: configuration),
+            () => gitRepository.getFile(configuration: configuration),
           ).thenAnswer(
-            (_) async => googleDriveFile,
+            (_) async => gitFileGetResponse,
           );
 
           when(
@@ -239,16 +261,16 @@ void main() {
           );
 
           when(
-            () => googleRepository.downloadFile(googleDriveFile),
+            () => getFileServiceApi.getFile(''),
           ).thenAnswer(
-            (_) async => downloadStream,
+            (_) async => [],
           );
 
           when(() => pinUsecase.getPinOrThrow()).thenReturn(pin);
 
           when(
             () => repository.mergeWithDatabasePath(
-              bytes: downloadedBytes,
+              bytes: realmDatabaseAsBytes,
               target: configuration.getTarget(pin: pin),
             ),
           ).thenAnswer((_) => Future.value());
@@ -267,37 +289,45 @@ void main() {
             (_) async => realmDatabaseAsBytes,
           );
 
-          when(
-            () => googleRepository.updateRemote(
-              realmDatabaseAsBytes,
-              configuration: configuration,
-            ),
-          ).thenAnswer(
-            (_) async => googleDriveFile,
+          final request = PutDbRequest(
+            message: SyncGitItemUsecase.commitMessage,
+            content: '',
+            sha: sha,
+            committer: SyncGitItemUsecase.committer,
+            branch: configuration.branch,
           );
 
           when(
-            () => googleRepository.getFile(target: configuration),
+            () => gitRepository.updateRemote(
+              request: request,
+              configuration: configuration,
+            ),
           ).thenAnswer(
-            (_) async => googleDriveFile,
+            (_) async => gitFilePutResponse,
+          );
+
+          when(
+            () => gitRepository.getFile(configuration: configuration),
+          ).thenAnswer(
+            (_) async => gitFileGetResponse,
           );
 
           when(
             () => checksumChecker.setChecksum(
-              googleDriveFile.checksum,
+              sha,
               configuration: configuration,
             ),
           ).thenAnswer((invocation) async {});
 
           await usecase.execute(configuration: configuration);
 
-          final verification = verifyInOrder(
+          verifyInOrder(
             [
-              () => googleRepository.getFile(target: configuration),
+              () => gitRepository.getFile(configuration: configuration),
               () => checksumChecker.getChecksum(
                     configuration: configuration,
                   ),
-              () => googleRepository.downloadFile(googleDriveFile),
+              () => getFileServiceApi.getFile(''),
               () => pinUsecase.getPinOrThrow(),
               () => repository.mergeWithDatabasePath(
                     bytes: realmDatabaseAsBytes,
@@ -310,32 +340,27 @@ void main() {
               () => repository.readAsBytes(
                     target: configuration.getTarget(pin: pin),
                   ),
-              () => googleRepository.updateRemote(
-                    realmDatabaseAsBytes,
+              () => gitRepository.updateRemote(
+                    request: request,
                     configuration: configuration,
                   ),
-              () => googleRepository.getFile(target: configuration),
+              () => gitRepository.getFile(configuration: configuration),
               () => checksumChecker.setChecksum(
-                    googleDriveFile.checksum,
+                    sha,
                     configuration: configuration,
                   ),
             ],
           );
-
-          expect(verification.length, 11);
         },
       );
+
       test(
-        'check all methods called, throws',
+        'file != null, localChecksum != remoteChecksum, throws',
         () async {
-          final downloadStream = Stream.value(const <int>[]);
-
-          final downloadedBytes = Uint8List.fromList(const []);
-
           when(
-            () => googleRepository.getFile(target: configuration),
+            () => gitRepository.getFile(configuration: configuration),
           ).thenAnswer(
-            (_) async => googleDriveFile,
+            (_) async => gitFileGetResponse,
           );
 
           when(
@@ -347,21 +372,19 @@ void main() {
           );
 
           when(
-            () => googleRepository.downloadFile(googleDriveFile),
+            () => getFileServiceApi.getFile(''),
           ).thenAnswer(
-            (_) async => downloadStream,
+            (_) async => [],
           );
 
           when(() => pinUsecase.getPinOrThrow()).thenReturn(pin);
 
           when(
             () => repository.mergeWithDatabasePath(
-              bytes: downloadedBytes,
+              bytes: realmDatabaseAsBytes,
               target: configuration.getTarget(pin: pin),
             ),
-          ).thenAnswer(
-            (_) async => {},
-          );
+          ).thenAnswer((_) => Future.value());
 
           when(
             () => repository.creanDeletedIfNeeded(
@@ -377,61 +400,39 @@ void main() {
             (_) async => realmDatabaseAsBytes,
           );
 
-          when(
-            () => googleRepository.updateRemote(
-              realmDatabaseAsBytes,
-              configuration: configuration,
-            ),
-          ).thenAnswer(
-            (_) async => googleDriveFile,
+          final request = PutDbRequest(
+            message: SyncGitItemUsecase.commitMessage,
+            content: '',
+            sha: sha,
+            committer: SyncGitItemUsecase.committer,
+            branch: configuration.branch,
           );
 
           when(
-            () => googleRepository.getFile(target: configuration),
+            () => gitRepository.updateRemote(
+              request: request,
+              configuration: configuration,
+            ),
           ).thenAnswer(
-            (_) async => googleDriveFile,
+            (_) async => gitFilePutResponse,
+          );
+
+          when(
+            () => gitRepository.getFile(configuration: configuration),
+          ).thenAnswer(
+            (_) async => gitFileGetResponse,
           );
 
           when(
             () => checksumChecker.setChecksum(
-              googleDriveFile.checksum,
+              sha,
               configuration: configuration,
             ),
           ).thenThrow(_Exception());
 
-          final usecaseFuture =
-              usecase.execute(configuration: configuration).then(
-            (_) {
-              final verification = verifyInOrder(
-                [
-                  () => googleRepository.getFile(target: configuration),
-                  () => checksumChecker.getChecksum(
-                        configuration: configuration,
-                      ),
-                  () => googleRepository.downloadFile(googleDriveFile),
-                  () => pinUsecase.getPinOrThrow(),
-                  () => repository.mergeWithDatabasePath(
-                        bytes: realmDatabaseAsBytes,
-                        target: configuration.getTarget(pin: pin),
-                      ),
-                  () => repository.creanDeletedIfNeeded(target: target),
-                  () => pinUsecase.getPinOrThrow(),
-                  () => repository.readAsBytes(
-                        target: configuration.getTarget(pin: pin),
-                      ),
-                  () => googleRepository.updateRemote(
-                        realmDatabaseAsBytes,
-                        configuration: configuration,
-                      ),
-                  () => googleRepository.getFile(target: configuration),
-                ],
-              );
+          final result = usecase.execute(configuration: configuration);
 
-              expect(verification.length, 10);
-            },
-          );
-
-          expect(usecaseFuture, throwsA(isA<SyncDataError>()));
+          expect(result, throwsA(isA<SyncDataError>()));
         },
       );
     },

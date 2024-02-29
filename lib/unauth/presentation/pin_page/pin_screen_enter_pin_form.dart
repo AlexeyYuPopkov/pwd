@@ -45,10 +45,13 @@ final class PinScreenEnterPinFormState extends State<PinScreenEnterPinForm> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SizedBox(
-                      height: topSpace,
-                      child: Center(
-                        child: ClocksWidget(formatter: widget.timeFormatter),
+                    Padding(
+                      padding: EdgeInsets.only(bottom: (topSpace / 5.0)),
+                      child: SizedBox(
+                        height: topSpace,
+                        child: Center(
+                          child: ClocksWidget(formatter: widget.timeFormatter),
+                        ),
                       ),
                     ),
                     ConstrainedBox(

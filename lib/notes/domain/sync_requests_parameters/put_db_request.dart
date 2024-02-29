@@ -1,4 +1,6 @@
-class PutDbRequest {
+import 'package:equatable/equatable.dart';
+
+class PutDbRequest extends Equatable {
   final String message;
   final String content;
   final String? sha;
@@ -24,6 +26,15 @@ class PutDbRequest {
       branch: branch ?? this.branch,
     );
   }
+
+  @override
+  List<Object?> get props => [
+        message,
+        content,
+        sha,
+        committer,
+        branch,
+      ];
 }
 
 class Committer {

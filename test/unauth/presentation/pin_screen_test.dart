@@ -188,6 +188,7 @@ final class _Tools {
 
     await tester.pumpAndSettle();
     expect(finders.screen, findsOneWidget);
+    expect(finders.clock, findsAtLeastNWidgets(1));
     expect(finders.blocConsumer, findsOneWidget);
     expect(finders.form, findsOneWidget);
     expect(finders.pinField, findsOneWidget);

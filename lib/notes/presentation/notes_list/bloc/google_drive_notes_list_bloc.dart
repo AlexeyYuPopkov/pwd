@@ -65,7 +65,7 @@ final class GoogleDriveNotesListBloc
     try {
       emit(GoogleDriveNotesListState.loading(data: data));
 
-      await syncUsecase.sync(configuration: configuration);
+      await syncUsecase.execute(configuration: configuration);
       final notes = await notesProviderUsecase.readNotes(
         configuration: configuration,
       );

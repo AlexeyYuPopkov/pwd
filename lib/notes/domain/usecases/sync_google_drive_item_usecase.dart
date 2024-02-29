@@ -6,6 +6,7 @@ import 'package:pwd/notes/domain/google_repository.dart';
 import 'package:pwd/notes/domain/realm_local_repository.dart';
 import 'package:pwd/notes/domain/model/google_error.dart';
 import 'package:pwd/notes/domain/model/google_drive_file.dart';
+import 'package:pwd/notes/domain/usecases/sync_data_usecases_errors.dart';
 import 'package:pwd/notes/domain/usecases/sync_helper.dart';
 import 'package:pwd/notes/domain/usecases/sync_usecase.dart';
 
@@ -25,7 +26,15 @@ final class SyncGoogleDriveItemUsecase with SyncHelper implements SyncUsecase {
   });
 
   @override
-  Future<void> sync({required RemoteConfiguration configuration}) async {
+  Future<void> execute({required RemoteConfiguration configuration}) async {
+    try {
+      await _sync(configuration: configuration);
+    } catch (e) {
+      throw SyncDataError.unknown(parentError: e);
+    }
+  }
+
+  Future<void> _sync({required RemoteConfiguration configuration}) async {
     // TODO: refactor
     switch (configuration) {
       case GitConfiguration():
@@ -76,21 +85,6 @@ final class SyncGoogleDriveItemUsecase with SyncHelper implements SyncUsecase {
         );
       }
     }
-  }
-
-  @override
-  Future<void> updateRemote({
-    required RemoteConfiguration configuration,
-  }) async {
-    // TODO: refactor
-    switch (configuration) {
-      case GitConfiguration():
-        assert(false);
-        return;
-      case GoogleDriveConfiguration():
-        break;
-    }
-    final _ = await _updateFileWithData(configuration: configuration);
   }
 
   Future<void> _downloadFileAndSync(

@@ -10,6 +10,7 @@ import 'package:pwd/notes/domain/realm_local_repository.dart';
 import 'package:pwd/notes/domain/sync_requests_parameters/get_db_response.dart';
 import 'package:pwd/notes/domain/sync_requests_parameters/put_db_request.dart';
 import 'package:pwd/notes/domain/sync_requests_parameters/put_db_response.dart';
+import 'package:pwd/notes/domain/usecases/sync_data_usecases_errors.dart';
 import 'package:pwd/notes/domain/usecases/sync_helper.dart';
 import 'package:pwd/notes/domain/usecases/sync_usecase.dart';
 
@@ -32,6 +33,11 @@ final class SyncGitItemUsecaseShaMap {
 }
 
 final class SyncGitItemUsecase with SyncHelper implements SyncUsecase {
+  static const commitMessage = 'Update notes';
+  static const committer = Committer(
+    name: 'Alekseii',
+    email: 'alexey.yu.popkov@gmail.com',
+  );
   final GitRepository remoteRepository;
   @override
   final RealmLocalRepository realmRepository;
@@ -52,7 +58,15 @@ final class SyncGitItemUsecase with SyncHelper implements SyncUsecase {
   });
 
   @override
-  Future<void> sync({required RemoteConfiguration configuration}) async {
+  Future<void> execute({required RemoteConfiguration configuration}) async {
+    try {
+      await _sync(configuration: configuration);
+    } catch (e) {
+      throw SyncDataError.unknown(parentError: e);
+    }
+  }
+
+  Future<void> _sync({required RemoteConfiguration configuration}) async {
     // TODO: refactor
     switch (configuration) {
       case GitConfiguration():
@@ -105,32 +119,6 @@ final class SyncGitItemUsecase with SyncHelper implements SyncUsecase {
       }
     }
   }
-
-  @override
-  Future<void> updateRemote({
-    required RemoteConfiguration configuration,
-  }) async {
-    // TODO: refactor
-    switch (configuration) {
-      case GitConfiguration():
-        break;
-      case GoogleDriveConfiguration():
-        assert(false);
-        return;
-    }
-
-    final sha = syncGitItemUsecaseShaMap[configuration];
-
-    if (sha == null || sha.isEmpty) {
-      assert(false);
-      return;
-    }
-
-    final _ = await _updateFileWithData(
-      configuration: configuration,
-      sha: sha,
-    );
-  }
 }
 
 // Private
@@ -152,12 +140,6 @@ extension on SyncGitItemUsecase {
     required GitConfiguration configuration,
     required String? sha,
   }) async {
-    const commitMessage = 'Update notes';
-    const committer = Committer(
-      name: 'Alekseii',
-      email: 'alexey.yu.popkov@gmail.com',
-    );
-
     final localRealmAsData = await getLocalRealmAsData(
       configuration: configuration,
     );
@@ -165,10 +147,10 @@ extension on SyncGitItemUsecase {
     final contentStr = base64.encode(localRealmAsData);
 
     final request = PutDbRequest(
-      message: commitMessage,
+      message: SyncGitItemUsecase.commitMessage,
       content: contentStr,
       sha: sha,
-      committer: committer,
+      committer: SyncGitItemUsecase.committer,
       branch: configuration.branch,
     );
 

@@ -15,12 +15,7 @@ final class SyncUsecaseLocator implements SyncUsecase {
   }
 
   @override
-  Future<void> sync({required RemoteConfiguration configuration}) =>
+  Future<void> execute({required RemoteConfiguration configuration}) =>
       getSyncUsecase(configuration: configuration)
-          .sync(configuration: configuration);
-
-  @override
-  Future<void> updateRemote({required RemoteConfiguration configuration}) =>
-      getSyncUsecase(configuration: configuration)
-          .updateRemote(configuration: configuration);
+          .execute(configuration: configuration);
 }

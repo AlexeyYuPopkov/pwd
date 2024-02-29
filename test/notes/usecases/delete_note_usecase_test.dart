@@ -42,7 +42,7 @@ void main() {
       );
 
       when(
-        () => syncUsecase.sync(configuration: configuration),
+        () => syncUsecase.execute(configuration: configuration),
       ).thenAnswer(
         (_) => Future.value(),
       );
@@ -58,7 +58,7 @@ void main() {
               '',
               target: configuration.getTarget(pin: pin),
             ),
-        () => syncUsecase.sync(configuration: configuration),
+        () => syncUsecase.execute(configuration: configuration),
       ]);
     });
   });
