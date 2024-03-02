@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 final class DeveloperSettings {
   static const isProxyEnabled = false;
-  static const showRawErrors = false;
+  static const showRawErrors = true;
 
   static void applay() {
     _setDeveloperSettings(

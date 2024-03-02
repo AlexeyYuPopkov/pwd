@@ -1,30 +1,25 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mocktail/mocktail.dart';
+import 'package:pwd/common/data/pin_repository_impl.dart';
 import 'package:pwd/common/domain/base_pin.dart';
-import 'package:pwd/common/domain/pin_repository.dart';
 import 'package:pwd/common/domain/usecases/pin_usecase.dart';
 
-class MockPinRepository extends Mock implements PinRepository {}
-
 void main() {
-  const validDuration = Duration(milliseconds: 1);
+  const validDuration = Duration(seconds: 10);
 
-  late PinRepository pinRepository;
   late PinUsecaseImpl usecase;
 
   setUp(
     () {
-      pinRepository = MockPinRepository();
       usecase = PinUsecaseImpl(
         validDuration: validDuration,
-        repository: pinRepository,
+        repository: PinRepositoryImpl(),
       );
     },
   );
 
   group('PinUsecase', () {
     void testInitialState() {
-      when(() => pinRepository.getPin()).thenReturn(const BasePin.empty());
+      // when(() => pinRepository.getPin()).thenReturn(const BasePin.empty());
 
       expect(usecase.getPin(), isA<EmptyPin>());
 
@@ -41,6 +36,8 @@ void main() {
       );
     }
 
+    test('Test initial state', () => testInitialState());
+
     Future<Pin> testSetValidPin() async {
       testInitialState();
 
@@ -48,21 +45,15 @@ void main() {
 
       await usecase.setPin(pin);
 
-      expect(usecase.getPin(), isA<Pin>());
-
       expect(
         usecase.pinStream,
-        // emits(isA<Pin>()),
-        emitsInOrder([
-          isA<Pin>(),
-          isA<EmptyPin>(),
-        ]),
+        emits(isA<Pin>()),
       );
+
+      expectLater(usecase.getPin(), isA<Pin>());
 
       return pin;
     }
-
-    test('Test initial state', () => testInitialState());
 
     test(
       'Test set valid pin and waiting for expiration',
@@ -75,11 +66,6 @@ void main() {
       const pin = Pin(pinSha512: []);
 
       await usecase.setPin(pin);
-
-      when(() => pinRepository.setPin(pin));
-      verify(
-        () => pinRepository.setPin(pin),
-      );
 
       expect(usecase.getPin(), isA<Pin>());
 

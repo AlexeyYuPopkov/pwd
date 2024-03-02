@@ -12,9 +12,7 @@ import 'package:pwd/notes/domain/realm_local_repository.dart';
 
 const _validTillDuration = Duration(days: 120);
 
-final class RealmDatasourceImpl
-    with TimestampHelper
-    implements RealmLocalRepository {
+final class RealmDatasourceImpl implements RealmLocalRepository {
   String? _appDirPath;
 
   Future<String> getAppDirPath() async =>
@@ -32,11 +30,13 @@ final class RealmDatasourceImpl
       final obj = realm.find<NoteItemRealm>(id);
 
       if (obj != null) {
+        final now = DateTime.now();
         realm.write(() {
           realm.add(
             obj.deletedCopy(
-              timestamp: timestampForDateAppending(
-                DateTime.now(),
+              timestamp: TimestampHelper.timestampForDate(now),
+              deletedTimestamp: TimestampHelper.timestampForDateAppending(
+                now,
                 _validTillDuration,
               ),
             ),
@@ -57,9 +57,9 @@ final class RealmDatasourceImpl
   }) async {
     final realm = await _getRealm(target: target);
     try {
-      final timestamp = timestampForDate(DateTime.now());
+      final timestamp = TimestampHelper.timestampForDate(DateTime.now());
       final items = realm.all<NoteItemRealm>().where((e) {
-        return e.deleted == true && e.timestamp < timestamp;
+        return e.deletedTimestamp != null && e.deletedTimestamp! < timestamp;
       });
 
       if (items.isNotEmpty) {
@@ -138,7 +138,7 @@ final class RealmDatasourceImpl
     try {
       return realm
           .all<NoteItemRealm>()
-          .where((e) => !e.deleted)
+          .where((e) => e.deletedTimestamp == null)
           .map((e) => NoteRealmMapper.toDomain(e))
           .toList();
     } catch (e) {
@@ -225,7 +225,7 @@ extension _Migration on RealmDatasourceImpl {
                     p.title,
                     p.description,
                     p.timestamp,
-                    p.deleted,
+                    deletedTimestamp: p.deletedTimestamp,
                     content: p.content.map((e) => NoteItemContentRealm(e.text)),
                   );
                 }
@@ -271,7 +271,7 @@ extension _CreateRealm on RealmDatasourceImpl {
     required String path,
   }) {
     try {
-      const int schemaVersion = 2;
+      const int schemaVersion = 3;
       final config = Configuration.local(
         [
           NoteItemRealm.schema,
@@ -281,13 +281,11 @@ extension _CreateRealm on RealmDatasourceImpl {
         path: path,
         schemaVersion: schemaVersion,
         migrationCallback: (migration, oldSchemaVersion) {
-          if (schemaVersion != oldSchemaVersion) {
-            final schema = migration.newRealm.schema;
-            schema.whereType<NoteItemRealm>().forEach(
-              (e) {
-                e.deleted = false;
-              },
-            );
+          if (schemaVersion == oldSchemaVersion) {
+            return;
+          }
+          if (schemaVersion == 3) {
+            _from2to3Migration(migration, oldSchemaVersion);
           }
         },
       );
@@ -302,6 +300,11 @@ extension _CreateRealm on RealmDatasourceImpl {
       throw _ErrorMapper.toDomain(e);
     }
   }
+
+  void _from2to3Migration(Migration migration, int oldSchemaVersion) =>
+      migration.newRealm.schema.whereType<NoteItemRealm>().forEach(
+            (e) => e.deletedTimestamp = null,
+          );
 
   Future<File> _createTempFile({
     required Uint8List bytes,
@@ -325,16 +328,6 @@ extension _CreateRealm on RealmDatasourceImpl {
     } catch (e) {
       throw _ErrorMapper.toDomain(e);
     }
-  }
-}
-
-mixin TimestampHelper {
-  int timestampForDate(DateTime date) {
-    return (date.millisecondsSinceEpoch / 1000).round();
-  }
-
-  int timestampForDateAppending(DateTime date, Duration duration) {
-    return timestampForDate(date.add(duration));
   }
 }
 

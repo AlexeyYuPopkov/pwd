@@ -14,7 +14,7 @@ final class NoteRealmMapper {
         ],
       ),
       timestamp: src.timestamp,
-      isDeleted: true,
+      deletedTimestamp: src.deletedTimestamp,
     );
   }
 
@@ -24,7 +24,7 @@ final class NoteRealmMapper {
       src.title,
       src.description,
       src.timestamp,
-      src.isDeleted,
+      deletedTimestamp: src.deletedTimestamp,
       content: [
         for (final item in src.content.items) NoteItemContentRealm(item.text),
       ],

@@ -31,6 +31,7 @@ final class GitConfiguration extends RemoteConfiguration {
         repo,
         owner,
         branch,
+        fileName,
         localCacheFileName,
         localCacheTmpFileName,
       ];

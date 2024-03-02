@@ -56,6 +56,7 @@ final class GoogleAndRealmDi extends DiScope {
         pinUsecase: di.resolve(),
         localRepository: di.resolve(),
         syncUsecase: di.resolve(),
+        checksumChecker: di.resolve(),
       ),
     );
 

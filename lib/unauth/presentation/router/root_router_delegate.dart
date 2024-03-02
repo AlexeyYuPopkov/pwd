@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:pwd/common/domain/base_pin.dart';
 import 'package:pwd/common/domain/usecases/pin_usecase.dart';
 import 'package:pwd/common/presentation/di/app_di_modules.dart';
-import 'package:pwd/common/presentation/router/base_router_delegate.dart';
 import 'package:pwd/home/presentation/home_tabbar/home_tabbar_page.dart';
 import 'package:pwd/unauth/presentation/pin_page/pin_screen.dart';
 
@@ -14,11 +13,10 @@ final class RootRouterDelegatePath {
   static const configuration = 'configuration';
 }
 
-final class RootRouterDelegate extends BaseRouterDelegate {
+final class RootRouterDelegate extends RouterDelegate
+    with ChangeNotifier, PopNavigatorRouterDelegateMixin {
   final PinUsecase pinUsecase;
-
   late final StreamSubscription pinSubscription;
-
   @override
   final GlobalKey<NavigatorState> navigatorKey;
 
@@ -38,6 +36,26 @@ final class RootRouterDelegate extends BaseRouterDelegate {
   }
 
   @override
+  Widget build(BuildContext context) {
+    // debugger();
+    return Navigator(
+      key: navigatorKey,
+      pages: initialPages,
+      onPopPage: (route, result) {
+        // updateState();
+        if (!route.didPop(result)) {
+          return false;
+        }
+
+        if (context.navigator.canPop()) {
+          return true;
+        }
+
+        return false;
+      },
+    );
+  }
+
   List<Page> get initialPages {
     final pages = _createPages(
       pinUsecase.getPin(),
@@ -46,8 +64,14 @@ final class RootRouterDelegate extends BaseRouterDelegate {
     return pages.isEmpty ? const [MaterialPage(child: SizedBox())] : pages;
   }
 
-  @override
   Future onRoute(BuildContext context, Object action) async {}
+
+  @override
+  Future<void> setNewRoutePath(configuration) async {}
+
+  void updateState() {
+    notifyListeners();
+  }
 }
 
 extension on RootRouterDelegate {
@@ -114,7 +138,13 @@ extension on RootRouterDelegate {
         return e;
       },
     ).listen(
-      (_) => updateState(),
+      (e) {
+        updateState();
+      },
     );
   }
+}
+
+extension on BuildContext {
+  NavigatorState get navigator => Navigator.of(this);
 }

@@ -11,7 +11,7 @@ sealed class BaseNoteItem extends Equatable {
   String get description;
   NoteContentInterface get content;
   int get timestamp;
-  bool get isDeleted;
+  int? get deletedTimestamp;
 
   factory BaseNoteItem.newItem() => UpdatedNoteItem.empty();
 
@@ -29,7 +29,7 @@ sealed class BaseNoteItem extends Equatable {
         description,
         content,
         timestamp,
-        isDeleted,
+        deletedTimestamp,
       ];
 }
 
@@ -45,7 +45,7 @@ class NoteItem extends BaseNoteItem {
   @override
   final int timestamp;
   @override
-  final bool isDeleted;
+  final int? deletedTimestamp;
 
   const NoteItem({
     required this.id,
@@ -53,7 +53,7 @@ class NoteItem extends BaseNoteItem {
     required this.description,
     required this.content,
     required this.timestamp,
-    required this.isDeleted,
+    required this.deletedTimestamp,
   });
 
   BaseNoteItem copyToUpdatedWith({
@@ -74,7 +74,6 @@ class NoteItem extends BaseNoteItem {
     String? description,
     NoteContentInterface? content,
     int? timestamp,
-    bool? isDeleted,
   }) {
     return NoteItem(
       id: id,
@@ -82,7 +81,7 @@ class NoteItem extends BaseNoteItem {
       description: description ?? this.description,
       content: content ?? this.content,
       timestamp: timestamp ?? this.timestamp,
-      isDeleted: isDeleted ?? this.isDeleted,
+      deletedTimestamp: deletedTimestamp,
     );
   }
 }
@@ -99,7 +98,7 @@ final class UpdatedNoteItem extends BaseNoteItem {
   @override
   final int timestamp;
   @override
-  final bool isDeleted;
+  final int? deletedTimestamp;
 
   const UpdatedNoteItem._({
     required this.id,
@@ -107,7 +106,7 @@ final class UpdatedNoteItem extends BaseNoteItem {
     required this.description,
     required this.content,
     required this.timestamp,
-    required this.isDeleted,
+    required this.deletedTimestamp,
   });
 
   factory UpdatedNoteItem({
@@ -121,8 +120,8 @@ final class UpdatedNoteItem extends BaseNoteItem {
       title: title,
       description: description,
       content: content,
-      timestamp: DateTime.now().timestamp,
-      isDeleted: false,
+      timestamp: TimestampHelper.timestampForDate(DateTime.now()),
+      deletedTimestamp: null,
     );
   }
 
@@ -133,11 +132,17 @@ final class UpdatedNoteItem extends BaseNoteItem {
       description: '',
       content: NoteStringContent(str: ''),
       timestamp: 0,
-      isDeleted: false,
+      deletedTimestamp: null,
     );
   }
 }
 
-extension on DateTime {
-  int get timestamp => millisecondsSinceEpoch * 1000;
+mixin TimestampHelper {
+  static int timestampForDate(DateTime date) {
+    return (date.millisecondsSinceEpoch / 1000).round();
+  }
+
+  static int timestampForDateAppending(DateTime date, Duration duration) {
+    return timestampForDate(date.add(duration));
+  }
 }

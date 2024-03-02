@@ -10,7 +10,7 @@ class _NoteItemRealm {
   late String description;
   late List<_NoteItemContentRealm> content;
   late int timestamp;
-  late bool deleted;
+  late int? deletedTimestamp;
 }
 
 @RealmModel(ObjectType.embeddedObject)
@@ -19,13 +19,16 @@ class _NoteItemContentRealm {
 }
 
 extension MarkDeleted on NoteItemRealm {
-  NoteItemRealm deletedCopy({required int timestamp}) {
+  NoteItemRealm deletedCopy({
+    required int timestamp,
+    required int? deletedTimestamp,
+  }) {
     return NoteItemRealm(
       id,
       '',
       '',
       timestamp,
-      true,
+      deletedTimestamp: deletedTimestamp,
       content: [],
     );
   }

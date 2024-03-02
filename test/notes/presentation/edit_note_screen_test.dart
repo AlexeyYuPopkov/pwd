@@ -119,7 +119,7 @@ void main() {
         description: 'description',
         content: NoteStringContent(str: '1\n2\n3'),
         timestamp: 0,
-        isDeleted: false,
+        deletedTimestamp: null,
       );
 
       await setupAndShowScreen(
@@ -148,7 +148,7 @@ void main() {
         description: 'description',
         content: NoteStringContent(str: '1\n2\n3'),
         timestamp: 0,
-        isDeleted: false,
+        deletedTimestamp: null,
       );
 
       await setupAndShowScreen(
@@ -199,7 +199,7 @@ void main() {
         description: 'description',
         content: NoteStringContent(str: '1\n2\n3'),
         timestamp: 0,
-        isDeleted: false,
+        deletedTimestamp: null,
       );
 
       await setupAndShowScreen(

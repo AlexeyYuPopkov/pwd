@@ -27,7 +27,7 @@ final class UnauthDiModule extends DiScope {
     di.bind<PinUsecase>(
       module: this,
       () => PinUsecaseImpl(
-        validDuration: const Duration(minutes: 10),
+        validDuration: const Duration(minutes: 5),
         repository: di.resolve(),
       ),
       lifeTime: const LifeTime.single(),

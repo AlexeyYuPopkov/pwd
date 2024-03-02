@@ -25,16 +25,15 @@ final class PinUsecaseImpl implements PinUsecase {
 
   late final _timerStream = Stream.periodic(validDuration).asBroadcastStream();
 
-  static var i = 0;
   @override
   Stream<BasePin> get pinStream => Rx.merge(
         [
           _pinStream,
           _timerStream
               .map(
-                (_) => const BasePin.empty(),
+                (e) => const BasePin.empty(),
               )
-              .distinct(),
+              .distinct((_, __) => repository.getPin() is EmptyPin),
         ],
       )
           .distinct()
@@ -49,7 +48,7 @@ final class PinUsecaseImpl implements PinUsecase {
   }
 
   @override
-  BasePin getPin() => _pinStream.value;
+  BasePin getPin() => repository.getPin();
 
   @override
   Future<void> setPin(Pin pin) async {
@@ -58,7 +57,7 @@ final class PinUsecaseImpl implements PinUsecase {
 
   @override
   Pin getPinOrThrow() {
-    final pin = _pinStream.value;
+    final pin = getPin();
     switch (pin) {
       case Pin():
         return pin;
