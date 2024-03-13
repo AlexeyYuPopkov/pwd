@@ -9,7 +9,7 @@ class _NoteItemRealm {
   late String title;
   late String description;
   late List<_NoteItemContentRealm> content;
-  late int timestamp;
+  late int updated;
   late int? deletedTimestamp;
 }
 

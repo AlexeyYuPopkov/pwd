@@ -13,14 +13,14 @@ class NoteItemRealm extends _NoteItemRealm
     String id,
     String title,
     String description,
-    int timestamp, {
+    int updated, {
     int? deletedTimestamp,
     Iterable<NoteItemContentRealm> content = const [],
   }) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'title', title);
     RealmObjectBase.set(this, 'description', description);
-    RealmObjectBase.set(this, 'timestamp', timestamp);
+    RealmObjectBase.set(this, 'updated', updated);
     RealmObjectBase.set(this, 'deletedTimestamp', deletedTimestamp);
     RealmObjectBase.set<RealmList<NoteItemContentRealm>>(
         this, 'content', RealmList<NoteItemContentRealm>(content));
@@ -54,9 +54,9 @@ class NoteItemRealm extends _NoteItemRealm
       throw RealmUnsupportedSetError();
 
   @override
-  int get timestamp => RealmObjectBase.get<int>(this, 'timestamp') as int;
+  int get updated => RealmObjectBase.get<int>(this, 'updated') as int;
   @override
-  set timestamp(int value) => RealmObjectBase.set(this, 'timestamp', value);
+  set updated(int value) => RealmObjectBase.set(this, 'updated', value);
 
   @override
   int? get deletedTimestamp =>
@@ -84,7 +84,7 @@ class NoteItemRealm extends _NoteItemRealm
       SchemaProperty('content', RealmPropertyType.object,
           linkTarget: 'NoteItemContentRealm',
           collectionType: RealmCollectionType.list),
-      SchemaProperty('timestamp', RealmPropertyType.int),
+      SchemaProperty('updated', RealmPropertyType.int),
       SchemaProperty('deletedTimestamp', RealmPropertyType.int, optional: true),
     ]);
   }

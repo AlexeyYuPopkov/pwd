@@ -10,7 +10,7 @@ sealed class BaseNoteItem extends Equatable {
   String get title;
   String get description;
   NoteContentInterface get content;
-  int get timestamp;
+  int get updated;
   int? get deletedTimestamp;
 
   factory BaseNoteItem.newItem() => UpdatedNoteItem.empty();
@@ -28,7 +28,7 @@ sealed class BaseNoteItem extends Equatable {
         title,
         description,
         content,
-        timestamp,
+        updated,
         deletedTimestamp,
       ];
 }
@@ -43,7 +43,7 @@ class NoteItem extends BaseNoteItem {
   @override
   final NoteContentInterface content;
   @override
-  final int timestamp;
+  final int updated;
   @override
   final int? deletedTimestamp;
 
@@ -52,7 +52,7 @@ class NoteItem extends BaseNoteItem {
     required this.title,
     required this.description,
     required this.content,
-    required this.timestamp,
+    required this.updated,
     required this.deletedTimestamp,
   });
 
@@ -73,14 +73,14 @@ class NoteItem extends BaseNoteItem {
     String? title,
     String? description,
     NoteContentInterface? content,
-    int? timestamp,
+    int? updated,
   }) {
     return NoteItem(
       id: id,
       title: title ?? this.title,
       description: description ?? this.description,
       content: content ?? this.content,
-      timestamp: timestamp ?? this.timestamp,
+      updated: updated ?? this.updated,
       deletedTimestamp: deletedTimestamp,
     );
   }
@@ -96,7 +96,7 @@ final class UpdatedNoteItem extends BaseNoteItem {
   @override
   final NoteContentInterface content;
   @override
-  final int timestamp;
+  final int updated;
   @override
   final int? deletedTimestamp;
 
@@ -105,7 +105,7 @@ final class UpdatedNoteItem extends BaseNoteItem {
     required this.title,
     required this.description,
     required this.content,
-    required this.timestamp,
+    required this.updated,
     required this.deletedTimestamp,
   });
 
@@ -120,7 +120,7 @@ final class UpdatedNoteItem extends BaseNoteItem {
       title: title,
       description: description,
       content: content,
-      timestamp: TimestampHelper.timestampForDate(DateTime.now()),
+      updated: TimestampHelper.timestampForDate(DateTime.now()),
       deletedTimestamp: null,
     );
   }
@@ -131,7 +131,7 @@ final class UpdatedNoteItem extends BaseNoteItem {
       title: '',
       description: '',
       content: NoteStringContent(str: ''),
-      timestamp: 0,
+      updated: 0,
       deletedTimestamp: null,
     );
   }

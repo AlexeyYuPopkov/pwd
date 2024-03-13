@@ -118,7 +118,7 @@ void main() {
         title: 'title',
         description: 'description',
         content: NoteStringContent(str: '1\n2\n3'),
-        timestamp: 0,
+        updated: 0,
         deletedTimestamp: null,
       );
 
@@ -147,7 +147,7 @@ void main() {
         title: 'title',
         description: 'description',
         content: NoteStringContent(str: '1\n2\n3'),
-        timestamp: 0,
+        updated: 0,
         deletedTimestamp: null,
       );
 
@@ -198,7 +198,7 @@ void main() {
         title: 'title',
         description: 'description',
         content: NoteStringContent(str: '1\n2\n3'),
-        timestamp: 0,
+        updated: 0,
         deletedTimestamp: null,
       );
 

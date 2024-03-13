@@ -227,14 +227,15 @@ extension _Migration on RealmDatasourceImpl {
                 // print(
                 //   "local timestamp: ${localItem?.timestamp ?? -1}, remote timestamp: ${p.timestamp},",
                 // );
-                if (localItem != null && localItem.timestamp >= p.timestamp) {
+
+                if (localItem != null && localItem.updated >= p.updated) {
                   return localItem;
                 } else {
                   return NoteItemRealm(
                     p.id,
                     p.title,
                     p.description,
-                    p.timestamp,
+                    p.updated,
                     deletedTimestamp: p.deletedTimestamp,
                     content: p.content.map((e) => NoteItemContentRealm(e.text)),
                   );
@@ -281,7 +282,7 @@ extension _CreateRealm on RealmDatasourceImpl {
     required String path,
   }) {
     try {
-      const int schemaVersion = 3;
+      const int schemaVersion = 5;
       final config = Configuration.local(
         [
           NoteItemRealm.schema,
@@ -294,8 +295,10 @@ extension _CreateRealm on RealmDatasourceImpl {
           if (schemaVersion == oldSchemaVersion) {
             return;
           }
-          if (schemaVersion == 3) {
-            _from2to3Migration(migration, oldSchemaVersion);
+          if (schemaVersion == 5) {
+            _migration5(migration, oldSchemaVersion);
+          } else {
+            return;
           }
         },
       );
@@ -311,10 +314,21 @@ extension _CreateRealm on RealmDatasourceImpl {
     }
   }
 
-  void _from2to3Migration(Migration migration, int oldSchemaVersion) =>
-      migration.newRealm.schema.whereType<NoteItemRealm>().forEach(
-            (e) => e.deletedTimestamp = null,
-          );
+  // void _from3to4Migration(Migration migration, int oldSchemaVersion) {
+  //   final now = DateTime.now();
+  //   // debugger();
+  //   migration.newRealm.schema.whereType<NoteItemRealm>().forEach(
+  //         (e) => e.timestamp = TimestampHelper.timestampForDate(now),
+  //       );
+  // }
+
+  void _migration5(Migration migration, int oldSchemaVersion) {
+    final now = DateTime.now();
+    // debugger();
+    migration.newRealm.schema.whereType<NoteItemRealm>().forEach(
+          (e) => e.updated = TimestampHelper.timestampForDate(now),
+        );
+  }
 
   Future<File> _createTempFile({
     required Uint8List bytes,

@@ -13,7 +13,7 @@ final class NoteRealmMapper {
           for (final item in src.content) NoteContentItem(text: item.text),
         ],
       ),
-      timestamp: src.timestamp,
+      updated: src.updated,
       deletedTimestamp: src.deletedTimestamp,
     );
   }
@@ -23,7 +23,7 @@ final class NoteRealmMapper {
       src.id,
       src.title,
       src.description,
-      src.timestamp,
+      src.updated,
       deletedTimestamp: src.deletedTimestamp,
       content: [
         for (final item in src.content.items) NoteItemContentRealm(item.text),
