@@ -5,7 +5,6 @@ import 'package:mocktail/mocktail.dart';
 import 'package:pwd/common/domain/base_pin.dart';
 import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
 import 'package:pwd/common/domain/usecases/pin_usecase.dart';
-import 'package:pwd/notes/data/sync_data_service/git_service_api.dart';
 import 'package:pwd/notes/domain/checksum_checker.dart';
 import 'package:pwd/notes/domain/git_repository.dart';
 import 'package:pwd/notes/domain/realm_local_repository.dart';
@@ -23,8 +22,6 @@ class MockPinUsecase extends Mock implements PinUsecase {}
 
 class MockChecksumChecker extends Mock implements ChecksumChecker {}
 
-class MockGetFileServiceApi extends Mock implements GetFileServiceApi {}
-
 void main() {
   late MockGitRepository gitRepository;
   late MockRealmLocalRepository repository;
@@ -32,7 +29,6 @@ void main() {
   late MockChecksumChecker checksumChecker;
   late SyncGitItemUsecase usecase;
   late SyncGitItemUsecaseShaMap shaMap;
-  late GetFileServiceApi getFileServiceApi;
 
   setUp(() {
     gitRepository = MockGitRepository();
@@ -40,7 +36,6 @@ void main() {
     pinUsecase = MockPinUsecase();
     checksumChecker = MockChecksumChecker();
     shaMap = SyncGitItemUsecaseShaMap();
-    getFileServiceApi = MockGetFileServiceApi();
 
     usecase = SyncGitItemUsecase(
       remoteRepository: gitRepository,
@@ -48,7 +43,6 @@ void main() {
       pinUsecase: pinUsecase,
       checksumChecker: checksumChecker,
       syncGitItemUsecaseShaMap: shaMap,
-      getFileServiceApi: getFileServiceApi,
     );
   });
 
@@ -126,7 +120,7 @@ void main() {
             ),
           ).thenAnswer((_) async {});
 
-          await usecase.execute(configuration: configuration);
+          await usecase.execute(configuration: configuration, force: false);
 
           verifyInOrder(
             [
@@ -170,7 +164,8 @@ void main() {
             ),
           ).thenThrow(_Exception());
 
-          final result = usecase.execute(configuration: configuration);
+          final result =
+              usecase.execute(configuration: configuration, force: false);
 
           expect(result, throwsA(isA<SyncDataError>()));
         },
@@ -198,7 +193,7 @@ void main() {
             (_) async => sha,
           );
 
-          await usecase.execute(configuration: configuration);
+          await usecase.execute(configuration: configuration, force: false);
 
           verifyInOrder(
             [
@@ -209,7 +204,9 @@ void main() {
             ],
           );
 
-          verifyNever(() => getFileServiceApi.getFile(''));
+          verifyNever(
+            () => gitRepository.getRawFile(configuration: configuration),
+          );
           verifyNever(() => pinUsecase.getPinOrThrow());
 
           verifyNever(
@@ -261,7 +258,7 @@ void main() {
           );
 
           when(
-            () => getFileServiceApi.getFile(''),
+            () => gitRepository.getRawFile(configuration: configuration),
           ).thenAnswer(
             (_) async => [],
           );
@@ -319,7 +316,7 @@ void main() {
             ),
           ).thenAnswer((invocation) async {});
 
-          await usecase.execute(configuration: configuration);
+          await usecase.execute(configuration: configuration, force: false);
 
           verifyInOrder(
             [
@@ -327,7 +324,7 @@ void main() {
               () => checksumChecker.getChecksum(
                     configuration: configuration,
                   ),
-              () => getFileServiceApi.getFile(''),
+              () => gitRepository.getRawFile(configuration: configuration),
               () => pinUsecase.getPinOrThrow(),
               () => repository.mergeWithDatabasePath(
                     bytes: realmDatabaseAsBytes,
@@ -372,7 +369,7 @@ void main() {
           );
 
           when(
-            () => getFileServiceApi.getFile(''),
+            () => gitRepository.getRawFile(configuration: configuration),
           ).thenAnswer(
             (_) async => [],
           );
@@ -430,7 +427,8 @@ void main() {
             ),
           ).thenThrow(_Exception());
 
-          final result = usecase.execute(configuration: configuration);
+          final result =
+              usecase.execute(configuration: configuration, force: false);
 
           expect(result, throwsA(isA<SyncDataError>()));
         },

@@ -182,23 +182,16 @@ void main() {
     // ignore: avoid_print
     print(mockGoogleRepository.toShortString());
 
-    const expectedCalls = [
-      '\n'
-          'getFile: (GoogleDriveConfiguration,); GoogleDriveFile}\n'
-          'downloadFile: (GoogleDriveFile,); Uint8List}\n'
-          'updateRemote: (Uint8List,, GoogleDriveConfiguration,); GoogleDriveFile}\n'
-          'getFile: (GoogleDriveConfiguration,); GoogleDriveFile}\n'
-          'getFile: (GoogleDriveConfiguration,); GoogleDriveFile}\n'
-          'downloadFile: (GoogleDriveFile,); Uint8List}\n'
-          'updateRemote: (Uint8List,, GoogleDriveConfiguration,); GoogleDriveFile}\n'
-          'getFile: (GoogleDriveConfiguration,); GoogleDriveFile}\n'
-          'getFile: (GoogleDriveConfiguration,); GoogleDriveFile}\n'
-          'downloadFile: (GoogleDriveFile,); Uint8List}\n'
-          'updateRemote: (Uint8List,, GoogleDriveConfiguration,); GoogleDriveFile}\n'
-          'getFile: (GoogleDriveConfiguration,); GoogleDriveFile}\n'
-          'getFile: (GoogleDriveConfiguration,); GoogleDriveFile}\n'
-          'logout: (); Null}'
-    ];
-    expect(mockGoogleRepository.toShortString(), expectedCalls.join(''));
+    const expectedCalls = '\n'
+        'getFile: (GoogleDriveConfiguration,); GoogleDriveFile}\n'
+        'downloadFile: (GoogleDriveFile,); Uint8List}\n'
+        'updateRemote: (Uint8List,, GoogleDriveConfiguration,); GoogleDriveFile}\n'
+        'getFile: (GoogleDriveConfiguration,); GoogleDriveFile}\n'
+        'getFile: (GoogleDriveConfiguration,); GoogleDriveFile}\n'
+        'downloadFile: (GoogleDriveFile,); Uint8List}\n'
+        'updateRemote: (Uint8List,, GoogleDriveConfiguration,); GoogleDriveFile}\n'
+        'getFile: (GoogleDriveConfiguration,); GoogleDriveFile}\n'
+        'logout: (); Null}';
+    expect(mockGoogleRepository.toShortString(), expectedCalls);
   });
 }

@@ -12,4 +12,8 @@ abstract class GitRepository {
     required PutDbRequest request,
     required GitConfiguration configuration,
   });
+
+  Future<List<int>> getRawFile({
+    required GitConfiguration configuration,
+  });
 }

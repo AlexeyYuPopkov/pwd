@@ -9,9 +9,10 @@ sealed class GoogleDriveNotesListEvent extends Equatable {
     required Object e,
   }) = ErrorEvent;
 
-  const factory GoogleDriveNotesListEvent.sync() = SyncEvent;
+  const factory GoogleDriveNotesListEvent.sync({required bool force}) =
+      SyncEvent;
 
-  // const factory NotesListVariantBlocEvent.sqlToRealm() = SqlToRealmEvent;
+  const factory GoogleDriveNotesListEvent.reloadLocally() = ReloadLocallyEvent;
 
   @override
   List<Object?> get props => const [];
@@ -27,9 +28,10 @@ final class ErrorEvent extends GoogleDriveNotesListEvent {
 }
 
 final class SyncEvent extends GoogleDriveNotesListEvent {
-  const SyncEvent();
+  final bool force;
+  const SyncEvent({required this.force});
 }
 
-// final class SqlToRealmEvent extends NotesListVariantBlocEvent {
-//   const SqlToRealmEvent();
-// }
+final class ReloadLocallyEvent extends GoogleDriveNotesListEvent {
+  const ReloadLocallyEvent();
+}

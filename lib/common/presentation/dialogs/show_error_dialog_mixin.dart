@@ -1,5 +1,6 @@
 import 'package:di_storage/di_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pwd/common/domain/app_configuration_provider.dart';
 import 'package:pwd/common/domain/errors/app_error.dart';
 import 'package:pwd/common/domain/errors/network_error.dart';
@@ -61,9 +62,10 @@ mixin ShowErrorDialogMixin implements ShowErrorDialogInterface {
 
     switch (message.destination) {
       case ErrorMessageDestination.dialog:
-        showErrorAlertDialog(
+        _showErrorAlertDialog(
           context,
-          message.message,
+          message: message.message,
+          showRawErrors: showRawErrors,
           title: message.title,
           handler: handler,
         );
@@ -95,18 +97,31 @@ mixin ShowErrorDialogMixin implements ShowErrorDialogInterface {
     }
   }
 
-  void showErrorAlertDialog(
-    BuildContext context,
-    String message, {
+  void _showErrorAlertDialog(
+    BuildContext context, {
+    required String message,
+    required bool showRawErrors,
     String? title,
     void Function(BuildContext)? handler,
   }) {
-    _Presenter().showErrorDialog(
-      context,
-      title: title,
-      message: message,
-      onPressed: handler,
-    );
+    if (showRawErrors) {
+      _Presenter().showOkCancelDialog(
+        context,
+        title: title,
+        message: message,
+        okButtonTitle: 'Copy',
+        onOk: (_) => _onCopyText(context, text: message),
+        cancelButtonTitle: 'OK',
+        onCancel: handler,
+      );
+    } else {
+      _Presenter().showErrorDialog(
+        context,
+        title: title,
+        message: message,
+        onPressed: handler,
+      );
+    }
   }
 }
 
@@ -142,6 +157,14 @@ extension Private on ShowErrorDialogMixin {
           ? _networkError(context, parentError)
           : ErrorMessage.uncatch(context);
     }
+  }
+
+  void _onCopyText(
+    BuildContext context, {
+    required String text,
+  }) {
+    final trimmed = text.trim();
+    Clipboard.setData(ClipboardData(text: trimmed));
   }
 }
 

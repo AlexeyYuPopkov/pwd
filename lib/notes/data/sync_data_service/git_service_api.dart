@@ -38,21 +38,48 @@ abstract class GitServiceApi {
   });
 }
 
-class GetFileServiceApi {
-  GetFileServiceApi(this._dio);
-
+final class GetGitFileServiceApi {
+  static const baseUrl = 'https://api.github.com/';
   final Dio _dio;
 
-  Future<List<int>> getFile(String urlStr) async {
-    final options = Options(
+  GetGitFileServiceApi(
+    this._dio,
+  );
+
+  Future<List<int>> getRawFile({
+    required String owner,
+    required String repo,
+    required String filename,
+    String? branch,
+    required String token,
+  }) async {
+    final extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{r'ref': branch};
+    queryParameters.removeWhere((k, v) => v == null);
+    final headers = <String, dynamic>{
+      r'Accept': 'application/vnd.github.raw+json',
+      r'X-GitHub-Api-Version': '2022-11-28',
+      r'Authorization': token,
+    };
+    headers.removeWhere((k, v) => v == null);
+    const Map<String, dynamic>? data = null;
+    final result =
+        await _dio.fetch<List<dynamic>>(_setStreamType<List<int>>(Options(
       method: 'GET',
-      responseType: ResponseType.bytes,
-    ).compose(_dio.options, '').copyWith(baseUrl: urlStr);
-
-    final result = await _dio.fetch<List<dynamic>>(
-      _setStreamType<List<int>>(options),
-    );
-
+      headers: headers,
+      extra: extra,
+    )
+            .compose(
+              _dio.options.copyWith(responseType: ResponseType.bytes),
+              'repos/$owner/$repo/contents/$filename',
+              queryParameters: queryParameters,
+              data: data,
+            )
+            .copyWith(
+                baseUrl: _combineBaseUrls(
+              _dio.options.baseUrl,
+              baseUrl,
+            ))));
     final value = result.data!.cast<int>();
     return value;
   }
@@ -68,5 +95,22 @@ class GetFileServiceApi {
       }
     }
     return requestOptions;
+  }
+
+  String _combineBaseUrls(
+    String dioBaseUrl,
+    String? baseUrl,
+  ) {
+    if (baseUrl == null || baseUrl.trim().isEmpty) {
+      return dioBaseUrl;
+    }
+
+    final url = Uri.parse(baseUrl);
+
+    if (url.isAbsolute) {
+      return url.toString();
+    }
+
+    return Uri.parse(dioBaseUrl).resolveUri(url).toString();
   }
 }

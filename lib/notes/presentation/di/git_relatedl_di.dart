@@ -15,6 +15,7 @@ final class GitRelatedlDi extends DiScope {
         service: GitServiceApi(
           di.resolve<UnAuthDio>(),
         ),
+        gitFileService: di.resolve(),
         putDbRequestMapper: PutDbRequestMapper(),
         errorMapper: di.resolve(),
       ),
@@ -34,7 +35,6 @@ final class GitRelatedlDi extends DiScope {
         pinUsecase: di.resolve(),
         checksumChecker: di.resolve(),
         syncGitItemUsecaseShaMap: di.resolve(),
-        getFileServiceApi: di.resolve(),
       ),
     );
   }

@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "133915072936-m0khq3f3fhn8apdrcof9gv9bhsg50lf0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.alekseii.popkov.pwd",
+            "certificate_hash": "b91d1b34c8229ed76f6a94bae874f463a30517e4"
+          }
+        },
+        {
           "client_id": "133915072936-646jgeghpvjvp8ao29inl656gsalnd9l.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -31,10 +39,10 @@
               "client_type": 3
             },
             {
-              "client_id": "133915072936-trq3ah1cnj0jb0lt7uej0nfjdskfdghd.apps.googleusercontent.com",
+              "client_id": "133915072936-ap6bfbjng5qr9hcgvvs4h2fdcdssj5mc.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.pwd"
+                "bundle_id": "com.alekseii.popkov.pwd"
               }
             }
           ]
@@ -67,10 +75,10 @@
               "client_type": 3
             },
             {
-              "client_id": "133915072936-trq3ah1cnj0jb0lt7uej0nfjdskfdghd.apps.googleusercontent.com",
+              "client_id": "133915072936-ap6bfbjng5qr9hcgvvs4h2fdcdssj5mc.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.pwd"
+                "bundle_id": "com.alekseii.popkov.pwd"
               }
             }
           ]

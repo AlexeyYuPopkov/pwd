@@ -44,11 +44,9 @@ class NetworkDiModule extends DiScope {
       lifeTime: const LifeTime.single(),
     );
 
-    di.bind<GetFileServiceApi>(
+    di.bind<GetGitFileServiceApi>(
       module: this,
-      () {
-        return GetFileServiceApi(dio);
-      },
+      () => GetGitFileServiceApi(dio),
     );
 
     // di.bind<HttpClientBuilder>(

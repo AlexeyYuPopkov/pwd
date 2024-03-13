@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:di_storage/di_storage.dart';
+import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
 import 'package:pwd/home/presentation/home_tabbar/home_tabbar_tab_model.dart';
 import 'package:pwd/theme/common_size.dart';
 
@@ -13,23 +14,25 @@ final class HomeTabbarPage extends StatelessWidget {
   void _listener(BuildContext context, HomeTabbarBlocState state) {}
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => HomeTabbarBloc(
-        remoteConfigurationsProvider: DiStorage.shared.resolve(),
-      ),
-      child: BlocConsumer<HomeTabbarBloc, HomeTabbarBlocState>(
-        listener: _listener,
-        builder: (context, state) {
-          return LayoutBuilder(builder: (context, constraints) {
-            if (constraints.maxWidth > constraints.maxHeight) {
-              return HomeTabbarPageDesktopContent(tabs: state.data.tabs);
-            } else {
-              return HomeTabbarPageMobileContent(
-                tabs: state.data.tabs,
-              );
-            }
-          });
-        },
+    return BlockingLoadingIndicator(
+      child: BlocProvider(
+        create: (_) => HomeTabbarBloc(
+          remoteConfigurationsProvider: DiStorage.shared.resolve(),
+        ),
+        child: BlocConsumer<HomeTabbarBloc, HomeTabbarBlocState>(
+          listener: _listener,
+          builder: (context, state) {
+            return LayoutBuilder(builder: (context, constraints) {
+              if (constraints.maxWidth > constraints.maxHeight) {
+                return HomeTabbarPageDesktopContent(tabs: state.data.tabs);
+              } else {
+                return HomeTabbarPageMobileContent(
+                  tabs: state.data.tabs,
+                );
+              }
+            });
+          },
+        ),
       ),
     );
   }

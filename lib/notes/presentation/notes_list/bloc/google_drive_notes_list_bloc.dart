@@ -33,6 +33,7 @@ final class GoogleDriveNotesListBloc
   void _setupHandlers() {
     on<InitialEvent>(_onInitialEvent);
     on<SyncEvent>(_onSyncEvent);
+    on<ReloadLocallyEvent>(_onReloadLocallyEvent);
   }
 
   void _onInitialEvent(
@@ -40,19 +41,19 @@ final class GoogleDriveNotesListBloc
     Emitter<GoogleDriveNotesListState> emit,
   ) async {
     try {
-      emit(GoogleDriveNotesListState.loading(data: data));
-
       final notes = await notesProviderUsecase.readNotes(
         configuration: configuration,
       );
 
-      emit(
-        GoogleDriveNotesListState.common(
-          data: data.copyWith(notes: notes),
-        ),
-      );
+      if (notes.isNotEmpty) {
+        emit(
+          GoogleDriveNotesListState.common(
+            data: data.copyWith(notes: notes),
+          ),
+        );
+      }
 
-      add(const GoogleDriveNotesListEvent.sync());
+      add(const GoogleDriveNotesListEvent.sync(force: false));
     } catch (e) {
       emit(GoogleDriveNotesListState.error(data: data, e: e));
     }
@@ -63,9 +64,33 @@ final class GoogleDriveNotesListBloc
     Emitter<GoogleDriveNotesListState> emit,
   ) async {
     try {
+      if (data.notes.isNotEmpty) {
+        emit(GoogleDriveNotesListState.loading(data: data));
+      }
+
+      await syncUsecase.execute(
+          configuration: configuration, force: event.force);
+      final notes = await notesProviderUsecase.readNotes(
+        configuration: configuration,
+      );
+
+      emit(
+        GoogleDriveNotesListState.common(
+          data: data.copyWith(notes: notes),
+        ),
+      );
+    } catch (e) {
+      emit(GoogleDriveNotesListState.error(data: data, e: e));
+    }
+  }
+
+  void _onReloadLocallyEvent(
+    ReloadLocallyEvent event,
+    Emitter<GoogleDriveNotesListState> emit,
+  ) async {
+    try {
       emit(GoogleDriveNotesListState.loading(data: data));
 
-      await syncUsecase.execute(configuration: configuration);
       final notes = await notesProviderUsecase.readNotes(
         configuration: configuration,
       );

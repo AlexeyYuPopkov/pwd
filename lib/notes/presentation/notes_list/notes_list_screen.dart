@@ -47,7 +47,7 @@ final class NotesListScreen extends StatelessWidget with ShowErrorDialogMixin {
               actions: [
                 AppBarButton(
                   iconData: Icons.sync,
-                  onPressed: () => _onSync(context),
+                  onPressed: () => _onSync(context, force: true),
                 ),
                 AppBarButton(
                   key: const Key(
@@ -99,11 +99,12 @@ final class NotesListScreen extends StatelessWidget with ShowErrorDialogMixin {
     }
   }
 
-  void _onSync(BuildContext context) => context
+  void _onSync(BuildContext context, {required bool force}) => context
       .read<GoogleDriveNotesListBloc>()
-      .add(const GoogleDriveNotesListEvent.sync());
+      .add(GoogleDriveNotesListEvent.sync(force: force));
 
-  Future<void> _onPullToRefresh(BuildContext context) async => _onSync(context);
+  Future<void> _onPullToRefresh(BuildContext context) async =>
+      _onSync(context, force: true);
 
   void _onEdit(
     BuildContext context, {
@@ -116,7 +117,7 @@ final class NotesListScreen extends StatelessWidget with ShowErrorDialogMixin {
       (result) {
         if (result is NotePageShouldSync) {
           context.read<GoogleDriveNotesListBloc>().add(
-                const GoogleDriveNotesListEvent.sync(),
+                const GoogleDriveNotesListEvent.reloadLocally(),
               );
         }
       },

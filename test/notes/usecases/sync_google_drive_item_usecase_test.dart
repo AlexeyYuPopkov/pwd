@@ -93,7 +93,7 @@ void main() {
             ),
           ).thenAnswer((invocation) async {});
 
-          await usecase.execute(configuration: configuration);
+          await usecase.execute(configuration: configuration, force: false);
 
           verifyInOrder(
             [
@@ -145,7 +145,8 @@ void main() {
             ),
           ).thenThrow(_Exception());
 
-          final result = usecase.execute(configuration: configuration);
+          final result =
+              usecase.execute(configuration: configuration, force: false);
 
           expect(result, throwsA(isA<SyncDataError>()));
         },
@@ -173,7 +174,7 @@ void main() {
             (_) async => 'not empty',
           );
 
-          await usecase.execute(configuration: configuration);
+          await usecase.execute(configuration: configuration, force: false);
 
           final verification = verifyInOrder(
             [
@@ -289,7 +290,7 @@ void main() {
             ),
           ).thenAnswer((invocation) async {});
 
-          await usecase.execute(configuration: configuration);
+          await usecase.execute(configuration: configuration, force: false);
 
           final verification = verifyInOrder(
             [
@@ -399,8 +400,12 @@ void main() {
             ),
           ).thenThrow(_Exception());
 
-          final usecaseFuture =
-              usecase.execute(configuration: configuration).then(
+          final usecaseFuture = usecase
+              .execute(
+            configuration: configuration,
+            force: false,
+          )
+              .then(
             (_) {
               final verification = verifyInOrder(
                 [

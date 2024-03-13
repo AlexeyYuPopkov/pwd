@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
 import 'package:pwd/common/domain/usecases/pin_usecase.dart';
-import 'package:pwd/notes/data/sync_data_service/git_service_api.dart';
 import 'package:pwd/notes/domain/checksum_checker.dart';
 
 import 'package:pwd/notes/domain/git_repository.dart';
@@ -46,7 +45,6 @@ final class SyncGitItemUsecase with SyncHelper implements SyncUsecase {
   final ChecksumChecker checksumChecker;
 
   final SyncGitItemUsecaseShaMap syncGitItemUsecaseShaMap;
-  final GetFileServiceApi getFileServiceApi;
 
   SyncGitItemUsecase({
     required this.remoteRepository,
@@ -54,19 +52,20 @@ final class SyncGitItemUsecase with SyncHelper implements SyncUsecase {
     required this.pinUsecase,
     required this.checksumChecker,
     required this.syncGitItemUsecaseShaMap,
-    required this.getFileServiceApi,
   });
 
   @override
-  Future<void> execute({required RemoteConfiguration configuration}) async {
+  Future<void> execute(
+      {required RemoteConfiguration configuration, required bool force}) async {
     try {
-      await _sync(configuration: configuration);
+      await _sync(configuration: configuration, force: force);
     } catch (e) {
       throw SyncDataError.unknown(parentError: e);
     }
   }
 
-  Future<void> _sync({required RemoteConfiguration configuration}) async {
+  Future<void> _sync(
+      {required RemoteConfiguration configuration, required bool force}) async {
     // TODO: refactor
     switch (configuration) {
       case GitConfiguration():
@@ -99,7 +98,9 @@ final class SyncGitItemUsecase with SyncHelper implements SyncUsecase {
 
       final remoteChecksum = file.checksum;
 
-      if (localChecksum.isNotEmpty && localChecksum == remoteChecksum) {
+      if (localChecksum.isNotEmpty &&
+          localChecksum == remoteChecksum &&
+          force == false) {
         return;
       } else {
         await _downloadFileAndSync(file: file, configuration: configuration);
@@ -164,13 +165,10 @@ extension on SyncGitItemUsecase {
     required GetDbResponse file,
     required GitConfiguration configuration,
   }) async {
-    final bytes = await getFileServiceApi.getFile(file.downloadUrl);
-    // final bytes = base64.decode(file.content);
+    final bytes = await remoteRepository.getRawFile(
+      configuration: configuration,
+    );
     final pin = pinUsecase.getPinOrThrow();
-    // final deleted = await deletedItemsProvider.getDeletedItems(
-    //   configuration: configuration,
-    // );
-
     final target = configuration.getTarget(pin: pin);
 
     await realmRepository.mergeWithDatabasePath(
@@ -179,6 +177,5 @@ extension on SyncGitItemUsecase {
     );
 
     return realmRepository.creanDeletedIfNeeded(target: target);
-    // }
   }
 }

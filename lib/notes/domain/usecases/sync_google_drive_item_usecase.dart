@@ -26,15 +26,17 @@ final class SyncGoogleDriveItemUsecase with SyncHelper implements SyncUsecase {
   });
 
   @override
-  Future<void> execute({required RemoteConfiguration configuration}) async {
+  Future<void> execute(
+      {required RemoteConfiguration configuration, required bool force}) async {
     try {
-      await _sync(configuration: configuration);
+      await _sync(configuration: configuration, force: force);
     } catch (e) {
       throw SyncDataError.unknown(parentError: e);
     }
   }
 
-  Future<void> _sync({required RemoteConfiguration configuration}) async {
+  Future<void> _sync(
+      {required RemoteConfiguration configuration, required bool force}) async {
     // TODO: refactor
     switch (configuration) {
       case GitConfiguration():
@@ -64,7 +66,9 @@ final class SyncGoogleDriveItemUsecase with SyncHelper implements SyncUsecase {
 
       final remoteChecksum = file.checksum;
 
-      if (localChecksum.isNotEmpty && localChecksum == remoteChecksum) {
+      if (localChecksum.isNotEmpty &&
+          localChecksum == remoteChecksum &&
+          force == false) {
         return;
       } else {
         await _downloadFileAndSync(file, configuration: configuration);

@@ -4,6 +4,8 @@ import 'package:pwd/theme/theme_data.dart';
 import 'package:pwd/common/presentation/di/app_di_modules.dart';
 import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
 import 'unauth/presentation/router/root_router_delegate.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 void main() async {
   // debugRepaintRainbowEnabled = true;
@@ -13,6 +15,10 @@ void main() async {
 
 // TODO: refactor
   AppDiModules.bindUnauthModules();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   runApp(MyApp());
 }

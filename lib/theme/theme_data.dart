@@ -52,6 +52,13 @@ final lightThemeData = ThemeData.light().copyWith(
       color: _textColor,
     ),
   ),
+  dialogTheme: const DialogTheme(
+    titleTextStyle: TextStyle(
+      fontSize: TextSizes.titleMedium,
+      color: _textColor,
+      fontWeight: FontWeight.w500,
+    ),
+  ),
   extensions: [
     CommonTheme.lightTheme(),
     ShimmerTheme.lightTheme(),

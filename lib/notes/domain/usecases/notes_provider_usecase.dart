@@ -31,6 +31,7 @@ class NotesProviderUsecase {
     required RemoteConfiguration configuration,
   }) async {
     final pin = pinUsecase.getPinOrThrow();
+
     await repository.updateNote(
       noteItem,
       target: configuration.getTarget(pin: pin),

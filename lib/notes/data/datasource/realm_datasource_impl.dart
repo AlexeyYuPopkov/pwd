@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:realm/realm.dart';
@@ -63,6 +64,7 @@ final class RealmDatasourceImpl implements RealmLocalRepository {
       });
 
       if (items.isNotEmpty) {
+        debugger();
         realm.write(
           () => realm.deleteMany(items),
         );
@@ -138,7 +140,9 @@ final class RealmDatasourceImpl implements RealmLocalRepository {
     try {
       return realm
           .all<NoteItemRealm>()
-          .where((e) => e.deletedTimestamp == null)
+          .where((e) {
+            return e.deletedTimestamp == null;
+          })
           .map((e) => NoteRealmMapper.toDomain(e))
           .toList();
     } catch (e) {
@@ -172,7 +176,9 @@ final class RealmDatasourceImpl implements RealmLocalRepository {
   Future<Uint8List> readAsBytes({
     required LocalStorageTarget target,
   }) async {
-    final realm = await _getRealm(target: target);
+    final realm = await _getRealm(target: target).then(
+      (e) => e.freeze(),
+    );
     try {
       return File(realm.config.path).readAsBytes();
     } catch (e) {
@@ -217,7 +223,11 @@ extension _Migration on RealmDatasourceImpl {
               (p) {
                 final localItem = realm.find<NoteItemRealm>(p.id);
 
-                if (localItem != null && localItem.timestamp > p.timestamp) {
+                // debugger();
+                // print(
+                //   "local timestamp: ${localItem?.timestamp ?? -1}, remote timestamp: ${p.timestamp},",
+                // );
+                if (localItem != null && localItem.timestamp >= p.timestamp) {
                   return localItem;
                 } else {
                   return NoteItemRealm(
@@ -314,6 +324,7 @@ extension _CreateRealm on RealmDatasourceImpl {
     try {
       final tempDirPath = await getTemporaryDirectory().then((e) => e.path);
       final tempRealmPath = '$tempDirPath/${target.cacheTmpFileName}';
+      // await File(tempRealmPath).delete();
       final result = await File(tempRealmPath).writeAsBytes(bytes);
 
       return result;

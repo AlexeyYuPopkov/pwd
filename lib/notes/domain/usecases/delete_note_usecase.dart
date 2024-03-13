@@ -27,6 +27,6 @@ class DeleteNoteUsecase {
       target: configuration.getTarget(pin: pin),
     );
     await checksumChecker.dropChecksum(configuration: configuration);
-    await syncUsecase.execute(configuration: configuration);
+    await syncUsecase.execute(configuration: configuration, force: true);
   }
 }

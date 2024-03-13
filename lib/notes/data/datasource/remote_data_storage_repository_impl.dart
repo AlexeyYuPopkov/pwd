@@ -12,6 +12,7 @@ import 'package:pwd/notes/domain/sync_requests_parameters/put_db_response.dart';
 
 class RemoteDataStorageRepositoryImpl implements GitRepository {
   final GitServiceApi service;
+  final GetGitFileServiceApi gitFileService;
 
   final Mapper<PutDbRequestData, PutDbRequest> putDbRequestMapper;
 
@@ -19,6 +20,7 @@ class RemoteDataStorageRepositoryImpl implements GitRepository {
 
   RemoteDataStorageRepositoryImpl({
     required this.service,
+    required this.gitFileService,
     required this.errorMapper,
     required this.putDbRequestMapper,
   });
@@ -75,6 +77,21 @@ class RemoteDataStorageRepositoryImpl implements GitRepository {
         throw error;
       }
     }
+  }
+
+  @override
+  Future<List<int>> getRawFile({
+    required GitConfiguration configuration,
+  }) async {
+    final result = await gitFileService.getRawFile(
+      token: _adjustedToken(configuration.token),
+      owner: configuration.owner,
+      repo: configuration.repo,
+      filename: configuration.fileName,
+      branch: configuration.branch,
+    );
+
+    return result;
   }
 
   String _adjustedToken(String str) => 'Bearer $str';

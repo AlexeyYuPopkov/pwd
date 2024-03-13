@@ -53,7 +53,7 @@ void main() {
       );
 
       when(
-        () => syncUsecase.execute(configuration: configuration),
+        () => syncUsecase.execute(configuration: configuration, force: true),
       ).thenAnswer(
         (_) => Future.value(),
       );
@@ -70,7 +70,7 @@ void main() {
               target: configuration.getTarget(pin: pin),
             ),
         () => checksumChecker.dropChecksum(configuration: configuration),
-        () => syncUsecase.execute(configuration: configuration),
+        () => syncUsecase.execute(configuration: configuration, force: true),
       ]);
     });
   });

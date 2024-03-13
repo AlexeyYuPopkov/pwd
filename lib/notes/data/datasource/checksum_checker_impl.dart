@@ -23,7 +23,7 @@ final class ChecksumCheckerImpl implements ChecksumChecker {
     required RemoteConfiguration configuration,
   }) async {
     final storage = await SharedPreferences.getInstance();
-    storage.setString(_sharedPreferencesKey(configuration), checksum);
+    await storage.setString(_sharedPreferencesKey(configuration), checksum);
   }
 
   @override
@@ -31,6 +31,6 @@ final class ChecksumCheckerImpl implements ChecksumChecker {
     required RemoteConfiguration configuration,
   }) async {
     final storage = await SharedPreferences.getInstance();
-    storage.remove(_sharedPreferencesKey(configuration));
+    await storage.remove(_sharedPreferencesKey(configuration));
   }
 }
