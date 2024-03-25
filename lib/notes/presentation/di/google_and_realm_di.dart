@@ -1,6 +1,7 @@
 import 'package:di_storage/di_storage.dart';
 import 'package:pwd/notes/data/datasource/checksum_checker_impl.dart';
-import 'package:pwd/notes/data/datasource/realm_datasource_impl.dart';
+import 'package:pwd/notes/data/datasource/realm_datasource/realm_datasource_impl.dart';
+import 'package:pwd/notes/data/datasource/realm_datasource/realm_provider_impl.dart';
 import 'package:pwd/notes/domain/checksum_checker.dart';
 import 'package:pwd/notes/domain/google_repository.dart';
 
@@ -17,7 +18,9 @@ final class GoogleAndRealmDi extends DiScope {
   void bind(DiStorage di) {
     di.bind<RealmLocalRepository>(
       module: this,
-      () => RealmDatasourceImpl(),
+      () => RealmDatasourceImpl(
+        realmProvider: RealmProviderImpl(),
+      ),
     );
 
     di.bind<GoogleRepository>(

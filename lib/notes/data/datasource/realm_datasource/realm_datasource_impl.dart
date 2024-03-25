@@ -1,31 +1,28 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
-import 'package:realm/realm.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:pwd/common/domain/model/remote_configuration/local_storage_target.dart';
-import 'package:pwd/common/domain/errors/app_error.dart';
 import 'package:pwd/notes/data/mappers/note_realm_mapper.dart';
 import 'package:pwd/notes/data/realm_model/note_item_realm.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
-import 'package:pwd/notes/domain/model/local_storage_error.dart';
 import 'package:pwd/notes/domain/realm_local_repository.dart';
+
+import 'realm_error_mapper.dart';
+import 'realm_provider_impl.dart';
 
 const _validTillDuration = Duration(days: 120);
 
 final class RealmDatasourceImpl implements RealmLocalRepository {
-  String? _appDirPath;
+  final RealmProvider realmProvider;
 
-  Future<String> getAppDirPath() async =>
-      _appDirPath ??
-      await getApplicationDocumentsDirectory().then((e) => e.path);
+  const RealmDatasourceImpl({required this.realmProvider});
 
   @override
   Future<void> markDeleted(
     String id, {
     required LocalStorageTarget target,
   }) async {
-    final realm = await _getRealm(target: target);
+    final realm = await realmProvider.getRealm(target: target);
 
     try {
       final obj = realm.find<NoteItemRealm>(id);
@@ -46,7 +43,7 @@ final class RealmDatasourceImpl implements RealmLocalRepository {
         });
       }
     } catch (e) {
-      throw _ErrorMapper.toDomain(e);
+      throw RealmErrorMapper.toDomain(e);
     } finally {
       realm.close();
     }
@@ -56,7 +53,7 @@ final class RealmDatasourceImpl implements RealmLocalRepository {
   Future<void> creanDeletedIfNeeded({
     required LocalStorageTarget target,
   }) async {
-    final realm = await _getRealm(target: target);
+    final realm = await realmProvider.getRealm(target: target);
     try {
       final timestamp = TimestampHelper.timestampForDate(DateTime.now());
       final items = realm.all<NoteItemRealm>().where((e) {
@@ -70,7 +67,7 @@ final class RealmDatasourceImpl implements RealmLocalRepository {
         );
       }
     } catch (e) {
-      throw _ErrorMapper.toDomain(e);
+      throw RealmErrorMapper.toDomain(e);
     } finally {
       realm.close();
     }
@@ -80,7 +77,7 @@ final class RealmDatasourceImpl implements RealmLocalRepository {
   Future<void> deleteAll({
     required LocalStorageTarget target,
   }) async {
-    final realm = await _getRealm(target: target);
+    final realm = await realmProvider.getRealm(target: target);
     try {
       realm.write(
         () => realm.deleteAll<NoteItemRealm>(),
@@ -88,7 +85,7 @@ final class RealmDatasourceImpl implements RealmLocalRepository {
 
       assert(realm.all<NoteItemRealm>().isEmpty);
     } catch (e) {
-      throw _ErrorMapper.toDomain(e);
+      throw RealmErrorMapper.toDomain(e);
     } finally {
       realm.close();
     }
@@ -99,7 +96,7 @@ final class RealmDatasourceImpl implements RealmLocalRepository {
     required LocalStorageTarget target,
     required List<NoteItem> notes,
   }) async {
-    final realm = await _getRealm(target: target);
+    final realm = await realmProvider.getRealm(target: target);
     try {
       final items = notes.map((e) => NoteRealmMapper.toData(e));
 
@@ -110,7 +107,7 @@ final class RealmDatasourceImpl implements RealmLocalRepository {
         ),
       );
     } catch (e) {
-      throw _ErrorMapper.toDomain(e);
+      throw RealmErrorMapper.toDomain(e);
     } finally {
       realm.close();
     }
@@ -121,12 +118,12 @@ final class RealmDatasourceImpl implements RealmLocalRepository {
     String id, {
     required LocalStorageTarget target,
   }) async {
-    final realm = await _getRealm(target: target);
+    final realm = await realmProvider.getRealm(target: target);
     try {
       final obj = realm.find<NoteItemRealm>(id);
       return obj == null ? null : NoteRealmMapper.toDomain(obj);
     } catch (e) {
-      throw _ErrorMapper.toDomain(e);
+      throw RealmErrorMapper.toDomain(e);
     } finally {
       realm.close();
     }
@@ -136,7 +133,7 @@ final class RealmDatasourceImpl implements RealmLocalRepository {
   Future<List<NoteItem>> readNotes({
     required LocalStorageTarget target,
   }) async {
-    final realm = await _getRealm(target: target);
+    final realm = await realmProvider.getRealm(target: target);
     try {
       return realm
           .all<NoteItemRealm>()
@@ -146,7 +143,7 @@ final class RealmDatasourceImpl implements RealmLocalRepository {
           .map((e) => NoteRealmMapper.toDomain(e))
           .toList();
     } catch (e) {
-      throw _ErrorMapper.toDomain(e);
+      throw RealmErrorMapper.toDomain(e);
     } finally {
       realm.close();
     }
@@ -157,7 +154,7 @@ final class RealmDatasourceImpl implements RealmLocalRepository {
     BaseNoteItem noteItem, {
     required LocalStorageTarget target,
   }) async {
-    final realm = await _getRealm(target: target);
+    final realm = await realmProvider.getRealm(target: target);
     try {
       realm.write(
         () => realm.add(
@@ -166,7 +163,7 @@ final class RealmDatasourceImpl implements RealmLocalRepository {
         ),
       );
     } catch (e) {
-      throw _ErrorMapper.toDomain(e);
+      throw RealmErrorMapper.toDomain(e);
     } finally {
       realm.close();
     }
@@ -176,13 +173,13 @@ final class RealmDatasourceImpl implements RealmLocalRepository {
   Future<Uint8List> readAsBytes({
     required LocalStorageTarget target,
   }) async {
-    final realm = await _getRealm(target: target).then(
-      (e) => e.freeze(),
-    );
+    final realm = await realmProvider.getRealm(target: target).then(
+          (e) => e.freeze(),
+        );
     try {
       return File(realm.config.path).readAsBytes();
     } catch (e) {
-      throw _ErrorMapper.toDomain(e);
+      throw RealmErrorMapper.toDomain(e);
     } finally {
       realm.close();
     }
@@ -199,7 +196,7 @@ final class RealmDatasourceImpl implements RealmLocalRepository {
         target: target,
       );
     } catch (e) {
-      throw _ErrorMapper.toDomain(e);
+      throw RealmErrorMapper.toDomain(e);
     }
   }
 }
@@ -210,10 +207,12 @@ extension _Migration on RealmDatasourceImpl {
     required Uint8List bytes,
     required LocalStorageTarget target,
   }) async {
-    final realm = await _getRealm(target: target);
+    final realm = await realmProvider.getRealm(target: target);
     assert(realm.config.path.isNotEmpty);
-    final tempFile = await _createTempFile(bytes: bytes, target: target);
-    final tempRealm = _getTempRealm(target: target, path: tempFile.path);
+    final tempRealm = await realmProvider.getTempRealm(
+      target: target,
+      bytes: bytes,
+    );
 
     try {
       await realm.writeAsync(
@@ -247,122 +246,11 @@ extension _Migration on RealmDatasourceImpl {
         },
       );
     } catch (e) {
-      throw _ErrorMapper.toDomain(e);
+      throw RealmErrorMapper.toDomain(e);
     } finally {
       tempRealm.close();
       realm.close();
-      await _deleteTempFile(tempFile);
-    }
-  }
-}
-
-// Create realm
-extension _CreateRealm on RealmDatasourceImpl {
-  Future<Realm> _getRealm({
-    required LocalStorageTarget target,
-  }) async {
-    final path = await getAppDirPath();
-    return _createRealm(
-      target: target,
-      path: '$path/${target.cacheFileName}',
-    );
-  }
-
-  Realm _getTempRealm({
-    required LocalStorageTarget target,
-    required String path,
-  }) =>
-      _createRealm(
-        target: target,
-        path: path,
-      );
-
-  Realm _createRealm({
-    required LocalStorageTarget target,
-    required String path,
-  }) {
-    try {
-      const int schemaVersion = 5;
-      final config = Configuration.local(
-        [
-          NoteItemRealm.schema,
-          NoteItemContentRealm.schema,
-        ],
-        encryptionKey: target.key,
-        path: path,
-        schemaVersion: schemaVersion,
-        migrationCallback: (migration, oldSchemaVersion) {
-          if (schemaVersion == oldSchemaVersion) {
-            return;
-          }
-          if (schemaVersion == 5) {
-            _migration5(migration, oldSchemaVersion);
-          } else {
-            return;
-          }
-        },
-      );
-
-      final realm = Realm(config);
-
-      if (kDebugMode) {
-        print('Realm.config.path: ${realm.config.path}');
-      }
-      return realm;
-    } catch (e) {
-      throw _ErrorMapper.toDomain(e);
-    }
-  }
-
-  // void _from3to4Migration(Migration migration, int oldSchemaVersion) {
-  //   final now = DateTime.now();
-  //   // debugger();
-  //   migration.newRealm.schema.whereType<NoteItemRealm>().forEach(
-  //         (e) => e.timestamp = TimestampHelper.timestampForDate(now),
-  //       );
-  // }
-
-  void _migration5(Migration migration, int oldSchemaVersion) {
-    final now = DateTime.now();
-    // debugger();
-    migration.newRealm.schema.whereType<NoteItemRealm>().forEach(
-          (e) => e.updated = TimestampHelper.timestampForDate(now),
-        );
-  }
-
-  Future<File> _createTempFile({
-    required Uint8List bytes,
-    required LocalStorageTarget target,
-  }) async {
-    assert(bytes.isNotEmpty, 'Byte array is empty');
-    try {
-      final tempDirPath = await getTemporaryDirectory().then((e) => e.path);
-      final tempRealmPath = '$tempDirPath/${target.cacheTmpFileName}';
-      // await File(tempRealmPath).delete();
-      final result = await File(tempRealmPath).writeAsBytes(bytes);
-
-      return result;
-    } catch (e) {
-      throw _ErrorMapper.toDomain(e);
-    }
-  }
-
-  Future<void> _deleteTempFile(File tempFile) async {
-    try {
-      await tempFile.delete();
-    } catch (e) {
-      throw _ErrorMapper.toDomain(e);
-    }
-  }
-}
-
-final class _ErrorMapper {
-  static AppError toDomain(Object e) {
-    if (e is RealmException &&
-        e.message.contains('Realm file decryption failed')) {
-      return LocalStorageError.pinDoesNotMatch(parentError: e);
-    } else {
-      return LocalStorageError.unknown(parentError: e);
+      await realmProvider.deleteTempFile(tempRealm.config.path);
     }
   }
 }
