@@ -14,7 +14,7 @@ class ClockWidget extends StatelessWidget {
   final ClockModel parameters;
   final TimeFormatter formatter;
   final Stream<DateTime> timerStream;
-  final VoidCallback? onEdit;
+  final VoidCallback? onLongTap;
 
   const ClockWidget({
     super.key,
@@ -23,7 +23,7 @@ class ClockWidget extends StatelessWidget {
     required this.parameters,
     required this.formatter,
     required this.timerStream,
-    required this.onEdit,
+    required this.onLongTap,
   });
 
   @override
@@ -37,13 +37,13 @@ class ClockWidget extends StatelessWidget {
             stream: timerStream.map(
               (e) => formatter.dateTimeInTimezone(
                 date: e,
-                timeZoneOffset: parameters.timezoneOffset,
+                timeZoneOffset: parameters.timeZoneOffset,
               ),
             ),
             builder: (context, snapshot) => ClockForegroundWidget(
               date: snapshot.data ?? DateTime.now(),
               color: foregroundColor,
-              onEdit: onEdit,
+              onLongTap: onLongTap,
             ),
           ),
         ),
@@ -64,18 +64,18 @@ class ClockBackgroundWidget extends LeafRenderObjectWidget {
 class ClockForegroundWidget extends LeafRenderObjectWidget {
   final Color color;
   final DateTime date;
-  final VoidCallback? onEdit;
+  final VoidCallback? onLongTap;
 
   const ClockForegroundWidget({
     super.key,
     required this.color,
     required this.date,
-    required this.onEdit,
+    required this.onLongTap,
   });
 
   @override
   RenderObject createRenderObject(BuildContext context) =>
-      ClockForegroundRenderBox(color: color, onEdit: onEdit);
+      ClockForegroundRenderBox(color: color, onLongTap: onLongTap);
 
   @override
   void updateRenderObject(
@@ -85,7 +85,7 @@ class ClockForegroundWidget extends LeafRenderObjectWidget {
       renderObject
         ..date = date
         ..color = color
-        ..onEdit = onEdit;
+        ..onLongTap = onLongTap;
 }
 
 class ClockBackgroundRenderBox extends RenderBox {
@@ -189,17 +189,17 @@ class ClockBackgroundRenderBox extends RenderBox {
   }
 }
 
-class ClockForegroundRenderBox extends RenderBox {
+final class ClockForegroundRenderBox extends RenderBox {
   Color _color;
 
-  VoidCallback? onEdit;
+  VoidCallback? onLongTap;
 
   late final longPress = LongPressGestureRecognizer()
-    ..onLongPressEnd = (_) => onEdit?.call();
+    ..onLongPressEnd = (_) => onLongTap?.call();
 
   ClockForegroundRenderBox({
     required Color color,
-    required this.onEdit,
+    required this.onLongTap,
   }) : _color = color;
 
   DateTime _date = DateTime.now();
@@ -249,7 +249,9 @@ class ClockForegroundRenderBox extends RenderBox {
   @override
   void handleEvent(PointerEvent event, HitTestEntry entry) {
     if (event is PointerDownEvent) {
-      longPress.addPointer(event);
+      if (onLongTap != null) {
+        longPress.addPointer(event);
+      }
     }
   }
 

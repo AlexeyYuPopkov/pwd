@@ -20,12 +20,14 @@ Map<String, dynamic> _$ClocksModelDataToJson(ClocksModelData instance) =>
 
 ClockModelData _$ClockModelDataFromJson(Map<String, dynamic> json) =>
     ClockModelData(
+      id: json['id'] as String? ?? '',
       label: json['label'] as String? ?? '',
       timezoneOffsetInSeconds: json['timezoneOffsetInSeconds'] as int? ?? 0,
     );
 
 Map<String, dynamic> _$ClockModelDataToJson(ClockModelData instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'label': instance.label,
       'timezoneOffsetInSeconds': instance.timezoneOffsetInSeconds,
     };

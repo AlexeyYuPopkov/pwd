@@ -8,6 +8,7 @@ import 'package:pwd/common/domain/clock_configuration_provider.dart';
 import 'package:pwd/common/domain/pin_repository.dart';
 import 'package:pwd/common/domain/remote_configuration_provider.dart';
 import 'package:pwd/common/domain/time_formatter/time_formatter.dart';
+import 'package:pwd/common/domain/usecases/clock_timer_usecase.dart';
 import 'package:pwd/common/domain/usecases/clock_usecase.dart';
 import 'package:pwd/common/domain/usecases/hash_usecase.dart';
 import 'package:pwd/common/domain/usecases/pin_usecase.dart';
@@ -50,6 +51,9 @@ final class UnauthDiModule extends DiScope {
       module: this,
       lifeTime: const LifeTime.prototype(),
     );
+
+    di.bind<ClockTimerUsecase>(() => ClockTimerUsecaseImpl(),
+        module: this, lifeTime: const LifeTime.single());
 
     di.bind<ClockConfigurationProvider>(
       () => ClockConfigurationProviderImpl(),

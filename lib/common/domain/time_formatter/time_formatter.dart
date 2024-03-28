@@ -12,6 +12,10 @@ abstract class TimeFormatter {
     required DateTime date,
     required Duration timeZoneOffset,
   });
+
+  String formattedTimeZoneOffsetOffset({
+    required Duration offset,
+  });
 }
 
 class TimeFormatterImpl implements TimeFormatter {
@@ -27,7 +31,9 @@ class TimeFormatterImpl implements TimeFormatter {
     required DateTime date,
     required Duration timezoneOffset,
   }) =>
-      time(dateTimeInTimezone(date: date, timeZoneOffset: timezoneOffset));
+      time(
+        dateTimeInTimezone(date: date, timeZoneOffset: timezoneOffset),
+      );
 
   @override
   DateTime dateTimeInTimezone({
@@ -42,4 +48,18 @@ class TimeFormatterImpl implements TimeFormatter {
       return result;
     }
   }
+
+  @override
+  String formattedTimeZoneOffsetOffset({
+    required Duration offset,
+  }) {
+    final absDuration = offset.abs();
+    final minutes = absDuration.inMinutes.remainder(60);
+    final result =
+        '${absDuration.inHours}${minutes == 0 ? '' : ':${_twoDigits(minutes)}'}';
+
+    return offset.inMilliseconds > 0 ? '+$result' : '-$result';
+  }
 }
+
+String _twoDigits(int n) => n.toString().padLeft(2, '0');

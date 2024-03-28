@@ -30,7 +30,7 @@ class ClockWidget24 extends StatelessWidget {
             return Text(
               formatter.timeInTimezone(
                 date: date,
-                timezoneOffset: parameters.timezoneOffset,
+                timezoneOffset: parameters.timeZoneOffset,
               ),
               style: const TextStyle(
                 fontFeatures: [FontFeature.tabularFigures()],

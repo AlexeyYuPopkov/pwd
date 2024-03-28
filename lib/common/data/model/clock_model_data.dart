@@ -22,6 +22,9 @@ class ClocksModelData {
 @immutable
 @JsonSerializable()
 class ClockModelData {
+  @JsonKey(name: 'id', defaultValue: '')
+  final String id;
+
   @JsonKey(name: 'label', defaultValue: '')
   final String label;
 
@@ -29,6 +32,7 @@ class ClockModelData {
   final int timezoneOffsetInSeconds;
 
   const ClockModelData({
+    required this.id,
     required this.label,
     required this.timezoneOffsetInSeconds,
   });

@@ -44,7 +44,8 @@ extension on Map<String, dynamic> {
     return ClocksModelData.fromJson(this)
         .content
         .map(
-          (src) => ClockModel(
+          (src) => ClockModel.fromStorage(
+            id: src.id,
             label: src.label,
             timezoneOffset: Duration(seconds: src.timezoneOffsetInSeconds),
           ),
@@ -57,8 +58,9 @@ extension on List<ClockModel> {
   Map<String, dynamic> toJson() => ClocksModelData(
         content: map(
           (src) => ClockModelData(
+            id: src.id,
             label: src.label,
-            timezoneOffsetInSeconds: src.timezoneOffset.inSeconds,
+            timezoneOffsetInSeconds: src.timeZoneOffset.inSeconds,
           ),
         ),
       ).toJson();

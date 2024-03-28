@@ -1,17 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:pwd/common/domain/model/clock_model.dart';
 import 'package:pwd/theme/common_size.dart';
 
-class AddClockDialog extends StatefulWidget {
-  const AddClockDialog({super.key});
+final class AddClockDialog extends StatefulWidget {
+  final AddClockDialogModel model;
+  const AddClockDialog({super.key, required this.model});
 
   @override
   State<AddClockDialog> createState() => _AddClockDialogState();
 }
 
-class _AddClockDialogState extends State<AddClockDialog> {
-  final controller = TextEditingController();
+final class _AddClockDialogState extends State<AddClockDialog> {
+  late final controller = TextEditingController(text: widget.model.clock.label);
+  // TODO: fix 'inHours'
+  late double value = widget.model.clock.timeZoneOffset.inHours.toDouble();
 
-  var value = 0.0;
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -80,20 +87,18 @@ class _AddClockDialogState extends State<AddClockDialog> {
   }
 
   void _onSave(BuildContext context) => Navigator.of(context).pop(
-        AddClockDialogResult(
-          hours: value.toInt(),
+        widget.model.clock.copyWith(
+          timeZoneOffset: Duration(hours: value.toInt()),
           label: controller.text,
         ),
       );
 }
 
-class AddClockDialogResult {
-  final int hours;
-  final String label;
+final class AddClockDialogModel {
+  final ClockModel clock;
 
-  const AddClockDialogResult({
-    required this.hours,
-    required this.label,
+  const AddClockDialogModel({
+    required this.clock,
   });
 }
 
