@@ -43,7 +43,7 @@ final class ClocksWidget extends StatelessWidget {
         ),
         child: BlocBuilder<ClocksWidgetBloc, ClocksWidgetState>(
           builder: (context, state) {
-            final length = state.data.parameters.length;
+            final length = state.data.clocks.length;
 
             return SizedBox(
               height: constraints.maxHeight,
@@ -56,7 +56,7 @@ final class ClocksWidget extends StatelessWidget {
                     itemCount: length,
                     cacheExtent: itemWidth,
                     itemBuilder: (context, index) {
-                      final clock = state.data.parameters[index];
+                      final clock = state.data.clocks[index];
                       return SizedBox(
                         width: itemWidth,
                         child: ClockItemWidget(
@@ -101,9 +101,7 @@ final class ClocksWidget extends StatelessWidget {
       context: context,
       builder: (dialogContext) {
         return AddClockDialog(
-          model: AddClockDialogModel(
-            clock: clock ?? ClockModel.newClock(),
-          ),
+          clock: clock ?? ClockModel.newClock(),
         );
       },
     );

@@ -46,7 +46,6 @@ class ClockItemWidget extends StatelessWidget {
           Stack(
             children: [
               ClockWidget(
-                key: Key(ClocksWidgetTestHelper.clockWidgetKey(clock)),
                 formatter: formatter,
                 parameters: clock,
                 timerStream: timerStream,
@@ -204,8 +203,9 @@ final class ClockItemOwerlayMenuContent extends StatelessWidget {
   Widget build(BuildContext context) {
     const rowHeight = CommonSize.indent4x;
     final theme = Theme.of(context);
-    final textStyle =
-        theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.primary);
+    final textStyle = theme.textTheme.bodyMedium?.copyWith(
+      color: theme.colorScheme.primary,
+    );
     return DecoratedBox(
       decoration: BoxDecoration(
         color: theme.colorScheme.background,
@@ -216,6 +216,7 @@ final class ClockItemOwerlayMenuContent extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           CupertinoButton(
+            key: Key(ClocksWidgetTestHelper.clockWidgetEditButtonKey),
             padding: EdgeInsets.zero,
             onPressed: onEdit,
             child: SizedBox(
@@ -232,6 +233,7 @@ final class ClockItemOwerlayMenuContent extends StatelessWidget {
             height: CommonSize.thickness,
           ),
           CupertinoButton(
+            key: Key(ClocksWidgetTestHelper.clockWidgetAddButtonKey),
             padding: EdgeInsets.zero,
             onPressed: onAppend,
             child: SizedBox(
@@ -248,6 +250,7 @@ final class ClockItemOwerlayMenuContent extends StatelessWidget {
             height: CommonSize.thickness,
           ),
           CupertinoButton(
+            key: Key(ClocksWidgetTestHelper.clockWidgetDeleteButtonKey),
             padding: EdgeInsets.zero,
             onPressed: onDelete,
             child: SizedBox(

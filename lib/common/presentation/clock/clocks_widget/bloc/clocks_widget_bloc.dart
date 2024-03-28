@@ -34,7 +34,7 @@ final class ClocksWidgetBloc
   ) async {
     final clocks = await clockUsecase.getClocks();
 
-    final newData = state.data.copyWith(parameters: clocks);
+    final newData = state.data.copyWith(clocks: clocks);
 
     emit(
       ClocksWidgetState.common(data: newData),
@@ -50,7 +50,7 @@ final class ClocksWidgetBloc
     emit(
       ClocksWidgetState.common(
         data: state.data.copyWith(
-          parameters: clocks,
+          clocks: clocks,
         ),
       ),
     );
@@ -63,7 +63,7 @@ final class ClocksWidgetBloc
     final clocks = await clockUsecase.byClockDeletion(event.clock);
 
     emit(
-      ClocksWidgetState.common(data: state.data.copyWith(parameters: clocks)),
+      ClocksWidgetState.common(data: state.data.copyWith(clocks: clocks)),
     );
   }
 }

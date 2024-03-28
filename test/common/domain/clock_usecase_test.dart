@@ -99,19 +99,21 @@ void main() {
     });
 
     test('add clock.', () async {
-      final existingClock = ClockModel(
+      const existingClock = ClockModel(
+        id: '1',
         label: 'label1',
-        timezoneOffset: const Duration(hours: 2),
+        timeZoneOffset: Duration(hours: 2),
       );
 
-      final newClock = ClockModel(
+      const newClock = ClockModel(
+        id: '2',
         label: 'label2',
-        timezoneOffset: const Duration(hours: 3),
+        timeZoneOffset: Duration(hours: 3),
       );
 
       configurationProvider.whenClocksAnswers([
-        Future.value(ResultSuccess([existingClock])),
-        Future.value(ResultSuccess([existingClock, newClock])),
+        Future.value(const ResultSuccess([existingClock])),
+        Future.value(const ResultSuccess([existingClock, newClock])),
       ]);
 
       configurationProvider.whenSetClocksAnswers([Future.value()]);
@@ -131,24 +133,27 @@ void main() {
     });
 
     test('delete clock.', () async {
-      final clock1 = ClockModel(
+      const clock1 = ClockModel(
+        id: '1',
         label: 'label1',
-        timezoneOffset: const Duration(hours: 2),
+        timeZoneOffset: Duration(hours: 2),
       );
 
-      final clock2 = ClockModel(
+      const clock2 = ClockModel(
+        id: '2',
         label: 'label2',
-        timezoneOffset: const Duration(hours: 3),
+        timeZoneOffset: Duration(hours: 3),
       );
 
-      final clock3 = ClockModel(
+      const clock3 = ClockModel(
+        id: '3',
         label: 'label3',
-        timezoneOffset: const Duration(hours: 4),
+        timeZoneOffset: Duration(hours: 4),
       );
 
       configurationProvider.whenClocksAnswers([
-        Future.value(ResultSuccess([clock1, clock2, clock3])),
-        Future.value(ResultSuccess([clock1, clock3])),
+        Future.value(const ResultSuccess([clock1, clock2, clock3])),
+        Future.value(const ResultSuccess([clock1, clock3])),
       ]);
 
       configurationProvider.whenSetClocksAnswers([Future.value()]);

@@ -44,10 +44,10 @@ extension on Map<String, dynamic> {
     return ClocksModelData.fromJson(this)
         .content
         .map(
-          (src) => ClockModel.fromStorage(
+          (src) => ClockModel(
             id: src.id,
             label: src.label,
-            timezoneOffset: Duration(seconds: src.timezoneOffsetInSeconds),
+            timeZoneOffset: Duration(seconds: src.timezoneOffsetInSeconds),
           ),
         )
         .toList();

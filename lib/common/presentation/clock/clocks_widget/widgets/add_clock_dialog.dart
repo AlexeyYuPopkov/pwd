@@ -3,17 +3,17 @@ import 'package:pwd/common/domain/model/clock_model.dart';
 import 'package:pwd/theme/common_size.dart';
 
 final class AddClockDialog extends StatefulWidget {
-  final AddClockDialogModel model;
-  const AddClockDialog({super.key, required this.model});
+  final ClockModel clock;
+  const AddClockDialog({super.key, required this.clock});
 
   @override
   State<AddClockDialog> createState() => _AddClockDialogState();
 }
 
 final class _AddClockDialogState extends State<AddClockDialog> {
-  late final controller = TextEditingController(text: widget.model.clock.label);
+  late final controller = TextEditingController(text: widget.clock.label);
   // TODO: fix 'inHours'
-  late double value = widget.model.clock.timeZoneOffset.inHours.toDouble();
+  late double value = widget.clock.timeZoneOffset.inHours.toDouble();
 
   @override
   void initState() {
@@ -87,19 +87,11 @@ final class _AddClockDialogState extends State<AddClockDialog> {
   }
 
   void _onSave(BuildContext context) => Navigator.of(context).pop(
-        widget.model.clock.copyWith(
+        widget.clock.copyWith(
           timeZoneOffset: Duration(hours: value.toInt()),
           label: controller.text,
         ),
       );
-}
-
-final class AddClockDialogModel {
-  final ClockModel clock;
-
-  const AddClockDialogModel({
-    required this.clock,
-  });
 }
 
 extension on BuildContext {

@@ -5,34 +5,13 @@ final class ClockModel {
   final String label;
   final Duration timeZoneOffset;
 
-  factory ClockModel({
-    required String label,
-    required Duration timezoneOffset,
-  }) =>
-      ClockModel._(
-        id: const Uuid().v1(),
-        label: label,
-        timeZoneOffset: timezoneOffset,
-      );
-
-  factory ClockModel.newClock() => ClockModel._(
+  factory ClockModel.newClock() => ClockModel(
         id: const Uuid().v1(),
         label: '',
         timeZoneOffset: DateTime.now().timeZoneOffset,
       );
 
-  factory ClockModel.fromStorage({
-    required String id,
-    required String label,
-    required Duration timezoneOffset,
-  }) =>
-      ClockModel._(
-        id: id,
-        label: label,
-        timeZoneOffset: timezoneOffset,
-      );
-
-  const ClockModel._({
+  const ClockModel({
     required this.id,
     required this.label,
     required this.timeZoneOffset,
@@ -52,7 +31,7 @@ final class ClockModel {
     String? label,
     Duration? timeZoneOffset,
   }) {
-    return ClockModel._(
+    return ClockModel(
       id: id,
       label: label ?? this.label,
       timeZoneOffset: timeZoneOffset ?? this.timeZoneOffset,

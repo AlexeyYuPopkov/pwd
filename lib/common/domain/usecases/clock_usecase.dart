@@ -11,23 +11,19 @@ class ClockUsecase {
   Future<List<ClockModel>> getClocks() async {
     try {
       final clocks = await clockConfigurationProvider.clocks;
-      return clocks.isEmpty
-          ? [
-              ClockModel(
-                label: '',
-                timezoneOffset: DateTime.now().timeZoneOffset,
-              ),
-            ]
-          : clocks;
+      return clocks.isEmpty ? _createDefault() : clocks;
     } catch (e) {
-      return [
-        ClockModel(
-          label: '',
-          timezoneOffset: DateTime.now().timeZoneOffset,
-        ),
-      ];
+      return _createDefault();
     }
   }
+
+  List<ClockModel> _createDefault() => [
+        ClockModel(
+          id: '',
+          label: '',
+          timeZoneOffset: DateTime.now().timeZoneOffset,
+        )
+      ];
 
   Future<List<ClockModel>> byClockDeletion(ClockModel clock) async {
     final clocks = await getClocks();
@@ -42,7 +38,7 @@ class ClockUsecase {
   }
 
   Future<List<ClockModel>> changedWithClock(ClockModel clock) async {
-    var clocks = await getClocks();
+    final clocks = await getClocks();
 
     List<ClockModel> newClocks = [];
 
@@ -62,18 +58,7 @@ class ClockUsecase {
     }
 
     await clockConfigurationProvider.setClocks(newClocks);
+
     return getClocks();
   }
 }
-
-// class DefaultClockModel extends ClockModel {
-//   DefaultClockModel._({required super.label, required super.timezoneOffset});
-
-//   factory DefaultClockModel({
-//     required String label,
-//   }) =>
-//       DefaultClockModel._(
-//         label: label,
-//         timezoneOffset: DateTime.now().timeZoneOffset,
-//       );
-// }

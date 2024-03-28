@@ -28,22 +28,21 @@ final class EditingState extends ClocksWidgetState {
 
 // Data
 final class ClocksWidgetData extends Equatable {
-  final List<ClockModel> parameters;
+  final List<ClockModel> clocks;
 
   const ClocksWidgetData._({
-    required this.parameters,
+    required this.clocks,
   });
 
-  factory ClocksWidgetData.initial() =>
-      const ClocksWidgetData._(parameters: []);
+  factory ClocksWidgetData.initial() => const ClocksWidgetData._(clocks: []);
 
   @override
-  List<Object?> get props => [parameters];
+  List<Object?> get props => [clocks];
 
   ClocksWidgetData copyWith({
-    List<ClockModel>? parameters,
+    List<ClockModel>? clocks,
   }) =>
       ClocksWidgetData._(
-        parameters: parameters ?? this.parameters,
+        clocks: clocks ?? this.clocks,
       );
 }
