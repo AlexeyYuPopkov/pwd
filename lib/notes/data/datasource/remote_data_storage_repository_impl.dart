@@ -1,7 +1,7 @@
-import 'package:pwd/common/domain/errors/network_error.dart';
 import 'package:pwd/common/support/data_tools/mapper.dart';
 import 'package:pwd/common/domain/errors/network_error_mapper.dart';
 import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
+import 'package:pwd/notes/data/sync_data_service/git_graph_ql_service.dart';
 import 'package:pwd/notes/data/sync_data_service/git_service_api.dart';
 import 'package:pwd/notes/data/sync_models/put_db_request_data.dart';
 import 'package:pwd/notes/domain/git_repository.dart';
@@ -12,6 +12,7 @@ import 'package:pwd/notes/domain/sync_requests_parameters/put_db_response.dart';
 
 class RemoteDataStorageRepositoryImpl implements GitRepository {
   final GitServiceApi service;
+  final GitGraphQlService graphQlService;
   final GetGitFileServiceApi gitFileService;
 
   final Mapper<PutDbRequestData, PutDbRequest> putDbRequestMapper;
@@ -20,6 +21,7 @@ class RemoteDataStorageRepositoryImpl implements GitRepository {
 
   RemoteDataStorageRepositoryImpl({
     required this.service,
+    required this.graphQlService,
     required this.gitFileService,
     required this.errorMapper,
     required this.putDbRequestMapper,
@@ -33,7 +35,7 @@ class RemoteDataStorageRepositoryImpl implements GitRepository {
     PutDbRequest adjustedWithBranch(PutDbRequest request) {
       final branch = configuration.branch;
 
-      if (branch != null && branch.trim().isNotEmpty) {
+      if (branch.trim().isNotEmpty) {
         return request.copyWithBranch(branch: branch);
       }
 
@@ -59,23 +61,14 @@ class RemoteDataStorageRepositoryImpl implements GitRepository {
     required GitConfiguration configuration,
   }) async {
     try {
-      final result = await service.getDb(
-        token: _adjustedToken(configuration.token),
-        owner: configuration.owner,
-        repo: configuration.repo,
-        filename: configuration.fileName,
-        branch: configuration.branch,
+      final sha = await graphQlService.getFileSha(
+        token: configuration.token,
+        configuration: configuration,
       );
 
-      return result;
+      return sha == null ? null : GetDbResponse(sha: sha);
     } catch (e) {
-      final error = errorMapper(e);
-
-      if (error is NotFoundError) {
-        return null;
-      } else {
-        throw error;
-      }
+      throw errorMapper(e);
     }
   }
 

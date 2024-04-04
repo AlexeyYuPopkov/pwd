@@ -66,6 +66,7 @@ dependencies:
   # realm_dart: ^1.6.1
   di_storage: ^1.0.0
   firebase_core: ^2.27.0
+  graphql: ^5.2.0-beta.7
 
 dev_dependencies:
   flutter_test:
@@ -75,12 +76,13 @@ dev_dependencies:
 
   flutter_lints: ^3.0.0
 
-  build_runner: ^2.4.8
+  build_runner: ^2.4.9
 
   mocktail: ^1.0.2
   mockito: ^5.4.4
   # bloc_test: ^9.1.0
   retrofit_generator: ^8.0.5
+  graphql_codegen: ^0.13.11
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

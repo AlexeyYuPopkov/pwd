@@ -49,7 +49,7 @@ final class GitConfigurationScreenRobot {
     await tester.enterText(_finders.ownerTextField, configuration.owner);
 
     final branch = configuration.branch;
-    if (branch != null && branch.isNotEmpty) {
+    if (branch.isNotEmpty) {
       await tester.tap(_finders.branchTextField);
       await tester.enterText(_finders.branchTextField, branch);
     }

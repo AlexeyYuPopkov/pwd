@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart' hide Headers;
 import 'package:retrofit/http.dart';
-import 'package:pwd/notes/data/sync_models/get_db_response_data.dart';
 import 'package:pwd/notes/data/sync_models/put_db_request_data.dart';
 import 'package:pwd/notes/data/sync_models/put_db_response_data.dart';
 
@@ -20,19 +19,6 @@ abstract class GitServiceApi {
     @Path('repo') required String repo,
     @Path('filename') required String filename,
     @Body() required PutDbRequestData body,
-    @Query('ref') String? branch,
-    @Header('Authorization') required String token,
-  });
-
-  @GET('repos/{owner}/{repo}/contents/{filename}')
-  @Headers({
-    'Accept': 'application/json',
-    'X-GitHub-Api-Version': '2022-11-28',
-  })
-  Future<GetDbResponseData> getDb({
-    @Path('owner') required String owner,
-    @Path('repo') required String repo,
-    @Path('filename') required String filename,
     @Query('ref') String? branch,
     @Header('Authorization') required String token,
   });

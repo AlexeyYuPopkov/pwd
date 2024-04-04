@@ -61,45 +61,6 @@ class _GitServiceApi implements GitServiceApi {
     return value;
   }
 
-  @override
-  Future<GetDbResponseData> getDb({
-    required String owner,
-    required String repo,
-    required String filename,
-    String? branch,
-    required String token,
-  }) async {
-    final _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'ref': branch};
-    queryParameters.removeWhere((k, v) => v == null);
-    final _headers = <String, dynamic>{
-      r'Accept': 'application/json',
-      r'X-GitHub-Api-Version': '2022-11-28',
-      r'Authorization': token,
-    };
-    _headers.removeWhere((k, v) => v == null);
-    const Map<String, dynamic>? _data = null;
-    final _result = await _dio
-        .fetch<Map<String, dynamic>>(_setStreamType<GetDbResponseData>(Options(
-      method: 'GET',
-      headers: _headers,
-      extra: _extra,
-    )
-            .compose(
-              _dio.options,
-              'repos/${owner}/${repo}/contents/${filename}',
-              queryParameters: queryParameters,
-              data: _data,
-            )
-            .copyWith(
-                baseUrl: _combineBaseUrls(
-              _dio.options.baseUrl,
-              baseUrl,
-            ))));
-    final value = GetDbResponseData.fromJson(_result.data!);
-    return value;
-  }
-
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
     if (T != dynamic &&
         !(requestOptions.responseType == ResponseType.bytes ||

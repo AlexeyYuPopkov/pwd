@@ -134,9 +134,12 @@ void main() {
       final bloc = tester.element(finders.blocBuilder).read<ClocksWidgetBloc>();
 
       expect(bloc.state.data.clocks[0].label, '');
+
+      final now = DateTime.now();
+
       expect(
         bloc.state.data.clocks[0].timeZoneOffset,
-        const Duration(hours: 2),
+        now.timeZoneOffset,
       );
 
       await tester.longPress(finders.clockItem(0));
@@ -172,7 +175,7 @@ void main() {
 
       expect(bloc.state.data.clocks[0].label, '123');
       expect(
-        bloc.state.data.clocks[0].timeZoneOffset != const Duration(hours: 2),
+        bloc.state.data.clocks[0].timeZoneOffset != now.timeZoneOffset,
         true,
       );
     });

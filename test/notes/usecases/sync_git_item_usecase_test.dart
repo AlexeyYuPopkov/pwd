@@ -66,8 +66,8 @@ void main() {
       PutDbResponse(content: PutDbResponseContent(sha: sha));
   const gitFileGetResponse = GetDbResponse(
     sha: sha,
-    content: '',
-    downloadUrl: '',
+    // content: '',
+    // downloadUrl: '',
   );
 
   final request = PutDbRequest(

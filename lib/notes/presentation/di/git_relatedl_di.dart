@@ -2,6 +2,7 @@ import 'package:di_storage/di_storage.dart';
 import 'package:pwd/common/presentation/di/network_di.dart';
 import 'package:pwd/notes/data/datasource/remote_data_storage_repository_impl.dart';
 import 'package:pwd/notes/data/sync_data_mappers/put_db_request_mapper.dart';
+import 'package:pwd/notes/data/sync_data_service/git_graph_ql_service.dart';
 import 'package:pwd/notes/data/sync_data_service/git_service_api.dart';
 import 'package:pwd/notes/domain/git_repository.dart';
 import 'package:pwd/notes/domain/usecases/sync_git_item_usecase.dart';
@@ -15,6 +16,7 @@ final class GitRelatedlDi extends DiScope {
         service: GitServiceApi(
           di.resolve<UnAuthDio>(),
         ),
+        graphQlService: GitGraphQlService(),
         gitFileService: di.resolve(),
         putDbRequestMapper: PutDbRequestMapper(),
         errorMapper: di.resolve(),

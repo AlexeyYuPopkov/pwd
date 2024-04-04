@@ -1,13 +1,15 @@
 part of 'remote_configuration.dart';
 
 final class GitConfiguration extends RemoteConfiguration {
+  static const defaultBranch = 'main';
   @override
   final type = ConfigurationType.git;
 
   final String token;
   final String repo;
   final String owner;
-  String? get branch => _branch?.trim().isNotEmpty == true ? _branch : null;
+  String get branch =>
+      _branch?.trim().isNotEmpty == true ? _branch! : defaultBranch;
   final String fileName;
   final String? _branch;
 

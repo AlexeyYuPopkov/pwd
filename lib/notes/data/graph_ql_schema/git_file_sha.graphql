@@ -1,0 +1,9 @@
+
+
+query Repository($name: String!, $owner: String!, $path: String!) {
+    repository(name: $name, owner: $owner) {
+        object(expression: $path) {
+            oid
+        }
+    }
+}

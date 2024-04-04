@@ -101,10 +101,10 @@ packages:
     dependency: "direct dev"
     description:
       name: build_runner
-      sha256: "581bacf68f89ec8792f5e5a0b2c4decd1c948e97ce659dc783688c8a88fbec21"
+      sha256: "3ac61a79bfb6f6cc11f693591063a7f19a7af628dc52f141743edac5c16e8c22"
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.8"
+    version: "2.4.9"
   build_runner_core:
     dependency: transitive
     description:
@@ -450,6 +450,94 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "12.0.0"
+  gql:
+    dependency: transitive
+    description:
+      name: gql
+      sha256: afe032332ddfa69b79f1dea2ad7d95923d4993c1b269b224fc7bb3d17e32d33c
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1-alpha+1709845491443"
+  gql_code_builder:
+    dependency: transitive
+    description:
+      name: gql_code_builder
+      sha256: b70e17fe62af58c3a9a3dfd619bf0b07ca15afe4d285001fbcd0852a40538401
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.9.1+1"
+  gql_dedupe_link:
+    dependency: transitive
+    description:
+      name: gql_dedupe_link
+      sha256: "2971173c68623d5c43f5327ea899bd2ee64ce3461c1263f240b4bb6211f667be"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.4-alpha+1709845491527"
+  gql_error_link:
+    dependency: transitive
+    description:
+      name: gql_error_link
+      sha256: "93901458f3c050e33386dedb0ca7173e08cebd7078e4e0deca4bf23ab7a71f63"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0+1"
+  gql_exec:
+    dependency: transitive
+    description:
+      name: gql_exec
+      sha256: "394944626fae900f1d34343ecf2d62e44eb984826189c8979d305f0ae5846e38"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.1-alpha+1699813812660"
+  gql_http_link:
+    dependency: transitive
+    description:
+      name: gql_http_link
+      sha256: "1f922eed1b7078fdbfd602187663026f9f659fe9a9499e2207b5d5e01617f658"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1+1"
+  gql_link:
+    dependency: transitive
+    description:
+      name: gql_link
+      sha256: "177500e250b3742d6d2673d57961e8413b6593dc6bd6a512c51865b6cf096f7e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1-alpha+1709845491457"
+  gql_transform_link:
+    dependency: transitive
+    description:
+      name: gql_transform_link
+      sha256: "0645fdd874ca1be695fd327271fdfb24c0cd6fa40774a64b946062f321a59709"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
+  gql_tristate_value:
+    dependency: transitive
+    description:
+      name: gql_tristate_value
+      sha256: ae045e7e272fbfd030084315140c683c9b032a9861a37165f68c2ecd8a759664
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
+  graphql:
+    dependency: "direct main"
+    description:
+      name: graphql
+      sha256: d066e53446166c12537458386b507f7426f2b8801ebafc184576aab3cbc64d56
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.2.0-beta.7"
+  graphql_codegen:
+    dependency: "direct dev"
+    description:
+      name: graphql_codegen
+      sha256: "943e1d6f04eece8dcdf54c128b53bd4ea62b746d6384ebcbbe15e5adaeaf89ff"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.13.11"
   graphs:
     dependency: transitive
     description:
@@ -458,6 +546,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.1"
+  hive:
+    dependency: transitive
+    description:
+      name: hive
+      sha256: "8dcf6db979d7933da8217edcec84e9df1bdb4e4edc7fc77dbd5aa74356d6d941"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.3"
   http:
     dependency: transitive
     description:
@@ -599,6 +695,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
+  normalize:
+    dependency: transitive
+    description:
+      name: normalize
+      sha256: "8a60e37de5b608eeaf9b839273370c71ebba445e9f73b08eee7725e0d92dbc43"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.8.2+1"
   objectid:
     dependency: transitive
     description:
@@ -767,6 +871,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.9.0"
+  recase:
+    dependency: transitive
+    description:
+      name: recase
+      sha256: e4eb4ec2dcdee52dcf99cb4ceabaffc631d7424ee55e56f280bc039737f89213
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.1.0"
   retrofit:
     dependency: "direct main"
     description:
