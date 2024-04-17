@@ -14,10 +14,10 @@ final class GitConfiguration extends RemoteConfiguration {
   final String? _branch;
 
   @override
-  String get localCacheFileName => 'git_cache';
+  String get cacheFileName => 'git_cache';
 
   @override
-  String get localCacheTmpFileName => 'git_cache_tmp';
+  String get cacheTmpFileName => 'git_cache_tmp';
 
   const GitConfiguration({
     required this.token,
@@ -34,7 +34,7 @@ final class GitConfiguration extends RemoteConfiguration {
         owner,
         branch,
         fileName,
-        localCacheFileName,
-        localCacheTmpFileName,
+        cacheFileName,
+        cacheTmpFileName,
       ];
 }

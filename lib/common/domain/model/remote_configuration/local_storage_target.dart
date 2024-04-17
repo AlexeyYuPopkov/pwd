@@ -1,8 +1,12 @@
 import 'package:equatable/equatable.dart';
 
-final class LocalStorageTarget extends Equatable {
+import 'remote_configuration.dart';
+
+final class LocalStorageTarget extends Equatable implements CacheTerget {
   final List<int> key;
+  @override
   final String cacheFileName;
+  @override
   final String cacheTmpFileName;
 
   const LocalStorageTarget({

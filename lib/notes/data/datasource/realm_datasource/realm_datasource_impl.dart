@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:pwd/common/domain/model/remote_configuration/local_storage_target.dart';
+import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
 import 'package:pwd/notes/data/mappers/note_realm_mapper.dart';
 import 'package:pwd/notes/data/realm_model/note_item_realm.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
@@ -90,6 +91,14 @@ final class RealmDatasourceImpl implements RealmLocalRepository {
       realm.close();
     }
   }
+
+  @override
+  Future<void> deleteCacheFile({
+    required CacheTerget target,
+  }) async =>
+      await realmProvider.deleteCacheFile(
+        target: target,
+      );
 
   @override
   Future<void> saveNotes({
@@ -250,7 +259,7 @@ extension _Migration on RealmDatasourceImpl {
     } finally {
       tempRealm.close();
       realm.close();
-      await realmProvider.deleteTempFile(tempRealm.config.path);
+      await realmProvider.deleteTempFile(target: target);
     }
   }
 }

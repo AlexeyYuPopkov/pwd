@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:pwd/common/domain/model/remote_configuration/local_storage_target.dart';
+import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
 
 abstract interface class RealmLocalRepository {
@@ -33,5 +34,9 @@ abstract interface class RealmLocalRepository {
   Future<void> mergeWithDatabasePath({
     required Uint8List bytes,
     required LocalStorageTarget target,
+  });
+
+  Future<void> deleteCacheFile({
+    required CacheTerget target,
   });
 }

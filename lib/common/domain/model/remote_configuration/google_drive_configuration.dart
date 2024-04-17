@@ -13,13 +13,13 @@ final class GoogleDriveConfiguration extends RemoteConfiguration {
   @override
   List<Object?> get props => [
         fileName,
-        localCacheFileName,
-        localCacheTmpFileName,
+        cacheFileName,
+        cacheTmpFileName,
       ];
 
   @override
-  String get localCacheFileName => 'google_drive_cache';
+  String get cacheFileName => 'google_drive_cache';
 
   @override
-  String get localCacheTmpFileName => 'google_drive_cache_tmp';
+  String get cacheTmpFileName => 'google_drive_cache_tmp';
 }

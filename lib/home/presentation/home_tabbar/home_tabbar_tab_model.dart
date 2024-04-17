@@ -8,7 +8,8 @@ import 'package:pwd/settings/presentation/router/settings_router_delegate.dart';
 import 'home_tabbar_screen_test_helper.dart';
 
 // final _noteRouterKey = GlobalKey<NavigatorState>();
-final _notesListRouterKey = GlobalKey<NavigatorState>();
+final _gitNotesListRouterKey = GlobalKey<NavigatorState>();
+final _googleNotesListRouterKey = GlobalKey<NavigatorState>();
 final _settingsRouterKey = GlobalKey<NavigatorState>();
 
 sealed class HomeTabbarTabModel {
@@ -30,7 +31,6 @@ final class ConfigurationUndefinedTab extends HomeTabbarTabModel {
       routerDelegate: ConfigurationUndefinedTabRouterDelegate(),
     );
   }
-  // const ConfigurationUndefinedScreen();
 
   @override
   BottomNavigationBarItem buildNavigationBarItem(BuildContext context) =>
@@ -81,7 +81,7 @@ final class GitTab extends HomeTabbarTabModel {
   Router buildRoute(BuildContext context) {
     return Router(
       routerDelegate: NotesRouterDelegate(
-        navigatorKey: _notesListRouterKey,
+        navigatorKey: _gitNotesListRouterKey,
         configuration: configuration,
       ),
     );
@@ -121,7 +121,7 @@ final class GoogleDriveTab extends HomeTabbarTabModel {
   Router buildRoute(BuildContext context) {
     return Router(
       routerDelegate: NotesRouterDelegate(
-        navigatorKey: _notesListRouterKey,
+        navigatorKey: _googleNotesListRouterKey,
         configuration: configuration,
       ),
     );

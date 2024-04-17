@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pwd/common/domain/model/remote_configuration/local_storage_target.dart';
+import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
 import 'package:pwd/notes/data/datasource/realm_datasource/realm_error_mapper.dart';
 import 'package:pwd/notes/data/realm_model/note_item_realm.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
@@ -17,7 +18,13 @@ abstract interface class RealmProvider {
     required Uint8List bytes,
   });
 
-  Future<void> deleteTempFile(String path);
+  Future<void> deleteCacheFile({
+    required CacheTerget target,
+  });
+
+  Future<void> deleteTempFile({
+    required CacheTerget target,
+  });
 }
 
 final class RealmProviderImpl implements RealmProvider {
@@ -28,15 +35,11 @@ final class RealmProviderImpl implements RealmProvider {
   @override
   Future<Realm> getRealm({
     required LocalStorageTarget target,
-  }) async {
-    final path = await getAppDirPath();
-    final filePath = '$path/${target.cacheFileName}';
-
-    return _createRealm(
-      target: target,
-      path: filePath,
-    );
-  }
+  }) async =>
+      _createRealm(
+        target: target,
+        path: await _getRealmFilePath(target: target),
+      );
 
   @override
   Future<Realm> getTempRealm({
@@ -48,12 +51,45 @@ final class RealmProviderImpl implements RealmProvider {
   }
 
   @override
-  Future<void> deleteTempFile(String path) async {
+  Future<void> deleteCacheFile({
+    required CacheTerget target,
+  }) async {
     try {
-      await File(path).delete();
+      final path = await _getRealmFilePath(target: target);
+      final file = File(path);
+      if (await file.exists()) {
+        await file.delete();
+      }
     } catch (e) {
       throw RealmErrorMapper.toDomain(e);
     }
+  }
+
+  @override
+  Future<void> deleteTempFile({required CacheTerget target}) async {
+    try {
+      final path = await _getRealmTempFilePath(target: target);
+      final file = File(path);
+      if (await file.exists()) {
+        await file.delete();
+      }
+    } catch (e) {
+      throw RealmErrorMapper.toDomain(e);
+    }
+  }
+
+  Future<String> _getRealmFilePath({
+    required CacheTerget target,
+  }) async {
+    final path = await getAppDirPath();
+    return '$path/${target.cacheFileName}';
+  }
+
+  Future<String> _getRealmTempFilePath({
+    required CacheTerget target,
+  }) async {
+    final path = await getTemporaryDirectory().then((e) => e.path);
+    return '$path/${target.cacheTmpFileName}';
   }
 }
 
@@ -75,12 +111,9 @@ extension on RealmProviderImpl {
   }) async {
     assert(bytes.isNotEmpty, 'Byte array is empty');
     try {
-      final tempDirPath = await getTemporaryDirectory().then((e) => e.path);
-      final tempRealmPath = '$tempDirPath/${target.cacheTmpFileName}';
+      final tempRealmPath = await _getRealmTempFilePath(target: target);
 
-      if (await File(tempRealmPath).exists()) {
-        await deleteTempFile(tempRealmPath);
-      }
+      await deleteTempFile(target: target);
 
       final result = await File(tempRealmPath).writeAsBytes(
         bytes,

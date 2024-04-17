@@ -5,6 +5,7 @@ import 'package:pwd/common/domain/usecases/pin_usecase.dart';
 
 import 'package:pwd/notes/domain/checksum_checker.dart';
 import 'package:pwd/notes/domain/google_repository.dart';
+import 'package:pwd/notes/domain/model/local_storage_error.dart';
 import 'package:pwd/notes/domain/realm_local_repository.dart';
 
 class SaveConfigurationsUsecase {
@@ -45,22 +46,32 @@ class SaveConfigurationsUsecase {
   }
 
   Future<void> _drop(RemoteConfiguration configuration) async {
-    await checksumChecker.dropChecksum(
-      configuration: configuration,
-    );
+    try {
+      final pin = pinUsecase.getPinOrThrow();
+      await localRepository.deleteAll(
+        target: configuration.getTarget(pin: pin),
+      );
+    } catch (e) {
+      if (e is PinDoesNotMatchError) {
+        await localRepository.deleteCacheFile(target: configuration);
+      } else {
+        rethrow;
+      }
+    } finally {
+      await checksumChecker.dropChecksum(
+        configuration: configuration,
+      );
 
-    final pin = pinUsecase.getPinOrThrow();
-    await localRepository.deleteAll(
-      target: configuration.getTarget(pin: pin),
-    );
+      switch (configuration.type) {
+        case ConfigurationType.git:
+          break;
+        case ConfigurationType.googleDrive:
+          await googleRepository.logout();
 
-    switch (configuration.type) {
-      case ConfigurationType.git:
-        break;
-      case ConfigurationType.googleDrive:
-        await googleRepository.logout();
-
-        break;
+          break;
+      }
     }
+
+    // PinDoesNotMatchError
   }
 }

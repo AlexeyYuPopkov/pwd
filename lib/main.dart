@@ -16,7 +16,7 @@ void main() async {
 // TODO: refactor
   AppDiModules.bindUnauthModules();
 
-  await Firebase.initializeApp(
+  Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
@@ -34,6 +34,7 @@ final class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      color: Colors.white,
       theme: lightThemeData,
       themeMode: ThemeMode.light,
       debugShowCheckedModeBanner: false,
