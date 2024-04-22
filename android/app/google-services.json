@@ -48,42 +48,6 @@
           ]
         }
       }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:133915072936:android:d0f82549988303976de59d",
-        "android_client_info": {
-          "package_name": "com.example.pwd"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "133915072936-646jgeghpvjvp8ao29inl656gsalnd9l.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDGHEO9uylCyIH7D_wuCqbPf78TeyDhfGQ"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "133915072936-646jgeghpvjvp8ao29inl656gsalnd9l.apps.googleusercontent.com",
-              "client_type": 3
-            },
-            {
-              "client_id": "133915072936-ap6bfbjng5qr9hcgvvs4h2fdcdssj5mc.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.alekseii.popkov.pwd"
-              }
-            }
-          ]
-        }
-      }
     }
   ],
   "configuration_version": "1"

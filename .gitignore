@@ -74,6 +74,7 @@ unlinked_spec.ds
 **/android/**/GeneratedPluginRegistrant.java
 **/android/key.properties
 *.jks
+fastlane/keys/notesstorage-374314-3c911c9fb5a4.json
 
 # iOS/XCode related
 **/ios/**/*.mode1v3

@@ -1,0 +1,91 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:android)
+
+<<<<<<< Updated upstream
+platform :android do
+  desc "Runs all the tests"
+  lane :test do
+    gradle(task: "test")
+  end
+
+  desc "Submit a new Beta Build to Crashlytics Beta"
+  lane :beta do
+    gradle(task: "clean assembleRelease")
+    crashlytics
+  
+    # sh "your_script.sh"
+    # You can also use other beta testing services here
+  end
+
+  desc "Deploy a new version to the Google Play"
+  lane :deploy do
+    gradle(task: "clean assembleRelease")
+    upload_to_play_store
+=======
+# platform :android do
+#   desc "Runs all the tests"
+#   lane :test do
+#     gradle(task: "test")
+#   end
+
+#   desc "Submit a new Beta Build to Crashlytics Beta"
+#   lane :beta do
+#     gradle(task: "clean assembleRelease")
+#     crashlytics
+  
+#     # sh "your_script.sh"
+#     # You can also use other beta testing services here
+#   end
+
+#   desc "Deploy a new version to the Google Play"
+#   lane :deploy do
+#     gradle(task: "clean assembleRelease")
+#     upload_to_play_store
+#   end
+# end
+
+firebase_android_app_id = "1:133915072936:android:ed2206bc3e2202fc6de59d"
+firebase_cli_token = "1//09DnggYObEsRQCgYIARAAGAkSNwF-L9IrtKBPd0em6aq_llHbzy0eTulHFb9t6cUH3OcId6eWUsbif7dGlhSoM67MPl1fTr7o9d0"
+
+platform :android do
+  desc "Upload Android to Firebase"
+  gradle(
+      task: 'assemble',
+      build_type: 'Release'
+  )
+
+  lane :upload_android_beta_app do
+      Dir.chdir "../.." do
+        # sh("flutter", "packages", "get")
+        # sh("flutter", "clean")
+        # sh("dart", "pub get")
+        # sh("dart", "run build_runner build --delete-conflicting-outputs")
+        sh("flutter test --coverage")
+        sh("flutter", "build", "apk")
+      end
+
+      firebase_app_distribution(
+          app: firebase_android_app_id,
+          testers: "alexey.yu.popkov@gmail.com",
+          release_notes: File.read("./../../changelog.txt"),
+          firebase_cli_path: "/usr/local/bin/firebase",
+          apk_path: "../build/app/outputs/apk/release/app-release.apk",
+          firebase_cli_token: firebase_cli_token
+      )
+>>>>>>> Stashed changes
+  end
+end
