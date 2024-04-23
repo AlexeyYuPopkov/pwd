@@ -1,0 +1,40 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:ios)
+
+firebase_ios_app_id = "1:133915072936:ios:6def13fcf993bb626de59d"
+firebase_cli_token = "1//09DnggYObEsRQCgYIARAAGAkSNwF-L9IrtKBPd0em6aq_llHbzy0eTulHFb9t6cUH3OcId6eWUsbif7dGlhSoM67MPl1fTr7o9d0"
+
+platform :ios do
+  desc "Upload iOS to Firebase"
+    lane :upload_ios_beta_app do
+        Dir.chdir "../.." do
+          sh("flutter", "clean")
+          sh("flutter", "pub", "get")
+          sh("dart run build_runner build --delete-conflicting-outputs")
+          sh("flutter test --coverage")
+          sh("flutter", "build", "ipa", "--export-method", "development")
+        end
+        firebase_app_distribution(
+            app: firebase_ios_app_id,
+            testers: "alexey.yu.popkov@gmail.com",
+            release_notes: File.read("./../../changelog.txt"),
+            firebase_cli_path: "/usr/local/bin/firebase",
+            ipa_path: "../build/ios/ipa/KeyMemo.ipa",
+            firebase_cli_token: firebase_cli_token
+        )
+    end
+end

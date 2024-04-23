@@ -13,15 +13,15 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 # Available Actions
 
-## Android
+## iOS
 
-### android upload_android_beta_app
+### ios upload_ios_beta_app
 
 ```sh
-[bundle exec] fastlane android upload_android_beta_app
+[bundle exec] fastlane ios upload_ios_beta_app
 ```
 
-Upload Android to Firebase
+Upload iOS to Firebase
 
 ----
 

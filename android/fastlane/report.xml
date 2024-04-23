@@ -5,37 +5,37 @@
     
     
       
-<<<<<<< Updated upstream
-      <testcase classname="fastlane.lanes" name="0: default_platform" time="0.000352">
-=======
-      <testcase classname="fastlane.lanes" name="0: default_platform" time="0.000296">
->>>>>>> Stashed changes
+      <testcase classname="fastlane.lanes" name="0: default_platform" time="0.000261">
         
       </testcase>
     
       
-<<<<<<< Updated upstream
-      <testcase classname="fastlane.lanes" name="1: test" time="10.716502">
-        
-          <failure message="/Library/Ruby/Gems/2.6.0/gems/fastlane-2.220.0/fastlane/lib/fastlane/actions/actions_helper.rb:67:in `execute_action'&#10;/Library/Ruby/Gems/2.6.0/gems/fastlane-2.220.0/fastlane/lib/fastlane/runner.rb:255:in `block in execute_action'&#10;/Library/Ruby/Gems/2.6.0/gems/fastlane-2.220.0/fastlane/lib/fastlane/runner.rb:229:in `chdir'&#10;/Library/Ruby/Gems/2.6.0/gems/fastlane-2.220.0/fastlane/lib/fastlane/runner.rb:229:in `execute_action'&#10;/Library/Ruby/Gems/2.6.0/gems/fastlane-2.220.0/fastlane/lib/fastlane/runner.rb:157:in `trigger_action_by_name'&#10;/Library/Ruby/Gems/2.6.0/gems/fastlane-2.220.0/fastlane/lib/fastlane/fast_file.rb:159:in `method_missing'&#10;Fastfile:21:in `block (2 levels) in parsing_binding'&#10;/Library/Ruby/Gems/2.6.0/gems/fastlane-2.220.0/fastlane/lib/fastlane/lane.rb:41:in `call'&#10;/Library/Ruby/Gems/2.6.0/gems/fastlane-2.220.0/fastlane/lib/fastlane/runner.rb:49:in `block in execute'&#10;/Library/Ruby/Gems/2.6.0/gems/fastlane-2.220.0/fastlane/lib/fastlane/runner.rb:45:in `chdir'&#10;/Library/Ruby/Gems/2.6.0/gems/fastlane-2.220.0/fastlane/lib/fastlane/runner.rb:45:in `execute'&#10;/Library/Ruby/Gems/2.6.0/gems/fastlane-2.220.0/fastlane/lib/fastlane/lane_manager.rb:46:in `cruise_lane'&#10;/Library/Ruby/Gems/2.6.0/gems/fastlane-2.220.0/fastlane/lib/fastlane/command_line_handler.rb:34:in `handle'&#10;/Library/Ruby/Gems/2.6.0/gems/fastlane-2.220.0/fastlane/lib/fastlane/commands_generator.rb:110:in `block (2 levels) in run'&#10;/Library/Ruby/Gems/2.6.0/gems/commander-4.6.0/lib/commander/command.rb:187:in `call'&#10;/Library/Ruby/Gems/2.6.0/gems/commander-4.6.0/lib/commander/command.rb:157:in `run'&#10;/Library/Ruby/Gems/2.6.0/gems/commander-4.6.0/lib/commander/runner.rb:444:in `run_active_command'&#10;/Library/Ruby/Gems/2.6.0/gems/fastlane-2.220.0/fastlane_core/lib/fastlane_core/ui/fastlane_runner.rb:124:in `run!'&#10;/Library/Ruby/Gems/2.6.0/gems/commander-4.6.0/lib/commander/delegates.rb:18:in `run!'&#10;/Library/Ruby/Gems/2.6.0/gems/fastlane-2.220.0/fastlane/lib/fastlane/commands_generator.rb:363:in `run'&#10;/Library/Ruby/Gems/2.6.0/gems/fastlane-2.220.0/fastlane/lib/fastlane/commands_generator.rb:43:in `start'&#10;/Library/Ruby/Gems/2.6.0/gems/fastlane-2.220.0/fastlane/lib/fastlane/cli_tools_distributor.rb:123:in `take_off'&#10;/Library/Ruby/Gems/2.6.0/gems/fastlane-2.220.0/bin/fastlane:23:in `&lt;top (required)&gt;'&#10;/usr/local/bin/fastlane:25:in `load'&#10;/usr/local/bin/fastlane:25:in `&lt;main&gt;'&#10;&#10;Exit status of command '/Users/alekseypopkov/Doc/pwd/android/gradlew test -p .' was 1 instead of 0.&#10;&#10;Welcome to Gradle 7.4!&#10;&#10;Here are the highlights of this release:&#10; - Aggregated test and JaCoCo reports&#10; - Marking additional test source directories as tests in IntelliJ&#10; - Support for Adoptium JDKs in Java toolchains&#10;&#10;For more details see https://docs.gradle.org/7.4/release-notes.html&#10;&#10;Starting a Gradle Daemon (subsequent builds will be faster)&#10;&#10;FAILURE: Build failed with an exception.&#10;&#10;* Where:&#10;Build file '/Users/alekseypopkov/Doc/pwd/android/app/build.gradle' line: 24&#10;&#10;* What went wrong:&#10;A problem occurred evaluating project ':app'.&#10;&gt; Failed to apply plugin 'com.android.internal.application'.&#10;   &gt; Android Gradle plugin requires Java 11 to run. You are currently using Java 1.8.&#10;     You can try some of the following options:&#10;       - changing the IDE settings.&#10;       - changing the JAVA_HOME environment variable.&#10;       - changing `org.gradle.java.home` in `gradle.properties`.&#10;&#10;* Try:&#10;&gt; Run with --stacktrace option to get the stack trace.&#10;&gt; Run with --info or --debug option to get more log output.&#10;&gt; Run with --scan to get full insights.&#10;&#10;* Get more help at https://help.gradle.org&#10;&#10;BUILD FAILED in 8s&#10;" />
-=======
-      <testcase classname="fastlane.lanes" name="1: assembleRelease" time="4.298297">
+      <testcase classname="fastlane.lanes" name="1: flutter clean" time="5.762916">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="2: flutter test --coverage" time="9.821863">
+      <testcase classname="fastlane.lanes" name="2: flutter pub get" time="9.252946">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="3: flutter build apk" time="9.266546">
+      <testcase classname="fastlane.lanes" name="3: dart run build_runner build --delete-conflicting-outputs" time="26.7216">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="4: firebase_app_distribution" time="24.097833">
->>>>>>> Stashed changes
+      <testcase classname="fastlane.lanes" name="4: flutter test --coverage" time="13.256269">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="5: flutter build apk" time="47.972278">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="6: firebase_app_distribution" time="25.568117">
         
       </testcase>
     

@@ -20,17 +20,16 @@ firebase_cli_token = "1//09DnggYObEsRQCgYIARAAGAkSNwF-L9IrtKBPd0em6aq_llHbzy0eTu
 
 platform :android do
   desc "Upload Android to Firebase"
-  gradle(
-      task: 'assemble',
-      build_type: 'Release'
-  )
+  # gradle(
+  #     task: 'assemble',
+  #     build_type: 'Release'
+  # )
 
   lane :upload_android_beta_app do
       Dir.chdir "../.." do
-        sh("flutter", "packages", "get")
         sh("flutter", "clean")
-        sh("dart", "pub get")
-        sh("dart", "run build_runner build --delete-conflicting-outputs")
+        sh("flutter", "pub", "get")
+        sh("dart run build_runner build --delete-conflicting-outputs")
         sh("flutter test --coverage")
         sh("flutter", "build", "apk")
       end
