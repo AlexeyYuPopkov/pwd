@@ -13,10 +13,10 @@ import 'realm_provider_impl.dart';
 
 const _validTillDuration = Duration(days: 120);
 
-final class RealmDatasourceImpl implements RealmLocalRepository {
+final class RealmLocalRepositoryImpl implements RealmLocalRepository {
   final RealmProvider realmProvider;
 
-  const RealmDatasourceImpl({required this.realmProvider});
+  const RealmLocalRepositoryImpl({required this.realmProvider});
 
   @override
   Future<void> markDeleted(
@@ -211,7 +211,7 @@ final class RealmDatasourceImpl implements RealmLocalRepository {
 }
 
 // Merge
-extension _Migration on RealmDatasourceImpl {
+extension _Migration on RealmLocalRepositoryImpl {
   Future<void> _mergeWithDatabasePath({
     required Uint8List bytes,
     required LocalStorageTarget target,
@@ -224,32 +224,35 @@ extension _Migration on RealmDatasourceImpl {
     );
 
     try {
+      final toAdd = tempRealm.all<NoteItemRealm>().map(
+        (tempItem) {
+          final localItem = realm.find<NoteItemRealm>(tempItem.id);
+
+          // debugger();
+          // print(
+          //   "local timestamp: ${localItem?.timestamp ?? -1}, remote timestamp: ${p.timestamp},",
+          // );
+
+          if (localItem != null && localItem.updated >= tempItem.updated) {
+            return localItem;
+          } else {
+            return NoteItemRealm(
+              tempItem.id,
+              tempItem.title,
+              tempItem.description,
+              tempItem.updated,
+              deletedTimestamp: tempItem.deletedTimestamp,
+              content:
+                  tempItem.content.map((e) => NoteItemContentRealm(e.text)),
+            );
+          }
+        },
+      );
+
       await realm.writeAsync(
         () {
           realm.addAll<NoteItemRealm>(
-            tempRealm.all<NoteItemRealm>().map(
-              (p) {
-                final localItem = realm.find<NoteItemRealm>(p.id);
-
-                // debugger();
-                // print(
-                //   "local timestamp: ${localItem?.timestamp ?? -1}, remote timestamp: ${p.timestamp},",
-                // );
-
-                if (localItem != null && localItem.updated >= p.updated) {
-                  return localItem;
-                } else {
-                  return NoteItemRealm(
-                    p.id,
-                    p.title,
-                    p.description,
-                    p.updated,
-                    deletedTimestamp: p.deletedTimestamp,
-                    content: p.content.map((e) => NoteItemContentRealm(e.text)),
-                  );
-                }
-              },
-            ),
+            toAdd,
             update: true,
           );
         },

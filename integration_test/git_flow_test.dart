@@ -7,7 +7,7 @@ import 'package:pwd/common/domain/model/remote_configuration/remote_configuratio
 import 'package:pwd/common/domain/usecases/hash_usecase.dart';
 import 'package:pwd/home/presentation/home_tabbar/home_tabbar_page.dart';
 import 'package:pwd/main.dart' as app;
-import 'package:pwd/notes/data/datasource/realm_datasource/realm_datasource_impl.dart';
+import 'package:pwd/notes/data/datasource/realm_datasource/realm_local_repository_impl.dart';
 import 'package:pwd/notes/data/datasource/realm_datasource/realm_provider_impl.dart';
 
 import 'package:pwd/notes/presentation/edit_note/edit_note_screen.dart';
@@ -32,7 +32,7 @@ void main() {
     final config = GitConfigurationTestData.createTestConfiguration();
     const hashUsecase = HashUsecase();
     final pinSha512 = hashUsecase.pinHash512(PinScreenRobot.pinStr);
-    final db = RealmDatasourceImpl(realmProvider: RealmProviderImpl());
+    final db = RealmLocalRepositoryImpl(realmProvider: RealmProviderImpl());
     db.deleteAll(target: config.getTarget(pin: Pin(pinSha512: pinSha512)));
   });
 

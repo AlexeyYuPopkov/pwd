@@ -35,8 +35,10 @@ final class SyncGoogleDriveItemUsecase with SyncHelper implements SyncUsecase {
     }
   }
 
-  Future<void> _sync(
-      {required RemoteConfiguration configuration, required bool force}) async {
+  Future<void> _sync({
+    required RemoteConfiguration configuration,
+    required bool force,
+  }) async {
     // TODO: refactor
     switch (configuration) {
       case GitConfiguration():
@@ -65,7 +67,6 @@ final class SyncGoogleDriveItemUsecase with SyncHelper implements SyncUsecase {
           );
 
       final remoteChecksum = file.checksum;
-
       if (localChecksum.isNotEmpty &&
           localChecksum == remoteChecksum &&
           force == false) {
@@ -102,9 +103,6 @@ final class SyncGoogleDriveItemUsecase with SyncHelper implements SyncUsecase {
     } else {
       final bytes = await collectBytes(stream);
       final pin = pinUsecase.getPinOrThrow();
-      // final deleted = await deletedItemsProvider.getDeletedItems(
-      //   configuration: configuration,
-      // );
 
       final target = configuration.getTarget(pin: pin);
 
