@@ -111,6 +111,7 @@ fastlane/keys/notesstorage-374314-3c911c9fb5a4.json
 **/Pods/
 **/macos/Flutter/GeneratedPluginRegistrant.swift
 **/macos/Flutter/ephemeral
+**/macos/*.app
 **/xcuserdata/
 
 # Windows
