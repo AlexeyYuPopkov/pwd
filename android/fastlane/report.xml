@@ -5,37 +5,37 @@
     
     
       
-      <testcase classname="fastlane.lanes" name="0: default_platform" time="0.000238">
+      <testcase classname="fastlane.lanes" name="0: default_platform" time="0.000291">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="1: flutter clean" time="6.398317">
+      <testcase classname="fastlane.lanes" name="1: flutter clean" time="4.475881">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="2: flutter pub get" time="3.880894">
+      <testcase classname="fastlane.lanes" name="2: flutter pub get" time="8.989627">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="3: dart run build_runner build --delete-conflicting-outputs" time="26.6639">
+      <testcase classname="fastlane.lanes" name="3: dart run build_runner build --delete-conflicting-outputs" time="26.168064">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="4: flutter test --coverage" time="13.329048">
+      <testcase classname="fastlane.lanes" name="4: flutter test --coverage" time="13.300689">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="5: flutter build apk" time="48.893614">
+      <testcase classname="fastlane.lanes" name="5: flutter build apk" time="56.383682">
         
       </testcase>
     
       
-      <testcase classname="fastlane.lanes" name="6: firebase_app_distribution" time="25.140188">
+      <testcase classname="fastlane.lanes" name="6: firebase_app_distribution" time="24.955741">
         
       </testcase>
     
