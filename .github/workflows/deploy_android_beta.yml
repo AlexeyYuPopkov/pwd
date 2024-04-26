@@ -23,6 +23,5 @@ jobs:
          channel: "stable"
 
      - uses: actions/checkout@v2
-     - run: fastlane beta
       
-     - run: sh ./scripts/deploy_android_beta.sh
+     - run: sh ./deploy_android_beta.sh
