@@ -21,5 +21,8 @@ jobs:
      - uses: subosito/flutter-action@v1
        with:
          channel: "stable"
+
+     - uses: actions/checkout@v2
+     - run: fastlane beta
       
      - run: sh ./scripts/deploy_android_beta.sh
