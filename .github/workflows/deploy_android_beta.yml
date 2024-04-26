@@ -22,6 +22,16 @@ jobs:
        with:
          channel: "stable"
 
-     - uses: actions/checkout@v2
-      
-     - run: sh ./deploy_android_beta.sh
+     - name: Setup Ruby
+       uses: ruby/setup-ruby@v1
+       with:
+         ruby-version: '2.7.2'
+
+     - name: Setup Fastlane
+       run: bundle install
+
+     - name: Checkout
+       uses: actions/checkout@v2
+
+     - name: lane deploy_android_beta
+       run: sh ./deploy_android_beta.sh
