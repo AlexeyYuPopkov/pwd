@@ -60,9 +60,9 @@ void main() {
     await settingsRobot.tapRemoteConfiguration();
 
     // Configurations Screen
-    final configurationsScreenRobot = ConfigurationsScreenRobot(tester);
-    await configurationsScreenRobot.checkNoDataPlaceholderState();
-    await configurationsScreenRobot.gotoNewGitConfiguration();
+    final configurationsScreenRobot = ConfigurationsScreenRobot();
+    await configurationsScreenRobot.checkNoDataPlaceholderState(tester);
+    await configurationsScreenRobot.gotoNewGitConfiguration(tester);
 
     // Git configuration
     final gitConfigurationScreenRobot = GitConfigurationScreenRobot();
@@ -112,7 +112,7 @@ void main() {
     // Go to configurations
     await settingsRobot.tapRemoteConfiguration();
 
-    await configurationsScreenRobot.gotoGitConfiguration();
+    await configurationsScreenRobot.gotoGitConfiguration(tester);
     await gitConfigurationScreenRobot.deleteConfiguration(tester);
 
     // Check on pin page

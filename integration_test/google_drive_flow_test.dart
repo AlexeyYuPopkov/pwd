@@ -72,9 +72,9 @@ void main() {
     await configurationUndefinedScreenRobot.tapButton();
 
     // Configurations Screen
-    final configurationsScreenRobot = ConfigurationsScreenRobot(tester);
-    await configurationsScreenRobot.checkNoDataPlaceholderState();
-    await configurationsScreenRobot.gotoNewGoogleDriveConfiguration();
+    final configurationsScreenRobot = ConfigurationsScreenRobot();
+    await configurationsScreenRobot.checkNoDataPlaceholderState(tester);
+    await configurationsScreenRobot.gotoNewGoogleDriveConfiguration(tester);
 
     // Google drive configuration screen
     final googleDriveConfigurationScreenRobot =
@@ -157,9 +157,8 @@ void main() {
     await settingsRobot.checkInitialState();
     await settingsRobot.tapRemoteConfiguration();
 
-    // Toggle git & save
-    // await configurationsScreenRobot.checkNoDataPlaceholderState();
-    await configurationsScreenRobot.gotoGoogleDriveConfiguration();
+    // Configurations
+    await configurationsScreenRobot.gotoGoogleDriveConfiguration(tester);
     await googleDriveConfigurationScreenRobot.deleteConfiguration();
 
     // Check on pin page

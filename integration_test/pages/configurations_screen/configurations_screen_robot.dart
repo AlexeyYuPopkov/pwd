@@ -5,19 +5,16 @@ import 'package:pwd/common/domain/model/remote_configuration/remote_configuratio
 import '../../../test/settings/presentation/configurations_screen/configurations_screen_finders.dart';
 
 final class ConfigurationsScreenRobot {
-  ConfigurationsScreenRobot(this.tester);
-  final WidgetTester tester;
+  ConfigurationsScreenRobot();
 
-  late final _finders = ConfigurationsScreenFinders();
+  final _finders = ConfigurationsScreenFinders();
 
-  Future<void> checkNoDataPlaceholderState() async {
+  Future<void> checkNoDataPlaceholderState(WidgetTester tester) async {
     await tester.pumpAndSettle();
 
-    await Future.wait([
-      tester.ensureVisible(_finders.noDataPlaceholder),
-      tester.ensureVisible(_finders.noDataPlaceholderButton),
-      tester.ensureVisible(_finders.addNoteConfigurationButton),
-    ]);
+    await tester.ensureVisible(_finders.noDataPlaceholder);
+    await tester.ensureVisible(_finders.noDataPlaceholderButton);
+    await tester.ensureVisible(_finders.addNoteConfigurationButton);
 
     expect(
       tester.widget<OutlinedButton>(_finders.noDataPlaceholderButton).enabled,
@@ -26,7 +23,7 @@ final class ConfigurationsScreenRobot {
     );
   }
 
-  Future<void> gotoNewGoogleDriveConfiguration() async {
+  Future<void> gotoNewGoogleDriveConfiguration(WidgetTester tester) async {
     await tester.tap(_finders.noDataPlaceholderButton);
     await tester.pumpAndSettle();
 
@@ -38,7 +35,7 @@ final class ConfigurationsScreenRobot {
     await tester.pumpAndSettle();
   }
 
-  Future<void> gotoNewGitConfiguration() async {
+  Future<void> gotoNewGitConfiguration(WidgetTester tester) async {
     await tester.tap(_finders.noDataPlaceholderButton);
     await tester.pumpAndSettle();
 
@@ -50,7 +47,7 @@ final class ConfigurationsScreenRobot {
     await tester.pumpAndSettle();
   }
 
-  Future<void> gotoGoogleDriveConfiguration() async {
+  Future<void> gotoGoogleDriveConfiguration(WidgetTester tester) async {
     await tester.pumpAndSettle();
 
     expect(
@@ -62,7 +59,7 @@ final class ConfigurationsScreenRobot {
     await tester.pumpAndSettle();
   }
 
-  Future<void> gotoGitConfiguration() async {
+  Future<void> gotoGitConfiguration(WidgetTester tester) async {
     await tester.pumpAndSettle();
 
     expect(

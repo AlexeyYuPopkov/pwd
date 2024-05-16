@@ -7,6 +7,7 @@ import 'package:pwd/settings/presentation/remote_configuration/configuration_scr
 typedef _TestHelper = ConfigurationsScreenTestHelper;
 
 final class ConfigurationsScreenFinders {
+  ConfigurationsScreenFinders();
   Finder getItemFor(ConfigurationType type) => find.byKey(
         Key(_TestHelper.getItemKeyFor(type)),
       );
