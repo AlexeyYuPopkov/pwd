@@ -35,10 +35,11 @@ void main() {
     repo: '',
     owner: '',
     branch: '',
-    fileName: '',
+    fileName: 'fileName1',
   );
 
-  const googleDriveConfiguration = GoogleDriveConfiguration(fileName: '');
+  const googleDriveConfiguration =
+      GoogleDriveConfiguration(fileName: 'fileName2');
 
   final usecase = RemoveConfigurationsUsecase(
     remoteStorageConfigurationProvider: remoteStorageConfigurationProvider,
@@ -50,14 +51,14 @@ void main() {
 
   group('RemoveConfigurationsUsecase', () {
     test('remove config', () async {
-      final oldConfigurations = RemoteConfigurations(
+      final oldConfigurations = RemoteConfigurations.createOrThrow(
         configurations: const [
           gitConfiguration,
           googleDriveConfiguration,
         ],
       );
 
-      final newConfigurations = RemoteConfigurations(
+      final newConfigurations = RemoteConfigurations.createOrThrow(
         configurations: const [
           gitConfiguration,
         ],
@@ -121,14 +122,14 @@ void main() {
     });
 
     test('throws PinDoesNotMatchError', () async {
-      final oldConfigurations = RemoteConfigurations(
+      final oldConfigurations = RemoteConfigurations.createOrThrow(
         configurations: const [
           gitConfiguration,
           googleDriveConfiguration,
         ],
       );
 
-      final newConfigurations = RemoteConfigurations(
+      final newConfigurations = RemoteConfigurations.createOrThrow(
         configurations: const [
           gitConfiguration,
         ],

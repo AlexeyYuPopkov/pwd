@@ -32,11 +32,11 @@ void main() {
     repo: '',
     owner: '',
     branch: '',
-    fileName: 'fileName',
+    fileName: 'fileName1',
   );
 
   const googleDriveConfiguration = GoogleDriveConfiguration(
-    fileName: 'fileName',
+    fileName: 'fileName2',
   );
 
   late RemoteConfigurationProvider remoteStorageConfigurationProvider;
@@ -87,9 +87,7 @@ void main() {
         (tester) async {
       when(
         () => remoteStorageConfigurationProvider.currentConfiguration,
-      ).thenReturn(
-        RemoteConfigurations(configurations: const []),
-      );
+      ).thenReturn(RemoteConfigurations.empty());
 
       await setupAndShowScreen(tester, finders: finders);
       await tester.pumpAndSettle();
@@ -117,7 +115,7 @@ void main() {
       when(
         () => remoteStorageConfigurationProvider.currentConfiguration,
       ).thenReturn(
-        RemoteConfigurations(
+        RemoteConfigurations.createOrThrow(
           configurations: const [
             gitConfiguration,
             googleDriveConfiguration,
@@ -143,7 +141,7 @@ void main() {
       when(
         () => remoteStorageConfigurationProvider.currentConfiguration,
       ).thenReturn(
-        RemoteConfigurations(
+        RemoteConfigurations.createOrThrow(
           configurations: const [
             gitConfiguration,
             googleDriveConfiguration,
@@ -169,7 +167,7 @@ void main() {
       when(
         () => remoteStorageConfigurationProvider.currentConfiguration,
       ).thenReturn(
-        RemoteConfigurations(
+        RemoteConfigurations.createOrThrow(
           configurations: const [],
         ),
       );
@@ -199,11 +197,7 @@ void main() {
     testWidgets('Check route to new google drive config', (tester) async {
       when(
         () => remoteStorageConfigurationProvider.currentConfiguration,
-      ).thenReturn(
-        RemoteConfigurations(
-          configurations: const [],
-        ),
-      );
+      ).thenReturn(RemoteConfigurations.empty());
 
       await setupAndShowScreen(tester, finders: finders);
       await tester.pumpAndSettle();

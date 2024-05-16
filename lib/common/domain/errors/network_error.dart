@@ -1,6 +1,6 @@
 import 'package:pwd/common/domain/errors/app_error.dart';
 
-class NetworkError implements AppError {
+sealed class NetworkError implements AppError {
   @override
   final String message;
   @override
@@ -37,6 +37,9 @@ class NetworkError implements AppError {
     required Object? parentError,
     required Map<String, dynamic>? details,
   }) = NotFoundError;
+
+  @override
+  String get reason => '';
 }
 
 class UnknownNetworkError extends NetworkError {

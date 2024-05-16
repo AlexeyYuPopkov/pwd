@@ -1,88 +1,94 @@
 import 'package:equatable/equatable.dart';
+import 'package:pwd/common/domain/errors/app_error.dart';
 
 import 'remote_configuration.dart';
 
 final class RemoteConfigurations extends Equatable {
+  static const int maxCount = 4;
   final List<RemoteConfiguration> configurations;
-  late final Map<ConfigurationType, int> _configurationIndexes;
 
-  RemoteConfigurations({required this.configurations}) {
-    var configurationIndexes = <ConfigurationType, int>{};
-    for (int i = 0; i < configurations.length; i++) {
-      configurationIndexes[configurations[i].type] = i;
+  const RemoteConfigurations._({required this.configurations});
+
+  factory RemoteConfigurations.createOrThrow({
+    required List<RemoteConfiguration> configurations,
+  }) {
+    if (configurations.length > maxCount) {
+      throw const RemoteConfigurationsError.maxCount();
     }
 
-    _configurationIndexes = configurationIndexes;
+    if (Set.from(configurations).length != configurations.length) {
+      throw const RemoteConfigurationsError.configurationDublicate();
+    }
 
-    assert(Set.from(configurations).length == configurations.length);
+    final filenamesList = configurations.map((e) => e.fileName).toList();
+    final filenamesSet = filenamesList.toSet();
+
+    if (filenamesList.length != filenamesSet.length) {
+      throw const RemoteConfigurationsError.filenemeDublicate();
+    }
+
+    return RemoteConfigurations._(configurations: configurations);
   }
 
   factory RemoteConfigurations.empty() =>
-      RemoteConfigurations(configurations: const []);
+      const RemoteConfigurations._(configurations: []);
 
-  bool get isNotEmpty => configurations.isNotEmpty;
+  bool get isNotEmpty => !isEmpty;
   bool get isEmpty => configurations.isEmpty;
-
-  bool hasConfiguration(ConfigurationType type) => withType(type) != null;
 
   @override
   List<Object?> get props => [configurations];
 
-  RemoteConfiguration? withType(ConfigurationType type) {
-    final index = _configurationIndexes[type];
-
-    if (index == null) {
-      return null;
-    }
-
-    final idValidIndex = index >= 0 && index < configurations.length;
-    assert(idValidIndex);
-
-    return idValidIndex ? configurations[index] : null;
-  }
-
   RemoteConfigurations addAndCopy(RemoteConfiguration configuration) =>
-      RemoteConfigurations(
+      RemoteConfigurations.createOrThrow(
         configurations: [...configurations, configuration],
       );
 
   RemoteConfigurations removeAndCopy(RemoteConfiguration configuration) =>
-      RemoteConfigurations(
+      RemoteConfigurations.createOrThrow(
         configurations: configurations
             .where(
               (e) => e != configuration,
             )
             .toList(),
       );
+}
 
-  RemoteConfigurations copyRemovedType(ConfigurationType type) {
-    final index = _configurationIndexes[type];
+sealed class RemoteConfigurationsError extends AppError {
+  const RemoteConfigurationsError({
+    required super.message,
+    super.reason,
+  });
 
-    if (index is! int) {
-      return this;
-    }
-    assert(index >= 0 && index < configurations.length);
-    if (index >= 0 && index < configurations.length) {
-      var newConfigurations = configurations;
-      newConfigurations.removeAt(index);
+  const factory RemoteConfigurationsError.configurationDublicate() =
+      DublicateError;
 
-      return RemoteConfigurations(
-        configurations: newConfigurations,
-      );
-    } else {
-      return this;
-    }
-  }
+  const factory RemoteConfigurationsError.filenemeDublicate() =
+      FilenemeDublicateError;
 
-  RemoteConfigurations copyAppendedType(
-    RemoteConfiguration configuration,
-  ) =>
-      hasConfiguration(configuration.type)
-          ? this
-          : RemoteConfigurations(
-              configurations: [
-                ...configurations,
-                configuration,
-              ],
-            );
+  const factory RemoteConfigurationsError.maxCount() = MaxCountError;
+}
+
+final class DublicateError extends RemoteConfigurationsError {
+  const DublicateError()
+      : super(
+          message: '',
+          reason: 'The same configuration already exists',
+        );
+}
+
+final class FilenemeDublicateError extends RemoteConfigurationsError {
+  const FilenemeDublicateError()
+      : super(
+          message: '',
+          reason: 'A configuration with the same name already exists',
+        );
+}
+
+final class MaxCountError extends RemoteConfigurationsError {
+  const MaxCountError()
+      : super(
+          message: '',
+          reason: 'Max count of possible configurations is 4',
+        );
 }

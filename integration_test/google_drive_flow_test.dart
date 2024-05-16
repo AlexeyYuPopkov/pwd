@@ -178,7 +178,5 @@ void main() {
         'getFile: (GoogleDriveConfiguration,); GoogleDriveFile}\n'
         'logout: (); Null}';
     expect(mockGoogleRepository.toShortString(), expectedCalls);
-
-    // */
   });
 }

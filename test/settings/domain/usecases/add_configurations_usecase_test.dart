@@ -32,14 +32,14 @@ void main() {
         fileName: 'fileName',
       );
 
-      final oldConfigurations = RemoteConfigurations(
+      final oldConfigurations = RemoteConfigurations.createOrThrow(
         configurations: const [config1],
       );
 
       when(
         () => remoteStorageConfigurationProvider.currentConfiguration,
       ).thenReturn(
-        RemoteConfigurations(configurations: const [config1]),
+        RemoteConfigurations.createOrThrow(configurations: const [config1]),
       );
 
       final newConfigurations = oldConfigurations.addAndCopy(config2);
@@ -75,14 +75,14 @@ void main() {
         fileName: 'fileName',
       );
 
-      final oldConfigurations = RemoteConfigurations(
+      final oldConfigurations = RemoteConfigurations.createOrThrow(
         configurations: const [config1],
       );
 
       when(
         () => remoteStorageConfigurationProvider.currentConfiguration,
       ).thenReturn(
-        RemoteConfigurations(configurations: const [config1]),
+        RemoteConfigurations.createOrThrow(configurations: const [config1]),
       );
 
       final newConfigurations = oldConfigurations.addAndCopy(config2);

@@ -14,9 +14,6 @@ final class GitConfiguration extends RemoteConfiguration {
   final String fileName;
   final String? _branch;
 
-  @override
-  String get cacheTmpFileName => 'git_cache_tmp';
-
   const GitConfiguration({
     required this.token,
     required this.repo,

@@ -33,7 +33,7 @@ final class RemoteConfigurationsMapper {
     final googleDrive =
         _GoogleDriveConfigurationMapper.toDomainOrNull(src.googleDrive);
 
-    return RemoteConfigurations(
+    return RemoteConfigurations.createOrThrow(
       configurations: [
         if (git != null) git,
         if (googleDrive != null) googleDrive,
