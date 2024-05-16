@@ -63,8 +63,9 @@ final class SettingsScreen extends StatelessWidget with ShowErrorDialogMixin {
             children: [
               const Divider(height: CommonSize.indent2x),
               CupertinoButton(
-                key:
-                    const Key(SettingsScreenTestHelper.remoteConfigurationItem),
+                key: const Key(
+                  SettingsScreenTestHelper.remoteConfigurationItem,
+                ),
                 child: Text(context.remoteConfigurationPageButtonTitle),
                 onPressed: () => _onRemoteConfiguration(context),
               ),

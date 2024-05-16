@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import '../configuration_undefined_screen/configuration_undefined_screen_robot.dart';
 import 'home_tabbar_finders.dart';
@@ -12,7 +13,7 @@ final class HomeTabbarRobot {
       ConfigurationUndefinedScreenRobot(tester);
 
   Future<void> checkInitialState() async {
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(Durations.extralong4);
 
     await Future.wait([
       tester.ensureVisible(_finders.configurationUndefinedItemIcon),

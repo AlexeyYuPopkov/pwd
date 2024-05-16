@@ -9,6 +9,7 @@ class CommonTextFieldRow extends StatelessWidget {
   final CommonFieldInputFormatter? inputFormatter;
   final String hint;
   final String tooltipMessage;
+  final bool isReadOnly;
 
   const CommonTextFieldRow({
     super.key,
@@ -17,6 +18,7 @@ class CommonTextFieldRow extends StatelessWidget {
     required this.inputFormatter,
     required this.hint,
     required this.tooltipMessage,
+    this.isReadOnly = false,
   });
 
   @override
@@ -25,6 +27,7 @@ class CommonTextFieldRow extends StatelessWidget {
       children: [
         Expanded(
           child: TextFormField(
+            readOnly: isReadOnly,
             controller: controller,
             decoration: InputDecoration(
               labelText: hint,

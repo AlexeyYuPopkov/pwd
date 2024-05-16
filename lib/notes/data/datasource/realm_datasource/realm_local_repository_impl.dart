@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:pwd/common/domain/model/remote_configuration/local_storage_target.dart';
@@ -62,7 +61,6 @@ final class RealmLocalRepositoryImpl implements RealmLocalRepository {
       });
 
       if (items.isNotEmpty) {
-        debugger();
         realm.write(
           () => realm.deleteMany(items),
         );
@@ -94,7 +92,7 @@ final class RealmLocalRepositoryImpl implements RealmLocalRepository {
 
   @override
   Future<void> deleteCacheFile({
-    required CacheTerget target,
+    required CacheTarget target,
   }) async =>
       await realmProvider.deleteCacheFile(
         target: target,

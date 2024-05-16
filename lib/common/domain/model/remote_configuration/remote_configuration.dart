@@ -11,12 +11,12 @@ enum ConfigurationType {
   googleDrive,
 }
 
-abstract interface class CacheTerget {
-  String get cacheFileName;
+abstract interface class CacheTarget {
+  String get fileName;
   String get cacheTmpFileName;
 }
 
-sealed class RemoteConfiguration extends Equatable implements CacheTerget {
+sealed class RemoteConfiguration extends Equatable implements CacheTarget {
   const RemoteConfiguration();
 
   const factory RemoteConfiguration.git({
@@ -34,16 +34,17 @@ sealed class RemoteConfiguration extends Equatable implements CacheTerget {
   ConfigurationType get type;
 
   @override
-  String get cacheFileName;
+  String get fileName;
+
   @override
-  String get cacheTmpFileName;
+  String get cacheTmpFileName => '${fileName}_tmp';
 }
 
 extension GetLocalStorageTarget on RemoteConfiguration {
   LocalStorageTarget getTarget({required Pin pin}) {
     return LocalStorageTarget(
       key: pin.pinSha512,
-      cacheFileName: cacheFileName,
+      fileName: fileName,
       cacheTmpFileName: cacheTmpFileName,
     );
   }

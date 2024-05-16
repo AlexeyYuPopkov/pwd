@@ -4,5 +4,5 @@ abstract class RemoteConfigurationProvider {
   RemoteConfigurations get currentConfiguration;
 
   Future<void> setConfigurations(RemoteConfigurations configurations);
-  Future<void> dropConfiguration();
+  // Future<void> dropConfiguration();
 }

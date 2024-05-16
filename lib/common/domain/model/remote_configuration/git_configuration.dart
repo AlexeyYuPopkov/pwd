@@ -10,11 +10,9 @@ final class GitConfiguration extends RemoteConfiguration {
   final String owner;
   String get branch =>
       _branch?.trim().isNotEmpty == true ? _branch! : defaultBranch;
+  @override
   final String fileName;
   final String? _branch;
-
-  @override
-  String get cacheFileName => 'git_cache';
 
   @override
   String get cacheTmpFileName => 'git_cache_tmp';
@@ -34,7 +32,6 @@ final class GitConfiguration extends RemoteConfiguration {
         owner,
         branch,
         fileName,
-        cacheFileName,
         cacheTmpFileName,
       ];
 }

@@ -1,15 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
-import 'package:pwd/common/presentation/dialogs/dialog_helper.dart';
-import 'package:pwd/common/presentation/validators/noEmpty/no_empty_validator.dart';
-import 'package:pwd/common/presentation/validators/remote_settings_field_validator/file_name_validator.dart';
-import 'package:pwd/common/presentation/validators/remote_settings_field_validator/remote_settings_field_validator.dart';
-import 'package:pwd/common/presentation/validators/remote_settings_field_validator/remote_settings_field_validator_not_required.dart';
-import 'package:pwd/common/presentation/validators/remote_settings_field_validator/remote_settings_file_name_validator.dart';
-import 'package:pwd/common/presentation/widgets/common_text_field_row.dart';
-import 'package:pwd/theme/common_size.dart';
+part of 'git_configuration_screen.dart';
 
-import 'git_configuration_screen_test_helper.dart';
+typedef _TestHelper = GitConfigurationScreenTestHelper;
 
 final class GitConfigurationFormResult {
   final GitConfiguration configuration;
@@ -19,11 +10,15 @@ final class GitConfigurationFormResult {
   });
 }
 
-typedef _TestHelper = GitConfigurationScreenTestHelper;
-
 final class GitConfigurationForm extends StatefulWidget {
   final GitConfiguration? initial;
-  const GitConfigurationForm({super.key, required this.initial});
+  final SetConfigurationBlocMode mode;
+
+  const GitConfigurationForm({
+    super.key,
+    required this.initial,
+    required this.mode,
+  });
 
   @override
   State<GitConfigurationForm> createState() => _GitConfigurationFormState();
@@ -32,6 +27,18 @@ final class GitConfigurationForm extends StatefulWidget {
 final class _GitConfigurationFormState extends State<GitConfigurationForm>
     with DialogHelper {
   bool isValidForm = false;
+
+  bool get isButtonEnabled {
+    switch (widget.mode) {
+      case SetConfigurationBlocMode.newConfiguration:
+        return isValidForm;
+      case SetConfigurationBlocMode.editConfiguration:
+        return true;
+    }
+  }
+
+  late final isTextFieldsReadOnly =
+      widget.mode == SetConfigurationBlocMode.editConfiguration;
 
   late final formKey = GlobalKey<FormState>();
   late final tokenController = TextEditingController(
@@ -66,8 +73,6 @@ final class _GitConfigurationFormState extends State<GitConfigurationForm>
   final fileNameValidator = const FileNameValidator();
   final fileNameInputFormatter = const FileNameInputFormatter();
 
-  bool checkBoxState = false;
-
   @override
   void dispose() {
     tokenController.dispose();
@@ -79,16 +84,27 @@ final class _GitConfigurationFormState extends State<GitConfigurationForm>
     super.dispose();
   }
 
+  bool checkIfFormValid() => [
+        noEmptyValidator(tokenController.text),
+        remoteSettingsFieldValidator(repoController.text),
+        remoteSettingsFieldValidator(ownerController.text),
+        remoteSettingsFieldValidatorNotRequired(branchController.text),
+        remoteSettingsFileNameValidator(fileNameController.text),
+      ].where((e) => e != null).isEmpty;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return SingleChildScrollView(
-      child: Column(
-        // physics: const NeverScrollableScrollPhysics(),
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(CommonSize.indent2x),
-            child: SizedBox(
+    return GestureDetector(
+      onTap: () {
+        formKey.currentState?.validate();
+        FocusScope.of(context).unfocus();
+      },
+      child: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(CommonSize.indent2x),
               child: Form(
                 key: formKey,
                 onChanged: () {
@@ -109,6 +125,7 @@ final class _GitConfigurationFormState extends State<GitConfigurationForm>
                     const SizedBox(height: CommonSize.indent2x),
                     CommonTextFieldRow(
                       key: const Key(_TestHelper.tokenTextField),
+                      isReadOnly: isTextFieldsReadOnly,
                       hint: context.tokenTextFieldHint,
                       tooltipMessage: context.tokenTooltip,
                       controller: tokenController,
@@ -118,6 +135,7 @@ final class _GitConfigurationFormState extends State<GitConfigurationForm>
                     const SizedBox(height: CommonSize.indent2x),
                     CommonTextFieldRow(
                       key: const Key(_TestHelper.repoTextField),
+                      isReadOnly: isTextFieldsReadOnly,
                       hint: context.repoTextFieldHint,
                       tooltipMessage: context.repoTooltip,
                       controller: repoController,
@@ -127,6 +145,7 @@ final class _GitConfigurationFormState extends State<GitConfigurationForm>
                     const SizedBox(height: CommonSize.indent2x),
                     CommonTextFieldRow(
                       key: const Key(_TestHelper.ownerTextField),
+                      isReadOnly: isTextFieldsReadOnly,
                       hint: context.ownerTextFieldHint,
                       tooltipMessage: context.ownerTooltip,
                       controller: ownerController,
@@ -136,6 +155,7 @@ final class _GitConfigurationFormState extends State<GitConfigurationForm>
                     const SizedBox(height: CommonSize.indent2x),
                     CommonTextFieldRow(
                       key: const Key(_TestHelper.branchTextField),
+                      isReadOnly: isTextFieldsReadOnly,
                       hint: context.branchTextFieldHint,
                       tooltipMessage: context.branchTooltip,
                       controller: branchController,
@@ -145,9 +165,8 @@ final class _GitConfigurationFormState extends State<GitConfigurationForm>
                     ),
                     const SizedBox(height: CommonSize.indent2x),
                     CommonTextFieldRow(
-                      key: const Key(
-                        _TestHelper.fileNameTextField,
-                      ),
+                      key: const Key(_TestHelper.fileNameTextField),
+                      isReadOnly: isTextFieldsReadOnly,
                       hint: context.fileNameTextFieldHint,
                       tooltipMessage: context.fileTooltip,
                       controller: fileNameController,
@@ -160,17 +179,10 @@ final class _GitConfigurationFormState extends State<GitConfigurationForm>
               ),
             ),
           ),
-          SizedBox(
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: CommonSize.indent2x),
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: OutlinedButton(
-                  key: const Key(_TestHelper.nextButton),
-                  onPressed: isValidForm ? () => _onSave(context) : null,
-                  child: Text(context.saveButtonTitle),
-                ),
-              ),
+          SliverFillRemaining(
+            child: ConfigurationFormNextButtomWidget(
+              mode: widget.mode,
+              onTap: isButtonEnabled ? () => _onNext(context) : null,
             ),
           ),
         ],
@@ -178,39 +190,55 @@ final class _GitConfigurationFormState extends State<GitConfigurationForm>
     );
   }
 
-  bool checkIfFormValid() => [
-        noEmptyValidator(tokenController.text),
-        remoteSettingsFieldValidator(repoController.text),
-        remoteSettingsFieldValidator(ownerController.text),
-        remoteSettingsFieldValidatorNotRequired(branchController.text),
-        remoteSettingsFileNameValidator(fileNameController.text),
-      ].where((e) => e != null).isEmpty;
+  void _onNext(BuildContext context) {
+    switch (widget.mode) {
+      case SetConfigurationBlocMode.newConfiguration:
+        _onNew(context);
+        return;
+      case SetConfigurationBlocMode.editConfiguration:
+        _onDelete(context);
+        return;
+    }
+  }
 
-  void _onSave(BuildContext context) {
+  void _onNew(BuildContext context) {
     if (formKey.currentState?.validate() == true) {
       if (isValidForm) {
         formKey.currentState?.save();
 
-        final result = GitConfigurationFormResult(
-          configuration: GitConfiguration(
-            token: tokenController.text,
-            repo: repoController.text,
-            owner: ownerController.text,
-            branch: branchController.text,
-            fileName: fileNameController.text,
-          ),
+        final result = GitConfiguration(
+          token: tokenController.text,
+          repo: repoController.text,
+          owner: ownerController.text,
+          branch: branchController.text,
+          fileName: fileNameController.text,
         );
 
-        Navigator.of(context).pop(result);
+        context.read<SetConfigurationBloc>().add(
+              SetConfigurationBlocEvent.newConfiguration(
+                configuration: result,
+              ),
+            );
       }
     }
   }
+
+  void _onDelete(BuildContext context) => showOkCancelDialog(
+        context,
+        title: context.confirmationMessageDeleteTitle,
+        message: context.confirmationMessageDeleteMessage,
+        onOk: (dialogContext) {
+          context.read<SetConfigurationBloc>().add(
+                const SetConfigurationBlocEvent.deleteConfiguration(),
+              );
+          Navigator.of(dialogContext).maybePop();
+        },
+      );
 }
 
 extension on BuildContext {
-  String get description => 'Create a git repository to sync records. '
-      'Create a file for store records. '
-      'Then enter repository details';
+  String get description =>
+      'Enter repository details and file name for synchronization';
 
   String get tokenTextFieldHint => 'Token';
   String get tokenTooltip => 'Go to your GitHub account '
@@ -228,5 +256,7 @@ extension on BuildContext {
   String get fileTooltip => 'Create {your repo}/{your brunch}/{file_name} '
       'then paste {file_name}.';
 
-  String get saveButtonTitle => 'Save';
+  String get confirmationMessageDeleteTitle => 'Warning';
+  String get confirmationMessageDeleteMessage =>
+      'Are you sure you want delete configuration from the device?';
 }

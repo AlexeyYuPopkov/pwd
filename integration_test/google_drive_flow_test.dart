@@ -59,7 +59,6 @@ void main() {
     // Enter pin
     final enterPinRobot = PinScreenRobot(tester);
     await enterPinRobot.checkInitialState();
-
     await enterPinRobot.fillFormAndLogin();
 
     // Home Tabbar tap Settings
@@ -74,8 +73,8 @@ void main() {
 
     // Configurations Screen
     final configurationsScreenRobot = ConfigurationsScreenRobot(tester);
-    await configurationsScreenRobot.checkInitialState();
-    await configurationsScreenRobot.toggleGoogleDriveConfiguration();
+    await configurationsScreenRobot.checkNoDataPlaceholderState();
+    await configurationsScreenRobot.gotoNewGoogleDriveConfiguration();
 
     // Google drive configuration screen
     final googleDriveConfigurationScreenRobot =
@@ -85,7 +84,7 @@ void main() {
     await googleDriveConfigurationScreenRobot.save();
 
     // Save configurations
-    await configurationsScreenRobot.saveConfigurations();
+    // await configurationsScreenRobot.saveConfigurations();
     final mockGoogleRepository = MockGoogleRepository();
 
     // final RemoteConfigurationProvider configurationProvider =
@@ -106,19 +105,6 @@ void main() {
             GoogleAndRealmDi().bindUsecases(DiStorage.shared);
           });
 
-          // final configurations = configurationProvider.currentConfiguration;
-
-          // final configuration =
-          //     configurations.withType(ConfigurationType.googleDrive);
-
-          // expect(configuration != null, true);
-
-          // if (configuration == null) {
-          //   return;
-          // }
-
-          // final RealmLocalRepository db = RealmDatasourceImpl();
-          // await db.deleteAll(target: configuration.getTarget(pin: e));
           break;
         case EmptyPin():
           break;
@@ -164,7 +150,6 @@ void main() {
     await notesListScreenRobot.checkEmptyPageState();
 
     // Go to settings
-
     await homeTabbarRobot.tapSettings();
 
     // Settings tap RemoteConfiguration item
@@ -173,9 +158,9 @@ void main() {
     await settingsRobot.tapRemoteConfiguration();
 
     // Toggle git & save
-    await configurationsScreenRobot.checkInitialState();
-    await configurationsScreenRobot.toggleGoogleDriveConfiguration();
-    await configurationsScreenRobot.saveConfigurations();
+    // await configurationsScreenRobot.checkNoDataPlaceholderState();
+    await configurationsScreenRobot.gotoGoogleDriveConfiguration();
+    await googleDriveConfigurationScreenRobot.deleteConfiguration();
 
     // Check on pin page
     await enterPinRobot.checkInitialState();
@@ -194,5 +179,7 @@ void main() {
         'getFile: (GoogleDriveConfiguration,); GoogleDriveFile}\n'
         'logout: (); Null}';
     expect(mockGoogleRepository.toShortString(), expectedCalls);
+
+    // */
   });
 }

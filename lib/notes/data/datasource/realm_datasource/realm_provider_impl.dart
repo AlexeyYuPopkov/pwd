@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
@@ -20,11 +19,11 @@ abstract interface class RealmProvider {
   });
 
   Future<void> deleteCacheFile({
-    required CacheTerget target,
+    required CacheTarget target,
   });
 
   Future<void> deleteTempFile({
-    required CacheTerget target,
+    required CacheTarget target,
   });
 }
 
@@ -53,7 +52,7 @@ final class RealmProviderImpl implements RealmProvider {
 
   @override
   Future<void> deleteCacheFile({
-    required CacheTerget target,
+    required CacheTarget target,
   }) async {
     try {
       final path = await _getRealmFilePath(target: target);
@@ -67,7 +66,7 @@ final class RealmProviderImpl implements RealmProvider {
   }
 
   @override
-  Future<void> deleteTempFile({required CacheTerget target}) async {
+  Future<void> deleteTempFile({required CacheTarget target}) async {
     try {
       final folderPath = await _getRealmTempFileFolderPath(target: target);
       final folder = Directory(folderPath);
@@ -80,21 +79,21 @@ final class RealmProviderImpl implements RealmProvider {
   }
 
   Future<String> _getRealmFilePath({
-    required CacheTerget target,
+    required CacheTarget target,
   }) async {
     final path = await getAppDirPath();
-    return '$path/${target.cacheFileName}';
+    return '$path/${target.fileName}';
   }
 
   Future<String> _getRealmTempFilePath({
-    required CacheTerget target,
+    required CacheTarget target,
   }) async {
     final path = await _getRealmTempFileFolderPath(target: target);
     return '$path/${target.cacheTmpFileName}';
   }
 
   Future<String> _getRealmTempFileFolderPath({
-    required CacheTerget target,
+    required CacheTarget target,
   }) async {
     final path = await getApplicationDocumentsDirectory().then((e) => e.path);
     return '$path/${target.cacheTmpFileName}';
@@ -138,7 +137,6 @@ extension on RealmProviderImpl {
 
       return result;
     } catch (e) {
-      debugger();
       throw RealmErrorMapper.toDomain(e);
     }
   }

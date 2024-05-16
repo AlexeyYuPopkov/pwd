@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 final class ChecksumCheckerImpl implements ChecksumChecker {
   static String _sharedPreferencesKey(RemoteConfiguration configuration) =>
-      'ChecksumChecker.ChecksumKey.${configuration.type.toString()}.${configuration.cacheFileName}';
+      'ChecksumChecker.ChecksumKey.${configuration.type.toString()}.${configuration.fileName}';
 
   const ChecksumCheckerImpl();
 

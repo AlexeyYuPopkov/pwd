@@ -80,7 +80,7 @@ class SettingsRouterDelegate extends RouterDelegate
   }
 }
 
-class ConfigurationsScreenRouterWidget extends StatelessWidget {
+final class ConfigurationsScreenRouterWidget extends StatelessWidget {
   const ConfigurationsScreenRouterWidget({super.key});
 
   @override

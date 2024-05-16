@@ -90,6 +90,7 @@ mixin DialogHelper {
           : showCupertinoModalPopup<T>(
               context: context,
               builder: (context) => CupertinoAlertDialog(
+                key: const Key(_TestKey.okCancelDialog),
                 title: title == null ? null : Text(title),
                 content: message == null ? null : Text(message),
                 actions: [

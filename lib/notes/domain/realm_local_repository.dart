@@ -37,6 +37,6 @@ abstract interface class RealmLocalRepository {
   });
 
   Future<void> deleteCacheFile({
-    required CacheTerget target,
+    required CacheTarget target,
   });
 }

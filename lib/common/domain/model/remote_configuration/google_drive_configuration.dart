@@ -4,6 +4,7 @@ final class GoogleDriveConfiguration extends RemoteConfiguration {
   @override
   final type = ConfigurationType.googleDrive;
 
+  @override
   final String fileName;
 
   const GoogleDriveConfiguration({
@@ -11,15 +12,5 @@ final class GoogleDriveConfiguration extends RemoteConfiguration {
   });
 
   @override
-  List<Object?> get props => [
-        fileName,
-        cacheFileName,
-        cacheTmpFileName,
-      ];
-
-  @override
-  String get cacheFileName => 'google_drive_cache';
-
-  @override
-  String get cacheTmpFileName => 'google_drive_cache_tmp';
+  List<Object?> get props => [fileName];
 }

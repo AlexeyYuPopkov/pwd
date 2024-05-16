@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:graphql/client.dart';
 import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
 import 'package:pwd/notes/data/graph_ql_schema/git_file_sha.graphql.dart';
@@ -37,7 +35,6 @@ final class GitGraphQlService {
     final data = response.data;
 
     if (response.hasException || data == null) {
-      debugger();
       await client.link.dispose();
 
       // TODO: Map not found error

@@ -9,4 +9,7 @@ final class OptionalBox<T> extends Equatable {
 
   @override
   List<Object?> get props => [data];
+
+  bool get isNull => data == null;
+  bool get isNotNull => !isNull;
 }

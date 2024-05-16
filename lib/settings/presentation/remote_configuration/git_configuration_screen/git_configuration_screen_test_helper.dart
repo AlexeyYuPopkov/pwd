@@ -6,5 +6,4 @@ final class GitConfigurationScreenTestHelper {
       'GitConfigurationScreen.BranchTextField.TestKey';
   static const fileNameTextField =
       'GitConfigurationScreen.FileNameTextField.TestKey';
-  static const nextButton = 'GitConfigurationScreen.NextButton.TestKey';
 }

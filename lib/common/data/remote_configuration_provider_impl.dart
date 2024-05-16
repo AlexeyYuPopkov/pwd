@@ -28,6 +28,7 @@ final class RemoteConfigurationProviderImpl
   Future<void> setConfigurations(
     RemoteConfigurations configurations,
   ) async {
+    // print('TODO: remove storage with secure');
     if (configurations.isNotEmpty) {
       final data = RemoteConfigurationsMapper.toData(configurations);
 
@@ -43,23 +44,23 @@ final class RemoteConfigurationProviderImpl
         },
       );
     } else {
-      return dropConfiguration();
+      // return dropConfiguration();
     }
   }
 
-  @override
-  Future<void> dropConfiguration() async {
-    final storage = await SharedPreferences.getInstance();
-    return storage.remove(_jsonSharedPreferencesKey).then(
-      (isSuccess) {
-        assert(isSuccess);
+  // @override
+  // Future<void> dropConfiguration() async {
+  //   final storage = await SharedPreferences.getInstance();
+  //   return storage.remove(_jsonSharedPreferencesKey).then(
+  //     (isSuccess) {
+  //       assert(isSuccess);
 
-        if (isSuccess) {
-          _currentConfiguration = RemoteConfigurations.empty();
-        }
-      },
-    );
-  }
+  //       if (isSuccess) {
+  //         _currentConfiguration = RemoteConfigurations.empty();
+  //       }
+  //     },
+  //   );
+  // }
 
 // Private
   Future<RemoteConfigurations> _readConfiguration() async {

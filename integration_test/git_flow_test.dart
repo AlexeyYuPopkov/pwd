@@ -45,11 +45,13 @@ void main() {
     // Enter pin
     final enterPinRobot = PinScreenRobot(tester);
     await enterPinRobot.checkInitialState();
+
     await enterPinRobot.fillFormAndLogin();
 
     // Home Tabbar tap Settings
     final homeTabbarRobot = HomeTabbarRobot(tester);
     await homeTabbarRobot.checkInitialState();
+
     await homeTabbarRobot.tapSettings();
 
     // Settings tap RemoteConfiguration item
@@ -59,18 +61,17 @@ void main() {
 
     // Configurations Screen
     final configurationsScreenRobot = ConfigurationsScreenRobot(tester);
-    await configurationsScreenRobot.checkInitialState();
-
-    await configurationsScreenRobot.toggleGitConfiguration();
+    await configurationsScreenRobot.checkNoDataPlaceholderState();
+    await configurationsScreenRobot.gotoNewGitConfiguration();
 
     // Git configuration
-    final gitConfigurationScreenRobot = GitConfigurationScreenRobot(tester);
-    await gitConfigurationScreenRobot.checkInitialState();
-    await gitConfigurationScreenRobot.fillForm();
-    await gitConfigurationScreenRobot.save();
+    final gitConfigurationScreenRobot = GitConfigurationScreenRobot();
+    await gitConfigurationScreenRobot.checkInitialState(tester);
+    await gitConfigurationScreenRobot.fillForm(tester);
+    await gitConfigurationScreenRobot.save(tester);
 
-    // Save configurations
-    await configurationsScreenRobot.saveConfigurations();
+    // // Save configurations
+    // await configurationsScreenRobot.saveConfigurations();
 
     // Check return on Pin screen
     await enterPinRobot.checkInitialState();
@@ -110,10 +111,9 @@ void main() {
     await homeTabbarRobot.tapSettings();
     // Go to configurations
     await settingsRobot.tapRemoteConfiguration();
-    // Toggle git & save
-    await configurationsScreenRobot.checkInitialState();
-    await configurationsScreenRobot.toggleGitConfiguration();
-    await configurationsScreenRobot.saveConfigurations();
+
+    await configurationsScreenRobot.gotoGitConfiguration();
+    await gitConfigurationScreenRobot.deleteConfiguration(tester);
 
     // Check on pin page
     await enterPinRobot.checkInitialState();

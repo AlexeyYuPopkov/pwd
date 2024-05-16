@@ -41,6 +41,20 @@ final class RemoteConfigurations extends Equatable {
     return idValidIndex ? configurations[index] : null;
   }
 
+  RemoteConfigurations addAndCopy(RemoteConfiguration configuration) =>
+      RemoteConfigurations(
+        configurations: [...configurations, configuration],
+      );
+
+  RemoteConfigurations removeAndCopy(RemoteConfiguration configuration) =>
+      RemoteConfigurations(
+        configurations: configurations
+            .where(
+              (e) => e != configuration,
+            )
+            .toList(),
+      );
+
   RemoteConfigurations copyRemovedType(ConfigurationType type) {
     final index = _configurationIndexes[type];
 

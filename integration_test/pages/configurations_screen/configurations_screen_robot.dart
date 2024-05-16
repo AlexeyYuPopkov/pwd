@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
 
-import 'configurations_screen_finders.dart';
+import '../../../test/settings/presentation/configurations_screen/configurations_screen_finders.dart';
 
 final class ConfigurationsScreenRobot {
   ConfigurationsScreenRobot(this.tester);
@@ -9,50 +10,67 @@ final class ConfigurationsScreenRobot {
 
   late final _finders = ConfigurationsScreenFinders();
 
-  Future<void> checkInitialState() async {
+  Future<void> checkNoDataPlaceholderState() async {
     await tester.pumpAndSettle();
 
     await Future.wait([
-      tester.ensureVisible(_finders.gitSwitch),
-      tester.ensureVisible(_finders.googleDriveSwitch),
-      tester.ensureVisible(_finders.nextButton),
+      tester.ensureVisible(_finders.noDataPlaceholder),
+      tester.ensureVisible(_finders.noDataPlaceholderButton),
+      tester.ensureVisible(_finders.addNoteConfigurationButton),
     ]);
 
-    expect(_finders.gitSwitch, findsOneWidget);
-    expect(_finders.googleDriveSwitch, findsOneWidget);
-    expect(_finders.nextButton, findsOneWidget);
-
     expect(
-      tester.widget<OutlinedButton>(_finders.nextButton).enabled,
-      false,
-    );
-  }
-
-  Future<void> toggleGitConfiguration() async {
-    // ??
-    // await tester.pumpAndSettle();
-    await tester.ensureVisible(_finders.gitSwitch);
-    expect(_finders.gitSwitch, findsOneWidget);
-    await tester.tap(_finders.gitSwitch);
-    await tester.pumpAndSettle();
-  }
-
-  Future<void> toggleGoogleDriveConfiguration() async {
-    // ??
-    // await tester.pumpAndSettle();
-    await tester.ensureVisible(_finders.googleDriveSwitch);
-    expect(_finders.googleDriveSwitch, findsOneWidget);
-    await tester.tap(_finders.googleDriveSwitch);
-    await tester.pumpAndSettle();
-  }
-
-  Future<void> saveConfigurations() async {
-    await tester.pumpAndSettle();
-
-    expect(
-      tester.widget<OutlinedButton>(_finders.nextButton).enabled,
+      tester.widget<OutlinedButton>(_finders.noDataPlaceholderButton).enabled,
       true,
+      reason: 'ConfigurationsScreen, No data placeholder button - disabled',
     );
-    await tester.tap(_finders.nextButton);
+  }
+
+  Future<void> gotoNewGoogleDriveConfiguration() async {
+    await tester.tap(_finders.noDataPlaceholderButton);
+    await tester.pumpAndSettle();
+
+    expect(_finders.googleActionSheetFinder, findsOneWidget);
+    expect(_finders.gitActionSheetFinder, findsOneWidget);
+    expect(_finders.cancelActionSheetFinder, findsOneWidget);
+
+    await tester.tap(_finders.googleActionSheetFinder);
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> gotoNewGitConfiguration() async {
+    await tester.tap(_finders.noDataPlaceholderButton);
+    await tester.pumpAndSettle();
+
+    expect(_finders.googleActionSheetFinder, findsOneWidget);
+    expect(_finders.gitActionSheetFinder, findsOneWidget);
+    expect(_finders.cancelActionSheetFinder, findsOneWidget);
+
+    await tester.tap(_finders.gitActionSheetFinder);
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> gotoGoogleDriveConfiguration() async {
+    await tester.pumpAndSettle();
+
+    expect(
+      _finders.getItemFor(ConfigurationType.googleDrive),
+      findsOneWidget,
+    );
+
+    await tester.tap(_finders.getItemFor(ConfigurationType.googleDrive));
+    await tester.pumpAndSettle();
+  }
+
+  Future<void> gotoGitConfiguration() async {
+    await tester.pumpAndSettle();
+
+    expect(
+      _finders.getItemFor(ConfigurationType.git),
+      findsOneWidget,
+    );
+
+    await tester.tap(_finders.getItemFor(ConfigurationType.git));
+    await tester.pumpAndSettle();
   }
 }
