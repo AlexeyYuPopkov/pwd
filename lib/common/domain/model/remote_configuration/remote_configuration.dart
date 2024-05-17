@@ -38,6 +38,8 @@ sealed class RemoteConfiguration extends Equatable implements CacheTarget {
 
   @override
   String get cacheTmpFileName => '${fileName}_tmp';
+
+  String get id => '${type.toString()}_$fileName';
 }
 
 extension GetLocalStorageTarget on RemoteConfiguration {

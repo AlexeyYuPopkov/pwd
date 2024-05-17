@@ -11,6 +11,7 @@ import 'package:pwd/common/presentation/validators/remote_settings_field_validat
 import 'package:pwd/common/presentation/validators/remote_settings_field_validator/remote_settings_field_validator_not_required.dart';
 import 'package:pwd/common/presentation/validators/remote_settings_field_validator/remote_settings_file_name_validator.dart';
 import 'package:pwd/common/presentation/widgets/common_text_field_row.dart';
+import 'package:pwd/settings/presentation/remote_configuration/error_message_providers/remote_configurations_error_message_provider.dart';
 import 'package:pwd/settings/presentation/remote_configuration/set_configuration_bloc/set_configuration_bloc.dart';
 import 'package:pwd/settings/presentation/remote_configuration/set_configuration_bloc/set_configuration_bloc_data.dart';
 import 'package:pwd/settings/presentation/remote_configuration/set_configuration_bloc/set_configuration_bloc_state.dart';
@@ -37,7 +38,13 @@ final class GitConfigurationScreen extends StatelessWidget
         Navigator.of(context).maybePop();
         break;
       case ErrorState(e: final e):
-        showError(context, e);
+        showError(
+          context,
+          e,
+          errorMessageProviders: [
+            const RemoteConfigurationsErrorMessageProvider().call,
+          ],
+        );
         break;
     }
   }

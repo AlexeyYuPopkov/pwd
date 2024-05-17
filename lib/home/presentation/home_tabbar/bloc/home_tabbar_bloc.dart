@@ -1,3 +1,4 @@
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
 import 'package:pwd/common/domain/remote_configuration_provider.dart';
@@ -24,15 +25,21 @@ final class HomeTabbarBloc
   }
 
   void _setupHandlers() {
-    on<InitialEvent>(_onInitialEvent);
+    on<InitialEvent>(
+      _onInitialEvent,
+      transformer: sequential(),
+    );
   }
 
   void _onInitialEvent(
     InitialEvent event,
     Emitter<HomeTabbarBlocState> emit,
-  ) {
+  ) async {
     try {
-      final configuration = remoteConfigurationsProvider.currentConfiguration;
+      emit(HomeTabbarBlocState.loading(data: data));
+
+      final configuration =
+          await remoteConfigurationsProvider.readConfiguration();
 
       final tabs = <HomeTabbarTabModel>[
         if (configuration.configurations.isEmpty)

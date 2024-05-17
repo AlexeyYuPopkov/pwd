@@ -70,7 +70,7 @@ void main() {
 
       expect(
         () => sut.addAndCopy(config2),
-        throwsA(isA<DublicateError>()),
+        throwsA(isA<FilenemeDublicateError>()),
       );
     });
 

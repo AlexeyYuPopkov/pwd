@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pwd/common/domain/errors/app_error.dart';
 import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
+import 'package:pwd/common/domain/model/remote_configuration/remote_configurations.dart';
 import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
 import 'package:pwd/common/presentation/dialogs/dialog_helper.dart';
 import 'package:pwd/settings/domain/add_configurations_usecase.dart';
@@ -76,6 +77,50 @@ void main() {
     expect(finders.screen, findsOneWidget);
   }
 
+  Future<void> fillForm(
+    WidgetTester tester, {
+    required GitConfigurationScreenFinders finders,
+    required GitConfiguration config,
+  }) async {
+    final tokenWidget = finders.tokenTextFieldWidget(tester);
+    final repoWidget = finders.repoTextFieldWidget(tester);
+    final ownerWidget = finders.ownerTextFieldWidget(tester);
+    final branchWidget = finders.branchTextFieldWidget(tester);
+    final fileNameWidget = finders.fileNameTextFieldWidget(tester);
+
+    final textFields = [
+      tokenWidget,
+      repoWidget,
+      ownerWidget,
+      branchWidget,
+      fileNameWidget,
+    ];
+
+    for (final e in textFields) {
+      expect(e!.controller!.text.isEmpty, true);
+      expect(e.readOnly, false);
+    }
+
+    await tester.tap(finders.tokenTextField);
+    await tester.enterText(finders.tokenTextField, config.token);
+    await tester.tap(finders.repoTextField);
+    await tester.enterText(finders.repoTextField, config.repo);
+    await tester.tap(finders.ownerTextField);
+    await tester.enterText(finders.ownerTextField, config.owner);
+    await tester.tap(finders.branchTextField);
+    await tester.enterText(finders.branchTextField, config.branch);
+    await tester.tap(finders.fileNameTextField);
+    await tester.enterText(finders.fileNameTextField, config.fileName);
+
+    await tester.pumpAndSettle();
+
+    expect(tokenWidget!.controller!.text, configuration.token);
+    expect(repoWidget!.controller!.text, configuration.repo);
+    expect(ownerWidget!.controller!.text, configuration.owner);
+    expect(branchWidget!.controller!.text, configuration.branch);
+    expect(fileNameWidget!.controller!.text, configuration.fileName);
+  }
+
   group('GitConfigurationScreen', () {
     testWidgets(
       'New configuration',
@@ -89,46 +134,7 @@ void main() {
           SetConfigurationBlocMode.newConfiguration,
         );
 
-        final tokenWidget = finders.tokenTextFieldWidget(tester);
-        final repoWidget = finders.repoTextFieldWidget(tester);
-        final ownerWidget = finders.ownerTextFieldWidget(tester);
-        final branchWidget = finders.branchTextFieldWidget(tester);
-        final fileNameWidget = finders.fileNameTextFieldWidget(tester);
-
-        final textFields = [
-          tokenWidget,
-          repoWidget,
-          ownerWidget,
-          branchWidget,
-          fileNameWidget,
-        ];
-
-        for (final e in textFields) {
-          expect(e!.controller!.text.isEmpty, true);
-          expect(e.readOnly, false);
-        }
-
-        await tester.tap(finders.tokenTextField);
-        await tester.enterText(finders.tokenTextField, configuration.token);
-        await tester.tap(finders.repoTextField);
-        await tester.enterText(finders.repoTextField, configuration.repo);
-        await tester.tap(finders.ownerTextField);
-        await tester.enterText(finders.ownerTextField, configuration.owner);
-        await tester.tap(finders.branchTextField);
-        await tester.enterText(finders.branchTextField, configuration.branch);
-        await tester.tap(finders.fileNameTextField);
-        await tester.enterText(
-          finders.fileNameTextField,
-          configuration.fileName,
-        );
-
-        await tester.pumpAndSettle();
-
-        expect(tokenWidget!.controller!.text, configuration.token);
-        expect(repoWidget!.controller!.text, configuration.repo);
-        expect(ownerWidget!.controller!.text, configuration.owner);
-        expect(branchWidget!.controller!.text, configuration.branch);
-        expect(fileNameWidget!.controller!.text, configuration.fileName);
+        await fillForm(tester, finders: finders, config: configuration);
 
         expect(finders.nextButtonWidget(tester)?.enabled, true);
 
@@ -142,6 +148,55 @@ void main() {
             addConfigurationsUsecase as MockAddConfigurationsUsecase;
 
         expect(usecase.calls.first == configuration, true);
+      },
+    );
+
+    testWidgets(
+      'New configuration file dublicate',
+      (tester) async {
+        await setupAndShowScreen(tester, finders: finders, initial: null);
+
+        expect(finders.nextButton, findsOneWidget);
+        expect(finders.nextButtonWidget(tester)?.enabled, false);
+        expect(
+          finders.bloc(tester).data.mode,
+          SetConfigurationBlocMode.newConfiguration,
+        );
+
+        final usecase =
+            addConfigurationsUsecase as MockAddConfigurationsUsecase;
+
+        usecase.initialConfigurations = RemoteConfigurations.createOrThrow(
+          configurations: const [
+            GitConfiguration(
+              token: 'token1',
+              repo: 'repo1',
+              owner: 'owner1',
+              branch: 'branch1',
+              fileName: 'fileName',
+            ),
+          ],
+        );
+
+        await fillForm(tester, finders: finders, config: configuration);
+
+        expect(finders.nextButtonWidget(tester)?.enabled, true);
+
+        await tester.tap(finders.nextButton);
+
+        await tester.pumpAndSettle();
+
+        final state = finders.bloc(tester).state;
+        expect(state is ErrorState, true);
+
+        expect(usecase.calls.first == configuration, true);
+
+        final errorDialog = find.byKey(
+          const Key(DialogHelperTestHelper.errorDialog),
+        );
+
+        expect(errorDialog, findsOneWidget);
+        expect((state as ErrorState).e is FilenemeDublicateError, true);
       },
     );
 

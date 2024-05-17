@@ -8,9 +8,28 @@ import 'package:pwd/settings/presentation/router/settings_router_delegate.dart';
 import 'home_tabbar_screen_test_helper.dart';
 
 // final _noteRouterKey = GlobalKey<NavigatorState>();
-final _gitNotesListRouterKey = GlobalKey<NavigatorState>();
-final _googleNotesListRouterKey = GlobalKey<NavigatorState>();
+// final _gitNotesListRouterKey = GlobalKey<NavigatorState>();
+// final _googleNotesListRouterKey = GlobalKey<NavigatorState>();
 final _settingsRouterKey = GlobalKey<NavigatorState>();
+
+final _tabRouterKeys = _TabRouterKeys();
+
+final class _TabRouterKeys {
+  Map<String, GlobalKey<NavigatorState>> map = {};
+
+  GlobalKey<NavigatorState> getKey(RemoteConfiguration config) {
+    final id = config.id;
+    final result = map[id];
+
+    if (result == null) {
+      final key = GlobalKey<NavigatorState>();
+      map[id] = key;
+      return key;
+    } else {
+      return result;
+    }
+  }
+}
 
 sealed class HomeTabbarTabModel {
   const HomeTabbarTabModel();
@@ -81,7 +100,7 @@ final class GitTab extends HomeTabbarTabModel {
   Router buildRoute(BuildContext context) {
     return Router(
       routerDelegate: NotesRouterDelegate(
-        navigatorKey: _gitNotesListRouterKey,
+        navigatorKey: _tabRouterKeys.getKey(configuration),
         configuration: configuration,
       ),
     );
@@ -90,9 +109,9 @@ final class GitTab extends HomeTabbarTabModel {
   @override
   BottomNavigationBarItem buildNavigationBarItem(BuildContext context) {
     return BottomNavigationBarItem(
-      icon: const Icon(
+      icon: Icon(
         Icons.home,
-        key: Key(HomeTabbarScreenTestKey.gitTabIcon),
+        key: Key(HomeTabbarScreenTestKey.notesTabIcon(configuration)),
       ),
       label: context.gitTabName,
     );
@@ -102,9 +121,9 @@ final class GitTab extends HomeTabbarTabModel {
   NavigationRailDestination buildNavigationRailDestination(
       BuildContext context) {
     return NavigationRailDestination(
-      icon: const Icon(
+      icon: Icon(
         Icons.home,
-        key: Key(HomeTabbarScreenTestKey.gitTabIcon),
+        key: Key(HomeTabbarScreenTestKey.notesTabIcon(configuration)),
       ),
       label: Text(context.gitTabName),
     );
@@ -121,7 +140,7 @@ final class GoogleDriveTab extends HomeTabbarTabModel {
   Router buildRoute(BuildContext context) {
     return Router(
       routerDelegate: NotesRouterDelegate(
-        navigatorKey: _googleNotesListRouterKey,
+        navigatorKey: _tabRouterKeys.getKey(configuration),
         configuration: configuration,
       ),
     );
@@ -130,9 +149,10 @@ final class GoogleDriveTab extends HomeTabbarTabModel {
   @override
   BottomNavigationBarItem buildNavigationBarItem(BuildContext context) {
     return BottomNavigationBarItem(
-      icon: const Icon(
+      icon: Icon(
         Icons.list,
-        key: Key(HomeTabbarScreenTestKey.googleDriveTabIcon),
+        key: Key(HomeTabbarScreenTestKey.notesTabIcon(configuration)),
+        size: 16,
       ),
       label: context.googleTabName,
     );
@@ -142,9 +162,9 @@ final class GoogleDriveTab extends HomeTabbarTabModel {
   NavigationRailDestination buildNavigationRailDestination(
       BuildContext context) {
     return NavigationRailDestination(
-      icon: const Icon(
+      icon: Icon(
         Icons.list,
-        key: Key(HomeTabbarScreenTestKey.googleDriveTabIcon),
+        key: Key(HomeTabbarScreenTestKey.notesTabIcon(configuration)),
       ),
       label: Text(context.googleTabName),
     );

@@ -7,6 +7,7 @@ import 'package:pwd/common/presentation/dialogs/dialog_helper.dart';
 import 'package:pwd/common/presentation/dialogs/show_error_dialog_mixin.dart';
 import 'package:pwd/common/presentation/validators/remote_settings_field_validator/file_name_validator.dart';
 import 'package:pwd/common/presentation/widgets/common_text_field_row.dart';
+import 'package:pwd/settings/presentation/remote_configuration/error_message_providers/remote_configurations_error_message_provider.dart';
 import 'package:pwd/settings/presentation/remote_configuration/set_configuration_bloc/set_configuration_bloc.dart';
 import 'package:pwd/settings/presentation/remote_configuration/set_configuration_bloc/set_configuration_bloc_data.dart';
 import 'package:pwd/settings/presentation/remote_configuration/set_configuration_bloc/set_configuration_bloc_event.dart';
@@ -17,16 +18,6 @@ import 'package:pwd/theme/common_size.dart';
 import 'google_drive_configuration_screen_test_helper.dart';
 
 typedef _TestHelper = GoogleDriveConfigurationScreenTestHelper;
-
-// TODO: remove
-/// deprecated
-final class GoogleDriveConfigurationFormResult {
-  final GoogleDriveConfiguration configuration;
-
-  const GoogleDriveConfigurationFormResult({
-    required this.configuration,
-  });
-}
 
 final class GoogleDriveConfigurationScreen extends StatelessWidget
     with ShowErrorDialogMixin {
@@ -44,7 +35,13 @@ final class GoogleDriveConfigurationScreen extends StatelessWidget
         Navigator.of(context).maybePop();
         break;
       case ErrorState(e: final e):
-        showError(context, e);
+        showError(
+          context,
+          e,
+          errorMessageProviders: [
+            const RemoteConfigurationsErrorMessageProvider().call,
+          ],
+        );
         break;
     }
   }

@@ -116,6 +116,7 @@ final class _HomeTabbarPageMobileContentState
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         items: [
           for (final tab in widget.tabs) tab.buildNavigationBarItem(context),
         ],

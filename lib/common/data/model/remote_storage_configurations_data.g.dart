@@ -9,18 +9,36 @@ part of 'remote_storage_configurations_data.dart';
 RemoteStorageConfigurationsData _$RemoteStorageConfigurationsDataFromJson(
         Map<String, dynamic> json) =>
     RemoteStorageConfigurationsData(
-      git: json['git'] == null
-          ? null
-          : GitConfigurationData.fromJson(json['git'] as Map<String, dynamic>),
-      googleDrive: json['googleDrive'] == null
-          ? null
-          : GoogleDriveConfigurationData.fromJson(
-              json['googleDrive'] as Map<String, dynamic>),
+      configurations: (json['configurations'] as List<dynamic>)
+          .map((e) =>
+              RemoteStorageConfigurationBox.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$RemoteStorageConfigurationsDataToJson(
         RemoteStorageConfigurationsData instance) =>
     <String, dynamic>{
-      'git': instance.git,
-      'googleDrive': instance.googleDrive,
+      'configurations': instance.configurations,
     };
+
+RemoteStorageConfigurationBox _$RemoteStorageConfigurationBoxFromJson(
+        Map<String, dynamic> json) =>
+    RemoteStorageConfigurationBox(
+      type: $enumDecodeNullable(
+              _$RemoteConfigurationTypeDataEnumMap, json['type']) ??
+          RemoteConfigurationTypeData.unknown,
+      value: json['value'],
+    );
+
+Map<String, dynamic> _$RemoteStorageConfigurationBoxToJson(
+        RemoteStorageConfigurationBox instance) =>
+    <String, dynamic>{
+      'type': _$RemoteConfigurationTypeDataEnumMap[instance.type]!,
+      'value': instance.value,
+    };
+
+const _$RemoteConfigurationTypeDataEnumMap = {
+  RemoteConfigurationTypeData.git: 'git',
+  RemoteConfigurationTypeData.googleDrive: 'googleDrive',
+  RemoteConfigurationTypeData.unknown: 'unknown',
+};

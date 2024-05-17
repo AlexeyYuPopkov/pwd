@@ -16,7 +16,7 @@ final class RemoteConfigurationProviderImpl
   RemoteConfigurations _currentConfiguration = RemoteConfigurations.empty();
 
   RemoteConfigurationProviderImpl() {
-    _readConfiguration().then(
+    readConfiguration().then(
       (e) => _currentConfiguration = e,
     );
   }
@@ -50,7 +50,7 @@ final class RemoteConfigurationProviderImpl
             value: jsonStr,
           )
           .then(
-            (_) => _readConfiguration().then(
+            (_) => readConfiguration().then(
               (e) => _currentConfiguration = e,
             ),
           );
@@ -61,8 +61,8 @@ final class RemoteConfigurationProviderImpl
     }
   }
 
-// Private
-  Future<RemoteConfigurations> _readConfiguration() async {
+  @override
+  Future<RemoteConfigurations> readConfiguration() async {
     // final storage = await SharedPreferences.getInstance();
     // final json = storage.getString(_jsonSharedPreferencesKey);
     final json = await storage.read(key: _jsonSharedPreferencesKey);

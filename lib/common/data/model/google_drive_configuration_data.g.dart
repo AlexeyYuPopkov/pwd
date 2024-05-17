@@ -9,11 +9,11 @@ part of 'google_drive_configuration_data.dart';
 GoogleDriveConfigurationData _$GoogleDriveConfigurationDataFromJson(
         Map<String, dynamic> json) =>
     GoogleDriveConfigurationData(
-      filename: json['filename'] as String? ?? '',
+      fileName: json['fileName'] as String? ?? '',
     );
 
 Map<String, dynamic> _$GoogleDriveConfigurationDataToJson(
         GoogleDriveConfigurationData instance) =>
     <String, dynamic>{
-      'filename': instance.filename,
+      'fileName': instance.fileName,
     };

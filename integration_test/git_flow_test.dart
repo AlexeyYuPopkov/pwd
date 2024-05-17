@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:pwd/common/domain/base_pin.dart';
@@ -22,6 +23,8 @@ import 'pages/settings_screen/settings_robot.dart';
 import 'tools/test_tools.dart';
 
 void main() {
+  final config = GitConfigurationTestData.createTestConfiguration();
+
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   DartPluginRegistrant.ensureInitialized();
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,11 +32,19 @@ void main() {
   setUp(() async {
     DeveloperSettings.applay();
 
-    final config = GitConfigurationTestData.createTestConfiguration();
     const hashUsecase = HashUsecase();
     final pinSha512 = hashUsecase.pinHash512(PinScreenRobot.pinStr);
     final db = RealmLocalRepositoryImpl(realmProvider: RealmProviderImpl());
     db.deleteAll(target: config.getTarget(pin: Pin(pinSha512: pinSha512)));
+    await const FlutterSecureStorage().delete(
+      key: 'RemoteStorageConfigurationProvider.RemoteStorageConfigurationKey',
+    );
+  });
+
+  tearDown(() async {
+    await const FlutterSecureStorage().delete(
+      key: 'RemoteStorageConfigurationProvider.RemoteStorageConfigurationKey',
+    );
   });
 
   testWidgets('Test Login and add note, then delete note with Git',
@@ -49,10 +60,10 @@ void main() {
     await enterPinRobot.fillFormAndLogin();
 
     // Home Tabbar tap Settings
-    final homeTabbarRobot = HomeTabbarRobot(tester);
-    await homeTabbarRobot.checkInitialState();
+    final homeTabbarRobot = HomeTabbarRobot();
+    await homeTabbarRobot.checkInitialState(tester);
 
-    await homeTabbarRobot.tapSettings();
+    await homeTabbarRobot.tapSettings(tester);
 
     // Settings tap RemoteConfiguration item
     final settingsRobot = SettingsRobot(tester);
@@ -78,7 +89,7 @@ void main() {
     await enterPinRobot.fillFormAndLogin();
 
     // Check home screen with git enabled
-    await homeTabbarRobot.checkGitEnabledState();
+    await homeTabbarRobot.checkGitEnabledState(tester, config: config);
 
     // Notes list screen
     final notesListScreenRobot = NotesListScreenRobot(tester);
@@ -108,7 +119,7 @@ void main() {
     await notesListScreenRobot.checkEmptyPageState();
 
     // Go to settings
-    await homeTabbarRobot.tapSettings();
+    await homeTabbarRobot.tapSettings(tester);
     // Go to configurations
     await settingsRobot.tapRemoteConfiguration();
 

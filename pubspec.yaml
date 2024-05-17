@@ -34,6 +34,7 @@ dependencies:
   # timezone: ^0.9.1
 
   flutter_bloc: ^8.1.4
+  bloc_concurrency: ^0.2.5
   equatable: ^2.0.5
   rxdart: ^0.27.7
   collection: ^1.18.0

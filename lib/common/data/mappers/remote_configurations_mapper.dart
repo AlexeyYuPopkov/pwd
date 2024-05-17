@@ -7,82 +7,77 @@ import 'package:pwd/common/domain/model/remote_configuration/remote_configuratio
 final class RemoteConfigurationsMapper {
   static RemoteStorageConfigurationsData toData(
     RemoteConfigurations src,
-  ) {
-    final configurations = src.configurations.map(
-      (e) {
-        switch (e) {
-          case GitConfiguration():
-            return _GitConfigurationMapper.toData(e);
-          case GoogleDriveConfiguration():
-            return _GoogleDriveConfigurationMapper.toData(e);
-        }
-      },
-    );
+  ) =>
+      RemoteStorageConfigurationsData(
+        configurations: [
+          for (final item in src.configurations) _createConfigurationBox(item),
+        ],
+      );
 
-    return RemoteStorageConfigurationsData(
-      git: configurations.whereType<GitConfigurationData>().firstOrNull,
-      googleDrive:
-          configurations.whereType<GoogleDriveConfigurationData>().firstOrNull,
-    );
+  static RemoteStorageConfigurationBox _createConfigurationBox(
+    RemoteConfiguration src,
+  ) {
+    switch (src) {
+      case GitConfiguration():
+        return RemoteStorageConfigurationBox(
+          type: RemoteConfigurationTypeData.git,
+          value: GitConfigurationData(
+            token: src.token,
+            repo: src.repo,
+            owner: src.owner,
+            branch: src.branch,
+            fileName: src.fileName,
+          ),
+        );
+      case GoogleDriveConfiguration():
+        return RemoteStorageConfigurationBox(
+          type: RemoteConfigurationTypeData.googleDrive,
+          value: GoogleDriveConfigurationData(
+            fileName: src.fileName,
+          ),
+        );
+    }
   }
 
   static RemoteConfigurations toDomain(
     RemoteStorageConfigurationsData src,
   ) {
-    final git = _GitConfigurationMapper.toDomainOrNull(src.git);
-    final googleDrive =
-        _GoogleDriveConfigurationMapper.toDomainOrNull(src.googleDrive);
-
     return RemoteConfigurations.createOrThrow(
       configurations: [
-        if (git != null) git,
-        if (googleDrive != null) googleDrive,
-      ],
-    );
-  }
-}
-
-// Git configuration mapper
-final class _GitConfigurationMapper {
-  static GitConfigurationData toData(GitConfiguration src) {
-    return GitConfigurationData(
-      token: src.token,
-      repo: src.repo,
-      owner: src.owner,
-      branch: src.branch,
-      fileName: src.fileName,
+        for (final item in src.configurations)
+          _createConfigurationFromBox(item),
+      ].whereType<RemoteConfiguration>().toList(),
     );
   }
 
-  static GitConfiguration toDomain(GitConfigurationData src) {
-    return GitConfiguration(
-      token: src.token,
-      repo: src.repo,
-      owner: src.owner,
-      branch: src.branch,
-      fileName: src.fileName,
-    );
+  static RemoteConfiguration? _createConfigurationFromBox(
+    RemoteStorageConfigurationBox src,
+  ) {
+    switch (src.type) {
+      case RemoteConfigurationTypeData.git:
+        final value = src.value;
+        if (value is Map<String, dynamic>) {
+          final config = GitConfigurationData.fromJson(value);
+          return RemoteConfiguration.git(
+            token: config.token,
+            repo: config.repo,
+            owner: config.owner,
+            branch: config.branch,
+            fileName: config.fileName,
+          );
+        } else {
+          return null;
+        }
+      case RemoteConfigurationTypeData.googleDrive:
+        final value = src.value;
+        if (value is Map<String, dynamic>) {
+          final config = GoogleDriveConfigurationData.fromJson(value);
+          return RemoteConfiguration.google(fileName: config.fileName);
+        } else {
+          return null;
+        }
+      case RemoteConfigurationTypeData.unknown:
+        return null;
+    }
   }
-
-  static GitConfiguration? toDomainOrNull(GitConfigurationData? src) =>
-      src == null ? null : toDomain(src);
-}
-
-// Google drive configuration mapper
-final class _GoogleDriveConfigurationMapper {
-  static GoogleDriveConfigurationData toData(GoogleDriveConfiguration src) {
-    return GoogleDriveConfigurationData(
-      filename: src.fileName,
-    );
-  }
-
-  static GoogleDriveConfiguration toDomain(GoogleDriveConfigurationData src) {
-    return GoogleDriveConfiguration(
-      fileName: src.filename,
-    );
-  }
-
-  static GoogleDriveConfiguration? toDomainOrNull(
-          GoogleDriveConfigurationData? src) =>
-      src == null ? null : toDomain(src);
 }

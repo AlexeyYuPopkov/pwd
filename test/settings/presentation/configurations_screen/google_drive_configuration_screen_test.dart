@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pwd/common/domain/errors/app_error.dart';
 import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
+import 'package:pwd/common/domain/model/remote_configuration/remote_configurations.dart';
 import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
 import 'package:pwd/common/presentation/dialogs/dialog_helper.dart';
 import 'package:pwd/settings/domain/add_configurations_usecase.dart';
@@ -72,6 +73,23 @@ void main() {
     expect(finders.screen, findsOneWidget);
   }
 
+  Future<void> fillForm(
+    WidgetTester tester, {
+    required GoogleDriveConfigurationScreenFinders finders,
+    required GoogleDriveConfiguration config,
+  }) async {
+    final textFieldWidget = finders.filenameTextFormFieldWidget(tester);
+
+    expect(textFieldWidget!.controller!.text.isEmpty, true);
+    expect(textFieldWidget.readOnly, false);
+
+    await tester.tap(finders.filenameTextField);
+    await tester.enterText(finders.filenameTextField, config.fileName);
+    await tester.pumpAndSettle();
+
+    expect(textFieldWidget.controller!.text, config.fileName);
+  }
+
   group('GoogleDriveConfigurationScreen', () {
     testWidgets(
       'New configuration',
@@ -86,16 +104,8 @@ void main() {
           SetConfigurationBlocMode.newConfiguration,
         );
 
-        final textFieldWidget = finders.filenameTextFormFieldWidget(tester);
+        await fillForm(tester, finders: finders, config: configuration);
 
-        expect(textFieldWidget!.controller!.text.isEmpty, true);
-        expect(textFieldWidget.readOnly, false);
-
-        await tester.tap(finders.filenameTextField);
-        await tester.enterText(finders.filenameTextField, fileName);
-        await tester.pumpAndSettle();
-
-        expect(textFieldWidget.controller!.text, fileName);
         expect(finders.nextButtonWidget(tester)?.enabled, true);
 
         await tester.tap(finders.nextButton);
@@ -108,6 +118,50 @@ void main() {
             addConfigurationsUsecase as MockAddConfigurationsUsecase;
 
         expect(usecase.calls.first == configuration, true);
+      },
+    );
+
+    testWidgets(
+      'New configuration file dublicate',
+      (tester) async {
+        await setupAndShowScreen(tester, finders: finders, initial: null);
+
+        final usecase =
+            addConfigurationsUsecase as MockAddConfigurationsUsecase;
+
+        usecase.initialConfigurations = RemoteConfigurations.createOrThrow(
+          configurations: const [
+            GoogleDriveConfiguration(fileName: fileName),
+          ],
+        );
+
+        expect(finders.filenameTextField, findsOneWidget);
+        expect(finders.nextButton, findsOneWidget);
+        expect(finders.nextButtonWidget(tester)?.enabled, false);
+        expect(
+          finders.bloc(tester).data.mode,
+          SetConfigurationBlocMode.newConfiguration,
+        );
+
+        await fillForm(tester, finders: finders, config: configuration);
+
+        expect(finders.nextButtonWidget(tester)?.enabled, true);
+
+        await tester.tap(finders.nextButton);
+
+        await tester.pumpAndSettle();
+
+        final state = finders.bloc(tester).state;
+        expect(state is ErrorState, true);
+
+        expect(usecase.calls.first == configuration, true);
+
+        final errorDialog = find.byKey(
+          const Key(DialogHelperTestHelper.errorDialog),
+        );
+
+        expect(errorDialog, findsOneWidget);
+        expect((state as ErrorState).e is FilenemeDublicateError, true);
       },
     );
 

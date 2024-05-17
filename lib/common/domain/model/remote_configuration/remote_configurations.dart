@@ -12,22 +12,28 @@ final class RemoteConfigurations extends Equatable {
   factory RemoteConfigurations.createOrThrow({
     required List<RemoteConfiguration> configurations,
   }) {
+    _checkForMaxCount(configurations);
+    _checkForFilenemeDublicates(configurations);
+
+    return RemoteConfigurations._(configurations: configurations);
+  }
+
+  static void _checkForMaxCount(
+    List<RemoteConfiguration> configurations,
+  ) {
     if (configurations.length > maxCount) {
       throw const RemoteConfigurationsError.maxCount();
     }
+  }
 
-    if (Set.from(configurations).length != configurations.length) {
-      throw const RemoteConfigurationsError.configurationDublicate();
-    }
-
+  static void _checkForFilenemeDublicates(
+      List<RemoteConfiguration> configurations) {
     final filenamesList = configurations.map((e) => e.fileName).toList();
     final filenamesSet = filenamesList.toSet();
 
     if (filenamesList.length != filenamesSet.length) {
       throw const RemoteConfigurationsError.filenemeDublicate();
     }
-
-    return RemoteConfigurations._(configurations: configurations);
   }
 
   factory RemoteConfigurations.empty() =>
@@ -60,21 +66,10 @@ sealed class RemoteConfigurationsError extends AppError {
     super.reason,
   });
 
-  const factory RemoteConfigurationsError.configurationDublicate() =
-      DublicateError;
-
   const factory RemoteConfigurationsError.filenemeDublicate() =
       FilenemeDublicateError;
 
   const factory RemoteConfigurationsError.maxCount() = MaxCountError;
-}
-
-final class DublicateError extends RemoteConfigurationsError {
-  const DublicateError()
-      : super(
-          message: '',
-          reason: 'The same configuration already exists',
-        );
 }
 
 final class FilenemeDublicateError extends RemoteConfigurationsError {

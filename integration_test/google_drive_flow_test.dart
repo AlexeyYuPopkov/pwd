@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:ui';
 import 'package:di_storage/di_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:pwd/common/domain/base_pin.dart';
@@ -30,6 +31,7 @@ import 'pages/settings_screen/settings_robot.dart';
 import 'tools/test_tools.dart';
 
 void main() {
+  final config = GoogleDriveTestData.createTestConfiguration();
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   DartPluginRegistrant.ensureInitialized();
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,15 +41,20 @@ void main() {
   setUp(() async {
     DeveloperSettings.applay();
 
-    final config = GoogleDriveTestData.createTestConfiguration();
     const hashUsecase = HashUsecase();
     final pinSha512 = hashUsecase.pinHash512(PinScreenRobot.pinStr);
     final db = RealmLocalRepositoryImpl(realmProvider: RealmProviderImpl());
     db.deleteAll(target: config.getTarget(pin: Pin(pinSha512: pinSha512)));
+    await const FlutterSecureStorage().delete(
+      key: 'RemoteStorageConfigurationProvider.RemoteStorageConfigurationKey',
+    );
   });
 
-  tearDown(() {
+  tearDown(() async {
     pinSubscription?.cancel();
+    await const FlutterSecureStorage().delete(
+      key: 'RemoteStorageConfigurationProvider.RemoteStorageConfigurationKey',
+    );
   });
 
   testWidgets('Test Login and add note, then delete note with Google Drive',
@@ -62,14 +69,14 @@ void main() {
     await enterPinRobot.fillFormAndLogin();
 
     // Home Tabbar tap Settings
-    final homeTabbarRobot = HomeTabbarRobot(tester);
-    await homeTabbarRobot.checkInitialState();
+    final homeTabbarRobot = HomeTabbarRobot();
+    await homeTabbarRobot.checkInitialState(tester);
 
     // Configuration undefined screen: go to configurations
     final configurationUndefinedScreenRobot =
-        ConfigurationUndefinedScreenRobot(tester);
-    await configurationUndefinedScreenRobot.checkInitialState();
-    await configurationUndefinedScreenRobot.tapButton();
+        ConfigurationUndefinedScreenRobot();
+    await configurationUndefinedScreenRobot.checkInitialState(tester);
+    await configurationUndefinedScreenRobot.tapButton(tester);
 
     // Configurations Screen
     final configurationsScreenRobot = ConfigurationsScreenRobot();
@@ -117,7 +124,7 @@ void main() {
     await enterPinRobot.fillFormAndLogin();
 
     // Check home screen with git enabled
-    await homeTabbarRobot.checkGoogleDriveEnabledState();
+    await homeTabbarRobot.checkGoogleDriveEnabledState(tester, config: config);
 
     // Notes list screen
     final notesListScreenRobot = NotesListScreenRobot(tester);
@@ -150,7 +157,7 @@ void main() {
     await notesListScreenRobot.checkEmptyPageState();
 
     // Go to settings
-    await homeTabbarRobot.tapSettings();
+    await homeTabbarRobot.tapSettings(tester);
 
     // Settings tap RemoteConfiguration item
     final settingsRobot = SettingsRobot(tester);

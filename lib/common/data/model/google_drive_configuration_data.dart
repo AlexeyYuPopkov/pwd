@@ -6,17 +6,17 @@ part 'google_drive_configuration_data.g.dart';
 @immutable
 @JsonSerializable()
 final class GoogleDriveConfigurationData {
-  @JsonKey(name: 'filename', defaultValue: '')
-  final String filename;
+  @JsonKey(name: 'fileName', defaultValue: '')
+  final String fileName;
 
   const GoogleDriveConfigurationData({
-    required this.filename,
+    required this.fileName,
   });
 
   @override
   String toString() {
     return 'type: $runtimeType\n'
-        'filename: $filename';
+        'fileName: $fileName';
   }
 
   factory GoogleDriveConfigurationData.fromJson(Map<String, dynamic> json) =>

@@ -25,7 +25,7 @@ final class GitConfigurationData {
     required this.token,
     required this.repo,
     required this.owner,
-    this.branch,
+    required this.branch,
     required this.fileName,
   });
 

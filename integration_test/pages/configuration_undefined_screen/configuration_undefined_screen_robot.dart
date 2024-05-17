@@ -3,12 +3,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'configuration_undefined_screen_finders.dart';
 
 final class ConfigurationUndefinedScreenRobot {
-  ConfigurationUndefinedScreenRobot(this.tester);
-  final WidgetTester tester;
+  ConfigurationUndefinedScreenRobot();
 
   late final _finders = ConfigurationUndefinedScreenFinders();
 
-  Future<void> checkInitialState() async {
+  Future<void> checkInitialState(WidgetTester tester) async {
     await tester.pumpAndSettle();
 
     await Future.wait([
@@ -20,7 +19,7 @@ final class ConfigurationUndefinedScreenRobot {
     expect(_finders.button, findsOneWidget);
   }
 
-  Future<void> tapButton() async {
+  Future<void> tapButton(WidgetTester tester) async {
     await tester.pumpAndSettle();
     await tester.tap(_finders.button);
     await tester.pumpAndSettle();
