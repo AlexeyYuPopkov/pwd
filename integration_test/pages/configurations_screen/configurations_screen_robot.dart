@@ -47,27 +47,18 @@ final class ConfigurationsScreenRobot {
     await tester.pumpAndSettle();
   }
 
-  Future<void> gotoGoogleDriveConfiguration(WidgetTester tester) async {
+  Future<void> gotoConfiguration(
+    WidgetTester tester,
+    RemoteConfiguration config,
+  ) async {
     await tester.pumpAndSettle();
 
     expect(
-      _finders.getItemFor(ConfigurationType.googleDrive),
+      _finders.getItemFor(config),
       findsOneWidget,
     );
 
-    await tester.tap(_finders.getItemFor(ConfigurationType.googleDrive));
-    await tester.pumpAndSettle();
-  }
-
-  Future<void> gotoGitConfiguration(WidgetTester tester) async {
-    await tester.pumpAndSettle();
-
-    expect(
-      _finders.getItemFor(ConfigurationType.git),
-      findsOneWidget,
-    );
-
-    await tester.tap(_finders.getItemFor(ConfigurationType.git));
+    await tester.tap(_finders.getItemFor(config));
     await tester.pumpAndSettle();
   }
 }

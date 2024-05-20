@@ -42,7 +42,9 @@ final class UnauthDiModule extends DiScope {
 
     di.bind<RemoteConfigurationProvider>(
       module: this,
-      () => RemoteConfigurationProviderImpl(),
+      () => RemoteConfigurationProviderImpl(
+        storage: const SecureStorageBox(),
+      ),
       lifeTime: const LifeTime.single(),
     );
 

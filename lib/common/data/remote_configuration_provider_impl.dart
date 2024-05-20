@@ -4,68 +4,51 @@ import 'package:pwd/common/data/mappers/remote_configurations_mapper.dart';
 import 'package:pwd/common/data/model/remote_storage_configurations_data.dart';
 import 'package:pwd/common/domain/model/remote_configuration/remote_configurations.dart';
 import 'package:pwd/common/domain/remote_configuration_provider.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
+import 'package:rxdart/rxdart.dart';
 
 final class RemoteConfigurationProviderImpl
     implements RemoteConfigurationProvider {
-  static const String _jsonSharedPreferencesKey =
-      'RemoteStorageConfigurationProvider.RemoteStorageConfigurationKey';
+  final SecureStorageBox _storage;
 
-  final storage = const FlutterSecureStorage();
+  RemoteConfigurationProviderImpl({required SecureStorageBox storage})
+      : _storage = storage; // {}
 
-  RemoteConfigurations _currentConfiguration = RemoteConfigurations.empty();
-
-  RemoteConfigurationProviderImpl() {
-    readConfiguration().then(
-      (e) => _currentConfiguration = e,
-    );
-  }
+  late final BehaviorSubject<RemoteConfigurations> _configuration =
+      BehaviorSubject<RemoteConfigurations>.seeded(
+    RemoteConfigurations.empty(),
+    onListen: () {
+      _storage.readConfiguration().then(
+            (e) => _configuration.sink.add(e),
+          );
+    },
+  );
 
   @override
-  RemoteConfigurations get currentConfiguration => _currentConfiguration;
+  RemoteConfigurations get currentConfiguration => _configuration.value;
+
+  @override
+  Stream<RemoteConfigurations> get configuration => _configuration;
 
   @override
   Future<void> setConfigurations(
     RemoteConfigurations configurations,
   ) async {
-    // print('TODO: remove storage with secure');
-    if (configurations.isNotEmpty) {
-      final data = RemoteConfigurationsMapper.toData(configurations);
-
-      final jsonStr = jsonEncode(data.toJson());
-      // final storage = await SharedPreferences.getInstance();
-      // return storage.setString(_jsonSharedPreferencesKey, jsonStr).then(
-      //   (isSuccess) {
-      //     assert(isSuccess);
-
-      //     if (isSuccess) {
-      //       _currentConfiguration = configurations;
-      //     }
-      //   },
-      // );
-
-      return storage
-          .write(
-            key: _jsonSharedPreferencesKey,
-            value: jsonStr,
-          )
-          .then(
-            (_) => readConfiguration().then(
-              (e) => _currentConfiguration = e,
-            ),
-          );
-    } else {
-      return storage.delete(key: _jsonSharedPreferencesKey).then(
-            (_) => _currentConfiguration = RemoteConfigurations.empty(),
-          );
-    }
+    await _storage.writeConfigurations(configurations);
+    final result = await _storage.readConfiguration();
+    _configuration.sink.add(result);
   }
+}
 
-  @override
+class SecureStorageBox {
+  static const String _jsonSharedPreferencesKey =
+      'RemoteStorageConfigurationProvider.RemoteStorageConfigurationKey';
+
+  final _storage = const FlutterSecureStorage();
+
+  const SecureStorageBox();
+
   Future<RemoteConfigurations> readConfiguration() async {
-    // final storage = await SharedPreferences.getInstance();
-    // final json = storage.getString(_jsonSharedPreferencesKey);
-    final json = await storage.read(key: _jsonSharedPreferencesKey);
+    final json = await _storage.read(key: _jsonSharedPreferencesKey);
 
     if (json == null || json.isEmpty) {
       return RemoteConfigurations.empty();
@@ -74,6 +57,23 @@ final class RemoteConfigurationProviderImpl
       final data = RemoteStorageConfigurationsData.fromJson(jsonMap);
 
       return RemoteConfigurationsMapper.toDomain(data);
+    }
+  }
+
+  Future<void> writeConfigurations(
+    RemoteConfigurations configurations,
+  ) async {
+    if (configurations.isNotEmpty) {
+      final data = RemoteConfigurationsMapper.toData(configurations);
+
+      final jsonStr = jsonEncode(data.toJson());
+
+      return _storage.write(
+        key: _jsonSharedPreferencesKey,
+        value: jsonStr,
+      );
+    } else {
+      return _storage.delete(key: _jsonSharedPreferencesKey);
     }
   }
 }

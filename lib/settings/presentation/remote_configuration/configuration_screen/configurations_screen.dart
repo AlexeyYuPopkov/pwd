@@ -6,6 +6,7 @@ import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
 import 'package:pwd/common/presentation/dialogs/action_sheet.dart';
 import 'package:pwd/common/presentation/dialogs/show_error_dialog_mixin.dart';
 import 'package:di_storage/di_storage.dart';
+import 'package:pwd/settings/presentation/remote_configuration/configuration_screen/bloc/configurations_screen_event.dart';
 import 'package:pwd/theme/common_size.dart';
 
 import 'bloc/configurations_screen_bloc.dart';
@@ -39,6 +40,7 @@ final class ConfigurationsScreen extends StatelessWidget
     return BlocProvider(
       create: (context) => ConfigurationsScreenBloc(
         remoteStorageConfigurationProvider: DiStorage.shared.resolve(),
+        reorderConfigurationsUsecase: DiStorage.shared.resolve(),
       ),
       child: BlocConsumer<ConfigurationsScreenBloc, ConfigurationsScreenState>(
         listener: _listener,
@@ -68,19 +70,31 @@ final class ConfigurationsScreen extends StatelessWidget
                       ),
                       onAdd: () => _onNew(context),
                     )
-                  : SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          for (final item in state.data.items)
-                            _ConfigurationItem(
-                              item: item,
-                              onTap: () => _onOnSetupConfiguration(
-                                context,
-                                type: item.type,
-                                configuration: item,
+                  : ReorderableListView(
+                      children: [
+                        for (final item in state.data.items)
+                          ListTile(
+                            key: Key(_TestHelper.getItemKeyFor(item.id)),
+                            title: Text(item.itemTitle(context)),
+                            subtitle: Text(item.itemDescription(context)),
+                            leading: Icon(
+                              Icons.reorder,
+                              key: Key(
+                                _TestHelper.getReorderIconKeyFor(item.id),
                               ),
                             ),
-                        ],
+                            trailing: const Icon(Icons.chevron_right),
+                            onTap: () => _onOnSetupConfiguration(
+                              context,
+                              type: item.type,
+                              configuration: item,
+                            ),
+                          ),
+                      ],
+                      onReorder: (oldIndex, newIndex) => _onReorder(
+                        context,
+                        oldIndex: oldIndex,
+                        newIndex: newIndex,
                       ),
                     ),
             ),
@@ -88,6 +102,19 @@ final class ConfigurationsScreen extends StatelessWidget
         },
       ),
     );
+  }
+
+  void _onReorder(
+    BuildContext context, {
+    required int oldIndex,
+    required int newIndex,
+  }) {
+    context.read<ConfigurationsScreenBloc>().add(
+          ConfigurationsScreenEvent.shouldReorder(
+            oldIndex: oldIndex,
+            newIndex: newIndex,
+          ),
+        );
   }
 
   void _onNew(BuildContext context) {
@@ -136,29 +163,6 @@ final class ConfigurationsScreen extends StatelessWidget
         context,
         OnSetupConfigurationRoute(type: type, configuration: configuration),
       );
-}
-
-// _ConfigurationItem
-final class _ConfigurationItem extends StatelessWidget {
-  final RemoteConfiguration item;
-
-  final Function() onTap;
-
-  const _ConfigurationItem({
-    required this.item,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      key: Key(_TestHelper.getItemKeyFor(item.type)),
-      title: Text(item.itemTitle(context)),
-      subtitle: Text(item.itemDescription(context)),
-      trailing: const Icon(Icons.chevron_right),
-      onTap: onTap,
-    );
-  }
 }
 
 // _NoDataPlaceholder

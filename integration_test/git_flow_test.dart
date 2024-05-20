@@ -23,6 +23,8 @@ import 'pages/settings_screen/settings_robot.dart';
 import 'tools/test_tools.dart';
 
 void main() {
+  const secureStorageKey =
+      'RemoteStorageConfigurationProvider.RemoteStorageConfigurationKey';
   final config = GitConfigurationTestData.createTestConfiguration();
 
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -36,15 +38,11 @@ void main() {
     final pinSha512 = hashUsecase.pinHash512(PinScreenRobot.pinStr);
     final db = RealmLocalRepositoryImpl(realmProvider: RealmProviderImpl());
     db.deleteAll(target: config.getTarget(pin: Pin(pinSha512: pinSha512)));
-    await const FlutterSecureStorage().delete(
-      key: 'RemoteStorageConfigurationProvider.RemoteStorageConfigurationKey',
-    );
+    await const FlutterSecureStorage().delete(key: secureStorageKey);
   });
 
   tearDown(() async {
-    await const FlutterSecureStorage().delete(
-      key: 'RemoteStorageConfigurationProvider.RemoteStorageConfigurationKey',
-    );
+    await const FlutterSecureStorage().delete(key: secureStorageKey);
   });
 
   testWidgets('Test Login and add note, then delete note with Git',
@@ -123,7 +121,7 @@ void main() {
     // Go to configurations
     await settingsRobot.tapRemoteConfiguration();
 
-    await configurationsScreenRobot.gotoGitConfiguration(tester);
+    await configurationsScreenRobot.gotoConfiguration(tester, config);
     await gitConfigurationScreenRobot.deleteConfiguration(tester);
 
     // Check on pin page

@@ -113,7 +113,7 @@ final class GitTab extends HomeTabbarTabModel {
         Icons.home,
         key: Key(HomeTabbarScreenTestKey.notesTabIcon(configuration)),
       ),
-      label: context.gitTabName,
+      label: configuration.fileName,
     );
   }
 
@@ -125,7 +125,7 @@ final class GitTab extends HomeTabbarTabModel {
         Icons.home,
         key: Key(HomeTabbarScreenTestKey.notesTabIcon(configuration)),
       ),
-      label: Text(context.gitTabName),
+      label: Text(configuration.fileName),
     );
   }
 }
@@ -154,7 +154,7 @@ final class GoogleDriveTab extends HomeTabbarTabModel {
         key: Key(HomeTabbarScreenTestKey.notesTabIcon(configuration)),
         size: 16,
       ),
-      label: context.googleTabName,
+      label: configuration.fileName,
     );
   }
 
@@ -166,7 +166,7 @@ final class GoogleDriveTab extends HomeTabbarTabModel {
         Icons.list,
         key: Key(HomeTabbarScreenTestKey.notesTabIcon(configuration)),
       ),
-      label: Text(context.googleTabName),
+      label: Text(configuration.fileName),
     );
   }
 }
@@ -211,7 +211,5 @@ final class SettingsTab extends HomeTabbarTabModel {
 // Localization
 extension on BuildContext {
   String get configurationUndefinedTabName => 'Home';
-  String get gitTabName => 'Git';
-  String get googleTabName => 'Google';
   String get settingsTabName => 'Settings';
 }

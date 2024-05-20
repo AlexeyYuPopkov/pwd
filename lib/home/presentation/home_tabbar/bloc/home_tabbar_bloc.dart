@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
@@ -11,6 +13,8 @@ import 'home_tabbar_bloc_state.dart';
 final class HomeTabbarBloc
     extends Bloc<HomeTabbarBlocEvent, HomeTabbarBlocState> {
   final RemoteConfigurationProvider remoteConfigurationsProvider;
+  late final StreamSubscription configurationSubscription;
+
   HomeTabbarBlocData get data => state.data;
 
   HomeTabbarBloc({required this.remoteConfigurationsProvider})
@@ -19,33 +23,46 @@ final class HomeTabbarBloc
             data: HomeTabbarBlocData.initial(),
           ),
         ) {
+    _subscribeToStreams();
     _setupHandlers();
-
-    add(const HomeTabbarBlocEvent.initial());
   }
 
   void _setupHandlers() {
-    on<InitialEvent>(
-      _onInitialEvent,
+    on<DidChangeEvent>(
+      _onDidChangeEvent,
       transformer: sequential(),
     );
   }
 
-  void _onInitialEvent(
-    InitialEvent event,
+  void _subscribeToStreams() {
+    configurationSubscription =
+        remoteConfigurationsProvider.configuration.listen(
+      (e) => add(
+        HomeTabbarBlocEvent.didChange(
+          configurations: e.configurations,
+        ),
+      ),
+    );
+  }
+
+  @override
+  Future<void> close() {
+    configurationSubscription.cancel();
+    return super.close();
+  }
+
+  void _onDidChangeEvent(
+    DidChangeEvent event,
     Emitter<HomeTabbarBlocState> emit,
   ) async {
     try {
       emit(HomeTabbarBlocState.loading(data: data));
 
-      final configuration =
-          await remoteConfigurationsProvider.readConfiguration();
-
       final tabs = <HomeTabbarTabModel>[
-        if (configuration.configurations.isEmpty)
+        if (event.configurations.isEmpty)
           const ConfigurationUndefinedTab()
         else
-          ...configuration.configurations.map(
+          ...event.configurations.map(
             (e) {
               switch (e) {
                 case GitConfiguration():

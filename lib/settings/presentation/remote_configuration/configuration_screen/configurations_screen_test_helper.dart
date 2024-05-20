@@ -1,9 +1,12 @@
-import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
-
 final class ConfigurationsScreenTestHelper {
-  static String getItemKeyFor(ConfigurationType type) =>
+  static String getItemKeyFor(String id) =>
       'ConfigurationsScreen.ConfigurationItem'
-      '.${type.toString()}'
+      '.$id'
+      '.Key';
+
+  static String getReorderIconKeyFor(String id) =>
+      'ConfigurationsScreen.ReorderableListItem'
+      '.$id'
       '.Key';
 
   static const addNoteConfigurationButton = 'ConfigurationsScreen'

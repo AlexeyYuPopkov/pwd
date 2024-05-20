@@ -1,6 +1,7 @@
 import 'package:di_storage/di_storage.dart';
 import 'package:pwd/settings/domain/add_configurations_usecase.dart';
 import 'package:pwd/settings/domain/remove_configurations_usecase.dart';
+import 'package:pwd/settings/domain/reorder_configurations_usecase.dart';
 
 final class SettingsDi extends DiScope {
   @override
@@ -21,6 +22,13 @@ final class SettingsDi extends DiScope {
         localRepository: di.resolve(),
         googleRepository: di.resolve(),
         checksumChecker: di.resolve(),
+      ),
+    );
+
+    di.bind<ReorderConfigurationsUsecase>(
+      module: this,
+      () => ReorderConfigurationsUsecase(
+        remoteStorageConfigurationProvider: di.resolve(),
       ),
     );
   }

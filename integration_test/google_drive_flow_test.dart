@@ -31,6 +31,8 @@ import 'pages/settings_screen/settings_robot.dart';
 import 'tools/test_tools.dart';
 
 void main() {
+  const secureStorageKey =
+      'RemoteStorageConfigurationProvider.RemoteStorageConfigurationKey';
   final config = GoogleDriveTestData.createTestConfiguration();
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   DartPluginRegistrant.ensureInitialized();
@@ -45,16 +47,12 @@ void main() {
     final pinSha512 = hashUsecase.pinHash512(PinScreenRobot.pinStr);
     final db = RealmLocalRepositoryImpl(realmProvider: RealmProviderImpl());
     db.deleteAll(target: config.getTarget(pin: Pin(pinSha512: pinSha512)));
-    await const FlutterSecureStorage().delete(
-      key: 'RemoteStorageConfigurationProvider.RemoteStorageConfigurationKey',
-    );
+    await const FlutterSecureStorage().delete(key: secureStorageKey);
   });
 
   tearDown(() async {
     pinSubscription?.cancel();
-    await const FlutterSecureStorage().delete(
-      key: 'RemoteStorageConfigurationProvider.RemoteStorageConfigurationKey',
-    );
+    await const FlutterSecureStorage().delete(key: secureStorageKey);
   });
 
   testWidgets('Test Login and add note, then delete note with Google Drive',
@@ -165,7 +163,7 @@ void main() {
     await settingsRobot.tapRemoteConfiguration();
 
     // Configurations
-    await configurationsScreenRobot.gotoGoogleDriveConfiguration(tester);
+    await configurationsScreenRobot.gotoConfiguration(tester, config);
     await googleDriveConfigurationScreenRobot.deleteConfiguration();
 
     // Check on pin page
