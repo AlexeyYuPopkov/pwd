@@ -1,1 +1,1 @@
-- Setup ci/cd for android
+- configurations managment
