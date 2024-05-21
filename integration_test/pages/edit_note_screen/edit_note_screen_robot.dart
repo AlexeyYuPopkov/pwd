@@ -5,16 +5,13 @@ import 'package:pwd/common/presentation/dialogs/dialog_helper.dart';
 import 'edit_note_screen_finders.dart';
 
 final class EditNoteScreenRobot {
-  EditNoteScreenRobot(this.tester);
-  final WidgetTester tester;
-
   late final _finders = EditNoteScreenFinders();
 
   String get titleText => 'Title Test';
   String get descriptionText => 'Description Test';
   String get contentText => 'Content Test';
 
-  Future<void> checkInitialState() async {
+  Future<void> checkInitialState(WidgetTester tester) async {
     await tester.pumpAndSettle();
 
     await Future.wait([
@@ -43,7 +40,7 @@ final class EditNoteScreenRobot {
     // );
   }
 
-  Future<void> fillFormAndSave() async {
+  Future<void> fillFormAndSave(WidgetTester tester) async {
     await tester.tap(_finders.titleTextField);
     await tester.enterText(_finders.titleTextField, titleText);
 
@@ -56,7 +53,7 @@ final class EditNoteScreenRobot {
     await tester.tap(_finders.saveButton);
   }
 
-  Future<void> deleteNote() async {
+  Future<void> deleteNote(WidgetTester tester) async {
     await tester.pumpAndSettle();
 
     await tester.ensureVisible(_finders.deleteButton);

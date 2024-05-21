@@ -52,10 +52,10 @@ void main() {
     await tester.pumpAndSettle();
 
     // Enter pin
-    final enterPinRobot = PinScreenRobot(tester);
-    await enterPinRobot.checkInitialState();
+    final enterPinRobot = PinScreenRobot();
+    await enterPinRobot.checkInitialState(tester);
 
-    await enterPinRobot.fillFormAndLogin();
+    await enterPinRobot.fillFormAndLogin(tester);
 
     // Home Tabbar tap Settings
     final homeTabbarRobot = HomeTabbarRobot();
@@ -64,9 +64,9 @@ void main() {
     await homeTabbarRobot.tapSettings(tester);
 
     // Settings tap RemoteConfiguration item
-    final settingsRobot = SettingsRobot(tester);
-    await settingsRobot.checkInitialState();
-    await settingsRobot.tapRemoteConfiguration();
+    final settingsRobot = SettingsRobot();
+    await settingsRobot.checkInitialState(tester);
+    await settingsRobot.tapRemoteConfiguration(tester);
 
     // Configurations Screen
     final configurationsScreenRobot = ConfigurationsScreenRobot();
@@ -79,52 +79,53 @@ void main() {
     await gitConfigurationScreenRobot.fillForm(tester);
     await gitConfigurationScreenRobot.save(tester);
 
-    // // Save configurations
-    // await configurationsScreenRobot.saveConfigurations();
-
-    // Check return on Pin screen
-    await enterPinRobot.checkInitialState();
-    await enterPinRobot.fillFormAndLogin();
-
     // Check home screen with git enabled
     await homeTabbarRobot.checkGitEnabledState(tester, config: config);
+    await homeTabbarRobot.tapNotesTab(tester, config: config);
 
     // Notes list screen
-    final notesListScreenRobot = NotesListScreenRobot(tester);
-    await notesListScreenRobot.checkEmptyPageState();
-    await notesListScreenRobot.goToAddNotePage();
+    final notesListScreenRobot = NotesListScreenRobot();
+    await notesListScreenRobot.checkEmptyPageState(tester);
+    await notesListScreenRobot.goToAddNotePage(tester);
 
     // Edit note screen
-    final editNoteScreenRobot = EditNoteScreenRobot(tester);
-    await editNoteScreenRobot.checkInitialState();
-    await editNoteScreenRobot.fillFormAndSave();
+    final editNoteScreenRobot = EditNoteScreenRobot();
+    await editNoteScreenRobot.checkInitialState(tester);
+    await editNoteScreenRobot.fillFormAndSave(tester);
 
     expect(find.text(editNoteScreenRobot.titleText), findsOneWidget);
     expect(find.text(editNoteScreenRobot.descriptionText), findsOneWidget);
 
     // Go to edit note and delete note
     await notesListScreenRobot.goToEditNoteScreenWithTitle(
-      editNoteScreenRobot.titleText,
+      tester,
+      noteTitle: editNoteScreenRobot.titleText,
     );
 
     await tester.pumpAndSettle();
     expect(find.byType(HomeTabbarPage), findsOneWidget);
     expect(find.byType(EditNoteScreen), findsOneWidget);
 
-    await editNoteScreenRobot.deleteNote();
+    await editNoteScreenRobot.deleteNote(tester);
 
     // Check note deleted
-    await notesListScreenRobot.checkEmptyPageState();
+    await notesListScreenRobot.checkEmptyPageState(tester);
 
     // Go to settings
     await homeTabbarRobot.tapSettings(tester);
     // Go to configurations
-    await settingsRobot.tapRemoteConfiguration();
+    // await settingsRobot.tapRemoteConfiguration(tester);
 
     await configurationsScreenRobot.gotoConfiguration(tester, config);
     await gitConfigurationScreenRobot.deleteConfiguration(tester);
 
+    // Go to settings
+    await configurationsScreenRobot.maybePop(tester);
+    await settingsRobot.tapLogout(tester);
+
+    await enterPinRobot.checkInitialState(tester);
+
     // Check on pin page
-    await enterPinRobot.checkInitialState();
+    await enterPinRobot.checkInitialState(tester);
   });
 }

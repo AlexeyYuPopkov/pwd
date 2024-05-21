@@ -3,12 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'settings_screen_finders.dart';
 
 final class SettingsRobot {
-  SettingsRobot(this.tester);
-  final WidgetTester tester;
-
   late final _finders = SettingsScreenFinders();
 
-  Future<void> checkInitialState() async {
+  Future<void> checkInitialState(WidgetTester tester) async {
     await tester.pumpAndSettle();
 
     await Future.wait([
@@ -22,8 +19,13 @@ final class SettingsRobot {
     expect(_finders.logoutItem, findsOneWidget);
   }
 
-  Future<void> tapRemoteConfiguration() async {
+  Future<void> tapRemoteConfiguration(WidgetTester tester) async {
     await tester.pumpAndSettle();
     await tester.tap(_finders.remoteConfigurationItem);
+  }
+
+  Future<void> tapLogout(WidgetTester tester) async {
+    await tester.pumpAndSettle();
+    await tester.tap(_finders.logoutItem);
   }
 }

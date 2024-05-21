@@ -61,4 +61,10 @@ final class ConfigurationsScreenRobot {
     await tester.tap(_finders.getItemFor(config));
     await tester.pumpAndSettle();
   }
+
+  Future<void> maybePop(WidgetTester tester) async {
+    await tester.pumpAndSettle();
+    await tester.tap(_finders.backButton);
+    await tester.pumpAndSettle();
+  }
 }

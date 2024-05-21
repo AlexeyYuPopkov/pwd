@@ -61,4 +61,13 @@ final class HomeTabbarRobot {
     await tester.tap(_finders.settingsItemIcon);
     await tester.pumpAndSettle();
   }
+
+  Future<void> tapNotesTab(
+    WidgetTester tester, {
+    required GitConfiguration config,
+  }) async {
+    await tester.pumpAndSettle();
+    await tester.tap(_finders.notesTabIcon(config));
+    await tester.pumpAndSettle();
+  }
 }

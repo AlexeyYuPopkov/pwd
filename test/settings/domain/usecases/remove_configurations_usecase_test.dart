@@ -96,10 +96,6 @@ void main() {
         ),
       ).thenAnswer((_) => Future.value());
 
-      when(
-        () => pinUsecase.dropPin(),
-      ).thenAnswer((_) => Future.value());
-
       await usecase.execute(googleDriveConfiguration);
 
       verifyInOrder(
@@ -116,7 +112,6 @@ void main() {
           () => remoteStorageConfigurationProvider.setConfigurations(
                 newConfigurations,
               ),
-          () => pinUsecase.dropPin(),
         ],
       );
     });
@@ -163,10 +158,6 @@ void main() {
         ),
       ).thenAnswer((_) => Future.value());
 
-      when(
-        () => pinUsecase.dropPin(),
-      ).thenAnswer((_) => Future.value());
-
       await usecase.execute(googleDriveConfiguration);
 
       verifyInOrder(
@@ -180,7 +171,6 @@ void main() {
           () => remoteStorageConfigurationProvider.setConfigurations(
                 newConfigurations,
               ),
-          () => pinUsecase.dropPin(),
         ],
       );
     });

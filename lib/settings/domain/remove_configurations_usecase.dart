@@ -34,8 +34,6 @@ class RemoveConfigurationsUsecase {
     await _remoteStorageConfigurationProvider.setConfigurations(
       old.removeAndCopy(configuration),
     );
-
-    await _pinUsecase.dropPin();
   }
 
   Future<void> _cleanRelatedData(RemoteConfiguration configuration) async {

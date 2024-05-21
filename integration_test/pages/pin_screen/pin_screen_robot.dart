@@ -5,12 +5,11 @@ import 'pin_screen_finders.dart';
 final class PinScreenRobot {
   static const pinStr = '3333';
 
-  PinScreenRobot(this.tester);
-  final WidgetTester tester;
+  PinScreenRobot();
 
   late final _finders = PinScreenFinders();
 
-  Future<void> checkInitialState() async {
+  Future<void> checkInitialState(WidgetTester tester) async {
     await tester.pumpAndSettle();
 
     await Future.wait([
@@ -22,7 +21,7 @@ final class PinScreenRobot {
     expect(_finders.nextButton, findsOneWidget);
   }
 
-  Future<void> fillFormAndLogin() async {
+  Future<void> fillFormAndLogin(WidgetTester tester) async {
     await tester.pumpAndSettle();
 
     await tester.tap(_finders.pinField);

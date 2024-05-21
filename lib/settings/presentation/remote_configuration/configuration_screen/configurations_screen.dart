@@ -49,6 +49,7 @@ final class ConfigurationsScreen extends StatelessWidget
             appBar: AppBar(
               title: Text(context.headerText),
               leading: BackButton(
+                key: const Key(_TestHelper.backButton),
                 onPressed: () => onRoute(
                   context,
                   const MaybePopRoute(),

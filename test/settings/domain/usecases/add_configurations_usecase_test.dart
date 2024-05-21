@@ -50,10 +50,6 @@ void main() {
         ),
       ).thenAnswer((_) => Future.value());
 
-      when(
-        () => pinUsecase.dropPin(),
-      ).thenAnswer((_) => Future.value());
-
       await usecase.execute(config2);
 
       verifyInOrder([
@@ -61,7 +57,6 @@ void main() {
         () => remoteStorageConfigurationProvider.setConfigurations(
               newConfigurations,
             ),
-        () => pinUsecase.dropPin(),
       ]);
     });
 
@@ -91,10 +86,6 @@ void main() {
         () => remoteStorageConfigurationProvider.setConfigurations(
           newConfigurations,
         ),
-      ).thenAnswer((_) => Future.value());
-
-      when(
-        () => pinUsecase.dropPin(),
       ).thenThrow(Exception('reason'));
 
       final result = usecase.execute(config2);
@@ -106,7 +97,6 @@ void main() {
         () => remoteStorageConfigurationProvider.setConfigurations(
               newConfigurations,
             ),
-        // () => pinUsecase.dropPin(),
       ]);
     });
   });

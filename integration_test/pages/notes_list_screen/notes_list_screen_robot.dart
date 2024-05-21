@@ -3,12 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'notes_list_screen_finders.dart';
 
 final class NotesListScreenRobot {
-  NotesListScreenRobot(this.tester);
-  final WidgetTester tester;
-
   late final _finders = NotesListScreenFinders();
 
-  Future<void> checkEmptyPageState() async {
+  Future<void> checkEmptyPageState(WidgetTester tester) async {
     await tester.pumpAndSettle();
 
     await Future.wait([
@@ -22,13 +19,16 @@ final class NotesListScreenRobot {
     expect(_finders.noteItemRow, findsNothing);
   }
 
-  Future<void> goToAddNotePage() async {
+  Future<void> goToAddNotePage(WidgetTester tester) async {
     await tester.pumpAndSettle();
 
     await tester.tap(_finders.addNoteButton);
   }
 
-  Future<void> goToEditNoteScreenWithTitle(String noteTitle) async {
+  Future<void> goToEditNoteScreenWithTitle(
+    WidgetTester tester, {
+    required String noteTitle,
+  }) async {
     await tester.pumpAndSettle();
 
     // TODO: remove first

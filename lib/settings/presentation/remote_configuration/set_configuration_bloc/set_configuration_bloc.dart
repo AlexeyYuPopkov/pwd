@@ -61,7 +61,7 @@ final class SetConfigurationBloc
         await removeConfigurationsUsecase.execute(configuration);
 
         emit(
-          SetConfigurationBlocState.common(data: data),
+          SetConfigurationBlocState.savedState(data: data),
         );
       } else {
         return;

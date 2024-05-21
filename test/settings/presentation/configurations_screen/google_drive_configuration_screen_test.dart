@@ -82,6 +82,7 @@ void main() {
 
     expect(textFieldWidget!.controller!.text.isEmpty, true);
     expect(textFieldWidget.readOnly, false);
+    expect(textFieldWidget.enabled, true);
 
     await tester.tap(finders.filenameTextField);
     await tester.enterText(finders.filenameTextField, config.fileName);
@@ -198,7 +199,7 @@ void main() {
 
         await tester.pumpAndSettle();
 
-        expect(finders.bloc(tester).state is CommonState, true);
+        expect(finders.bloc(tester).state is SavedState, true);
         final usecase =
             removeConfigurationsUsecase as MockRemoveConfigurationsUsecase;
 

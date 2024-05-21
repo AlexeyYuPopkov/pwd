@@ -1,4 +1,5 @@
 final class ConfigurationsScreenTestHelper {
+  static const backButton = 'ConfigurationsScreen.AppBar.BackButton.Key';
   static String getItemKeyFor(String id) =>
       'ConfigurationsScreen.ConfigurationItem'
       '.$id'

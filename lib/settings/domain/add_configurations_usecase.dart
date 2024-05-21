@@ -4,14 +4,11 @@ import 'package:pwd/common/domain/usecases/pin_usecase.dart';
 
 class AddConfigurationsUsecase {
   final RemoteConfigurationProvider _remoteStorageConfigurationProvider;
-  final PinUsecase _pinUsecase;
 
   AddConfigurationsUsecase({
     required RemoteConfigurationProvider remoteStorageConfigurationProvider,
     required PinUsecase pinUsecase,
-  })  : _remoteStorageConfigurationProvider =
-            remoteStorageConfigurationProvider,
-        _pinUsecase = pinUsecase;
+  }) : _remoteStorageConfigurationProvider = remoteStorageConfigurationProvider;
 
   Future<void> execute(RemoteConfiguration configuration) async {
     final old = _remoteStorageConfigurationProvider.currentConfiguration;
@@ -19,7 +16,5 @@ class AddConfigurationsUsecase {
     await _remoteStorageConfigurationProvider.setConfigurations(
       old.addAndCopy(configuration),
     );
-
-    await _pinUsecase.dropPin();
   }
 }

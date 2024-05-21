@@ -126,6 +126,7 @@ final class _GitConfigurationFormState extends State<GitConfigurationForm>
                     CommonTextFieldRow(
                       key: const Key(_TestHelper.tokenTextField),
                       isReadOnly: isTextFieldsReadOnly,
+                      isEnabled: !isTextFieldsReadOnly,
                       hint: context.tokenTextFieldHint,
                       tooltipMessage: context.tokenTooltip,
                       controller: tokenController,
@@ -136,6 +137,7 @@ final class _GitConfigurationFormState extends State<GitConfigurationForm>
                     CommonTextFieldRow(
                       key: const Key(_TestHelper.repoTextField),
                       isReadOnly: isTextFieldsReadOnly,
+                      isEnabled: !isTextFieldsReadOnly,
                       hint: context.repoTextFieldHint,
                       tooltipMessage: context.repoTooltip,
                       controller: repoController,
@@ -146,6 +148,7 @@ final class _GitConfigurationFormState extends State<GitConfigurationForm>
                     CommonTextFieldRow(
                       key: const Key(_TestHelper.ownerTextField),
                       isReadOnly: isTextFieldsReadOnly,
+                      isEnabled: !isTextFieldsReadOnly,
                       hint: context.ownerTextFieldHint,
                       tooltipMessage: context.ownerTooltip,
                       controller: ownerController,
@@ -156,6 +159,7 @@ final class _GitConfigurationFormState extends State<GitConfigurationForm>
                     CommonTextFieldRow(
                       key: const Key(_TestHelper.branchTextField),
                       isReadOnly: isTextFieldsReadOnly,
+                      isEnabled: !isTextFieldsReadOnly,
                       hint: context.branchTextFieldHint,
                       tooltipMessage: context.branchTooltip,
                       controller: branchController,
@@ -167,6 +171,7 @@ final class _GitConfigurationFormState extends State<GitConfigurationForm>
                     CommonTextFieldRow(
                       key: const Key(_TestHelper.fileNameTextField),
                       isReadOnly: isTextFieldsReadOnly,
+                      isEnabled: !isTextFieldsReadOnly,
                       hint: context.fileNameTextFieldHint,
                       tooltipMessage: context.fileTooltip,
                       controller: fileNameController,

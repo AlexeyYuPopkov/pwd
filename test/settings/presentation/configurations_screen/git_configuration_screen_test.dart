@@ -99,6 +99,7 @@ void main() {
     for (final e in textFields) {
       expect(e!.controller!.text.isEmpty, true);
       expect(e.readOnly, false);
+      expect(e.enabled, true);
     }
 
     await tester.tap(finders.tokenTextField);
@@ -114,11 +115,11 @@ void main() {
 
     await tester.pumpAndSettle();
 
-    expect(tokenWidget!.controller!.text, configuration.token);
-    expect(repoWidget!.controller!.text, configuration.repo);
-    expect(ownerWidget!.controller!.text, configuration.owner);
-    expect(branchWidget!.controller!.text, configuration.branch);
-    expect(fileNameWidget!.controller!.text, configuration.fileName);
+    expect(tokenWidget!.controller!.text, config.token);
+    expect(repoWidget!.controller!.text, config.repo);
+    expect(ownerWidget!.controller!.text, config.owner);
+    expect(branchWidget!.controller!.text, config.branch);
+    expect(fileNameWidget!.controller!.text, config.fileName);
   }
 
   group('GitConfigurationScreen', () {
@@ -246,7 +247,7 @@ void main() {
 
         await tester.pumpAndSettle();
 
-        expect(finders.bloc(tester).state is CommonState, true);
+        expect(finders.bloc(tester).state is SavedState, true);
 
         final usecase =
             removeConfigurationsUsecase as MockRemoveConfigurationsUsecase;

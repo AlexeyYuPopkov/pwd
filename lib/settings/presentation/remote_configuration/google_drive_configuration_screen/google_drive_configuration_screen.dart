@@ -150,6 +150,7 @@ final class __FormState extends State<_Form> with DialogHelper {
                     CommonTextFieldRow(
                       key: const Key(_TestHelper.filenameTextFieldKey),
                       isReadOnly: isTextFieldReadOnly,
+                      isEnabled: !isTextFieldReadOnly,
                       hint: context.fileNameTextFieldHint,
                       tooltipMessage: context.fileNameTooltip,
                       controller: filenameController,

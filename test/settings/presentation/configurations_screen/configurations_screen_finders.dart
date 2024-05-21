@@ -12,6 +12,10 @@ typedef _TestHelper = ConfigurationsScreenTestHelper;
 final class ConfigurationsScreenFinders {
   ConfigurationsScreenFinders();
 
+  late final backButton = find.byKey(
+    const Key(_TestHelper.backButton),
+  );
+
   Finder getItemFor(RemoteConfiguration configuration) => find.byKey(
         Key(_TestHelper.getItemKeyFor(configuration.id)),
       );
