@@ -135,7 +135,7 @@ class _ClockItemOwerlayMenuState extends State<ClockItemOwerlayMenu> {
     final entry = OverlayEntry(
       builder: (context) {
         final maskColor =
-            Theme.of(context).colorScheme.background.withOpacity(0.5);
+            Theme.of(context).colorScheme.surface.withOpacity(0.5);
         return Stack(
           children: [
             Positioned.fill(
@@ -208,7 +208,7 @@ final class ClockItemOwerlayMenuContent extends StatelessWidget {
     );
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: theme.colorScheme.background,
+        color: theme.colorScheme.surface,
         borderRadius:
             const BorderRadius.all(Radius.circular(CommonSize.cornerRadius)),
       ),

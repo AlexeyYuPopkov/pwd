@@ -4,12 +4,10 @@ import 'package:pwd/notes/presentation/router/configuration_undefined_tab_router
 import 'package:pwd/notes/presentation/router/notes_router_delegate.dart';
 
 import 'package:pwd/settings/presentation/router/settings_router_delegate.dart';
+import 'package:pwd/theme/common_size.dart';
 
 import 'home_tabbar_screen_test_helper.dart';
 
-// final _noteRouterKey = GlobalKey<NavigatorState>();
-// final _gitNotesListRouterKey = GlobalKey<NavigatorState>();
-// final _googleNotesListRouterKey = GlobalKey<NavigatorState>();
 final _settingsRouterKey = GlobalKey<NavigatorState>();
 
 final _tabRouterKeys = _TabRouterKeys();
@@ -59,6 +57,7 @@ final class ConfigurationUndefinedTab extends HomeTabbarTabModel {
           key: Key(
             HomeTabbarScreenTestKey.configurationUndefinedTabIcon,
           ),
+          size: CommonSize.iconSize,
         ),
         label: context.configurationUndefinedTabName,
       );
@@ -73,6 +72,7 @@ final class ConfigurationUndefinedTab extends HomeTabbarTabModel {
           key: Key(
             HomeTabbarScreenTestKey.configurationUndefinedTabIcon,
           ),
+          size: CommonSize.iconSize,
         ),
         label: Text(
           context.configurationUndefinedTabName,
@@ -85,16 +85,6 @@ final class GitTab extends HomeTabbarTabModel {
   final RemoteConfiguration configuration;
 
   const GitTab({required this.configuration});
-
-  // @override
-  // Router buildRoute(BuildContext context) {
-  //   return Router(
-  //     routerDelegate: GitItemRouterDelegate(
-  //       navigatorKey: _noteRouterKey,
-  //       configuration: configuration,
-  //     ),
-  //   );
-  // }
 
   @override
   Router buildRoute(BuildContext context) {
@@ -112,6 +102,7 @@ final class GitTab extends HomeTabbarTabModel {
       icon: Icon(
         Icons.home,
         key: Key(HomeTabbarScreenTestKey.notesTabIcon(configuration)),
+        size: CommonSize.iconSize,
       ),
       label: configuration.fileName,
     );
@@ -124,6 +115,7 @@ final class GitTab extends HomeTabbarTabModel {
       icon: Icon(
         Icons.home,
         key: Key(HomeTabbarScreenTestKey.notesTabIcon(configuration)),
+        size: CommonSize.iconSize,
       ),
       label: Text(configuration.fileName),
     );
@@ -152,7 +144,7 @@ final class GoogleDriveTab extends HomeTabbarTabModel {
       icon: Icon(
         Icons.list,
         key: Key(HomeTabbarScreenTestKey.notesTabIcon(configuration)),
-        size: 16,
+        size: CommonSize.iconSize,
       ),
       label: configuration.fileName,
     );
@@ -165,6 +157,7 @@ final class GoogleDriveTab extends HomeTabbarTabModel {
       icon: Icon(
         Icons.list,
         key: Key(HomeTabbarScreenTestKey.notesTabIcon(configuration)),
+        size: CommonSize.iconSize,
       ),
       label: Text(configuration.fileName),
     );
@@ -189,6 +182,7 @@ final class SettingsTab extends HomeTabbarTabModel {
       icon: const Icon(
         Icons.settings,
         key: Key(HomeTabbarScreenTestKey.settingsTabIcon),
+        size: CommonSize.iconSize,
       ),
       label: context.settingsTabName,
     );
@@ -202,6 +196,7 @@ final class SettingsTab extends HomeTabbarTabModel {
       icon: const Icon(
         Icons.settings,
         key: Key(HomeTabbarScreenTestKey.settingsTabIcon),
+        size: CommonSize.iconSize,
       ),
       label: Text(context.settingsTabName),
     );
