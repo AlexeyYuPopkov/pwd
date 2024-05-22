@@ -1,6 +1,5 @@
 import 'package:realm/realm.dart';
-
-part 'note_item_realm.g.dart';
+part 'note_item_realm.realm.dart';
 
 @RealmModel()
 class _NoteItemRealm {

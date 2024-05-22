@@ -16,8 +16,8 @@ final lightThemeData = ThemeData.light().copyWith(
   ),
   outlinedButtonTheme: const OutlinedButtonThemeData(
     style: ButtonStyle(
-      minimumSize: MaterialStatePropertyAll(Size(150, 44)),
-      textStyle: MaterialStatePropertyAll(
+      minimumSize: WidgetStatePropertyAll(Size(150, 44)),
+      textStyle: WidgetStatePropertyAll(
         TextStyle(
           fontSize: TextSizes.normal,
         ),
@@ -83,11 +83,9 @@ const lightColorScheme = ColorScheme(
   errorContainer: Color(0xFFFFDAD6),
   onError: Color(0xFFFFFFFF),
   onErrorContainer: Color(0xFF410002),
-  background: Color(0xFFFFFFFF),
-  onBackground: Color(0xFF1A1C18),
-  surface: Color(0xFFFDFDF6),
+  surface: Color(0xFFFFFFFF),
   onSurface: Color(0xFF1A1C18),
-  surfaceVariant: Color(0xFFDFE4D7),
+  surfaceContainerHighest: Color(0xFFDFE4D7),
   onSurfaceVariant: Color(0xFF43483F),
   outline: Color(0xFF73796E),
   onInverseSurface: Color(0xFFF1F1EA),

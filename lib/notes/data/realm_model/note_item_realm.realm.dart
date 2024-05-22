@@ -14,16 +14,16 @@ class NoteItemRealm extends _NoteItemRealm
     String title,
     String description,
     int updated, {
-    int? deletedTimestamp,
     Iterable<NoteItemContentRealm> content = const [],
+    int? deletedTimestamp,
   }) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'title', title);
     RealmObjectBase.set(this, 'description', description);
-    RealmObjectBase.set(this, 'updated', updated);
-    RealmObjectBase.set(this, 'deletedTimestamp', deletedTimestamp);
     RealmObjectBase.set<RealmList<NoteItemContentRealm>>(
         this, 'content', RealmList<NoteItemContentRealm>(content));
+    RealmObjectBase.set(this, 'updated', updated);
+    RealmObjectBase.set(this, 'deletedTimestamp', deletedTimestamp);
   }
 
   NoteItemRealm._();
@@ -70,13 +70,51 @@ class NoteItemRealm extends _NoteItemRealm
       RealmObjectBase.getChanges<NoteItemRealm>(this);
 
   @override
+  Stream<RealmObjectChanges<NoteItemRealm>> changesFor(
+          [List<String>? keyPaths]) =>
+      RealmObjectBase.getChangesFor<NoteItemRealm>(this, keyPaths);
+
+  @override
   NoteItemRealm freeze() => RealmObjectBase.freezeObject<NoteItemRealm>(this);
 
-  static SchemaObject get schema => _schema ??= _initSchema();
-  static SchemaObject? _schema;
-  static SchemaObject _initSchema() {
+  EJsonValue toEJson() {
+    return <String, dynamic>{
+      'id': id.toEJson(),
+      'title': title.toEJson(),
+      'description': description.toEJson(),
+      'content': content.toEJson(),
+      'updated': updated.toEJson(),
+      'deletedTimestamp': deletedTimestamp.toEJson(),
+    };
+  }
+
+  static EJsonValue _toEJson(NoteItemRealm value) => value.toEJson();
+  static NoteItemRealm _fromEJson(EJsonValue ejson) {
+    return switch (ejson) {
+      {
+        'id': EJsonValue id,
+        'title': EJsonValue title,
+        'description': EJsonValue description,
+        'content': EJsonValue content,
+        'updated': EJsonValue updated,
+        'deletedTimestamp': EJsonValue deletedTimestamp,
+      } =>
+        NoteItemRealm(
+          fromEJson(id),
+          fromEJson(title),
+          fromEJson(description),
+          fromEJson(updated),
+          content: fromEJson(content),
+          deletedTimestamp: fromEJson(deletedTimestamp),
+        ),
+      _ => raiseInvalidEJson(ejson),
+    };
+  }
+
+  static final schema = () {
     RealmObjectBase.registerFactory(NoteItemRealm._);
-    return const SchemaObject(
+    register(_toEJson, _fromEJson);
+    return SchemaObject(
         ObjectType.realmObject, NoteItemRealm, 'NoteItemRealm', [
       SchemaProperty('id', RealmPropertyType.string, primaryKey: true),
       SchemaProperty('title', RealmPropertyType.string),
@@ -87,7 +125,10 @@ class NoteItemRealm extends _NoteItemRealm
       SchemaProperty('updated', RealmPropertyType.int),
       SchemaProperty('deletedTimestamp', RealmPropertyType.int, optional: true),
     ]);
-  }
+  }();
+
+  @override
+  SchemaObject get objectSchema => RealmObjectBase.getSchema(this) ?? schema;
 }
 
 class NoteItemContentRealm extends _NoteItemContentRealm
@@ -110,16 +151,42 @@ class NoteItemContentRealm extends _NoteItemContentRealm
       RealmObjectBase.getChanges<NoteItemContentRealm>(this);
 
   @override
+  Stream<RealmObjectChanges<NoteItemContentRealm>> changesFor(
+          [List<String>? keyPaths]) =>
+      RealmObjectBase.getChangesFor<NoteItemContentRealm>(this, keyPaths);
+
+  @override
   NoteItemContentRealm freeze() =>
       RealmObjectBase.freezeObject<NoteItemContentRealm>(this);
 
-  static SchemaObject get schema => _schema ??= _initSchema();
-  static SchemaObject? _schema;
-  static SchemaObject _initSchema() {
+  EJsonValue toEJson() {
+    return <String, dynamic>{
+      'text': text.toEJson(),
+    };
+  }
+
+  static EJsonValue _toEJson(NoteItemContentRealm value) => value.toEJson();
+  static NoteItemContentRealm _fromEJson(EJsonValue ejson) {
+    return switch (ejson) {
+      {
+        'text': EJsonValue text,
+      } =>
+        NoteItemContentRealm(
+          fromEJson(text),
+        ),
+      _ => raiseInvalidEJson(ejson),
+    };
+  }
+
+  static final schema = () {
     RealmObjectBase.registerFactory(NoteItemContentRealm._);
-    return const SchemaObject(ObjectType.embeddedObject, NoteItemContentRealm,
+    register(_toEJson, _fromEJson);
+    return SchemaObject(ObjectType.embeddedObject, NoteItemContentRealm,
         'NoteItemContentRealm', [
       SchemaProperty('text', RealmPropertyType.string),
     ]);
-  }
+  }();
+
+  @override
+  SchemaObject get objectSchema => RealmObjectBase.getSchema(this) ?? schema;
 }

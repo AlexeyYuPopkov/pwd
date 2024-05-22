@@ -18,19 +18,19 @@ class CommonTheme extends ThemeExtension<CommonTheme> {
     return CommonTheme(
       primaryTextColor: primaryTextColor,
       iconButtonStyle: ButtonStyle(
-        elevation: MaterialStateProperty.all(0.0),
-        backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
-        iconColor: MaterialStateProperty.resolveWith<Color>(
-          (Set<MaterialState> states) {
-            if (states.contains(MaterialState.disabled)) {
+        elevation: WidgetStateProperty.all(0.0),
+        backgroundColor: WidgetStateProperty.all<Color>(Colors.transparent),
+        iconColor: WidgetStateProperty.resolveWith<Color>(
+          (states) {
+            if (states.contains(WidgetState.disabled)) {
               return primaryTextColor.withOpacity(0.5);
-            } else if (states.contains(MaterialState.pressed)) {
+            } else if (states.contains(WidgetState.pressed)) {
               return primaryTextColor.withOpacity(0.5);
             }
             return primaryTextColor;
           },
         ),
-        overlayColor: MaterialStateProperty.all<Color>(Colors.transparent),
+        overlayColor: WidgetStateProperty.all<Color>(Colors.transparent),
       ),
     );
   }

@@ -31,7 +31,7 @@ final class _AddClockDialogState extends State<AddClockDialog> {
     final theme = Theme.of(context);
     return Center(
       child: Container(
-        color: theme.colorScheme.background,
+        color: theme.colorScheme.surface,
         margin: const EdgeInsets.symmetric(horizontal: CommonSize.indent2x),
         padding: const EdgeInsets.symmetric(horizontal: CommonSize.indent),
         child: Form(

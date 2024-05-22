@@ -1,2 +1,2 @@
-- configurations managment: not nessesary logout removed
-- configurations managment: small ui improvements
+- update flutter 
+- update realm
