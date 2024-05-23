@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
@@ -14,6 +16,7 @@ import 'bloc/configurations_screen_state.dart';
 import 'configurations_screen_test_helper.dart';
 
 part 'configurations_screen_routing.dart';
+part 'widgets/configurations_screen_reorder_icon_part.dart';
 
 typedef _TestHelper = ConfigurationsScreenTestHelper;
 
@@ -78,12 +81,7 @@ final class ConfigurationsScreen extends StatelessWidget
                             key: Key(_TestHelper.getItemKeyFor(item.id)),
                             title: Text(item.itemTitle(context)),
                             subtitle: Text(item.itemDescription(context)),
-                            leading: Icon(
-                              Icons.reorder,
-                              key: Key(
-                                _TestHelper.getReorderIconKeyFor(item.id),
-                              ),
-                            ),
+                            leading: _ReorderIcon(item: item),
                             trailing: const Icon(Icons.chevron_right),
                             onTap: () => _onOnSetupConfiguration(
                               context,
@@ -167,7 +165,7 @@ final class ConfigurationsScreen extends StatelessWidget
 }
 
 // _NoDataPlaceholder
-class _NoDataPlaceholder extends StatelessWidget {
+final class _NoDataPlaceholder extends StatelessWidget {
   final VoidCallback onAdd;
   const _NoDataPlaceholder({super.key, required this.onAdd});
 

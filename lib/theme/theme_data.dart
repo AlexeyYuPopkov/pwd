@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pwd/theme/common_theme.dart';
+import 'package:pwd/theme/custom_page_transistions_theme.dart';
 import 'package:pwd/theme/shimmer_theme.dart';
 import 'package:pwd/theme/text_sizes.dart';
 
@@ -62,6 +63,7 @@ final lightThemeData = ThemeData.light().copyWith(
   extensions: [
     CommonTheme.lightTheme(),
     ShimmerTheme.lightTheme(),
+    CustomPageTransistionsTheme.create(),
   ],
 );
 

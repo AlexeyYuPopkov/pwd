@@ -112,7 +112,7 @@ final class NoteLine extends StatelessWidget with DialogHelper {
       child: Row(
         children: [
           Expanded(
-            child: Text(
+            child: SelectableText(
               text,
               style: style,
               textAlign: TextAlign.left,
