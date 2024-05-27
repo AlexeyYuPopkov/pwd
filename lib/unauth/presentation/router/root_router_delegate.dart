@@ -4,14 +4,9 @@ import 'package:pwd/common/domain/base_pin.dart';
 import 'package:pwd/common/domain/usecases/pin_usecase.dart';
 import 'package:pwd/common/presentation/di/app_di_modules.dart';
 import 'package:pwd/home/presentation/home_tabbar/home_tabbar_page.dart';
+import 'package:pwd/theme/custom_page_transistions_theme.dart';
 import 'package:pwd/unauth/presentation/pin_page/pin_screen.dart';
-
-final class RootRouterDelegatePath {
-  static const root = '/';
-  static const home = 'home';
-  static const pin = 'pin';
-  static const configuration = 'configuration';
-}
+import 'package:pwd/unauth/presentation/router/custom_page_route.dart';
 
 final class RootRouterDelegate extends RouterDelegate
     with ChangeNotifier, PopNavigatorRouterDelegateMixin {
@@ -35,19 +30,23 @@ final class RootRouterDelegate extends RouterDelegate
     super.dispose();
   }
 
+  var current = const MaterialPage(child: SizedBox());
+
   @override
   Widget build(BuildContext context) {
-    // debugger();
     return Navigator(
       key: navigatorKey,
-      pages: initialPages,
+      onGenerateRoute: (_) => MaterialPageRoute(
+        builder: (context) => ColoredBox(
+          color: Theme.of(context).colorScheme.surface,
+        ),
+      ),
       onPopPage: (route, result) {
-        // updateState();
         if (!route.didPop(result)) {
           return false;
         }
 
-        if (context.navigator.canPop()) {
+        if (Navigator.of(context).canPop()) {
           return true;
         }
 
@@ -56,95 +55,53 @@ final class RootRouterDelegate extends RouterDelegate
     );
   }
 
-  List<Page> get initialPages {
-    final pages = _createPages(
-      pinUsecase.getPin(),
-    );
-
-    return pages.isEmpty ? const [MaterialPage(child: SizedBox())] : pages;
-  }
-
   Future onRoute(BuildContext context, Object action) async {}
 
   @override
   Future<void> setNewRoutePath(configuration) async {}
-
-  void updateState() {
-    notifyListeners();
-  }
 }
 
 extension on RootRouterDelegate {
-  List<Page> _createPages(BasePin pin) {
+  void _installDI(BasePin pin) {
     switch (pin) {
       case Pin():
-        return [
-          const MaterialPage(
-            child: HomeTabbarPage(),
-            name: RootRouterDelegatePath.home,
-          ),
-        ];
+        AppDiModules.bindAuthModules();
       case EmptyPin():
-        return [
-          const MaterialPage(
-            child: PinScreen(),
-            name: RootRouterDelegatePath.pin,
-          ),
-        ];
+        AppDiModules.dropAuthModules();
     }
-    // switch (userSession) {
-    //   case UnconfiguredSession():
-    //     return [
-    //       MaterialPage(
-    //         child: Router(
-    //           routerDelegate: ConfigurationRouterDelegate(),
-    //         ),
-    //       ),
-    //     ];
-    //   case UnauthorizedSession():
-    //     return [
-    //       MaterialPage(
-    //         child: PinPage(onRoute: onRoute),
-    //         name: RootRouterDelegatePath.pin,
-    //       ),
-    //     ];
-    //   case ValidSession():
-    //     return [
-    //       const MaterialPage(
-    //         child: HomeTabbarPage(),
-    //         name: RootRouterDelegatePath.home,
-    //       ),
-    //     ];
-    // }
+  }
+
+  void _performNavigation(BasePin pin) {
+    final context = navigatorKey.currentContext;
+    if (context != null) {
+      final transitionTheme = CustomPageTransistionsTheme.of(context);
+      Navigator.of(context).pushReplacement(
+        CustomPageRoute(
+          builder: (_) => _getScreen(pin),
+          theme: transitionTheme.fade,
+          transitionDuration: transitionTheme.fadeDuration,
+        ),
+      );
+    }
+  }
+
+  Widget _getScreen(BasePin pin) {
+    switch (pin) {
+      case Pin():
+        return const HomeTabbarPage();
+      case EmptyPin():
+        return const PinScreen();
+    }
   }
 
   StreamSubscription _createSubscriptions() {
     return pinUsecase.pinStream.distinct().asyncMap(
       (e) {
-        switch (e) {
-          case Pin():
-            AppDiModules.bindAuthModules();
-          case EmptyPin():
-            AppDiModules.dropAuthModules();
-        }
-        // switch (userSession) {
-        //   case UnconfiguredSession():
-        //   case UnauthorizedSession():
-        //     AppDiModules.dropAuthModules();
-        //   case ValidSession():
-        //     AppDiModules.bindAuthModules();
-        // }
-
+        _installDI(e);
         return e;
       },
     ).listen(
-      (e) {
-        updateState();
-      },
+      (e) => _performNavigation(e),
     );
   }
-}
-
-extension on BuildContext {
-  NavigatorState get navigator => Navigator.of(this);
 }
