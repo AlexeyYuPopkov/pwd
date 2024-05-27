@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 @immutable
 class CommonTheme extends ThemeExtension<CommonTheme> {
   final Color? primaryTextColor;
+  final Color? highlightColor;
   final ButtonStyle? iconButtonStyle;
 
   const CommonTheme({
     this.primaryTextColor,
+    this.highlightColor,
     this.iconButtonStyle,
   });
 
@@ -17,6 +19,7 @@ class CommonTheme extends ThemeExtension<CommonTheme> {
     const primaryTextColor = Colors.black87;
     return CommonTheme(
       primaryTextColor: primaryTextColor,
+      highlightColor: const Color(0xeeD8E7CC),
       iconButtonStyle: ButtonStyle(
         elevation: WidgetStateProperty.all(0.0),
         backgroundColor: WidgetStateProperty.all<Color>(Colors.transparent),

@@ -53,6 +53,9 @@ final lightThemeData = ThemeData.light().copyWith(
       color: _textColor,
     ),
   ),
+  listTileTheme: const ListTileThemeData(
+    selectedTileColor: Color(0xFFD8E7CC),
+  ),
   dialogTheme: const DialogTheme(
     titleTextStyle: TextStyle(
       fontSize: TextSizes.titleMedium,

@@ -35,12 +35,10 @@ final class PinUsecaseImpl implements PinUsecase {
               )
               .distinct((_, __) => repository.getPin() is EmptyPin),
         ],
-      )
-          .distinct()
-          .doOnData(
+      ).distinct().doOnData(
             (e) => repository.setPin(e),
-          )
-          .asBroadcastStream();
+          );
+  // .asBroadcastStream();
 
   @override
   Future<void> dropPin() async {

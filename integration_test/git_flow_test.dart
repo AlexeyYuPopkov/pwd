@@ -6,7 +6,7 @@ import 'package:integration_test/integration_test.dart';
 import 'package:pwd/common/domain/base_pin.dart';
 import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
 import 'package:pwd/common/domain/usecases/hash_usecase.dart';
-import 'package:pwd/home/presentation/home_tabbar/home_tabbar_page.dart';
+import 'package:pwd/home/presentation/home_tabbar/home_tabbar_screen.dart';
 import 'package:pwd/main.dart' as app;
 import 'package:pwd/notes/data/datasource/realm_datasource/realm_local_repository_impl.dart';
 import 'package:pwd/notes/data/datasource/realm_datasource/realm_provider_impl.dart';
@@ -103,7 +103,7 @@ void main() {
     );
 
     await tester.pumpAndSettle();
-    expect(find.byType(HomeTabbarPage), findsOneWidget);
+    expect(find.byType(HomeTabbarScreen), findsOneWidget);
     expect(find.byType(EditNoteScreen), findsOneWidget);
 
     await editNoteScreenRobot.deleteNote(tester);

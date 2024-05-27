@@ -42,7 +42,7 @@ class CommonHighlightedRow extends StatelessWidget {
 ///   @override
 ///   Widget build(BuildContext context) {
 ///     return CommonHighlightedBackgroundRow(
-///       handler: () {},
+///       onTap: () {},
 ///       child: Row(
 ///         children: [
 ///           const IgnorePointer(child: Expanded(child: Text('test text'))),

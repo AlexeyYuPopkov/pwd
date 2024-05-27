@@ -8,29 +8,32 @@ import 'package:pwd/theme/common_size.dart';
 import 'bloc/home_tabbar_bloc.dart';
 import 'bloc/home_tabbar_bloc_state.dart';
 
-final class HomeTabbarPage extends StatelessWidget {
-  const HomeTabbarPage({super.key});
+final class HomeTabbarScreen extends StatelessWidget {
+  const HomeTabbarScreen({super.key});
 
   void _listener(BuildContext context, HomeTabbarBlocState state) {}
   @override
   Widget build(BuildContext context) {
     return BlockingLoadingIndicator(
       child: BlocProvider(
+        key: const Key('HomeTabbarBloc'),
         create: (_) => HomeTabbarBloc(
           remoteConfigurationsProvider: DiStorage.shared.resolve(),
         ),
         child: BlocConsumer<HomeTabbarBloc, HomeTabbarBlocState>(
           listener: _listener,
           builder: (context, state) {
-            return LayoutBuilder(builder: (context, constraints) {
-              if (constraints.maxWidth > constraints.maxHeight) {
-                return HomeTabbarPageDesktopContent(tabs: state.data.tabs);
-              } else {
-                return HomeTabbarPageMobileContent(
-                  tabs: state.data.tabs,
-                );
-              }
-            });
+            return LayoutBuilder(
+              builder: (context, constraints) {
+                if (constraints.maxWidth > constraints.maxHeight) {
+                  return HomeTabbarPageDesktopContent(tabs: state.data.tabs);
+                } else {
+                  return HomeTabbarPageMobileContent(
+                    tabs: state.data.tabs,
+                  );
+                }
+              },
+            );
           },
         ),
       ),

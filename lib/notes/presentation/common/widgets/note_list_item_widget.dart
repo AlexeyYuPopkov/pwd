@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pwd/common/presentation/common_highlighted_row.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
 import 'package:pwd/theme/common_size.dart';
+import 'package:pwd/theme/common_theme.dart';
 
 final class NoteListItemWidget extends StatelessWidget {
   final NoteItem note;
@@ -27,9 +28,9 @@ final class NoteListItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
+    final commonTheme = CommonTheme.of(context);
     return CommonHighlightedBackgroundRow(
-      highlightedColor: Colors.grey.shade200,
+      highlightedColor: commonTheme.highlightColor,
       onTap: () => onDetailsButton(
         context,
         note: note,

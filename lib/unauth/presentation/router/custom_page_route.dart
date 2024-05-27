@@ -1,9 +1,38 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+final class CustomPage extends Page implements Equatable {
+  final PageTransitionsTheme? theme;
+  final WidgetBuilder builder;
+
+  const CustomPage({
+    super.key,
+    super.name,
+    super.arguments,
+    super.restorationId,
+    required this.theme,
+    required this.builder,
+  });
+
+  @override
+  Route createRoute(BuildContext context) {
+    return CustomPageRoute(
+      theme: theme,
+      builder: builder,
+      settings: this,
+    );
+  }
+
+  @override
+  List<Object?> get props => [key, name, arguments];
+
+  @override
+  bool? get stringify => null;
+}
+
 final class CustomPageRoute<T> extends PageRoute<T>
     with CustomRouteTransitionMixin<T> {
-  /// Construct a MaterialPageRoute whose contents are defined by [builder].
   CustomPageRoute({
     required this.builder,
     required this.theme,

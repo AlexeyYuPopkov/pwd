@@ -20,16 +20,14 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 final class MyApp extends StatelessWidget {
-  MyApp({super.key});
-
+  const MyApp({super.key});
+  static final _rootNavigatorKey = GlobalKey<NavigatorState>();
   // UserSessionProviderUsecase get userSessionProviderUsecase =>
   //     DiStorage.shared.resolve();
-
-  final rootNavigatorKey = GlobalKey<NavigatorState>();
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +43,7 @@ final class MyApp extends StatelessWidget {
       home: BlockingLoadingIndicator(
         child: Router(
           routerDelegate: RootRouterDelegate(
-            navigatorKey: rootNavigatorKey,
+            navigatorKey: _rootNavigatorKey,
             pinUsecase: DiStorage.shared.resolve(),
           ),
         ),

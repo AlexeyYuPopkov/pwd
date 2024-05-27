@@ -1,22 +1,19 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:di_storage/di_storage.dart';
 import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
 import 'package:pwd/common/presentation/app_bar_button.dart';
 import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
 import 'package:pwd/common/presentation/dialogs/action_sheet.dart';
 import 'package:pwd/common/presentation/dialogs/show_error_dialog_mixin.dart';
-import 'package:di_storage/di_storage.dart';
 import 'package:pwd/settings/presentation/remote_configuration/configuration_screen/bloc/configurations_screen_event.dart';
+import 'package:pwd/settings/presentation/remote_configuration/configuration_screen/widgets/configuration_screen_config_item.dart';
 import 'package:pwd/theme/common_size.dart';
-
 import 'bloc/configurations_screen_bloc.dart';
 import 'bloc/configurations_screen_state.dart';
 import 'configurations_screen_test_helper.dart';
 
 part 'configurations_screen_routing.dart';
-part 'widgets/configurations_screen_reorder_icon_part.dart';
 
 typedef _TestHelper = ConfigurationsScreenTestHelper;
 
@@ -77,13 +74,14 @@ final class ConfigurationsScreen extends StatelessWidget
                   : ReorderableListView(
                       children: [
                         for (final item in state.data.items)
-                          ListTile(
-                            key: Key(_TestHelper.getItemKeyFor(item.id)),
-                            title: Text(item.itemTitle(context)),
-                            subtitle: Text(item.itemDescription(context)),
-                            leading: _ReorderIcon(item: item),
-                            trailing: const Icon(Icons.chevron_right),
-                            onTap: () => _onOnSetupConfiguration(
+                          ConfigurationScreenConfigItem(
+                            key: Key(
+                              ConfigurationsScreenTestHelper.getItemKeyFor(
+                                item.id,
+                              ),
+                            ),
+                            item: item,
+                            onTap: (item) => _onOnSetupConfiguration(
                               context,
                               type: item.type,
                               configuration: item,
@@ -211,19 +209,6 @@ extension on ConfigurationType {
         return 'Git';
       case ConfigurationType.googleDrive:
         return 'Google Drive';
-    }
-  }
-}
-
-extension on RemoteConfiguration {
-  String itemTitle(BuildContext context) => fileName;
-
-  String itemDescription(BuildContext context) {
-    switch (type) {
-      case ConfigurationType.git:
-        return 'Synchronization with Git API';
-      case ConfigurationType.googleDrive:
-        return 'Synchronization with Google Drive API';
     }
   }
 }
