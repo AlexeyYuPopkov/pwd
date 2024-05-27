@@ -1,8 +1,8 @@
 import 'dart:async';
-
-import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'package:pwd/common/tools/list_helper.dart';
+import 'package:rxdart/rxdart.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
 import 'package:pwd/common/domain/remote_configuration_provider.dart';
 import 'package:pwd/home/presentation/home_tabbar/home_tabbar_tab_model.dart';
 
@@ -11,7 +11,7 @@ import 'home_tabbar_bloc_event.dart';
 import 'home_tabbar_bloc_state.dart';
 
 final class HomeTabbarBloc
-    extends Bloc<HomeTabbarBlocEvent, HomeTabbarBlocState> {
+    extends Bloc<HomeTabbarBlocEvent, HomeTabbarBlocState> with ListHelper {
   final RemoteConfigurationProvider remoteConfigurationsProvider;
   late final StreamSubscription configurationSubscription;
 
@@ -30,19 +30,21 @@ final class HomeTabbarBloc
   void _setupHandlers() {
     on<DidChangeEvent>(
       _onDidChangeEvent,
-      transformer: sequential(),
+      // transformer: sequential(),
     );
   }
 
   void _subscribeToStreams() {
-    configurationSubscription =
-        remoteConfigurationsProvider.configuration.listen(
-      (e) => add(
-        HomeTabbarBlocEvent.didChange(
-          configurations: e.configurations,
-        ),
-      ),
-    );
+    configurationSubscription = remoteConfigurationsProvider.configuration
+        .debounceTime(Durations.short1)
+        .distinct()
+        .listen(
+          (e) => add(
+            HomeTabbarBlocEvent.didChange(
+              configurations: e.configurations,
+            ),
+          ),
+        );
   }
 
   @override
@@ -56,21 +58,12 @@ final class HomeTabbarBloc
     Emitter<HomeTabbarBlocState> emit,
   ) async {
     try {
-      emit(HomeTabbarBlocState.loading(data: data));
-
       final tabs = <HomeTabbarTabModel>[
         if (event.configurations.isEmpty)
           const ConfigurationUndefinedTab()
         else
           ...event.configurations.map(
-            (e) {
-              switch (e) {
-                case GitConfiguration():
-                  return GitTab(configuration: e);
-                case GoogleDriveConfiguration():
-                  return GoogleDriveTab(configuration: e);
-              }
-            },
+            (e) => NotesTab(configuration: e),
           ),
         const SettingsTab(),
       ];

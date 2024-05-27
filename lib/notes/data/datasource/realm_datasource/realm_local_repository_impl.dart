@@ -226,11 +226,6 @@ extension _Migration on RealmLocalRepositoryImpl {
         (tempItem) {
           final localItem = realm.find<NoteItemRealm>(tempItem.id);
 
-          // debugger();
-          // print(
-          //   "local timestamp: ${localItem?.timestamp ?? -1}, remote timestamp: ${p.timestamp},",
-          // );
-
           if (localItem != null && localItem.updated >= tempItem.updated) {
             return localItem;
           } else {

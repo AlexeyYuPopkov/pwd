@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
-import 'package:pwd/common/presentation/router/base_router_delegate.dart';
 import 'package:pwd/home/presentation/configuration_undefined_screen/configuration_undefined_screen.dart';
 import 'package:pwd/settings/presentation/remote_configuration/configuration_screen/configurations_screen.dart';
 import 'package:pwd/settings/presentation/remote_configuration/git_configuration_screen/git_configuration_screen.dart';
@@ -11,11 +10,14 @@ abstract final class ConfigurationUndefinedTabPagePath {
   static const configurations = 'home/configurations';
 }
 
-final _navigatorKey = GlobalKey<NavigatorState>();
+final _navigatorKey = GlobalKey<NavigatorState>(
+  debugLabel: 'ConfigurationUndefinedTabRouterDelegate',
+);
 
-final class ConfigurationUndefinedTabRouterDelegate extends BaseRouterDelegate {
+final class ConfigurationUndefinedTabRouterDelegate extends RouterDelegate
+    with ChangeNotifier, PopNavigatorRouterDelegateMixin {
   @override
-  final GlobalKey<NavigatorState> navigatorKey = _navigatorKey;
+  GlobalKey<NavigatorState> get navigatorKey => _navigatorKey;
 
   ConfigurationUndefinedTabRouterDelegate();
 
@@ -23,9 +25,10 @@ final class ConfigurationUndefinedTabRouterDelegate extends BaseRouterDelegate {
   Widget build(BuildContext context) {
     return Navigator(
       key: navigatorKey,
-      pages: initialPages,
+      onGenerateRoute: (_) => MaterialPageRoute(
+        builder: (context) => ConfigurationUndefinedScreen(onRoute: onRoute),
+      ),
       onPopPage: (route, result) {
-        updateState();
         if (!route.didPop(result)) {
           return false;
         }
@@ -39,15 +42,6 @@ final class ConfigurationUndefinedTabRouterDelegate extends BaseRouterDelegate {
     );
   }
 
-  @override
-  late List<Page> initialPages = [
-    MaterialPage(
-      child: ConfigurationUndefinedScreen(onRoute: onRoute),
-      name: ConfigurationUndefinedTabPagePath.home,
-    ),
-  ];
-
-  @override
   Future onRoute(BuildContext context, Object action) async {
     if (action is ConfigurationUndefinedScreensRoute) {
       switch (action) {
@@ -94,6 +88,9 @@ final class ConfigurationUndefinedTabRouterDelegate extends BaseRouterDelegate {
       }
     }
   }
+
+  @override
+  Future<void> setNewRoutePath(configuration) async {}
 }
 
 extension on BuildContext {

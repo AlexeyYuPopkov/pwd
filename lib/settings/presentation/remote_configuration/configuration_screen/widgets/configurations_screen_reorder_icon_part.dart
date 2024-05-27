@@ -1,15 +1,22 @@
-part of '../configurations_screen.dart';
+import 'dart:math' show pi, sin, cos;
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
+import 'package:pwd/settings/presentation/remote_configuration/configuration_screen/configurations_screen_test_helper.dart';
+import 'package:pwd/theme/common_size.dart';
 
-final class _ReorderIcon extends StatefulWidget {
+final class ConfigurationsScreenReorderIcon extends StatefulWidget {
   final RemoteConfiguration item;
 
-  const _ReorderIcon({required this.item});
+  const ConfigurationsScreenReorderIcon({super.key, required this.item});
 
   @override
-  State<_ReorderIcon> createState() => _ReorderIconState();
+  State<ConfigurationsScreenReorderIcon> createState() =>
+      _ConfigurationsScreenReorderIconState();
 }
 
-final class _ReorderIconState extends State<_ReorderIcon>
+final class _ConfigurationsScreenReorderIconState
+    extends State<ConfigurationsScreenReorderIcon>
     with SingleTickerProviderStateMixin {
   static const duration = Durations.medium2;
   late final _tween = Tween<double>(begin: 0.0, end: pi);
@@ -17,14 +24,10 @@ final class _ReorderIconState extends State<_ReorderIcon>
   late final _animation = _controller.drive(_tween);
 
   @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) => GestureDetector(
-        onTap: () {
+  Widget build(BuildContext context) => CupertinoButton(
+        padding: EdgeInsets.zero,
+        minSize: CommonSize.zero,
+        onPressed: () {
           _controller.reset();
           _controller.animateTo(_tween.end as double);
         },
@@ -33,7 +36,9 @@ final class _ReorderIconState extends State<_ReorderIcon>
           child: Icon(
             Icons.reorder,
             key: Key(
-              _TestHelper.getReorderIconKeyFor(widget.item.id),
+              ConfigurationsScreenTestHelper.getReorderIconKeyFor(
+                widget.item.id,
+              ),
             ),
           ),
         ),

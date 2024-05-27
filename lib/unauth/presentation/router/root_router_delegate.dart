@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pwd/common/domain/base_pin.dart';
 import 'package:pwd/common/domain/usecases/pin_usecase.dart';
 import 'package:pwd/common/presentation/di/app_di_modules.dart';
-import 'package:pwd/home/presentation/home_tabbar/home_tabbar_page.dart';
+import 'package:pwd/home/presentation/home_tabbar/home_tabbar_screen.dart';
 import 'package:pwd/theme/custom_page_transistions_theme.dart';
 import 'package:pwd/unauth/presentation/pin_page/pin_screen.dart';
 import 'package:pwd/unauth/presentation/router/custom_page_route.dart';
@@ -17,10 +17,21 @@ final class RootRouterDelegate extends RouterDelegate
 
   late final unauthRouterDelegateNavigatorKey = GlobalKey<NavigatorState>();
 
+  late BasePin _pin;
+
+  void setPin(BasePin pin) {
+    if (_pin != pin) {
+      _pin = pin;
+      _installDI(_pin);
+      notifyListeners();
+    }
+  }
+
   RootRouterDelegate({
     GlobalKey<NavigatorState>? navigatorKey,
     required this.pinUsecase,
   }) : navigatorKey = navigatorKey ?? GlobalKey<NavigatorState>() {
+    _pin = pinUsecase.getPin();
     pinSubscription = _createSubscriptions();
   }
 
@@ -30,17 +41,25 @@ final class RootRouterDelegate extends RouterDelegate
     super.dispose();
   }
 
-  var current = const MaterialPage(child: SizedBox());
-
   @override
   Widget build(BuildContext context) {
+    final transitionTheme = CustomPageTransistionsTheme.of(context).fade;
     return Navigator(
       key: navigatorKey,
-      onGenerateRoute: (_) => MaterialPageRoute(
-        builder: (context) => ColoredBox(
-          color: Theme.of(context).colorScheme.surface,
-        ),
-      ),
+      pages: [
+        if (_pin is Pin)
+          CustomPage(
+            key: const ValueKey('HomeTabbarPage'),
+            theme: transitionTheme,
+            builder: (_) => const HomeTabbarScreen(),
+          )
+        else
+          CustomPage(
+            key: const ValueKey('PinScreen'),
+            theme: transitionTheme,
+            builder: (_) => const PinScreen(),
+          )
+      ],
       onPopPage: (route, result) {
         if (!route.didPop(result)) {
           return false;
@@ -71,37 +90,8 @@ extension on RootRouterDelegate {
     }
   }
 
-  void _performNavigation(BasePin pin) {
-    final context = navigatorKey.currentContext;
-    if (context != null) {
-      final transitionTheme = CustomPageTransistionsTheme.of(context);
-      Navigator.of(context).pushReplacement(
-        CustomPageRoute(
-          builder: (_) => _getScreen(pin),
-          theme: transitionTheme.fade,
-          transitionDuration: transitionTheme.fadeDuration,
-        ),
-      );
-    }
-  }
-
-  Widget _getScreen(BasePin pin) {
-    switch (pin) {
-      case Pin():
-        return const HomeTabbarPage();
-      case EmptyPin():
-        return const PinScreen();
-    }
-  }
-
-  StreamSubscription _createSubscriptions() {
-    return pinUsecase.pinStream.distinct().asyncMap(
-      (e) {
-        _installDI(e);
-        return e;
-      },
-    ).listen(
-      (e) => _performNavigation(e),
-    );
-  }
+  StreamSubscription _createSubscriptions() =>
+      pinUsecase.pinStream.distinct().listen(
+            (e) => setPin(e),
+          );
 }
