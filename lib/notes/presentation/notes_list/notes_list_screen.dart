@@ -112,7 +112,7 @@ final class NotesListScreen extends StatelessWidget with ShowErrorDialogMixin {
   }) {
     onRoute(
       context,
-      NotePageRoute.onEdit(noteItem: note),
+      NotePageRoute.onEdit(config: configuration, noteItem: note),
     ).then(
       (result) {
         if (result is NotePageShouldSync) {
@@ -130,7 +130,7 @@ final class NotesListScreen extends StatelessWidget with ShowErrorDialogMixin {
   }) =>
       onRoute(
         context,
-        NotePageRoute.onDetails(noteItem: note),
+        NotePageRoute.onDetails(config: configuration, noteItem: note),
       );
 }
 
@@ -156,10 +156,11 @@ final class _NotesList extends StatelessWidget {
       child: ListView.separated(
         itemCount: notes.length,
         itemBuilder: (context, index) {
+          final note = notes[index];
           return NoteListItemWidget(
             note: notes[index],
-            onDetailsButton: onDetails,
-            onEditButton: onEdit,
+            onDetailsButtonTap: () => onDetails(context, note: note),
+            onEditButtonTap: () => onEdit(context, note: note),
           );
         },
         separatorBuilder: (_, __) => const Divider(

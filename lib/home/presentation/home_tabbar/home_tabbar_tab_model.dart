@@ -1,18 +1,10 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
-import 'package:pwd/notes/presentation/router/configuration_undefined_tab_router_delegate.dart';
-import 'package:pwd/notes/presentation/router/notes_router_delegate.dart';
 
-import 'package:pwd/settings/presentation/router/settings_router_delegate.dart';
 import 'package:pwd/theme/common_size.dart';
 
-import 'home_tabbar_screen_test_helper.dart';
-
-final _settingsRouterKey =
-    GlobalKey<NavigatorState>(debugLabel: 'Settings Router Key');
-
-final _tabRouterKeys = _TabRouterKeys();
+import 'home_screen_test_helper.dart';
 
 final class _TabRouterKeys {
   Map<String, GlobalKey<NavigatorState>> map = {};
@@ -32,8 +24,13 @@ final class _TabRouterKeys {
 }
 
 sealed class HomeTabbarTabModel extends Equatable {
+  static final settingsRouterKey =
+      GlobalKey<NavigatorState>(debugLabel: 'Settings Router Key');
+
+  static final tabRouterKeys = _TabRouterKeys();
+
   const HomeTabbarTabModel();
-  Widget buildRoute(BuildContext context);
+  // Widget buildRoute(BuildContext context);
 
   BottomNavigationBarItem buildNavigationBarItem(BuildContext context);
 
@@ -44,12 +41,12 @@ sealed class HomeTabbarTabModel extends Equatable {
 
 final class ConfigurationUndefinedTab extends HomeTabbarTabModel {
   const ConfigurationUndefinedTab();
-  @override
-  Widget buildRoute(BuildContext context) {
-    return Router(
-      routerDelegate: ConfigurationUndefinedTabRouterDelegate(),
-    );
-  }
+  // @override
+  // Widget buildRoute(BuildContext context) {
+  //   return Router(
+  //     routerDelegate: ConfigurationUndefinedTabRouterDelegate(),
+  //   );
+  // }
 
   @override
   BottomNavigationBarItem buildNavigationBarItem(BuildContext context) =>
@@ -57,7 +54,7 @@ final class ConfigurationUndefinedTab extends HomeTabbarTabModel {
         icon: const Icon(
           Icons.home,
           key: Key(
-            HomeTabbarScreenTestKey.configurationUndefinedTabIcon,
+            HomeScreenTestHelper.configurationUndefinedTabIcon,
           ),
           size: CommonSize.iconSize,
         ),
@@ -72,7 +69,7 @@ final class ConfigurationUndefinedTab extends HomeTabbarTabModel {
         icon: const Icon(
           Icons.home,
           key: Key(
-            HomeTabbarScreenTestKey.configurationUndefinedTabIcon,
+            HomeScreenTestHelper.configurationUndefinedTabIcon,
           ),
           size: CommonSize.iconSize,
         ),
@@ -91,22 +88,22 @@ final class NotesTab extends HomeTabbarTabModel {
 
   const NotesTab({required this.configuration});
 
-  @override
-  Router buildRoute(BuildContext context) {
-    return Router(
-      routerDelegate: NotesRouterDelegate(
-        navigatorKey: _tabRouterKeys.getKey(configuration),
-        configuration: configuration,
-      ),
-    );
-  }
+  // @override
+  // Router buildRoute(BuildContext context) {
+  //   return Router(
+  //     routerDelegate: NotesRouterDelegate(
+  //       navigatorKey: HomeTabbarTabModel.tabRouterKeys.getKey(configuration),
+  //       configuration: configuration,
+  //     ),
+  //   );
+  // }
 
   @override
   BottomNavigationBarItem buildNavigationBarItem(BuildContext context) {
     return BottomNavigationBarItem(
       icon: Icon(
         Icons.home,
-        key: Key(HomeTabbarScreenTestKey.notesTabIcon(configuration)),
+        key: Key(HomeScreenTestHelper.notesTabIcon(configuration)),
         size: CommonSize.iconSize,
       ),
       label: configuration.fileName,
@@ -119,7 +116,7 @@ final class NotesTab extends HomeTabbarTabModel {
     return NavigationRailDestination(
       icon: Icon(
         Icons.home,
-        key: Key(HomeTabbarScreenTestKey.notesTabIcon(configuration)),
+        key: Key(HomeScreenTestHelper.notesTabIcon(configuration)),
         size: CommonSize.iconSize,
       ),
       label: Text(configuration.fileName),
@@ -133,21 +130,21 @@ final class NotesTab extends HomeTabbarTabModel {
 // Settings tab
 final class SettingsTab extends HomeTabbarTabModel {
   const SettingsTab();
-  @override
-  Router buildRoute(BuildContext context) {
-    return Router(
-      routerDelegate: SettingsRouterDelegate(
-        navigatorKey: _settingsRouterKey,
-      ),
-    );
-  }
+  // @override
+  // Router buildRoute(BuildContext context) {
+  //   return Router(
+  //     routerDelegate: SettingsRouterDelegate(
+  //       navigatorKey: HomeTabbarTabModel.settingsRouterKey,
+  //     ),
+  //   );
+  // }
 
   @override
   BottomNavigationBarItem buildNavigationBarItem(BuildContext context) {
     return BottomNavigationBarItem(
       icon: const Icon(
         Icons.settings,
-        key: Key(HomeTabbarScreenTestKey.settingsTabIcon),
+        key: Key(HomeScreenTestHelper.settingsTabIcon),
         size: CommonSize.iconSize,
       ),
       label: context.settingsTabName,
@@ -161,7 +158,7 @@ final class SettingsTab extends HomeTabbarTabModel {
     return NavigationRailDestination(
       icon: const Icon(
         Icons.settings,
-        key: Key(HomeTabbarScreenTestKey.settingsTabIcon),
+        key: Key(HomeScreenTestHelper.settingsTabIcon),
         size: CommonSize.iconSize,
       ),
       label: Text(context.settingsTabName),

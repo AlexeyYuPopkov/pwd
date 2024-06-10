@@ -50,10 +50,7 @@ final class ConfigurationsScreen extends StatelessWidget
               title: Text(context.headerText),
               leading: BackButton(
                 key: const Key(_TestHelper.backButton),
-                onPressed: () => onRoute(
-                  context,
-                  const MaybePopRoute(),
-                ),
+                onPressed: () => Navigator.of(context).maybePop(),
               ),
               actions: [
                 AppBarButton(
@@ -66,28 +63,29 @@ final class ConfigurationsScreen extends StatelessWidget
             body: SafeArea(
               child: state.data.items.isEmpty
                   ? _NoDataPlaceholder(
-                      key: const Key(
-                        _TestHelper.noDataPlaceholder,
-                      ),
+                      key: const Key(_TestHelper.noDataPlaceholder),
                       onAdd: () => _onNew(context),
                     )
-                  : ReorderableListView(
-                      children: [
-                        for (final item in state.data.items)
-                          ConfigurationScreenConfigItem(
-                            key: Key(
-                              ConfigurationsScreenTestHelper.getItemKeyFor(
-                                item.id,
-                              ),
-                            ),
-                            item: item,
-                            onTap: (item) => _onOnSetupConfiguration(
-                              context,
-                              type: item.type,
-                              configuration: item,
+                  : ReorderableListView.builder(
+                      buildDefaultDragHandles: false,
+                      itemBuilder: (context, index) {
+                        final item = state.data.items[index];
+                        return ConfigurationScreenConfigItem(
+                          key: Key(
+                            ConfigurationsScreenTestHelper.getItemKeyFor(
+                              item.id,
                             ),
                           ),
-                      ],
+                          index: index,
+                          item: item,
+                          onTap: (item) => _onOnSetupConfiguration(
+                            context,
+                            type: item.type,
+                            configuration: item,
+                          ),
+                        );
+                      },
+                      itemCount: state.data.items.length,
                       onReorder: (oldIndex, newIndex) => _onReorder(
                         context,
                         oldIndex: oldIndex,

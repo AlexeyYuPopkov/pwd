@@ -17,12 +17,21 @@ import 'edit_note_screen_test_helper.dart';
 
 part 'edit_note_page_results_part.dart';
 
+final class EditNoteScreenInput {
+  final BaseNoteItem noteItem;
+  final RemoteConfiguration configuration;
+
+  const EditNoteScreenInput({
+    required this.noteItem,
+    required this.configuration,
+  });
+}
+
 final class EditNoteScreen extends StatelessWidget
     with ShowErrorDialogMixin, DialogHelper {
   final formKey = GlobalKey<_FormState>();
 
-  final BaseNoteItem noteItem;
-  final RemoteConfiguration configuration;
+  final EditNoteScreenInput input;
 
   final Future Function(BuildContext, Object) onRoute;
 
@@ -30,8 +39,7 @@ final class EditNoteScreen extends StatelessWidget
 
   EditNoteScreen({
     super.key,
-    required this.noteItem,
-    required this.configuration,
+    required this.input,
     required this.onRoute,
   });
 
@@ -78,11 +86,11 @@ final class EditNoteScreen extends StatelessWidget
         ),
         body: BlocProvider(
           create: (context) => EditNoteBloc(
-            configuration: configuration,
+            configuration: input.configuration,
             notesProviderUsecase:
                 DiStorage.shared.resolve<NotesProviderUsecase>(),
             deleteNoteUsecase: DiStorage.shared.resolve(),
-            noteItem: noteItem,
+            noteItem: input.noteItem,
           ),
           child: BlocConsumer<EditNoteBloc, EditNoteState>(
             key: const Key(_TestHelper.blocConsumerKey),
@@ -135,7 +143,7 @@ final class EditNoteScreen extends StatelessWidget
                                   key: const Key(
                                     _TestHelper.deleteButtonKey,
                                   ),
-                                  onPressed: noteItem is UpdatedNoteItem
+                                  onPressed: input.noteItem is UpdatedNoteItem
                                       ? null
                                       : () => _onDelete(context),
                                   child: Text(context.deleteButtonTitle),

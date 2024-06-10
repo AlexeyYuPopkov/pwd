@@ -58,8 +58,10 @@ void main() {
         MaterialApp(
           home: BlockingLoadingIndicator(
             child: EditNoteScreen(
-              noteItem: noteItem,
-              configuration: configuration,
+              input: EditNoteScreenInput(
+                configuration: configuration,
+                noteItem: noteItem,
+              ),
               onRoute: dummyOnRoute,
             ),
           ),
@@ -100,7 +102,7 @@ void main() {
       );
 
       expect(
-        widgetTester.widget<EditNoteScreen>(finders.screen).noteItem,
+        widgetTester.widget<EditNoteScreen>(finders.screen).input.noteItem,
         isA<UpdatedNoteItem>(),
       );
 
@@ -129,7 +131,7 @@ void main() {
       );
 
       expect(
-        widgetTester.widget<EditNoteScreen>(finders.screen).noteItem,
+        widgetTester.widget<EditNoteScreen>(finders.screen).input.noteItem,
         isA<NoteItem>(),
       );
 

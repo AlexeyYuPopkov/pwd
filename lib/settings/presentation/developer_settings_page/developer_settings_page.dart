@@ -11,9 +11,9 @@ import 'developer_settings_proxy_form.dart';
 
 final class DeveloperSettingsPage extends StatelessWidget
     with ShowErrorDialogMixin {
-  final formKey = GlobalKey<DeveloperSettingsProxyFormState>();
+  static final formKey = GlobalKey<DeveloperSettingsProxyFormState>();
 
-  DeveloperSettingsPage({super.key});
+  const DeveloperSettingsPage({super.key});
 
   void _listener(BuildContext context, DeveloperSettingsPageState state) {
     BlockingLoadingIndicator.of(context).isLoading = state is LoadingState;

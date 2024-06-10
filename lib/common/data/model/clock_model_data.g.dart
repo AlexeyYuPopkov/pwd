@@ -22,7 +22,8 @@ ClockModelData _$ClockModelDataFromJson(Map<String, dynamic> json) =>
     ClockModelData(
       id: json['id'] as String? ?? '',
       label: json['label'] as String? ?? '',
-      timezoneOffsetInSeconds: json['timezoneOffsetInSeconds'] as int? ?? 0,
+      timezoneOffsetInSeconds:
+          (json['timezoneOffsetInSeconds'] as num?)?.toInt() ?? 0,
     );
 
 Map<String, dynamic> _$ClockModelDataToJson(ClockModelData instance) =>

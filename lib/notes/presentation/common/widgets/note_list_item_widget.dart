@@ -8,21 +8,24 @@ import 'package:pwd/theme/common_theme.dart';
 final class NoteListItemWidget extends StatelessWidget {
   final NoteItem note;
 
-  final void Function(
-    BuildContext context, {
-    required NoteItem note,
-  }) onDetailsButton;
+  // final void Function(
+  //   BuildContext context, {
+  //   required NoteItem note,
+  // }) onDetailsButton;
 
-  final void Function(
-    BuildContext context, {
-    required NoteItem note,
-  }) onEditButton;
+  // final void Function(
+  //   BuildContext context, {
+  //   required NoteItem note,
+  // }) onEditButton;
+
+  final VoidCallback onDetailsButtonTap;
+  final VoidCallback onEditButtonTap;
 
   const NoteListItemWidget({
     super.key,
     required this.note,
-    required this.onDetailsButton,
-    required this.onEditButton,
+    required this.onDetailsButtonTap,
+    required this.onEditButtonTap,
   });
 
   @override
@@ -31,10 +34,7 @@ final class NoteListItemWidget extends StatelessWidget {
     final commonTheme = CommonTheme.of(context);
     return CommonHighlightedBackgroundRow(
       highlightedColor: commonTheme.highlightColor,
-      onTap: () => onDetailsButton(
-        context,
-        note: note,
-      ),
+      onTap: onDetailsButtonTap,
       child: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: CommonSize.indent2x,
@@ -64,10 +64,7 @@ final class NoteListItemWidget extends StatelessWidget {
             CupertinoButton(
               alignment: Alignment.centerRight,
               padding: const EdgeInsets.only(left: CommonSize.indent2x),
-              onPressed: () => onEditButton(
-                context,
-                note: note,
-              ),
+              onPressed: onEditButtonTap,
               child: const Icon(
                 key: Key(NoteListItemWidgetTestHelper.editIconKey),
                 Icons.edit,

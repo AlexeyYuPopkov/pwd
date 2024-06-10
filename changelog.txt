@@ -1,4 +1,3 @@
-- update flutter 
-- update realm
-- ui improvements
-- routing improvements
+- updated pubs 
+- switched to go_router
+- fixed reorder item widget

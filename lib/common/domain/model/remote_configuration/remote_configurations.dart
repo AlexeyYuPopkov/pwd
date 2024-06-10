@@ -6,8 +6,13 @@ import 'remote_configuration.dart';
 final class RemoteConfigurations extends Equatable {
   static const int maxCount = 4;
   final List<RemoteConfiguration> configurations;
+  late final Map<String, int> _map = {};
 
-  const RemoteConfigurations._({required this.configurations});
+  RemoteConfigurations._({required this.configurations}) {
+    for (int i = 0; i < configurations.length; i++) {
+      _map[configurations[i].id] = i;
+    }
+  }
 
   factory RemoteConfigurations.createOrThrow({
     required List<RemoteConfiguration> configurations,
@@ -37,7 +42,7 @@ final class RemoteConfigurations extends Equatable {
   }
 
   factory RemoteConfigurations.empty() =>
-      const RemoteConfigurations._(configurations: []);
+      RemoteConfigurations._(configurations: const []);
 
   bool get isNotEmpty => !isEmpty;
   bool get isEmpty => configurations.isEmpty;
@@ -58,6 +63,17 @@ final class RemoteConfigurations extends Equatable {
             )
             .toList(),
       );
+
+  RemoteConfiguration? withId(String id) {
+    final index = _map[id];
+
+    if (index == null || index < 0 || index >= configurations.length) {
+      return null;
+    } else {
+      assert(index >= 0 && index < configurations.length);
+      return configurations[index];
+    }
+  }
 }
 
 sealed class RemoteConfigurationsError extends AppError {
