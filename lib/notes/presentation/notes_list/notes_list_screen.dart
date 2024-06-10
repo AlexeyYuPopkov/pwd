@@ -64,6 +64,7 @@ final class NotesListScreen extends StatelessWidget with ShowErrorDialogMixin {
             body: state is InitialState
                 ? const _LoadingShimmer()
                 : _NotesList(
+                    isLoading: state is SyncLoadingState,
                     notes: state.data.notes,
                     onRefresh: _onPullToRefresh,
                     onEdit: _onEdit,
@@ -82,10 +83,9 @@ final class NotesListScreen extends StatelessWidget with ShowErrorDialogMixin {
       case InitialState():
       case CommonState():
       case LoadingState():
+      case SyncLoadingState():
         break;
       case FilesListState():
-        // print('Files:');
-        // print(state.files.map((e) => '${e.name}\n'));
         break;
       case ErrorState(e: final e):
         showError(
@@ -137,12 +137,14 @@ final class NotesListScreen extends StatelessWidget with ShowErrorDialogMixin {
 // Notes List
 
 final class _NotesList extends StatelessWidget {
+  final bool isLoading;
   final List<NoteItem> notes;
   final Future Function(BuildContext) onRefresh;
   final void Function(BuildContext, {required NoteItem note}) onEdit;
   final void Function(BuildContext, {required NoteItem note}) onDetails;
 
   const _NotesList({
+    required this.isLoading,
     required this.notes,
     required this.onRefresh,
     required this.onEdit,
@@ -151,22 +153,38 @@ final class _NotesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: () => onRefresh(context),
-      child: ListView.separated(
-        itemCount: notes.length,
-        itemBuilder: (context, index) {
-          final note = notes[index];
-          return NoteListItemWidget(
-            note: notes[index],
-            onDetailsButtonTap: () => onDetails(context, note: note),
-            onEditButtonTap: () => onEdit(context, note: note),
-          );
-        },
-        separatorBuilder: (_, __) => const Divider(
-          height: CommonSize.thickness,
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Visibility(
+          visible: isLoading,
+          replacement: const SizedBox(
+            height: CommonSize.thickness,
+          ),
+          child: const LinearProgressIndicator(
+            minHeight: CommonSize.thickness,
+          ),
         ),
-      ),
+        Expanded(
+          child: RefreshIndicator(
+            onRefresh: () => onRefresh(context),
+            child: ListView.separated(
+              itemCount: notes.length,
+              itemBuilder: (context, index) {
+                final note = notes[index];
+                return NoteListItemWidget(
+                  note: notes[index],
+                  onDetailsButtonTap: () => onDetails(context, note: note),
+                  onEditButtonTap: () => onEdit(context, note: note),
+                );
+              },
+              separatorBuilder: (_, __) => const Divider(
+                height: CommonSize.thickness,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

@@ -7,7 +7,7 @@ import 'package:pwd/common/presentation/clock/clock_widget24.dart';
 import 'package:pwd/common/presentation/clock/clocks_widget/clocks_widget_test_helper.dart';
 import 'package:pwd/theme/common_size.dart';
 
-class ClockItemWidget extends StatelessWidget {
+final class ClockItemWidget extends StatelessWidget {
   final ClockModel clock;
 
   final TimeFormatter formatter;
@@ -88,7 +88,7 @@ final class ClockItemOwerlayMenu extends StatefulWidget {
   State<ClockItemOwerlayMenu> createState() => _ClockItemOwerlayMenuState();
 }
 
-class _ClockItemOwerlayMenuState extends State<ClockItemOwerlayMenu> {
+final class _ClockItemOwerlayMenuState extends State<ClockItemOwerlayMenu> {
   OverlayEntry? overlayEntry;
   final layerLink = LayerLink();
   Size? _widgetSize;
