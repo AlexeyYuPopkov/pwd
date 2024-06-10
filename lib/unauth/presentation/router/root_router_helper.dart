@@ -23,7 +23,7 @@ final class RootRouterHelper with RedirectToLoginPageHelper {
     navigatorKey: navigatorKey,
     routes: [
       GoRoute(
-        path: '/',
+        path: RootRouterUnauthPath.shortPath,
         parentNavigatorKey: navigatorKey,
         pageBuilder: (context, state) {
           final theme = CustomPageTransistionsTheme.of(context);
@@ -37,4 +37,9 @@ final class RootRouterHelper with RedirectToLoginPageHelper {
       ...homeRouterHelper.route,
     ],
   );
+}
+
+final class RootRouterUnauthPath {
+  static const shortPath = '/';
+  static String goPath() => shortPath;
 }

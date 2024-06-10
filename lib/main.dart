@@ -5,6 +5,7 @@ import 'package:di_storage/di_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pwd/common/domain/base_pin.dart';
 import 'package:pwd/common/domain/usecases/pin_usecase.dart';
+import 'package:pwd/home/presentation/home_tabbar/home_router_helper.dart';
 import 'package:pwd/theme/theme_data.dart';
 import 'package:pwd/common/presentation/di/app_di_modules.dart';
 import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
@@ -58,7 +59,7 @@ final class RouterWidget extends StatefulWidget {
   State<RouterWidget> createState() => _RouterWidgetState();
 }
 
-class _RouterWidgetState extends State<RouterWidget> {
+final class _RouterWidgetState extends State<RouterWidget> {
   late final PinUsecase pinUsecase = DiStorage.shared.resolve();
   late final StreamSubscription pinSubscription;
   late final rootRouterHelper = RootRouterHelper(
@@ -95,7 +96,9 @@ class _RouterWidgetState extends State<RouterWidget> {
   }
 
   void _performNavigation(BasePin pin) {
-    final location = pin is EmptyPin ? '/' : '/home';
-    RootRouterHelper.navigatorKey.currentContext?.go(location);
+    final path = pin is EmptyPin
+        ? RootRouterUnauthPath.shortPath
+        : HomeRouterUndefinedTabPath.shortPath;
+    RootRouterHelper.navigatorKey.currentContext?.go(path);
   }
 }

@@ -14,15 +14,13 @@ final class NotesRouterHelper with RedirectToLoginPageHelper {
 
   NotesRouterHelper({required this.isAuthorized});
 
-  Widget getInitialScreen({required RemoteConfiguration configuration}) {
-    return NotesListScreen(
-      configuration: configuration,
-      onRoute: onRoute,
-    );
-  }
+  Widget getInitialScreen({required RemoteConfiguration configuration}) =>
+      NotesListScreen(
+        configuration: configuration,
+        onRoute: onRoute,
+      );
 
   late final routes = [
-    // final path = NotesRouterOnDetailPath();
     GoRoute(
       path: NotesRouterOnDetailPath.shortPath,
       builder: (context, state) {
