@@ -112,14 +112,14 @@ class LocalizationRu extends Localization {
       'Методы синхронизации';
 
   @override
-  String get configurationsScreenActionSheetCancelButtonTitle => 'Cancel';
+  String get configurationsScreenActionSheetCancelButtonTitle => 'Отмена';
 
   @override
   String get configurationsScreenNoDataPlaceholder =>
-      'Setup synchronization method';
+      'Настройка метода синхронизации';
 
   @override
-  String get configurationsScreenNoDataButtonTitle => 'Continue';
+  String get configurationsScreenNoDataButtonTitle => 'Продолжить';
 
   @override
   String get configurationsScreenItemLabelGit => 'Git';
