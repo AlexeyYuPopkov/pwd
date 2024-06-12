@@ -63569,7 +63569,16 @@ class _CopyWithStubImpl$Input$WorkflowsParametersInput<TRes>
   workflows(_fn) => _res;
 }
 
-enum Enum$ActorType { TEAM, USER, $unknown }
+enum Enum$ActorType {
+  TEAM,
+  USER,
+  $unknown;
+
+  factory Enum$ActorType.fromJson(String value) =>
+      fromJson$Enum$ActorType(value);
+
+  String toJson() => toJson$Enum$ActorType(this);
+}
 
 String toJson$Enum$ActorType(Enum$ActorType e) {
   switch (e) {
@@ -63593,7 +63602,15 @@ Enum$ActorType fromJson$Enum$ActorType(String value) {
   }
 }
 
-enum Enum$AuditLogOrderField { CREATED_AT, $unknown }
+enum Enum$AuditLogOrderField {
+  CREATED_AT,
+  $unknown;
+
+  factory Enum$AuditLogOrderField.fromJson(String value) =>
+      fromJson$Enum$AuditLogOrderField(value);
+
+  String toJson() => toJson$Enum$AuditLogOrderField(this);
+}
 
 String toJson$Enum$AuditLogOrderField(Enum$AuditLogOrderField e) {
   switch (e) {
@@ -63613,7 +63630,17 @@ Enum$AuditLogOrderField fromJson$Enum$AuditLogOrderField(String value) {
   }
 }
 
-enum Enum$CheckAnnotationLevel { FAILURE, NOTICE, WARNING, $unknown }
+enum Enum$CheckAnnotationLevel {
+  FAILURE,
+  NOTICE,
+  WARNING,
+  $unknown;
+
+  factory Enum$CheckAnnotationLevel.fromJson(String value) =>
+      fromJson$Enum$CheckAnnotationLevel(value);
+
+  String toJson() => toJson$Enum$CheckAnnotationLevel(this);
+}
 
 String toJson$Enum$CheckAnnotationLevel(Enum$CheckAnnotationLevel e) {
   switch (e) {
@@ -63651,7 +63678,12 @@ enum Enum$CheckConclusionState {
   STARTUP_FAILURE,
   SUCCESS,
   TIMED_OUT,
-  $unknown
+  $unknown;
+
+  factory Enum$CheckConclusionState.fromJson(String value) =>
+      fromJson$Enum$CheckConclusionState(value);
+
+  String toJson() => toJson$Enum$CheckConclusionState(this);
 }
 
 String toJson$Enum$CheckConclusionState(Enum$CheckConclusionState e) {
@@ -63719,7 +63751,12 @@ enum Enum$CheckRunState {
   SUCCESS,
   TIMED_OUT,
   WAITING,
-  $unknown
+  $unknown;
+
+  factory Enum$CheckRunState.fromJson(String value) =>
+      fromJson$Enum$CheckRunState(value);
+
+  String toJson() => toJson$Enum$CheckRunState(this);
 }
 
 String toJson$Enum$CheckRunState(Enum$CheckRunState e) {
@@ -63792,7 +63829,16 @@ Enum$CheckRunState fromJson$Enum$CheckRunState(String value) {
   }
 }
 
-enum Enum$CheckRunType { ALL, LATEST, $unknown }
+enum Enum$CheckRunType {
+  ALL,
+  LATEST,
+  $unknown;
+
+  factory Enum$CheckRunType.fromJson(String value) =>
+      fromJson$Enum$CheckRunType(value);
+
+  String toJson() => toJson$Enum$CheckRunType(this);
+}
 
 String toJson$Enum$CheckRunType(Enum$CheckRunType e) {
   switch (e) {
@@ -63823,7 +63869,12 @@ enum Enum$CheckStatusState {
   QUEUED,
   REQUESTED,
   WAITING,
-  $unknown
+  $unknown;
+
+  factory Enum$CheckStatusState.fromJson(String value) =>
+      fromJson$Enum$CheckStatusState(value);
+
+  String toJson() => toJson$Enum$CheckStatusState(this);
 }
 
 String toJson$Enum$CheckStatusState(Enum$CheckStatusState e) {
@@ -63864,7 +63915,17 @@ Enum$CheckStatusState fromJson$Enum$CheckStatusState(String value) {
   }
 }
 
-enum Enum$CollaboratorAffiliation { ALL, DIRECT, OUTSIDE, $unknown }
+enum Enum$CollaboratorAffiliation {
+  ALL,
+  DIRECT,
+  OUTSIDE,
+  $unknown;
+
+  factory Enum$CollaboratorAffiliation.fromJson(String value) =>
+      fromJson$Enum$CollaboratorAffiliation(value);
+
+  String toJson() => toJson$Enum$CollaboratorAffiliation(this);
+}
 
 String toJson$Enum$CollaboratorAffiliation(Enum$CollaboratorAffiliation e) {
   switch (e) {
@@ -63902,7 +63963,12 @@ enum Enum$CommentAuthorAssociation {
   MEMBER,
   NONE,
   OWNER,
-  $unknown
+  $unknown;
+
+  factory Enum$CommentAuthorAssociation.fromJson(String value) =>
+      fromJson$Enum$CommentAuthorAssociation(value);
+
+  String toJson() => toJson$Enum$CommentAuthorAssociation(this);
 }
 
 String toJson$Enum$CommentAuthorAssociation(Enum$CommentAuthorAssociation e) {
@@ -63960,7 +64026,12 @@ enum Enum$CommentCannotUpdateReason {
   LOGIN_REQUIRED,
   MAINTENANCE,
   VERIFIED_EMAIL_REQUIRED,
-  $unknown
+  $unknown;
+
+  factory Enum$CommentCannotUpdateReason.fromJson(String value) =>
+      fromJson$Enum$CommentCannotUpdateReason(value);
+
+  String toJson() => toJson$Enum$CommentCannotUpdateReason(this);
 }
 
 String toJson$Enum$CommentCannotUpdateReason(Enum$CommentCannotUpdateReason e) {
@@ -64006,7 +64077,16 @@ Enum$CommentCannotUpdateReason fromJson$Enum$CommentCannotUpdateReason(
   }
 }
 
-enum Enum$CommitContributionOrderField { COMMIT_COUNT, OCCURRED_AT, $unknown }
+enum Enum$CommitContributionOrderField {
+  COMMIT_COUNT,
+  OCCURRED_AT,
+  $unknown;
+
+  factory Enum$CommitContributionOrderField.fromJson(String value) =>
+      fromJson$Enum$CommitContributionOrderField(value);
+
+  String toJson() => toJson$Enum$CommitContributionOrderField(this);
+}
 
 String toJson$Enum$CommitContributionOrderField(
     Enum$CommitContributionOrderField e) {
@@ -64032,7 +64112,18 @@ Enum$CommitContributionOrderField fromJson$Enum$CommitContributionOrderField(
   }
 }
 
-enum Enum$ComparisonStatus { AHEAD, BEHIND, DIVERGED, IDENTICAL, $unknown }
+enum Enum$ComparisonStatus {
+  AHEAD,
+  BEHIND,
+  DIVERGED,
+  IDENTICAL,
+  $unknown;
+
+  factory Enum$ComparisonStatus.fromJson(String value) =>
+      fromJson$Enum$ComparisonStatus(value);
+
+  String toJson() => toJson$Enum$ComparisonStatus(this);
+}
 
 String toJson$Enum$ComparisonStatus(Enum$ComparisonStatus e) {
   switch (e) {
@@ -64070,7 +64161,12 @@ enum Enum$ContributionLevel {
   NONE,
   SECOND_QUARTILE,
   THIRD_QUARTILE,
-  $unknown
+  $unknown;
+
+  factory Enum$ContributionLevel.fromJson(String value) =>
+      fromJson$Enum$ContributionLevel(value);
+
+  String toJson() => toJson$Enum$ContributionLevel(this);
 }
 
 String toJson$Enum$ContributionLevel(Enum$ContributionLevel e) {
@@ -64112,7 +64208,12 @@ enum Enum$DefaultRepositoryPermissionField {
   NONE,
   READ,
   WRITE,
-  $unknown
+  $unknown;
+
+  factory Enum$DefaultRepositoryPermissionField.fromJson(String value) =>
+      fromJson$Enum$DefaultRepositoryPermissionField(value);
+
+  String toJson() => toJson$Enum$DefaultRepositoryPermissionField(this);
 }
 
 String toJson$Enum$DefaultRepositoryPermissionField(
@@ -64159,7 +64260,12 @@ enum Enum$DependencyGraphEcosystem {
   RUBYGEMS,
   RUST,
   SWIFT,
-  $unknown
+  $unknown;
+
+  factory Enum$DependencyGraphEcosystem.fromJson(String value) =>
+      fromJson$Enum$DependencyGraphEcosystem(value);
+
+  String toJson() => toJson$Enum$DependencyGraphEcosystem(this);
 }
 
 String toJson$Enum$DependencyGraphEcosystem(Enum$DependencyGraphEcosystem e) {
@@ -64221,7 +64327,15 @@ Enum$DependencyGraphEcosystem fromJson$Enum$DependencyGraphEcosystem(
   }
 }
 
-enum Enum$DeploymentOrderField { CREATED_AT, $unknown }
+enum Enum$DeploymentOrderField {
+  CREATED_AT,
+  $unknown;
+
+  factory Enum$DeploymentOrderField.fromJson(String value) =>
+      fromJson$Enum$DeploymentOrderField(value);
+
+  String toJson() => toJson$Enum$DeploymentOrderField(this);
+}
 
 String toJson$Enum$DeploymentOrderField(Enum$DeploymentOrderField e) {
   switch (e) {
@@ -64244,7 +64358,12 @@ Enum$DeploymentOrderField fromJson$Enum$DeploymentOrderField(String value) {
 enum Enum$DeploymentProtectionRuleType {
   REQUIRED_REVIEWERS,
   WAIT_TIMER,
-  $unknown
+  $unknown;
+
+  factory Enum$DeploymentProtectionRuleType.fromJson(String value) =>
+      fromJson$Enum$DeploymentProtectionRuleType(value);
+
+  String toJson() => toJson$Enum$DeploymentProtectionRuleType(this);
 }
 
 String toJson$Enum$DeploymentProtectionRuleType(
@@ -64271,7 +64390,16 @@ Enum$DeploymentProtectionRuleType fromJson$Enum$DeploymentProtectionRuleType(
   }
 }
 
-enum Enum$DeploymentReviewState { APPROVED, REJECTED, $unknown }
+enum Enum$DeploymentReviewState {
+  APPROVED,
+  REJECTED,
+  $unknown;
+
+  factory Enum$DeploymentReviewState.fromJson(String value) =>
+      fromJson$Enum$DeploymentReviewState(value);
+
+  String toJson() => toJson$Enum$DeploymentReviewState(this);
+}
 
 String toJson$Enum$DeploymentReviewState(Enum$DeploymentReviewState e) {
   switch (e) {
@@ -64307,7 +64435,12 @@ enum Enum$DeploymentState {
   QUEUED,
   SUCCESS,
   WAITING,
-  $unknown
+  $unknown;
+
+  factory Enum$DeploymentState.fromJson(String value) =>
+      fromJson$Enum$DeploymentState(value);
+
+  String toJson() => toJson$Enum$DeploymentState(this);
 }
 
 String toJson$Enum$DeploymentState(Enum$DeploymentState e) {
@@ -64377,7 +64510,12 @@ enum Enum$DeploymentStatusState {
   QUEUED,
   SUCCESS,
   WAITING,
-  $unknown
+  $unknown;
+
+  factory Enum$DeploymentStatusState.fromJson(String value) =>
+      fromJson$Enum$DeploymentStatusState(value);
+
+  String toJson() => toJson$Enum$DeploymentStatusState(this);
 }
 
 String toJson$Enum$DeploymentStatusState(Enum$DeploymentStatusState e) {
@@ -64426,7 +64564,15 @@ Enum$DeploymentStatusState fromJson$Enum$DeploymentStatusState(String value) {
   }
 }
 
-enum Enum$DiffSide { LEFT, RIGHT, $unknown }
+enum Enum$DiffSide {
+  LEFT,
+  RIGHT,
+  $unknown;
+
+  factory Enum$DiffSide.fromJson(String value) => fromJson$Enum$DiffSide(value);
+
+  String toJson() => toJson$Enum$DiffSide(this);
+}
 
 String toJson$Enum$DiffSide(Enum$DiffSide e) {
   switch (e) {
@@ -64450,7 +64596,17 @@ Enum$DiffSide fromJson$Enum$DiffSide(String value) {
   }
 }
 
-enum Enum$DiscussionCloseReason { DUPLICATE, OUTDATED, RESOLVED, $unknown }
+enum Enum$DiscussionCloseReason {
+  DUPLICATE,
+  OUTDATED,
+  RESOLVED,
+  $unknown;
+
+  factory Enum$DiscussionCloseReason.fromJson(String value) =>
+      fromJson$Enum$DiscussionCloseReason(value);
+
+  String toJson() => toJson$Enum$DiscussionCloseReason(this);
+}
 
 String toJson$Enum$DiscussionCloseReason(Enum$DiscussionCloseReason e) {
   switch (e) {
@@ -64478,7 +64634,16 @@ Enum$DiscussionCloseReason fromJson$Enum$DiscussionCloseReason(String value) {
   }
 }
 
-enum Enum$DiscussionOrderField { CREATED_AT, UPDATED_AT, $unknown }
+enum Enum$DiscussionOrderField {
+  CREATED_AT,
+  UPDATED_AT,
+  $unknown;
+
+  factory Enum$DiscussionOrderField.fromJson(String value) =>
+      fromJson$Enum$DiscussionOrderField(value);
+
+  String toJson() => toJson$Enum$DiscussionOrderField(this);
+}
 
 String toJson$Enum$DiscussionOrderField(Enum$DiscussionOrderField e) {
   switch (e) {
@@ -64505,7 +64670,12 @@ Enum$DiscussionOrderField fromJson$Enum$DiscussionOrderField(String value) {
 enum Enum$DiscussionPollOptionOrderField {
   AUTHORED_ORDER,
   VOTE_COUNT,
-  $unknown
+  $unknown;
+
+  factory Enum$DiscussionPollOptionOrderField.fromJson(String value) =>
+      fromJson$Enum$DiscussionPollOptionOrderField(value);
+
+  String toJson() => toJson$Enum$DiscussionPollOptionOrderField(this);
 }
 
 String toJson$Enum$DiscussionPollOptionOrderField(
@@ -64532,7 +64702,16 @@ Enum$DiscussionPollOptionOrderField
   }
 }
 
-enum Enum$DiscussionState { CLOSED, OPEN, $unknown }
+enum Enum$DiscussionState {
+  CLOSED,
+  OPEN,
+  $unknown;
+
+  factory Enum$DiscussionState.fromJson(String value) =>
+      fromJson$Enum$DiscussionState(value);
+
+  String toJson() => toJson$Enum$DiscussionState(this);
+}
 
 String toJson$Enum$DiscussionState(Enum$DiscussionState e) {
   switch (e) {
@@ -64561,7 +64740,12 @@ enum Enum$DiscussionStateReason {
   OUTDATED,
   REOPENED,
   RESOLVED,
-  $unknown
+  $unknown;
+
+  factory Enum$DiscussionStateReason.fromJson(String value) =>
+      fromJson$Enum$DiscussionStateReason(value);
+
+  String toJson() => toJson$Enum$DiscussionStateReason(this);
 }
 
 String toJson$Enum$DiscussionStateReason(Enum$DiscussionStateReason e) {
@@ -64600,7 +64784,12 @@ enum Enum$DismissReason {
   NOT_USED,
   NO_BANDWIDTH,
   TOLERABLE_RISK,
-  $unknown
+  $unknown;
+
+  factory Enum$DismissReason.fromJson(String value) =>
+      fromJson$Enum$DismissReason(value);
+
+  String toJson() => toJson$Enum$DismissReason(this);
 }
 
 String toJson$Enum$DismissReason(Enum$DismissReason e) {
@@ -64637,7 +64826,17 @@ Enum$DismissReason fromJson$Enum$DismissReason(String value) {
   }
 }
 
-enum Enum$EnterpriseAdministratorInvitationOrderField { CREATED_AT, $unknown }
+enum Enum$EnterpriseAdministratorInvitationOrderField {
+  CREATED_AT,
+  $unknown;
+
+  factory Enum$EnterpriseAdministratorInvitationOrderField.fromJson(
+          String value) =>
+      fromJson$Enum$EnterpriseAdministratorInvitationOrderField(value);
+
+  String toJson() =>
+      toJson$Enum$EnterpriseAdministratorInvitationOrderField(this);
+}
 
 String toJson$Enum$EnterpriseAdministratorInvitationOrderField(
     Enum$EnterpriseAdministratorInvitationOrderField e) {
@@ -64659,7 +64858,16 @@ Enum$EnterpriseAdministratorInvitationOrderField
   }
 }
 
-enum Enum$EnterpriseAdministratorRole { BILLING_MANAGER, OWNER, $unknown }
+enum Enum$EnterpriseAdministratorRole {
+  BILLING_MANAGER,
+  OWNER,
+  $unknown;
+
+  factory Enum$EnterpriseAdministratorRole.fromJson(String value) =>
+      fromJson$Enum$EnterpriseAdministratorRole(value);
+
+  String toJson() => toJson$Enum$EnterpriseAdministratorRole(this);
+}
 
 String toJson$Enum$EnterpriseAdministratorRole(
     Enum$EnterpriseAdministratorRole e) {
@@ -64692,7 +64900,14 @@ enum Enum$EnterpriseAllowPrivateRepositoryForkingPolicyValue {
   SAME_ORGANIZATION,
   SAME_ORGANIZATION_USER_ACCOUNTS,
   USER_ACCOUNTS,
-  $unknown
+  $unknown;
+
+  factory Enum$EnterpriseAllowPrivateRepositoryForkingPolicyValue.fromJson(
+          String value) =>
+      fromJson$Enum$EnterpriseAllowPrivateRepositoryForkingPolicyValue(value);
+
+  String toJson() =>
+      toJson$Enum$EnterpriseAllowPrivateRepositoryForkingPolicyValue(this);
 }
 
 String toJson$Enum$EnterpriseAllowPrivateRepositoryForkingPolicyValue(
@@ -64751,7 +64966,14 @@ enum Enum$EnterpriseDefaultRepositoryPermissionSettingValue {
   NO_POLICY,
   READ,
   WRITE,
-  $unknown
+  $unknown;
+
+  factory Enum$EnterpriseDefaultRepositoryPermissionSettingValue.fromJson(
+          String value) =>
+      fromJson$Enum$EnterpriseDefaultRepositoryPermissionSettingValue(value);
+
+  String toJson() =>
+      toJson$Enum$EnterpriseDefaultRepositoryPermissionSettingValue(this);
 }
 
 String toJson$Enum$EnterpriseDefaultRepositoryPermissionSettingValue(
@@ -64795,7 +65017,12 @@ enum Enum$EnterpriseEnabledDisabledSettingValue {
   DISABLED,
   ENABLED,
   NO_POLICY,
-  $unknown
+  $unknown;
+
+  factory Enum$EnterpriseEnabledDisabledSettingValue.fromJson(String value) =>
+      fromJson$Enum$EnterpriseEnabledDisabledSettingValue(value);
+
+  String toJson() => toJson$Enum$EnterpriseEnabledDisabledSettingValue(this);
 }
 
 String toJson$Enum$EnterpriseEnabledDisabledSettingValue(
@@ -64826,7 +65053,16 @@ Enum$EnterpriseEnabledDisabledSettingValue
   }
 }
 
-enum Enum$EnterpriseEnabledSettingValue { ENABLED, NO_POLICY, $unknown }
+enum Enum$EnterpriseEnabledSettingValue {
+  ENABLED,
+  NO_POLICY,
+  $unknown;
+
+  factory Enum$EnterpriseEnabledSettingValue.fromJson(String value) =>
+      fromJson$Enum$EnterpriseEnabledSettingValue(value);
+
+  String toJson() => toJson$Enum$EnterpriseEnabledSettingValue(this);
+}
 
 String toJson$Enum$EnterpriseEnabledSettingValue(
     Enum$EnterpriseEnabledSettingValue e) {
@@ -64852,7 +65088,16 @@ Enum$EnterpriseEnabledSettingValue fromJson$Enum$EnterpriseEnabledSettingValue(
   }
 }
 
-enum Enum$EnterpriseMemberOrderField { CREATED_AT, LOGIN, $unknown }
+enum Enum$EnterpriseMemberOrderField {
+  CREATED_AT,
+  LOGIN,
+  $unknown;
+
+  factory Enum$EnterpriseMemberOrderField.fromJson(String value) =>
+      fromJson$Enum$EnterpriseMemberOrderField(value);
+
+  String toJson() => toJson$Enum$EnterpriseMemberOrderField(this);
+}
 
 String toJson$Enum$EnterpriseMemberOrderField(
     Enum$EnterpriseMemberOrderField e) {
@@ -64884,7 +65129,14 @@ enum Enum$EnterpriseMembersCanCreateRepositoriesSettingValue {
   NO_POLICY,
   PRIVATE,
   PUBLIC,
-  $unknown
+  $unknown;
+
+  factory Enum$EnterpriseMembersCanCreateRepositoriesSettingValue.fromJson(
+          String value) =>
+      fromJson$Enum$EnterpriseMembersCanCreateRepositoriesSettingValue(value);
+
+  String toJson() =>
+      toJson$Enum$EnterpriseMembersCanCreateRepositoriesSettingValue(this);
 }
 
 String toJson$Enum$EnterpriseMembersCanCreateRepositoriesSettingValue(
@@ -64927,7 +65179,14 @@ Enum$EnterpriseMembersCanCreateRepositoriesSettingValue
 enum Enum$EnterpriseMembersCanMakePurchasesSettingValue {
   DISABLED,
   ENABLED,
-  $unknown
+  $unknown;
+
+  factory Enum$EnterpriseMembersCanMakePurchasesSettingValue.fromJson(
+          String value) =>
+      fromJson$Enum$EnterpriseMembersCanMakePurchasesSettingValue(value);
+
+  String toJson() =>
+      toJson$Enum$EnterpriseMembersCanMakePurchasesSettingValue(this);
 }
 
 String toJson$Enum$EnterpriseMembersCanMakePurchasesSettingValue(
@@ -64959,7 +65218,12 @@ enum Enum$EnterpriseMembershipType {
   ALL,
   BILLING_MANAGER,
   ORG_MEMBERSHIP,
-  $unknown
+  $unknown;
+
+  factory Enum$EnterpriseMembershipType.fromJson(String value) =>
+      fromJson$Enum$EnterpriseMembershipType(value);
+
+  String toJson() => toJson$Enum$EnterpriseMembershipType(this);
 }
 
 String toJson$Enum$EnterpriseMembershipType(Enum$EnterpriseMembershipType e) {
@@ -64993,7 +65257,15 @@ Enum$EnterpriseMembershipType fromJson$Enum$EnterpriseMembershipType(
   }
 }
 
-enum Enum$EnterpriseOrderField { NAME, $unknown }
+enum Enum$EnterpriseOrderField {
+  NAME,
+  $unknown;
+
+  factory Enum$EnterpriseOrderField.fromJson(String value) =>
+      fromJson$Enum$EnterpriseOrderField(value);
+
+  String toJson() => toJson$Enum$EnterpriseOrderField(this);
+}
 
 String toJson$Enum$EnterpriseOrderField(Enum$EnterpriseOrderField e) {
   switch (e) {
@@ -65017,7 +65289,12 @@ enum Enum$EnterpriseServerInstallationOrderField {
   CREATED_AT,
   CUSTOMER_NAME,
   HOST_NAME,
-  $unknown
+  $unknown;
+
+  factory Enum$EnterpriseServerInstallationOrderField.fromJson(String value) =>
+      fromJson$Enum$EnterpriseServerInstallationOrderField(value);
+
+  String toJson() => toJson$Enum$EnterpriseServerInstallationOrderField(this);
 }
 
 String toJson$Enum$EnterpriseServerInstallationOrderField(
@@ -65048,7 +65325,17 @@ Enum$EnterpriseServerInstallationOrderField
   }
 }
 
-enum Enum$EnterpriseServerUserAccountEmailOrderField { EMAIL, $unknown }
+enum Enum$EnterpriseServerUserAccountEmailOrderField {
+  EMAIL,
+  $unknown;
+
+  factory Enum$EnterpriseServerUserAccountEmailOrderField.fromJson(
+          String value) =>
+      fromJson$Enum$EnterpriseServerUserAccountEmailOrderField(value);
+
+  String toJson() =>
+      toJson$Enum$EnterpriseServerUserAccountEmailOrderField(this);
+}
 
 String toJson$Enum$EnterpriseServerUserAccountEmailOrderField(
     Enum$EnterpriseServerUserAccountEmailOrderField e) {
@@ -65073,7 +65360,12 @@ Enum$EnterpriseServerUserAccountEmailOrderField
 enum Enum$EnterpriseServerUserAccountOrderField {
   LOGIN,
   REMOTE_CREATED_AT,
-  $unknown
+  $unknown;
+
+  factory Enum$EnterpriseServerUserAccountOrderField.fromJson(String value) =>
+      fromJson$Enum$EnterpriseServerUserAccountOrderField(value);
+
+  String toJson() => toJson$Enum$EnterpriseServerUserAccountOrderField(this);
 }
 
 String toJson$Enum$EnterpriseServerUserAccountOrderField(
@@ -65100,7 +65392,17 @@ Enum$EnterpriseServerUserAccountOrderField
   }
 }
 
-enum Enum$EnterpriseServerUserAccountsUploadOrderField { CREATED_AT, $unknown }
+enum Enum$EnterpriseServerUserAccountsUploadOrderField {
+  CREATED_AT,
+  $unknown;
+
+  factory Enum$EnterpriseServerUserAccountsUploadOrderField.fromJson(
+          String value) =>
+      fromJson$Enum$EnterpriseServerUserAccountsUploadOrderField(value);
+
+  String toJson() =>
+      toJson$Enum$EnterpriseServerUserAccountsUploadOrderField(this);
+}
 
 String toJson$Enum$EnterpriseServerUserAccountsUploadOrderField(
     Enum$EnterpriseServerUserAccountsUploadOrderField e) {
@@ -65126,7 +65428,14 @@ enum Enum$EnterpriseServerUserAccountsUploadSyncState {
   FAILURE,
   PENDING,
   SUCCESS,
-  $unknown
+  $unknown;
+
+  factory Enum$EnterpriseServerUserAccountsUploadSyncState.fromJson(
+          String value) =>
+      fromJson$Enum$EnterpriseServerUserAccountsUploadSyncState(value);
+
+  String toJson() =>
+      toJson$Enum$EnterpriseServerUserAccountsUploadSyncState(this);
 }
 
 String toJson$Enum$EnterpriseServerUserAccountsUploadSyncState(
@@ -65161,7 +65470,12 @@ enum Enum$EnterpriseUserAccountMembershipRole {
   MEMBER,
   OWNER,
   UNAFFILIATED,
-  $unknown
+  $unknown;
+
+  factory Enum$EnterpriseUserAccountMembershipRole.fromJson(String value) =>
+      fromJson$Enum$EnterpriseUserAccountMembershipRole(value);
+
+  String toJson() => toJson$Enum$EnterpriseUserAccountMembershipRole(this);
 }
 
 String toJson$Enum$EnterpriseUserAccountMembershipRole(
@@ -65192,7 +65506,16 @@ Enum$EnterpriseUserAccountMembershipRole
   }
 }
 
-enum Enum$EnterpriseUserDeployment { CLOUD, SERVER, $unknown }
+enum Enum$EnterpriseUserDeployment {
+  CLOUD,
+  SERVER,
+  $unknown;
+
+  factory Enum$EnterpriseUserDeployment.fromJson(String value) =>
+      fromJson$Enum$EnterpriseUserDeployment(value);
+
+  String toJson() => toJson$Enum$EnterpriseUserDeployment(this);
+}
 
 String toJson$Enum$EnterpriseUserDeployment(Enum$EnterpriseUserDeployment e) {
   switch (e) {
@@ -65217,7 +65540,15 @@ Enum$EnterpriseUserDeployment fromJson$Enum$EnterpriseUserDeployment(
   }
 }
 
-enum Enum$EnvironmentOrderField { NAME, $unknown }
+enum Enum$EnvironmentOrderField {
+  NAME,
+  $unknown;
+
+  factory Enum$EnvironmentOrderField.fromJson(String value) =>
+      fromJson$Enum$EnvironmentOrderField(value);
+
+  String toJson() => toJson$Enum$EnvironmentOrderField(this);
+}
 
 String toJson$Enum$EnvironmentOrderField(Enum$EnvironmentOrderField e) {
   switch (e) {
@@ -65237,7 +65568,17 @@ Enum$EnvironmentOrderField fromJson$Enum$EnvironmentOrderField(String value) {
   }
 }
 
-enum Enum$FileViewedState { DISMISSED, UNVIEWED, VIEWED, $unknown }
+enum Enum$FileViewedState {
+  DISMISSED,
+  UNVIEWED,
+  VIEWED,
+  $unknown;
+
+  factory Enum$FileViewedState.fromJson(String value) =>
+      fromJson$Enum$FileViewedState(value);
+
+  String toJson() => toJson$Enum$FileViewedState(this);
+}
 
 String toJson$Enum$FileViewedState(Enum$FileViewedState e) {
   switch (e) {
@@ -65278,7 +65619,12 @@ enum Enum$FundingPlatform {
   PATREON,
   POLAR,
   TIDELIFT,
-  $unknown
+  $unknown;
+
+  factory Enum$FundingPlatform.fromJson(String value) =>
+      fromJson$Enum$FundingPlatform(value);
+
+  String toJson() => toJson$Enum$FundingPlatform(this);
 }
 
 String toJson$Enum$FundingPlatform(Enum$FundingPlatform e) {
@@ -65343,7 +65689,17 @@ Enum$FundingPlatform fromJson$Enum$FundingPlatform(String value) {
   }
 }
 
-enum Enum$GistOrderField { CREATED_AT, PUSHED_AT, UPDATED_AT, $unknown }
+enum Enum$GistOrderField {
+  CREATED_AT,
+  PUSHED_AT,
+  UPDATED_AT,
+  $unknown;
+
+  factory Enum$GistOrderField.fromJson(String value) =>
+      fromJson$Enum$GistOrderField(value);
+
+  String toJson() => toJson$Enum$GistOrderField(this);
+}
 
 String toJson$Enum$GistOrderField(Enum$GistOrderField e) {
   switch (e) {
@@ -65371,7 +65727,17 @@ Enum$GistOrderField fromJson$Enum$GistOrderField(String value) {
   }
 }
 
-enum Enum$GistPrivacy { ALL, PUBLIC, SECRET, $unknown }
+enum Enum$GistPrivacy {
+  ALL,
+  PUBLIC,
+  SECRET,
+  $unknown;
+
+  factory Enum$GistPrivacy.fromJson(String value) =>
+      fromJson$Enum$GistPrivacy(value);
+
+  String toJson() => toJson$Enum$GistPrivacy(this);
+}
 
 String toJson$Enum$GistPrivacy(Enum$GistPrivacy e) {
   switch (e) {
@@ -65417,7 +65783,12 @@ enum Enum$GitSignatureState {
   UNSIGNED,
   UNVERIFIED_EMAIL,
   VALID,
-  $unknown
+  $unknown;
+
+  factory Enum$GitSignatureState.fromJson(String value) =>
+      fromJson$Enum$GitSignatureState(value);
+
+  String toJson() => toJson$Enum$GitSignatureState(this);
 }
 
 String toJson$Enum$GitSignatureState(Enum$GitSignatureState e) {
@@ -65506,7 +65877,12 @@ enum Enum$IdentityProviderConfigurationState {
   CONFIGURED,
   ENFORCED,
   UNCONFIGURED,
-  $unknown
+  $unknown;
+
+  factory Enum$IdentityProviderConfigurationState.fromJson(String value) =>
+      fromJson$Enum$IdentityProviderConfigurationState(value);
+
+  String toJson() => toJson$Enum$IdentityProviderConfigurationState(this);
 }
 
 String toJson$Enum$IdentityProviderConfigurationState(
@@ -65537,7 +65913,16 @@ Enum$IdentityProviderConfigurationState
   }
 }
 
-enum Enum$IpAllowListEnabledSettingValue { DISABLED, ENABLED, $unknown }
+enum Enum$IpAllowListEnabledSettingValue {
+  DISABLED,
+  ENABLED,
+  $unknown;
+
+  factory Enum$IpAllowListEnabledSettingValue.fromJson(String value) =>
+      fromJson$Enum$IpAllowListEnabledSettingValue(value);
+
+  String toJson() => toJson$Enum$IpAllowListEnabledSettingValue(this);
+}
 
 String toJson$Enum$IpAllowListEnabledSettingValue(
     Enum$IpAllowListEnabledSettingValue e) {
@@ -65563,7 +65948,16 @@ Enum$IpAllowListEnabledSettingValue
   }
 }
 
-enum Enum$IpAllowListEntryOrderField { ALLOW_LIST_VALUE, CREATED_AT, $unknown }
+enum Enum$IpAllowListEntryOrderField {
+  ALLOW_LIST_VALUE,
+  CREATED_AT,
+  $unknown;
+
+  factory Enum$IpAllowListEntryOrderField.fromJson(String value) =>
+      fromJson$Enum$IpAllowListEntryOrderField(value);
+
+  String toJson() => toJson$Enum$IpAllowListEntryOrderField(this);
+}
 
 String toJson$Enum$IpAllowListEntryOrderField(
     Enum$IpAllowListEntryOrderField e) {
@@ -65592,7 +65986,14 @@ Enum$IpAllowListEntryOrderField fromJson$Enum$IpAllowListEntryOrderField(
 enum Enum$IpAllowListForInstalledAppsEnabledSettingValue {
   DISABLED,
   ENABLED,
-  $unknown
+  $unknown;
+
+  factory Enum$IpAllowListForInstalledAppsEnabledSettingValue.fromJson(
+          String value) =>
+      fromJson$Enum$IpAllowListForInstalledAppsEnabledSettingValue(value);
+
+  String toJson() =>
+      toJson$Enum$IpAllowListForInstalledAppsEnabledSettingValue(this);
 }
 
 String toJson$Enum$IpAllowListForInstalledAppsEnabledSettingValue(
@@ -65619,7 +66020,16 @@ Enum$IpAllowListForInstalledAppsEnabledSettingValue
   }
 }
 
-enum Enum$IssueClosedStateReason { COMPLETED, NOT_PLANNED, $unknown }
+enum Enum$IssueClosedStateReason {
+  COMPLETED,
+  NOT_PLANNED,
+  $unknown;
+
+  factory Enum$IssueClosedStateReason.fromJson(String value) =>
+      fromJson$Enum$IssueClosedStateReason(value);
+
+  String toJson() => toJson$Enum$IssueClosedStateReason(this);
+}
 
 String toJson$Enum$IssueClosedStateReason(Enum$IssueClosedStateReason e) {
   switch (e) {
@@ -65643,7 +66053,15 @@ Enum$IssueClosedStateReason fromJson$Enum$IssueClosedStateReason(String value) {
   }
 }
 
-enum Enum$IssueCommentOrderField { UPDATED_AT, $unknown }
+enum Enum$IssueCommentOrderField {
+  UPDATED_AT,
+  $unknown;
+
+  factory Enum$IssueCommentOrderField.fromJson(String value) =>
+      fromJson$Enum$IssueCommentOrderField(value);
+
+  String toJson() => toJson$Enum$IssueCommentOrderField(this);
+}
 
 String toJson$Enum$IssueCommentOrderField(Enum$IssueCommentOrderField e) {
   switch (e) {
@@ -65663,7 +66081,17 @@ Enum$IssueCommentOrderField fromJson$Enum$IssueCommentOrderField(String value) {
   }
 }
 
-enum Enum$IssueOrderField { COMMENTS, CREATED_AT, UPDATED_AT, $unknown }
+enum Enum$IssueOrderField {
+  COMMENTS,
+  CREATED_AT,
+  UPDATED_AT,
+  $unknown;
+
+  factory Enum$IssueOrderField.fromJson(String value) =>
+      fromJson$Enum$IssueOrderField(value);
+
+  String toJson() => toJson$Enum$IssueOrderField(this);
+}
 
 String toJson$Enum$IssueOrderField(Enum$IssueOrderField e) {
   switch (e) {
@@ -65691,7 +66119,16 @@ Enum$IssueOrderField fromJson$Enum$IssueOrderField(String value) {
   }
 }
 
-enum Enum$IssueState { CLOSED, OPEN, $unknown }
+enum Enum$IssueState {
+  CLOSED,
+  OPEN,
+  $unknown;
+
+  factory Enum$IssueState.fromJson(String value) =>
+      fromJson$Enum$IssueState(value);
+
+  String toJson() => toJson$Enum$IssueState(this);
+}
 
 String toJson$Enum$IssueState(Enum$IssueState e) {
   switch (e) {
@@ -65715,7 +66152,17 @@ Enum$IssueState fromJson$Enum$IssueState(String value) {
   }
 }
 
-enum Enum$IssueStateReason { COMPLETED, NOT_PLANNED, REOPENED, $unknown }
+enum Enum$IssueStateReason {
+  COMPLETED,
+  NOT_PLANNED,
+  REOPENED,
+  $unknown;
+
+  factory Enum$IssueStateReason.fromJson(String value) =>
+      fromJson$Enum$IssueStateReason(value);
+
+  String toJson() => toJson$Enum$IssueStateReason(this);
+}
 
 String toJson$Enum$IssueStateReason(Enum$IssueStateReason e) {
   switch (e) {
@@ -65775,7 +66222,12 @@ enum Enum$IssueTimelineItemsItemType {
   UNPINNED_EVENT,
   UNSUBSCRIBED_EVENT,
   USER_BLOCKED_EVENT,
-  $unknown
+  $unknown;
+
+  factory Enum$IssueTimelineItemsItemType.fromJson(String value) =>
+      fromJson$Enum$IssueTimelineItemsItemType(value);
+
+  String toJson() => toJson$Enum$IssueTimelineItemsItemType(this);
 }
 
 String toJson$Enum$IssueTimelineItemsItemType(
@@ -65918,7 +66370,16 @@ Enum$IssueTimelineItemsItemType fromJson$Enum$IssueTimelineItemsItemType(
   }
 }
 
-enum Enum$LabelOrderField { CREATED_AT, NAME, $unknown }
+enum Enum$LabelOrderField {
+  CREATED_AT,
+  NAME,
+  $unknown;
+
+  factory Enum$LabelOrderField.fromJson(String value) =>
+      fromJson$Enum$LabelOrderField(value);
+
+  String toJson() => toJson$Enum$LabelOrderField(this);
+}
 
 String toJson$Enum$LabelOrderField(Enum$LabelOrderField e) {
   switch (e) {
@@ -65942,7 +66403,15 @@ Enum$LabelOrderField fromJson$Enum$LabelOrderField(String value) {
   }
 }
 
-enum Enum$LanguageOrderField { SIZE, $unknown }
+enum Enum$LanguageOrderField {
+  SIZE,
+  $unknown;
+
+  factory Enum$LanguageOrderField.fromJson(String value) =>
+      fromJson$Enum$LanguageOrderField(value);
+
+  String toJson() => toJson$Enum$LanguageOrderField(this);
+}
 
 String toJson$Enum$LanguageOrderField(Enum$LanguageOrderField e) {
   switch (e) {
@@ -65962,7 +66431,18 @@ Enum$LanguageOrderField fromJson$Enum$LanguageOrderField(String value) {
   }
 }
 
-enum Enum$LockReason { OFF_TOPIC, RESOLVED, SPAM, TOO_HEATED, $unknown }
+enum Enum$LockReason {
+  OFF_TOPIC,
+  RESOLVED,
+  SPAM,
+  TOO_HEATED,
+  $unknown;
+
+  factory Enum$LockReason.fromJson(String value) =>
+      fromJson$Enum$LockReason(value);
+
+  String toJson() => toJson$Enum$LockReason(this);
+}
 
 String toJson$Enum$LockReason(Enum$LockReason e) {
   switch (e) {
@@ -65994,7 +66474,16 @@ Enum$LockReason fromJson$Enum$LockReason(String value) {
   }
 }
 
-enum Enum$MannequinOrderField { CREATED_AT, LOGIN, $unknown }
+enum Enum$MannequinOrderField {
+  CREATED_AT,
+  LOGIN,
+  $unknown;
+
+  factory Enum$MannequinOrderField.fromJson(String value) =>
+      fromJson$Enum$MannequinOrderField(value);
+
+  String toJson() => toJson$Enum$MannequinOrderField(this);
+}
 
 String toJson$Enum$MannequinOrderField(Enum$MannequinOrderField e) {
   switch (e) {
@@ -66018,7 +66507,17 @@ Enum$MannequinOrderField fromJson$Enum$MannequinOrderField(String value) {
   }
 }
 
-enum Enum$MergeCommitMessage { BLANK, PR_BODY, PR_TITLE, $unknown }
+enum Enum$MergeCommitMessage {
+  BLANK,
+  PR_BODY,
+  PR_TITLE,
+  $unknown;
+
+  factory Enum$MergeCommitMessage.fromJson(String value) =>
+      fromJson$Enum$MergeCommitMessage(value);
+
+  String toJson() => toJson$Enum$MergeCommitMessage(this);
+}
 
 String toJson$Enum$MergeCommitMessage(Enum$MergeCommitMessage e) {
   switch (e) {
@@ -66046,7 +66545,16 @@ Enum$MergeCommitMessage fromJson$Enum$MergeCommitMessage(String value) {
   }
 }
 
-enum Enum$MergeCommitTitle { MERGE_MESSAGE, PR_TITLE, $unknown }
+enum Enum$MergeCommitTitle {
+  MERGE_MESSAGE,
+  PR_TITLE,
+  $unknown;
+
+  factory Enum$MergeCommitTitle.fromJson(String value) =>
+      fromJson$Enum$MergeCommitTitle(value);
+
+  String toJson() => toJson$Enum$MergeCommitTitle(this);
+}
 
 String toJson$Enum$MergeCommitTitle(Enum$MergeCommitTitle e) {
   switch (e) {
@@ -66076,7 +66584,12 @@ enum Enum$MergeQueueEntryState {
   MERGEABLE,
   QUEUED,
   UNMERGEABLE,
-  $unknown
+  $unknown;
+
+  factory Enum$MergeQueueEntryState.fromJson(String value) =>
+      fromJson$Enum$MergeQueueEntryState(value);
+
+  String toJson() => toJson$Enum$MergeQueueEntryState(this);
 }
 
 String toJson$Enum$MergeQueueEntryState(Enum$MergeQueueEntryState e) {
@@ -66113,7 +66626,16 @@ Enum$MergeQueueEntryState fromJson$Enum$MergeQueueEntryState(String value) {
   }
 }
 
-enum Enum$MergeQueueMergingStrategy { ALLGREEN, HEADGREEN, $unknown }
+enum Enum$MergeQueueMergingStrategy {
+  ALLGREEN,
+  HEADGREEN,
+  $unknown;
+
+  factory Enum$MergeQueueMergingStrategy.fromJson(String value) =>
+      fromJson$Enum$MergeQueueMergingStrategy(value);
+
+  String toJson() => toJson$Enum$MergeQueueMergingStrategy(this);
+}
 
 String toJson$Enum$MergeQueueMergingStrategy(Enum$MergeQueueMergingStrategy e) {
   switch (e) {
@@ -66149,7 +66671,12 @@ enum Enum$MergeStateStatus {
   HAS_HOOKS,
   UNKNOWN,
   UNSTABLE,
-  $unknown
+  $unknown;
+
+  factory Enum$MergeStateStatus.fromJson(String value) =>
+      fromJson$Enum$MergeStateStatus(value);
+
+  String toJson() => toJson$Enum$MergeStateStatus(this);
 }
 
 String toJson$Enum$MergeStateStatus(Enum$MergeStateStatus e) {
@@ -66198,7 +66725,17 @@ Enum$MergeStateStatus fromJson$Enum$MergeStateStatus(String value) {
   }
 }
 
-enum Enum$MergeableState { CONFLICTING, MERGEABLE, UNKNOWN, $unknown }
+enum Enum$MergeableState {
+  CONFLICTING,
+  MERGEABLE,
+  UNKNOWN,
+  $unknown;
+
+  factory Enum$MergeableState.fromJson(String value) =>
+      fromJson$Enum$MergeableState(value);
+
+  String toJson() => toJson$Enum$MergeableState(this);
+}
 
 String toJson$Enum$MergeableState(Enum$MergeableState e) {
   switch (e) {
@@ -66230,7 +66767,12 @@ enum Enum$MigrationSourceType {
   AZURE_DEVOPS,
   BITBUCKET_SERVER,
   GITHUB_ARCHIVE,
-  $unknown
+  $unknown;
+
+  factory Enum$MigrationSourceType.fromJson(String value) =>
+      fromJson$Enum$MigrationSourceType(value);
+
+  String toJson() => toJson$Enum$MigrationSourceType(this);
 }
 
 String toJson$Enum$MigrationSourceType(Enum$MigrationSourceType e) {
@@ -66267,7 +66809,12 @@ enum Enum$MigrationState {
   PENDING_VALIDATION,
   QUEUED,
   SUCCEEDED,
-  $unknown
+  $unknown;
+
+  factory Enum$MigrationState.fromJson(String value) =>
+      fromJson$Enum$MigrationState(value);
+
+  String toJson() => toJson$Enum$MigrationState(this);
 }
 
 String toJson$Enum$MigrationState(Enum$MigrationState e) {
@@ -66317,7 +66864,12 @@ enum Enum$MilestoneOrderField {
   DUE_DATE,
   NUMBER,
   UPDATED_AT,
-  $unknown
+  $unknown;
+
+  factory Enum$MilestoneOrderField.fromJson(String value) =>
+      fromJson$Enum$MilestoneOrderField(value);
+
+  String toJson() => toJson$Enum$MilestoneOrderField(this);
 }
 
 String toJson$Enum$MilestoneOrderField(Enum$MilestoneOrderField e) {
@@ -66350,7 +66902,16 @@ Enum$MilestoneOrderField fromJson$Enum$MilestoneOrderField(String value) {
   }
 }
 
-enum Enum$MilestoneState { CLOSED, OPEN, $unknown }
+enum Enum$MilestoneState {
+  CLOSED,
+  OPEN,
+  $unknown;
+
+  factory Enum$MilestoneState.fromJson(String value) =>
+      fromJson$Enum$MilestoneState(value);
+
+  String toJson() => toJson$Enum$MilestoneState(this);
+}
 
 String toJson$Enum$MilestoneState(Enum$MilestoneState e) {
   switch (e) {
@@ -66374,7 +66935,16 @@ Enum$MilestoneState fromJson$Enum$MilestoneState(String value) {
   }
 }
 
-enum Enum$NotificationRestrictionSettingValue { DISABLED, ENABLED, $unknown }
+enum Enum$NotificationRestrictionSettingValue {
+  DISABLED,
+  ENABLED,
+  $unknown;
+
+  factory Enum$NotificationRestrictionSettingValue.fromJson(String value) =>
+      fromJson$Enum$NotificationRestrictionSettingValue(value);
+
+  String toJson() => toJson$Enum$NotificationRestrictionSettingValue(this);
+}
 
 String toJson$Enum$NotificationRestrictionSettingValue(
     Enum$NotificationRestrictionSettingValue e) {
@@ -66400,7 +66970,15 @@ Enum$NotificationRestrictionSettingValue
   }
 }
 
-enum Enum$OIDCProviderType { AAD, $unknown }
+enum Enum$OIDCProviderType {
+  AAD,
+  $unknown;
+
+  factory Enum$OIDCProviderType.fromJson(String value) =>
+      fromJson$Enum$OIDCProviderType(value);
+
+  String toJson() => toJson$Enum$OIDCProviderType(this);
+}
 
 String toJson$Enum$OIDCProviderType(Enum$OIDCProviderType e) {
   switch (e) {
@@ -66424,7 +67002,12 @@ enum Enum$OauthApplicationCreateAuditEntryState {
   ACTIVE,
   PENDING_DELETION,
   SUSPENDED,
-  $unknown
+  $unknown;
+
+  factory Enum$OauthApplicationCreateAuditEntryState.fromJson(String value) =>
+      fromJson$Enum$OauthApplicationCreateAuditEntryState(value);
+
+  String toJson() => toJson$Enum$OauthApplicationCreateAuditEntryState(this);
 }
 
 String toJson$Enum$OauthApplicationCreateAuditEntryState(
@@ -66463,7 +67046,12 @@ enum Enum$OperationType {
   REMOVE,
   RESTORE,
   TRANSFER,
-  $unknown
+  $unknown;
+
+  factory Enum$OperationType.fromJson(String value) =>
+      fromJson$Enum$OperationType(value);
+
+  String toJson() => toJson$Enum$OperationType(this);
 }
 
 String toJson$Enum$OperationType(Enum$OperationType e) {
@@ -66508,7 +67096,16 @@ Enum$OperationType fromJson$Enum$OperationType(String value) {
   }
 }
 
-enum Enum$OrderDirection { ASC, DESC, $unknown }
+enum Enum$OrderDirection {
+  ASC,
+  DESC,
+  $unknown;
+
+  factory Enum$OrderDirection.fromJson(String value) =>
+      fromJson$Enum$OrderDirection(value);
+
+  String toJson() => toJson$Enum$OrderDirection(this);
+}
 
 String toJson$Enum$OrderDirection(Enum$OrderDirection e) {
   switch (e) {
@@ -66532,7 +67129,16 @@ Enum$OrderDirection fromJson$Enum$OrderDirection(String value) {
   }
 }
 
-enum Enum$OrgAddMemberAuditEntryPermission { ADMIN, READ, $unknown }
+enum Enum$OrgAddMemberAuditEntryPermission {
+  ADMIN,
+  READ,
+  $unknown;
+
+  factory Enum$OrgAddMemberAuditEntryPermission.fromJson(String value) =>
+      fromJson$Enum$OrgAddMemberAuditEntryPermission(value);
+
+  String toJson() => toJson$Enum$OrgAddMemberAuditEntryPermission(this);
+}
 
 String toJson$Enum$OrgAddMemberAuditEntryPermission(
     Enum$OrgAddMemberAuditEntryPermission e) {
@@ -66564,7 +67170,12 @@ enum Enum$OrgCreateAuditEntryBillingPlan {
   FREE,
   TIERED_PER_SEAT,
   UNLIMITED,
-  $unknown
+  $unknown;
+
+  factory Enum$OrgCreateAuditEntryBillingPlan.fromJson(String value) =>
+      fromJson$Enum$OrgCreateAuditEntryBillingPlan(value);
+
+  String toJson() => toJson$Enum$OrgCreateAuditEntryBillingPlan(this);
 }
 
 String toJson$Enum$OrgCreateAuditEntryBillingPlan(
@@ -66603,7 +67214,15 @@ Enum$OrgCreateAuditEntryBillingPlan
   }
 }
 
-enum Enum$OrgEnterpriseOwnerOrderField { LOGIN, $unknown }
+enum Enum$OrgEnterpriseOwnerOrderField {
+  LOGIN,
+  $unknown;
+
+  factory Enum$OrgEnterpriseOwnerOrderField.fromJson(String value) =>
+      fromJson$Enum$OrgEnterpriseOwnerOrderField(value);
+
+  String toJson() => toJson$Enum$OrgEnterpriseOwnerOrderField(this);
+}
 
 String toJson$Enum$OrgEnterpriseOwnerOrderField(
     Enum$OrgEnterpriseOwnerOrderField e) {
@@ -66629,7 +67248,12 @@ enum Enum$OrgRemoveBillingManagerAuditEntryReason {
   SAML_EXTERNAL_IDENTITY_MISSING,
   SAML_SSO_ENFORCEMENT_REQUIRES_EXTERNAL_IDENTITY,
   TWO_FACTOR_REQUIREMENT_NON_COMPLIANCE,
-  $unknown
+  $unknown;
+
+  factory Enum$OrgRemoveBillingManagerAuditEntryReason.fromJson(String value) =>
+      fromJson$Enum$OrgRemoveBillingManagerAuditEntryReason(value);
+
+  String toJson() => toJson$Enum$OrgRemoveBillingManagerAuditEntryReason(this);
 }
 
 String toJson$Enum$OrgRemoveBillingManagerAuditEntryReason(
@@ -66673,7 +67297,12 @@ enum Enum$OrgRemoveMemberAuditEntryMembershipType {
   OUTSIDE_COLLABORATOR,
   SUSPENDED,
   UNAFFILIATED,
-  $unknown
+  $unknown;
+
+  factory Enum$OrgRemoveMemberAuditEntryMembershipType.fromJson(String value) =>
+      fromJson$Enum$OrgRemoveMemberAuditEntryMembershipType(value);
+
+  String toJson() => toJson$Enum$OrgRemoveMemberAuditEntryMembershipType(this);
 }
 
 String toJson$Enum$OrgRemoveMemberAuditEntryMembershipType(
@@ -66722,7 +67351,12 @@ enum Enum$OrgRemoveMemberAuditEntryReason {
   TWO_FACTOR_ACCOUNT_RECOVERY,
   TWO_FACTOR_REQUIREMENT_NON_COMPLIANCE,
   USER_ACCOUNT_DELETED,
-  $unknown
+  $unknown;
+
+  factory Enum$OrgRemoveMemberAuditEntryReason.fromJson(String value) =>
+      fromJson$Enum$OrgRemoveMemberAuditEntryReason(value);
+
+  String toJson() => toJson$Enum$OrgRemoveMemberAuditEntryReason(this);
 }
 
 String toJson$Enum$OrgRemoveMemberAuditEntryReason(
@@ -66770,7 +67404,14 @@ enum Enum$OrgRemoveOutsideCollaboratorAuditEntryMembershipType {
   BILLING_MANAGER,
   OUTSIDE_COLLABORATOR,
   UNAFFILIATED,
-  $unknown
+  $unknown;
+
+  factory Enum$OrgRemoveOutsideCollaboratorAuditEntryMembershipType.fromJson(
+          String value) =>
+      fromJson$Enum$OrgRemoveOutsideCollaboratorAuditEntryMembershipType(value);
+
+  String toJson() =>
+      toJson$Enum$OrgRemoveOutsideCollaboratorAuditEntryMembershipType(this);
 }
 
 String toJson$Enum$OrgRemoveOutsideCollaboratorAuditEntryMembershipType(
@@ -66810,7 +67451,14 @@ Enum$OrgRemoveOutsideCollaboratorAuditEntryMembershipType
 enum Enum$OrgRemoveOutsideCollaboratorAuditEntryReason {
   SAML_EXTERNAL_IDENTITY_MISSING,
   TWO_FACTOR_REQUIREMENT_NON_COMPLIANCE,
-  $unknown
+  $unknown;
+
+  factory Enum$OrgRemoveOutsideCollaboratorAuditEntryReason.fromJson(
+          String value) =>
+      fromJson$Enum$OrgRemoveOutsideCollaboratorAuditEntryReason(value);
+
+  String toJson() =>
+      toJson$Enum$OrgRemoveOutsideCollaboratorAuditEntryReason(this);
 }
 
 String toJson$Enum$OrgRemoveOutsideCollaboratorAuditEntryReason(
@@ -66846,7 +67494,16 @@ enum Enum$OrgUpdateDefaultRepositoryPermissionAuditEntryPermission {
   NONE,
   READ,
   WRITE,
-  $unknown
+  $unknown;
+
+  factory Enum$OrgUpdateDefaultRepositoryPermissionAuditEntryPermission.fromJson(
+          String value) =>
+      fromJson$Enum$OrgUpdateDefaultRepositoryPermissionAuditEntryPermission(
+          value);
+
+  String toJson() =>
+      toJson$Enum$OrgUpdateDefaultRepositoryPermissionAuditEntryPermission(
+          this);
 }
 
 String toJson$Enum$OrgUpdateDefaultRepositoryPermissionAuditEntryPermission(
@@ -66885,7 +67542,16 @@ Enum$OrgUpdateDefaultRepositoryPermissionAuditEntryPermission
   }
 }
 
-enum Enum$OrgUpdateMemberAuditEntryPermission { ADMIN, READ, $unknown }
+enum Enum$OrgUpdateMemberAuditEntryPermission {
+  ADMIN,
+  READ,
+  $unknown;
+
+  factory Enum$OrgUpdateMemberAuditEntryPermission.fromJson(String value) =>
+      fromJson$Enum$OrgUpdateMemberAuditEntryPermission(value);
+
+  String toJson() => toJson$Enum$OrgUpdateMemberAuditEntryPermission(this);
+}
 
 String toJson$Enum$OrgUpdateMemberAuditEntryPermission(
     Enum$OrgUpdateMemberAuditEntryPermission e) {
@@ -66920,7 +67586,16 @@ enum Enum$OrgUpdateMemberRepositoryCreationPermissionAuditEntryVisibility {
   PUBLIC,
   PUBLIC_INTERNAL,
   PUBLIC_PRIVATE,
-  $unknown
+  $unknown;
+
+  factory Enum$OrgUpdateMemberRepositoryCreationPermissionAuditEntryVisibility.fromJson(
+          String value) =>
+      fromJson$Enum$OrgUpdateMemberRepositoryCreationPermissionAuditEntryVisibility(
+          value);
+
+  String toJson() =>
+      toJson$Enum$OrgUpdateMemberRepositoryCreationPermissionAuditEntryVisibility(
+          this);
 }
 
 String
@@ -66997,7 +67672,12 @@ enum Enum$OrganizationInvitationRole {
   BILLING_MANAGER,
   DIRECT_MEMBER,
   REINSTATE,
-  $unknown
+  $unknown;
+
+  factory Enum$OrganizationInvitationRole.fromJson(String value) =>
+      fromJson$Enum$OrganizationInvitationRole(value);
+
+  String toJson() => toJson$Enum$OrganizationInvitationRole(this);
 }
 
 String toJson$Enum$OrganizationInvitationRole(
@@ -67032,7 +67712,17 @@ Enum$OrganizationInvitationRole fromJson$Enum$OrganizationInvitationRole(
   }
 }
 
-enum Enum$OrganizationInvitationSource { MEMBER, SCIM, UNKNOWN, $unknown }
+enum Enum$OrganizationInvitationSource {
+  MEMBER,
+  SCIM,
+  UNKNOWN,
+  $unknown;
+
+  factory Enum$OrganizationInvitationSource.fromJson(String value) =>
+      fromJson$Enum$OrganizationInvitationSource(value);
+
+  String toJson() => toJson$Enum$OrganizationInvitationSource(this);
+}
 
 String toJson$Enum$OrganizationInvitationSource(
     Enum$OrganizationInvitationSource e) {
@@ -67062,7 +67752,16 @@ Enum$OrganizationInvitationSource fromJson$Enum$OrganizationInvitationSource(
   }
 }
 
-enum Enum$OrganizationInvitationType { EMAIL, USER, $unknown }
+enum Enum$OrganizationInvitationType {
+  EMAIL,
+  USER,
+  $unknown;
+
+  factory Enum$OrganizationInvitationType.fromJson(String value) =>
+      fromJson$Enum$OrganizationInvitationType(value);
+
+  String toJson() => toJson$Enum$OrganizationInvitationType(this);
+}
 
 String toJson$Enum$OrganizationInvitationType(
     Enum$OrganizationInvitationType e) {
@@ -67088,7 +67787,16 @@ Enum$OrganizationInvitationType fromJson$Enum$OrganizationInvitationType(
   }
 }
 
-enum Enum$OrganizationMemberRole { ADMIN, MEMBER, $unknown }
+enum Enum$OrganizationMemberRole {
+  ADMIN,
+  MEMBER,
+  $unknown;
+
+  factory Enum$OrganizationMemberRole.fromJson(String value) =>
+      fromJson$Enum$OrganizationMemberRole(value);
+
+  String toJson() => toJson$Enum$OrganizationMemberRole(this);
+}
 
 String toJson$Enum$OrganizationMemberRole(Enum$OrganizationMemberRole e) {
   switch (e) {
@@ -67117,7 +67825,14 @@ enum Enum$OrganizationMembersCanCreateRepositoriesSettingValue {
   DISABLED,
   INTERNAL,
   PRIVATE,
-  $unknown
+  $unknown;
+
+  factory Enum$OrganizationMembersCanCreateRepositoriesSettingValue.fromJson(
+          String value) =>
+      fromJson$Enum$OrganizationMembersCanCreateRepositoriesSettingValue(value);
+
+  String toJson() =>
+      toJson$Enum$OrganizationMembersCanCreateRepositoriesSettingValue(this);
 }
 
 String toJson$Enum$OrganizationMembersCanCreateRepositoriesSettingValue(
@@ -67164,7 +67879,12 @@ enum Enum$OrganizationMigrationState {
   QUEUED,
   REPO_MIGRATION,
   SUCCEEDED,
-  $unknown
+  $unknown;
+
+  factory Enum$OrganizationMigrationState.fromJson(String value) =>
+      fromJson$Enum$OrganizationMigrationState(value);
+
+  String toJson() => toJson$Enum$OrganizationMigrationState(this);
 }
 
 String toJson$Enum$OrganizationMigrationState(
@@ -67223,7 +67943,16 @@ Enum$OrganizationMigrationState fromJson$Enum$OrganizationMigrationState(
   }
 }
 
-enum Enum$OrganizationOrderField { CREATED_AT, LOGIN, $unknown }
+enum Enum$OrganizationOrderField {
+  CREATED_AT,
+  LOGIN,
+  $unknown;
+
+  factory Enum$OrganizationOrderField.fromJson(String value) =>
+      fromJson$Enum$OrganizationOrderField(value);
+
+  String toJson() => toJson$Enum$OrganizationOrderField(this);
+}
 
 String toJson$Enum$OrganizationOrderField(Enum$OrganizationOrderField e) {
   switch (e) {
@@ -67247,7 +67976,15 @@ Enum$OrganizationOrderField fromJson$Enum$OrganizationOrderField(String value) {
   }
 }
 
-enum Enum$PackageFileOrderField { CREATED_AT, $unknown }
+enum Enum$PackageFileOrderField {
+  CREATED_AT,
+  $unknown;
+
+  factory Enum$PackageFileOrderField.fromJson(String value) =>
+      fromJson$Enum$PackageFileOrderField(value);
+
+  String toJson() => toJson$Enum$PackageFileOrderField(this);
+}
 
 String toJson$Enum$PackageFileOrderField(Enum$PackageFileOrderField e) {
   switch (e) {
@@ -67267,7 +68004,15 @@ Enum$PackageFileOrderField fromJson$Enum$PackageFileOrderField(String value) {
   }
 }
 
-enum Enum$PackageOrderField { CREATED_AT, $unknown }
+enum Enum$PackageOrderField {
+  CREATED_AT,
+  $unknown;
+
+  factory Enum$PackageOrderField.fromJson(String value) =>
+      fromJson$Enum$PackageOrderField(value);
+
+  String toJson() => toJson$Enum$PackageOrderField(this);
+}
 
 String toJson$Enum$PackageOrderField(Enum$PackageOrderField e) {
   switch (e) {
@@ -67305,7 +68050,12 @@ enum Enum$PackageType {
   @Deprecated(
       'RUBYGEMS will be removed from this enum as this type will be migrated to only be used by the Packages REST API. Removal on 2022-12-28 UTC.')
   RUBYGEMS,
-  $unknown
+  $unknown;
+
+  factory Enum$PackageType.fromJson(String value) =>
+      fromJson$Enum$PackageType(value);
+
+  String toJson() => toJson$Enum$PackageType(this);
 }
 
 String toJson$Enum$PackageType(Enum$PackageType e) {
@@ -67350,7 +68100,15 @@ Enum$PackageType fromJson$Enum$PackageType(String value) {
   }
 }
 
-enum Enum$PackageVersionOrderField { CREATED_AT, $unknown }
+enum Enum$PackageVersionOrderField {
+  CREATED_AT,
+  $unknown;
+
+  factory Enum$PackageVersionOrderField.fromJson(String value) =>
+      fromJson$Enum$PackageVersionOrderField(value);
+
+  String toJson() => toJson$Enum$PackageVersionOrderField(this);
+}
 
 String toJson$Enum$PackageVersionOrderField(Enum$PackageVersionOrderField e) {
   switch (e) {
@@ -67378,7 +68136,12 @@ enum Enum$PatchStatus {
   DELETED,
   MODIFIED,
   RENAMED,
-  $unknown
+  $unknown;
+
+  factory Enum$PatchStatus.fromJson(String value) =>
+      fromJson$Enum$PatchStatus(value);
+
+  String toJson() => toJson$Enum$PatchStatus(this);
 }
 
 String toJson$Enum$PatchStatus(Enum$PatchStatus e) {
@@ -67428,7 +68191,12 @@ enum Enum$PinnableItemType {
   REPOSITORY,
   TEAM,
   USER,
-  $unknown
+  $unknown;
+
+  factory Enum$PinnableItemType.fromJson(String value) =>
+      fromJson$Enum$PinnableItemType(value);
+
+  String toJson() => toJson$Enum$PinnableItemType(this);
 }
 
 String toJson$Enum$PinnableItemType(Enum$PinnableItemType e) {
@@ -67483,7 +68251,12 @@ enum Enum$PinnedDiscussionGradient {
   PINK_BLUE,
   PURPLE_CORAL,
   RED_ORANGE,
-  $unknown
+  $unknown;
+
+  factory Enum$PinnedDiscussionGradient.fromJson(String value) =>
+      fromJson$Enum$PinnedDiscussionGradient(value);
+
+  String toJson() => toJson$Enum$PinnedDiscussionGradient(this);
 }
 
 String toJson$Enum$PinnedDiscussionGradient(Enum$PinnedDiscussionGradient e) {
@@ -67528,7 +68301,12 @@ enum Enum$PinnedDiscussionPattern {
   HEART_FILL,
   PLUS,
   ZAP,
-  $unknown
+  $unknown;
+
+  factory Enum$PinnedDiscussionPattern.fromJson(String value) =>
+      fromJson$Enum$PinnedDiscussionPattern(value);
+
+  String toJson() => toJson$Enum$PinnedDiscussionPattern(this);
 }
 
 String toJson$Enum$PinnedDiscussionPattern(Enum$PinnedDiscussionPattern e) {
@@ -67570,7 +68348,16 @@ Enum$PinnedDiscussionPattern fromJson$Enum$PinnedDiscussionPattern(
   }
 }
 
-enum Enum$ProjectCardArchivedState { ARCHIVED, NOT_ARCHIVED, $unknown }
+enum Enum$ProjectCardArchivedState {
+  ARCHIVED,
+  NOT_ARCHIVED,
+  $unknown;
+
+  factory Enum$ProjectCardArchivedState.fromJson(String value) =>
+      fromJson$Enum$ProjectCardArchivedState(value);
+
+  String toJson() => toJson$Enum$ProjectCardArchivedState(this);
+}
 
 String toJson$Enum$ProjectCardArchivedState(Enum$ProjectCardArchivedState e) {
   switch (e) {
@@ -67595,7 +68382,17 @@ Enum$ProjectCardArchivedState fromJson$Enum$ProjectCardArchivedState(
   }
 }
 
-enum Enum$ProjectCardState { CONTENT_ONLY, NOTE_ONLY, REDACTED, $unknown }
+enum Enum$ProjectCardState {
+  CONTENT_ONLY,
+  NOTE_ONLY,
+  REDACTED,
+  $unknown;
+
+  factory Enum$ProjectCardState.fromJson(String value) =>
+      fromJson$Enum$ProjectCardState(value);
+
+  String toJson() => toJson$Enum$ProjectCardState(this);
+}
 
 String toJson$Enum$ProjectCardState(Enum$ProjectCardState e) {
   switch (e) {
@@ -67623,7 +68420,17 @@ Enum$ProjectCardState fromJson$Enum$ProjectCardState(String value) {
   }
 }
 
-enum Enum$ProjectColumnPurpose { DONE, IN_PROGRESS, TODO, $unknown }
+enum Enum$ProjectColumnPurpose {
+  DONE,
+  IN_PROGRESS,
+  TODO,
+  $unknown;
+
+  factory Enum$ProjectColumnPurpose.fromJson(String value) =>
+      fromJson$Enum$ProjectColumnPurpose(value);
+
+  String toJson() => toJson$Enum$ProjectColumnPurpose(this);
+}
 
 String toJson$Enum$ProjectColumnPurpose(Enum$ProjectColumnPurpose e) {
   switch (e) {
@@ -67651,7 +68458,17 @@ Enum$ProjectColumnPurpose fromJson$Enum$ProjectColumnPurpose(String value) {
   }
 }
 
-enum Enum$ProjectOrderField { CREATED_AT, NAME, UPDATED_AT, $unknown }
+enum Enum$ProjectOrderField {
+  CREATED_AT,
+  NAME,
+  UPDATED_AT,
+  $unknown;
+
+  factory Enum$ProjectOrderField.fromJson(String value) =>
+      fromJson$Enum$ProjectOrderField(value);
+
+  String toJson() => toJson$Enum$ProjectOrderField(this);
+}
 
 String toJson$Enum$ProjectOrderField(Enum$ProjectOrderField e) {
   switch (e) {
@@ -67679,7 +68496,16 @@ Enum$ProjectOrderField fromJson$Enum$ProjectOrderField(String value) {
   }
 }
 
-enum Enum$ProjectState { CLOSED, OPEN, $unknown }
+enum Enum$ProjectState {
+  CLOSED,
+  OPEN,
+  $unknown;
+
+  factory Enum$ProjectState.fromJson(String value) =>
+      fromJson$Enum$ProjectState(value);
+
+  String toJson() => toJson$Enum$ProjectState(this);
+}
 
 String toJson$Enum$ProjectState(Enum$ProjectState e) {
   switch (e) {
@@ -67708,7 +68534,12 @@ enum Enum$ProjectTemplate {
   AUTOMATED_REVIEWS_KANBAN,
   BASIC_KANBAN,
   BUG_TRIAGE,
-  $unknown
+  $unknown;
+
+  factory Enum$ProjectTemplate.fromJson(String value) =>
+      fromJson$Enum$ProjectTemplate(value);
+
+  String toJson() => toJson$Enum$ProjectTemplate(this);
 }
 
 String toJson$Enum$ProjectTemplate(Enum$ProjectTemplate e) {
@@ -67746,7 +68577,12 @@ enum Enum$ProjectV2CustomFieldType {
   NUMBER,
   SINGLE_SELECT,
   TEXT,
-  $unknown
+  $unknown;
+
+  factory Enum$ProjectV2CustomFieldType.fromJson(String value) =>
+      fromJson$Enum$ProjectV2CustomFieldType(value);
+
+  String toJson() => toJson$Enum$ProjectV2CustomFieldType(this);
 }
 
 String toJson$Enum$ProjectV2CustomFieldType(Enum$ProjectV2CustomFieldType e) {
@@ -67780,7 +68616,17 @@ Enum$ProjectV2CustomFieldType fromJson$Enum$ProjectV2CustomFieldType(
   }
 }
 
-enum Enum$ProjectV2FieldOrderField { CREATED_AT, NAME, POSITION, $unknown }
+enum Enum$ProjectV2FieldOrderField {
+  CREATED_AT,
+  NAME,
+  POSITION,
+  $unknown;
+
+  factory Enum$ProjectV2FieldOrderField.fromJson(String value) =>
+      fromJson$Enum$ProjectV2FieldOrderField(value);
+
+  String toJson() => toJson$Enum$ProjectV2FieldOrderField(this);
+}
 
 String toJson$Enum$ProjectV2FieldOrderField(Enum$ProjectV2FieldOrderField e) {
   switch (e) {
@@ -67824,7 +68670,12 @@ enum Enum$ProjectV2FieldType {
   TITLE,
   TRACKED_BY,
   TRACKS,
-  $unknown
+  $unknown;
+
+  factory Enum$ProjectV2FieldType.fromJson(String value) =>
+      fromJson$Enum$ProjectV2FieldType(value);
+
+  String toJson() => toJson$Enum$ProjectV2FieldType(this);
 }
 
 String toJson$Enum$ProjectV2FieldType(Enum$ProjectV2FieldType e) {
@@ -67897,7 +68748,15 @@ Enum$ProjectV2FieldType fromJson$Enum$ProjectV2FieldType(String value) {
   }
 }
 
-enum Enum$ProjectV2ItemFieldValueOrderField { POSITION, $unknown }
+enum Enum$ProjectV2ItemFieldValueOrderField {
+  POSITION,
+  $unknown;
+
+  factory Enum$ProjectV2ItemFieldValueOrderField.fromJson(String value) =>
+      fromJson$Enum$ProjectV2ItemFieldValueOrderField(value);
+
+  String toJson() => toJson$Enum$ProjectV2ItemFieldValueOrderField(this);
+}
 
 String toJson$Enum$ProjectV2ItemFieldValueOrderField(
     Enum$ProjectV2ItemFieldValueOrderField e) {
@@ -67919,7 +68778,15 @@ Enum$ProjectV2ItemFieldValueOrderField
   }
 }
 
-enum Enum$ProjectV2ItemOrderField { POSITION, $unknown }
+enum Enum$ProjectV2ItemOrderField {
+  POSITION,
+  $unknown;
+
+  factory Enum$ProjectV2ItemOrderField.fromJson(String value) =>
+      fromJson$Enum$ProjectV2ItemOrderField(value);
+
+  String toJson() => toJson$Enum$ProjectV2ItemOrderField(this);
+}
 
 String toJson$Enum$ProjectV2ItemOrderField(Enum$ProjectV2ItemOrderField e) {
   switch (e) {
@@ -67945,7 +68812,12 @@ enum Enum$ProjectV2ItemType {
   ISSUE,
   PULL_REQUEST,
   REDACTED,
-  $unknown
+  $unknown;
+
+  factory Enum$ProjectV2ItemType.fromJson(String value) =>
+      fromJson$Enum$ProjectV2ItemType(value);
+
+  String toJson() => toJson$Enum$ProjectV2ItemType(this);
 }
 
 String toJson$Enum$ProjectV2ItemType(Enum$ProjectV2ItemType e) {
@@ -67983,7 +68855,12 @@ enum Enum$ProjectV2OrderField {
   NUMBER,
   TITLE,
   UPDATED_AT,
-  $unknown
+  $unknown;
+
+  factory Enum$ProjectV2OrderField.fromJson(String value) =>
+      fromJson$Enum$ProjectV2OrderField(value);
+
+  String toJson() => toJson$Enum$ProjectV2OrderField(this);
 }
 
 String toJson$Enum$ProjectV2OrderField(Enum$ProjectV2OrderField e) {
@@ -68016,7 +68893,18 @@ Enum$ProjectV2OrderField fromJson$Enum$ProjectV2OrderField(String value) {
   }
 }
 
-enum Enum$ProjectV2Roles { ADMIN, NONE, READER, WRITER, $unknown }
+enum Enum$ProjectV2Roles {
+  ADMIN,
+  NONE,
+  READER,
+  WRITER,
+  $unknown;
+
+  factory Enum$ProjectV2Roles.fromJson(String value) =>
+      fromJson$Enum$ProjectV2Roles(value);
+
+  String toJson() => toJson$Enum$ProjectV2Roles(this);
+}
 
 String toJson$Enum$ProjectV2Roles(Enum$ProjectV2Roles e) {
   switch (e) {
@@ -68057,7 +68945,12 @@ enum Enum$ProjectV2SingleSelectFieldOptionColor {
   PURPLE,
   RED,
   YELLOW,
-  $unknown
+  $unknown;
+
+  factory Enum$ProjectV2SingleSelectFieldOptionColor.fromJson(String value) =>
+      fromJson$Enum$ProjectV2SingleSelectFieldOptionColor(value);
+
+  String toJson() => toJson$Enum$ProjectV2SingleSelectFieldOptionColor(this);
 }
 
 String toJson$Enum$ProjectV2SingleSelectFieldOptionColor(
@@ -68108,7 +69001,16 @@ Enum$ProjectV2SingleSelectFieldOptionColor
   }
 }
 
-enum Enum$ProjectV2State { CLOSED, OPEN, $unknown }
+enum Enum$ProjectV2State {
+  CLOSED,
+  OPEN,
+  $unknown;
+
+  factory Enum$ProjectV2State.fromJson(String value) =>
+      fromJson$Enum$ProjectV2State(value);
+
+  String toJson() => toJson$Enum$ProjectV2State(this);
+}
 
 String toJson$Enum$ProjectV2State(Enum$ProjectV2State e) {
   switch (e) {
@@ -68136,7 +69038,12 @@ enum Enum$ProjectV2ViewLayout {
   BOARD_LAYOUT,
   ROADMAP_LAYOUT,
   TABLE_LAYOUT,
-  $unknown
+  $unknown;
+
+  factory Enum$ProjectV2ViewLayout.fromJson(String value) =>
+      fromJson$Enum$ProjectV2ViewLayout(value);
+
+  String toJson() => toJson$Enum$ProjectV2ViewLayout(this);
 }
 
 String toJson$Enum$ProjectV2ViewLayout(Enum$ProjectV2ViewLayout e) {
@@ -68165,7 +69072,17 @@ Enum$ProjectV2ViewLayout fromJson$Enum$ProjectV2ViewLayout(String value) {
   }
 }
 
-enum Enum$ProjectV2ViewOrderField { CREATED_AT, NAME, POSITION, $unknown }
+enum Enum$ProjectV2ViewOrderField {
+  CREATED_AT,
+  NAME,
+  POSITION,
+  $unknown;
+
+  factory Enum$ProjectV2ViewOrderField.fromJson(String value) =>
+      fromJson$Enum$ProjectV2ViewOrderField(value);
+
+  String toJson() => toJson$Enum$ProjectV2ViewOrderField(this);
+}
 
 String toJson$Enum$ProjectV2ViewOrderField(Enum$ProjectV2ViewOrderField e) {
   switch (e) {
@@ -68199,7 +69116,12 @@ enum Enum$ProjectV2WorkflowsOrderField {
   NAME,
   NUMBER,
   UPDATED_AT,
-  $unknown
+  $unknown;
+
+  factory Enum$ProjectV2WorkflowsOrderField.fromJson(String value) =>
+      fromJson$Enum$ProjectV2WorkflowsOrderField(value);
+
+  String toJson() => toJson$Enum$ProjectV2WorkflowsOrderField(this);
 }
 
 String toJson$Enum$ProjectV2WorkflowsOrderField(
@@ -68234,7 +69156,16 @@ Enum$ProjectV2WorkflowsOrderField fromJson$Enum$ProjectV2WorkflowsOrderField(
   }
 }
 
-enum Enum$PullRequestBranchUpdateMethod { MERGE, REBASE, $unknown }
+enum Enum$PullRequestBranchUpdateMethod {
+  MERGE,
+  REBASE,
+  $unknown;
+
+  factory Enum$PullRequestBranchUpdateMethod.fromJson(String value) =>
+      fromJson$Enum$PullRequestBranchUpdateMethod(value);
+
+  String toJson() => toJson$Enum$PullRequestBranchUpdateMethod(this);
+}
 
 String toJson$Enum$PullRequestBranchUpdateMethod(
     Enum$PullRequestBranchUpdateMethod e) {
@@ -68260,7 +69191,17 @@ Enum$PullRequestBranchUpdateMethod fromJson$Enum$PullRequestBranchUpdateMethod(
   }
 }
 
-enum Enum$PullRequestMergeMethod { MERGE, REBASE, SQUASH, $unknown }
+enum Enum$PullRequestMergeMethod {
+  MERGE,
+  REBASE,
+  SQUASH,
+  $unknown;
+
+  factory Enum$PullRequestMergeMethod.fromJson(String value) =>
+      fromJson$Enum$PullRequestMergeMethod(value);
+
+  String toJson() => toJson$Enum$PullRequestMergeMethod(this);
+}
 
 String toJson$Enum$PullRequestMergeMethod(Enum$PullRequestMergeMethod e) {
   switch (e) {
@@ -68288,7 +69229,16 @@ Enum$PullRequestMergeMethod fromJson$Enum$PullRequestMergeMethod(String value) {
   }
 }
 
-enum Enum$PullRequestOrderField { CREATED_AT, UPDATED_AT, $unknown }
+enum Enum$PullRequestOrderField {
+  CREATED_AT,
+  UPDATED_AT,
+  $unknown;
+
+  factory Enum$PullRequestOrderField.fromJson(String value) =>
+      fromJson$Enum$PullRequestOrderField(value);
+
+  String toJson() => toJson$Enum$PullRequestOrderField(this);
+}
 
 String toJson$Enum$PullRequestOrderField(Enum$PullRequestOrderField e) {
   switch (e) {
@@ -68312,7 +69262,16 @@ Enum$PullRequestOrderField fromJson$Enum$PullRequestOrderField(String value) {
   }
 }
 
-enum Enum$PullRequestReviewCommentState { PENDING, SUBMITTED, $unknown }
+enum Enum$PullRequestReviewCommentState {
+  PENDING,
+  SUBMITTED,
+  $unknown;
+
+  factory Enum$PullRequestReviewCommentState.fromJson(String value) =>
+      fromJson$Enum$PullRequestReviewCommentState(value);
+
+  String toJson() => toJson$Enum$PullRequestReviewCommentState(this);
+}
 
 String toJson$Enum$PullRequestReviewCommentState(
     Enum$PullRequestReviewCommentState e) {
@@ -68342,7 +69301,12 @@ enum Enum$PullRequestReviewDecision {
   APPROVED,
   CHANGES_REQUESTED,
   REVIEW_REQUIRED,
-  $unknown
+  $unknown;
+
+  factory Enum$PullRequestReviewDecision.fromJson(String value) =>
+      fromJson$Enum$PullRequestReviewDecision(value);
+
+  String toJson() => toJson$Enum$PullRequestReviewDecision(this);
 }
 
 String toJson$Enum$PullRequestReviewDecision(Enum$PullRequestReviewDecision e) {
@@ -68377,7 +69341,12 @@ enum Enum$PullRequestReviewEvent {
   COMMENT,
   DISMISS,
   REQUEST_CHANGES,
-  $unknown
+  $unknown;
+
+  factory Enum$PullRequestReviewEvent.fromJson(String value) =>
+      fromJson$Enum$PullRequestReviewEvent(value);
+
+  String toJson() => toJson$Enum$PullRequestReviewEvent(this);
 }
 
 String toJson$Enum$PullRequestReviewEvent(Enum$PullRequestReviewEvent e) {
@@ -68416,7 +69385,12 @@ enum Enum$PullRequestReviewState {
   COMMENTED,
   DISMISSED,
   PENDING,
-  $unknown
+  $unknown;
+
+  factory Enum$PullRequestReviewState.fromJson(String value) =>
+      fromJson$Enum$PullRequestReviewState(value);
+
+  String toJson() => toJson$Enum$PullRequestReviewState(this);
 }
 
 String toJson$Enum$PullRequestReviewState(Enum$PullRequestReviewState e) {
@@ -68453,7 +69427,16 @@ Enum$PullRequestReviewState fromJson$Enum$PullRequestReviewState(String value) {
   }
 }
 
-enum Enum$PullRequestReviewThreadSubjectType { FILE, LINE, $unknown }
+enum Enum$PullRequestReviewThreadSubjectType {
+  FILE,
+  LINE,
+  $unknown;
+
+  factory Enum$PullRequestReviewThreadSubjectType.fromJson(String value) =>
+      fromJson$Enum$PullRequestReviewThreadSubjectType(value);
+
+  String toJson() => toJson$Enum$PullRequestReviewThreadSubjectType(this);
+}
 
 String toJson$Enum$PullRequestReviewThreadSubjectType(
     Enum$PullRequestReviewThreadSubjectType e) {
@@ -68479,7 +69462,17 @@ Enum$PullRequestReviewThreadSubjectType
   }
 }
 
-enum Enum$PullRequestState { CLOSED, MERGED, OPEN, $unknown }
+enum Enum$PullRequestState {
+  CLOSED,
+  MERGED,
+  OPEN,
+  $unknown;
+
+  factory Enum$PullRequestState.fromJson(String value) =>
+      fromJson$Enum$PullRequestState(value);
+
+  String toJson() => toJson$Enum$PullRequestState(this);
+}
 
 String toJson$Enum$PullRequestState(Enum$PullRequestState e) {
   switch (e) {
@@ -68566,7 +69559,12 @@ enum Enum$PullRequestTimelineItemsItemType {
   UNPINNED_EVENT,
   UNSUBSCRIBED_EVENT,
   USER_BLOCKED_EVENT,
-  $unknown
+  $unknown;
+
+  factory Enum$PullRequestTimelineItemsItemType.fromJson(String value) =>
+      fromJson$Enum$PullRequestTimelineItemsItemType(value);
+
+  String toJson() => toJson$Enum$PullRequestTimelineItemsItemType(this);
 }
 
 String toJson$Enum$PullRequestTimelineItemsItemType(
@@ -68829,7 +69827,16 @@ Enum$PullRequestTimelineItemsItemType
   }
 }
 
-enum Enum$PullRequestUpdateState { CLOSED, OPEN, $unknown }
+enum Enum$PullRequestUpdateState {
+  CLOSED,
+  OPEN,
+  $unknown;
+
+  factory Enum$PullRequestUpdateState.fromJson(String value) =>
+      fromJson$Enum$PullRequestUpdateState(value);
+
+  String toJson() => toJson$Enum$PullRequestUpdateState(this);
+}
 
 String toJson$Enum$PullRequestUpdateState(Enum$PullRequestUpdateState e) {
   switch (e) {
@@ -68862,7 +69869,12 @@ enum Enum$ReactionContent {
   ROCKET,
   THUMBS_DOWN,
   THUMBS_UP,
-  $unknown
+  $unknown;
+
+  factory Enum$ReactionContent.fromJson(String value) =>
+      fromJson$Enum$ReactionContent(value);
+
+  String toJson() => toJson$Enum$ReactionContent(this);
 }
 
 String toJson$Enum$ReactionContent(Enum$ReactionContent e) {
@@ -68911,7 +69923,15 @@ Enum$ReactionContent fromJson$Enum$ReactionContent(String value) {
   }
 }
 
-enum Enum$ReactionOrderField { CREATED_AT, $unknown }
+enum Enum$ReactionOrderField {
+  CREATED_AT,
+  $unknown;
+
+  factory Enum$ReactionOrderField.fromJson(String value) =>
+      fromJson$Enum$ReactionOrderField(value);
+
+  String toJson() => toJson$Enum$ReactionOrderField(this);
+}
 
 String toJson$Enum$ReactionOrderField(Enum$ReactionOrderField e) {
   switch (e) {
@@ -68931,7 +69951,16 @@ Enum$ReactionOrderField fromJson$Enum$ReactionOrderField(String value) {
   }
 }
 
-enum Enum$RefOrderField { ALPHABETICAL, TAG_COMMIT_DATE, $unknown }
+enum Enum$RefOrderField {
+  ALPHABETICAL,
+  TAG_COMMIT_DATE,
+  $unknown;
+
+  factory Enum$RefOrderField.fromJson(String value) =>
+      fromJson$Enum$RefOrderField(value);
+
+  String toJson() => toJson$Enum$RefOrderField(this);
+}
 
 String toJson$Enum$RefOrderField(Enum$RefOrderField e) {
   switch (e) {
@@ -68955,7 +69984,16 @@ Enum$RefOrderField fromJson$Enum$RefOrderField(String value) {
   }
 }
 
-enum Enum$ReleaseOrderField { CREATED_AT, NAME, $unknown }
+enum Enum$ReleaseOrderField {
+  CREATED_AT,
+  NAME,
+  $unknown;
+
+  factory Enum$ReleaseOrderField.fromJson(String value) =>
+      fromJson$Enum$ReleaseOrderField(value);
+
+  String toJson() => toJson$Enum$ReleaseOrderField(this);
+}
 
 String toJson$Enum$ReleaseOrderField(Enum$ReleaseOrderField e) {
   switch (e) {
@@ -68979,7 +70017,17 @@ Enum$ReleaseOrderField fromJson$Enum$ReleaseOrderField(String value) {
   }
 }
 
-enum Enum$RepoAccessAuditEntryVisibility { INTERNAL, PRIVATE, PUBLIC, $unknown }
+enum Enum$RepoAccessAuditEntryVisibility {
+  INTERNAL,
+  PRIVATE,
+  PUBLIC,
+  $unknown;
+
+  factory Enum$RepoAccessAuditEntryVisibility.fromJson(String value) =>
+      fromJson$Enum$RepoAccessAuditEntryVisibility(value);
+
+  String toJson() => toJson$Enum$RepoAccessAuditEntryVisibility(this);
+}
 
 String toJson$Enum$RepoAccessAuditEntryVisibility(
     Enum$RepoAccessAuditEntryVisibility e) {
@@ -69013,7 +70061,12 @@ enum Enum$RepoAddMemberAuditEntryVisibility {
   INTERNAL,
   PRIVATE,
   PUBLIC,
-  $unknown
+  $unknown;
+
+  factory Enum$RepoAddMemberAuditEntryVisibility.fromJson(String value) =>
+      fromJson$Enum$RepoAddMemberAuditEntryVisibility(value);
+
+  String toJson() => toJson$Enum$RepoAddMemberAuditEntryVisibility(this);
 }
 
 String toJson$Enum$RepoAddMemberAuditEntryVisibility(
@@ -69048,7 +70101,12 @@ enum Enum$RepoArchivedAuditEntryVisibility {
   INTERNAL,
   PRIVATE,
   PUBLIC,
-  $unknown
+  $unknown;
+
+  factory Enum$RepoArchivedAuditEntryVisibility.fromJson(String value) =>
+      fromJson$Enum$RepoArchivedAuditEntryVisibility(value);
+
+  String toJson() => toJson$Enum$RepoArchivedAuditEntryVisibility(this);
 }
 
 String toJson$Enum$RepoArchivedAuditEntryVisibility(
@@ -69083,7 +70141,14 @@ enum Enum$RepoChangeMergeSettingAuditEntryMergeType {
   MERGE,
   REBASE,
   SQUASH,
-  $unknown
+  $unknown;
+
+  factory Enum$RepoChangeMergeSettingAuditEntryMergeType.fromJson(
+          String value) =>
+      fromJson$Enum$RepoChangeMergeSettingAuditEntryMergeType(value);
+
+  String toJson() =>
+      toJson$Enum$RepoChangeMergeSettingAuditEntryMergeType(this);
 }
 
 String toJson$Enum$RepoChangeMergeSettingAuditEntryMergeType(
@@ -69114,7 +70179,17 @@ Enum$RepoChangeMergeSettingAuditEntryMergeType
   }
 }
 
-enum Enum$RepoCreateAuditEntryVisibility { INTERNAL, PRIVATE, PUBLIC, $unknown }
+enum Enum$RepoCreateAuditEntryVisibility {
+  INTERNAL,
+  PRIVATE,
+  PUBLIC,
+  $unknown;
+
+  factory Enum$RepoCreateAuditEntryVisibility.fromJson(String value) =>
+      fromJson$Enum$RepoCreateAuditEntryVisibility(value);
+
+  String toJson() => toJson$Enum$RepoCreateAuditEntryVisibility(this);
+}
 
 String toJson$Enum$RepoCreateAuditEntryVisibility(
     Enum$RepoCreateAuditEntryVisibility e) {
@@ -69148,7 +70223,12 @@ enum Enum$RepoDestroyAuditEntryVisibility {
   INTERNAL,
   PRIVATE,
   PUBLIC,
-  $unknown
+  $unknown;
+
+  factory Enum$RepoDestroyAuditEntryVisibility.fromJson(String value) =>
+      fromJson$Enum$RepoDestroyAuditEntryVisibility(value);
+
+  String toJson() => toJson$Enum$RepoDestroyAuditEntryVisibility(this);
 }
 
 String toJson$Enum$RepoDestroyAuditEntryVisibility(
@@ -69183,7 +70263,12 @@ enum Enum$RepoRemoveMemberAuditEntryVisibility {
   INTERNAL,
   PRIVATE,
   PUBLIC,
-  $unknown
+  $unknown;
+
+  factory Enum$RepoRemoveMemberAuditEntryVisibility.fromJson(String value) =>
+      fromJson$Enum$RepoRemoveMemberAuditEntryVisibility(value);
+
+  String toJson() => toJson$Enum$RepoRemoveMemberAuditEntryVisibility(this);
 }
 
 String toJson$Enum$RepoRemoveMemberAuditEntryVisibility(
@@ -69221,7 +70306,12 @@ enum Enum$ReportedContentClassifiers {
   OUTDATED,
   RESOLVED,
   SPAM,
-  $unknown
+  $unknown;
+
+  factory Enum$ReportedContentClassifiers.fromJson(String value) =>
+      fromJson$Enum$ReportedContentClassifiers(value);
+
+  String toJson() => toJson$Enum$ReportedContentClassifiers(this);
 }
 
 String toJson$Enum$ReportedContentClassifiers(
@@ -69268,7 +70358,12 @@ enum Enum$RepositoryAffiliation {
   COLLABORATOR,
   ORGANIZATION_MEMBER,
   OWNER,
-  $unknown
+  $unknown;
+
+  factory Enum$RepositoryAffiliation.fromJson(String value) =>
+      fromJson$Enum$RepositoryAffiliation(value);
+
+  String toJson() => toJson$Enum$RepositoryAffiliation(this);
 }
 
 String toJson$Enum$RepositoryAffiliation(Enum$RepositoryAffiliation e) {
@@ -69303,7 +70398,12 @@ enum Enum$RepositoryContributionType {
   PULL_REQUEST,
   PULL_REQUEST_REVIEW,
   REPOSITORY,
-  $unknown
+  $unknown;
+
+  factory Enum$RepositoryContributionType.fromJson(String value) =>
+      fromJson$Enum$RepositoryContributionType(value);
+
+  String toJson() => toJson$Enum$RepositoryContributionType(this);
 }
 
 String toJson$Enum$RepositoryContributionType(
@@ -69347,7 +70447,12 @@ enum Enum$RepositoryInteractionLimit {
   CONTRIBUTORS_ONLY,
   EXISTING_USERS,
   NO_LIMIT,
-  $unknown
+  $unknown;
+
+  factory Enum$RepositoryInteractionLimit.fromJson(String value) =>
+      fromJson$Enum$RepositoryInteractionLimit(value);
+
+  String toJson() => toJson$Enum$RepositoryInteractionLimit(this);
 }
 
 String toJson$Enum$RepositoryInteractionLimit(
@@ -69388,7 +70493,12 @@ enum Enum$RepositoryInteractionLimitExpiry {
   ONE_WEEK,
   SIX_MONTHS,
   THREE_DAYS,
-  $unknown
+  $unknown;
+
+  factory Enum$RepositoryInteractionLimitExpiry.fromJson(String value) =>
+      fromJson$Enum$RepositoryInteractionLimitExpiry(value);
+
+  String toJson() => toJson$Enum$RepositoryInteractionLimitExpiry(this);
 }
 
 String toJson$Enum$RepositoryInteractionLimitExpiry(
@@ -69431,7 +70541,12 @@ enum Enum$RepositoryInteractionLimitOrigin {
   ORGANIZATION,
   REPOSITORY,
   USER,
-  $unknown
+  $unknown;
+
+  factory Enum$RepositoryInteractionLimitOrigin.fromJson(String value) =>
+      fromJson$Enum$RepositoryInteractionLimitOrigin(value);
+
+  String toJson() => toJson$Enum$RepositoryInteractionLimitOrigin(this);
 }
 
 String toJson$Enum$RepositoryInteractionLimitOrigin(
@@ -69462,7 +70577,15 @@ Enum$RepositoryInteractionLimitOrigin
   }
 }
 
-enum Enum$RepositoryInvitationOrderField { CREATED_AT, $unknown }
+enum Enum$RepositoryInvitationOrderField {
+  CREATED_AT,
+  $unknown;
+
+  factory Enum$RepositoryInvitationOrderField.fromJson(String value) =>
+      fromJson$Enum$RepositoryInvitationOrderField(value);
+
+  String toJson() => toJson$Enum$RepositoryInvitationOrderField(this);
+}
 
 String toJson$Enum$RepositoryInvitationOrderField(
     Enum$RepositoryInvitationOrderField e) {
@@ -69491,7 +70614,12 @@ enum Enum$RepositoryLockReason {
   RENAME,
   TRADE_RESTRICTION,
   TRANSFERRING_OWNERSHIP,
-  $unknown
+  $unknown;
+
+  factory Enum$RepositoryLockReason.fromJson(String value) =>
+      fromJson$Enum$RepositoryLockReason(value);
+
+  String toJson() => toJson$Enum$RepositoryLockReason(this);
 }
 
 String toJson$Enum$RepositoryLockReason(Enum$RepositoryLockReason e) {
@@ -69532,7 +70660,16 @@ Enum$RepositoryLockReason fromJson$Enum$RepositoryLockReason(String value) {
   }
 }
 
-enum Enum$RepositoryMigrationOrderDirection { ASC, DESC, $unknown }
+enum Enum$RepositoryMigrationOrderDirection {
+  ASC,
+  DESC,
+  $unknown;
+
+  factory Enum$RepositoryMigrationOrderDirection.fromJson(String value) =>
+      fromJson$Enum$RepositoryMigrationOrderDirection(value);
+
+  String toJson() => toJson$Enum$RepositoryMigrationOrderDirection(this);
+}
 
 String toJson$Enum$RepositoryMigrationOrderDirection(
     Enum$RepositoryMigrationOrderDirection e) {
@@ -69558,7 +70695,15 @@ Enum$RepositoryMigrationOrderDirection
   }
 }
 
-enum Enum$RepositoryMigrationOrderField { CREATED_AT, $unknown }
+enum Enum$RepositoryMigrationOrderField {
+  CREATED_AT,
+  $unknown;
+
+  factory Enum$RepositoryMigrationOrderField.fromJson(String value) =>
+      fromJson$Enum$RepositoryMigrationOrderField(value);
+
+  String toJson() => toJson$Enum$RepositoryMigrationOrderField(this);
+}
 
 String toJson$Enum$RepositoryMigrationOrderField(
     Enum$RepositoryMigrationOrderField e) {
@@ -69586,7 +70731,12 @@ enum Enum$RepositoryOrderField {
   PUSHED_AT,
   STARGAZERS,
   UPDATED_AT,
-  $unknown
+  $unknown;
+
+  factory Enum$RepositoryOrderField.fromJson(String value) =>
+      fromJson$Enum$RepositoryOrderField(value);
+
+  String toJson() => toJson$Enum$RepositoryOrderField(this);
 }
 
 String toJson$Enum$RepositoryOrderField(Enum$RepositoryOrderField e) {
@@ -69629,7 +70779,12 @@ enum Enum$RepositoryPermission {
   READ,
   TRIAGE,
   WRITE,
-  $unknown
+  $unknown;
+
+  factory Enum$RepositoryPermission.fromJson(String value) =>
+      fromJson$Enum$RepositoryPermission(value);
+
+  String toJson() => toJson$Enum$RepositoryPermission(this);
 }
 
 String toJson$Enum$RepositoryPermission(Enum$RepositoryPermission e) {
@@ -69666,7 +70821,16 @@ Enum$RepositoryPermission fromJson$Enum$RepositoryPermission(String value) {
   }
 }
 
-enum Enum$RepositoryPrivacy { PRIVATE, PUBLIC, $unknown }
+enum Enum$RepositoryPrivacy {
+  PRIVATE,
+  PUBLIC,
+  $unknown;
+
+  factory Enum$RepositoryPrivacy.fromJson(String value) =>
+      fromJson$Enum$RepositoryPrivacy(value);
+
+  String toJson() => toJson$Enum$RepositoryPrivacy(this);
+}
 
 String toJson$Enum$RepositoryPrivacy(Enum$RepositoryPrivacy e) {
   switch (e) {
@@ -69690,7 +70854,17 @@ Enum$RepositoryPrivacy fromJson$Enum$RepositoryPrivacy(String value) {
   }
 }
 
-enum Enum$RepositoryRuleOrderField { CREATED_AT, TYPE, UPDATED_AT, $unknown }
+enum Enum$RepositoryRuleOrderField {
+  CREATED_AT,
+  TYPE,
+  UPDATED_AT,
+  $unknown;
+
+  factory Enum$RepositoryRuleOrderField.fromJson(String value) =>
+      fromJson$Enum$RepositoryRuleOrderField(value);
+
+  String toJson() => toJson$Enum$RepositoryRuleOrderField(this);
+}
 
 String toJson$Enum$RepositoryRuleOrderField(Enum$RepositoryRuleOrderField e) {
   switch (e) {
@@ -69745,7 +70919,12 @@ enum Enum$RepositoryRuleType {
   UPDATE,
   WORKFLOWS,
   WORKFLOW_UPDATES,
-  $unknown
+  $unknown;
+
+  factory Enum$RepositoryRuleType.fromJson(String value) =>
+      fromJson$Enum$RepositoryRuleType(value);
+
+  String toJson() => toJson$Enum$RepositoryRuleType(this);
 }
 
 String toJson$Enum$RepositoryRuleType(Enum$RepositoryRuleType e) {
@@ -69865,7 +71044,12 @@ Enum$RepositoryRuleType fromJson$Enum$RepositoryRuleType(String value) {
 enum Enum$RepositoryRulesetBypassActorBypassMode {
   ALWAYS,
   PULL_REQUEST,
-  $unknown
+  $unknown;
+
+  factory Enum$RepositoryRulesetBypassActorBypassMode.fromJson(String value) =>
+      fromJson$Enum$RepositoryRulesetBypassActorBypassMode(value);
+
+  String toJson() => toJson$Enum$RepositoryRulesetBypassActorBypassMode(this);
 }
 
 String toJson$Enum$RepositoryRulesetBypassActorBypassMode(
@@ -69892,7 +71076,16 @@ Enum$RepositoryRulesetBypassActorBypassMode
   }
 }
 
-enum Enum$RepositoryRulesetTarget { BRANCH, TAG, $unknown }
+enum Enum$RepositoryRulesetTarget {
+  BRANCH,
+  TAG,
+  $unknown;
+
+  factory Enum$RepositoryRulesetTarget.fromJson(String value) =>
+      fromJson$Enum$RepositoryRulesetTarget(value);
+
+  String toJson() => toJson$Enum$RepositoryRulesetTarget(this);
+}
 
 String toJson$Enum$RepositoryRulesetTarget(Enum$RepositoryRulesetTarget e) {
   switch (e) {
@@ -69917,7 +71110,17 @@ Enum$RepositoryRulesetTarget fromJson$Enum$RepositoryRulesetTarget(
   }
 }
 
-enum Enum$RepositoryVisibility { INTERNAL, PRIVATE, PUBLIC, $unknown }
+enum Enum$RepositoryVisibility {
+  INTERNAL,
+  PRIVATE,
+  PUBLIC,
+  $unknown;
+
+  factory Enum$RepositoryVisibility.fromJson(String value) =>
+      fromJson$Enum$RepositoryVisibility(value);
+
+  String toJson() => toJson$Enum$RepositoryVisibility(this);
+}
 
 String toJson$Enum$RepositoryVisibility(Enum$RepositoryVisibility e) {
   switch (e) {
@@ -69948,7 +71151,14 @@ Enum$RepositoryVisibility fromJson$Enum$RepositoryVisibility(String value) {
 enum Enum$RepositoryVulnerabilityAlertDependencyScope {
   DEVELOPMENT,
   RUNTIME,
-  $unknown
+  $unknown;
+
+  factory Enum$RepositoryVulnerabilityAlertDependencyScope.fromJson(
+          String value) =>
+      fromJson$Enum$RepositoryVulnerabilityAlertDependencyScope(value);
+
+  String toJson() =>
+      toJson$Enum$RepositoryVulnerabilityAlertDependencyScope(this);
 }
 
 String toJson$Enum$RepositoryVulnerabilityAlertDependencyScope(
@@ -69980,7 +71190,12 @@ enum Enum$RepositoryVulnerabilityAlertState {
   DISMISSED,
   FIXED,
   OPEN,
-  $unknown
+  $unknown;
+
+  factory Enum$RepositoryVulnerabilityAlertState.fromJson(String value) =>
+      fromJson$Enum$RepositoryVulnerabilityAlertState(value);
+
+  String toJson() => toJson$Enum$RepositoryVulnerabilityAlertState(this);
 }
 
 String toJson$Enum$RepositoryVulnerabilityAlertState(
@@ -70021,7 +71236,12 @@ enum Enum$RequestableCheckStatusState {
   PENDING,
   QUEUED,
   WAITING,
-  $unknown
+  $unknown;
+
+  factory Enum$RequestableCheckStatusState.fromJson(String value) =>
+      fromJson$Enum$RequestableCheckStatusState(value);
+
+  String toJson() => toJson$Enum$RequestableCheckStatusState(this);
 }
 
 String toJson$Enum$RequestableCheckStatusState(
@@ -70060,7 +71280,17 @@ Enum$RequestableCheckStatusState fromJson$Enum$RequestableCheckStatusState(
   }
 }
 
-enum Enum$RoleInOrganization { DIRECT_MEMBER, OWNER, UNAFFILIATED, $unknown }
+enum Enum$RoleInOrganization {
+  DIRECT_MEMBER,
+  OWNER,
+  UNAFFILIATED,
+  $unknown;
+
+  factory Enum$RoleInOrganization.fromJson(String value) =>
+      fromJson$Enum$RoleInOrganization(value);
+
+  String toJson() => toJson$Enum$RoleInOrganization(this);
+}
 
 String toJson$Enum$RoleInOrganization(Enum$RoleInOrganization e) {
   switch (e) {
@@ -70088,7 +71318,17 @@ Enum$RoleInOrganization fromJson$Enum$RoleInOrganization(String value) {
   }
 }
 
-enum Enum$RuleEnforcement { ACTIVE, DISABLED, EVALUATE, $unknown }
+enum Enum$RuleEnforcement {
+  ACTIVE,
+  DISABLED,
+  EVALUATE,
+  $unknown;
+
+  factory Enum$RuleEnforcement.fromJson(String value) =>
+      fromJson$Enum$RuleEnforcement(value);
+
+  String toJson() => toJson$Enum$RuleEnforcement(this);
+}
 
 String toJson$Enum$RuleEnforcement(Enum$RuleEnforcement e) {
   switch (e) {
@@ -70116,7 +71356,18 @@ Enum$RuleEnforcement fromJson$Enum$RuleEnforcement(String value) {
   }
 }
 
-enum Enum$SamlDigestAlgorithm { SHA1, SHA256, SHA384, SHA512, $unknown }
+enum Enum$SamlDigestAlgorithm {
+  SHA1,
+  SHA256,
+  SHA384,
+  SHA512,
+  $unknown;
+
+  factory Enum$SamlDigestAlgorithm.fromJson(String value) =>
+      fromJson$Enum$SamlDigestAlgorithm(value);
+
+  String toJson() => toJson$Enum$SamlDigestAlgorithm(this);
+}
 
 String toJson$Enum$SamlDigestAlgorithm(Enum$SamlDigestAlgorithm e) {
   switch (e) {
@@ -70153,7 +71404,12 @@ enum Enum$SamlSignatureAlgorithm {
   RSA_SHA256,
   RSA_SHA384,
   RSA_SHA512,
-  $unknown
+  $unknown;
+
+  factory Enum$SamlSignatureAlgorithm.fromJson(String value) =>
+      fromJson$Enum$SamlSignatureAlgorithm(value);
+
+  String toJson() => toJson$Enum$SamlSignatureAlgorithm(this);
 }
 
 String toJson$Enum$SamlSignatureAlgorithm(Enum$SamlSignatureAlgorithm e) {
@@ -70186,7 +71442,15 @@ Enum$SamlSignatureAlgorithm fromJson$Enum$SamlSignatureAlgorithm(String value) {
   }
 }
 
-enum Enum$SavedReplyOrderField { UPDATED_AT, $unknown }
+enum Enum$SavedReplyOrderField {
+  UPDATED_AT,
+  $unknown;
+
+  factory Enum$SavedReplyOrderField.fromJson(String value) =>
+      fromJson$Enum$SavedReplyOrderField(value);
+
+  String toJson() => toJson$Enum$SavedReplyOrderField(this);
+}
 
 String toJson$Enum$SavedReplyOrderField(Enum$SavedReplyOrderField e) {
   switch (e) {
@@ -70206,7 +71470,18 @@ Enum$SavedReplyOrderField fromJson$Enum$SavedReplyOrderField(String value) {
   }
 }
 
-enum Enum$SearchType { DISCUSSION, ISSUE, REPOSITORY, USER, $unknown }
+enum Enum$SearchType {
+  DISCUSSION,
+  ISSUE,
+  REPOSITORY,
+  USER,
+  $unknown;
+
+  factory Enum$SearchType.fromJson(String value) =>
+      fromJson$Enum$SearchType(value);
+
+  String toJson() => toJson$Enum$SearchType(this);
+}
 
 String toJson$Enum$SearchType(Enum$SearchType e) {
   switch (e) {
@@ -70238,7 +71513,16 @@ Enum$SearchType fromJson$Enum$SearchType(String value) {
   }
 }
 
-enum Enum$SecurityAdvisoryClassification { GENERAL, MALWARE, $unknown }
+enum Enum$SecurityAdvisoryClassification {
+  GENERAL,
+  MALWARE,
+  $unknown;
+
+  factory Enum$SecurityAdvisoryClassification.fromJson(String value) =>
+      fromJson$Enum$SecurityAdvisoryClassification(value);
+
+  String toJson() => toJson$Enum$SecurityAdvisoryClassification(this);
+}
 
 String toJson$Enum$SecurityAdvisoryClassification(
     Enum$SecurityAdvisoryClassification e) {
@@ -70277,7 +71561,12 @@ enum Enum$SecurityAdvisoryEcosystem {
   RUBYGEMS,
   RUST,
   SWIFT,
-  $unknown
+  $unknown;
+
+  factory Enum$SecurityAdvisoryEcosystem.fromJson(String value) =>
+      fromJson$Enum$SecurityAdvisoryEcosystem(value);
+
+  String toJson() => toJson$Enum$SecurityAdvisoryEcosystem(this);
 }
 
 String toJson$Enum$SecurityAdvisoryEcosystem(Enum$SecurityAdvisoryEcosystem e) {
@@ -70343,7 +71632,16 @@ Enum$SecurityAdvisoryEcosystem fromJson$Enum$SecurityAdvisoryEcosystem(
   }
 }
 
-enum Enum$SecurityAdvisoryIdentifierType { CVE, GHSA, $unknown }
+enum Enum$SecurityAdvisoryIdentifierType {
+  CVE,
+  GHSA,
+  $unknown;
+
+  factory Enum$SecurityAdvisoryIdentifierType.fromJson(String value) =>
+      fromJson$Enum$SecurityAdvisoryIdentifierType(value);
+
+  String toJson() => toJson$Enum$SecurityAdvisoryIdentifierType(this);
+}
 
 String toJson$Enum$SecurityAdvisoryIdentifierType(
     Enum$SecurityAdvisoryIdentifierType e) {
@@ -70369,7 +71667,16 @@ Enum$SecurityAdvisoryIdentifierType
   }
 }
 
-enum Enum$SecurityAdvisoryOrderField { PUBLISHED_AT, UPDATED_AT, $unknown }
+enum Enum$SecurityAdvisoryOrderField {
+  PUBLISHED_AT,
+  UPDATED_AT,
+  $unknown;
+
+  factory Enum$SecurityAdvisoryOrderField.fromJson(String value) =>
+      fromJson$Enum$SecurityAdvisoryOrderField(value);
+
+  String toJson() => toJson$Enum$SecurityAdvisoryOrderField(this);
+}
 
 String toJson$Enum$SecurityAdvisoryOrderField(
     Enum$SecurityAdvisoryOrderField e) {
@@ -70395,7 +71702,18 @@ Enum$SecurityAdvisoryOrderField fromJson$Enum$SecurityAdvisoryOrderField(
   }
 }
 
-enum Enum$SecurityAdvisorySeverity { CRITICAL, HIGH, LOW, MODERATE, $unknown }
+enum Enum$SecurityAdvisorySeverity {
+  CRITICAL,
+  HIGH,
+  LOW,
+  MODERATE,
+  $unknown;
+
+  factory Enum$SecurityAdvisorySeverity.fromJson(String value) =>
+      fromJson$Enum$SecurityAdvisorySeverity(value);
+
+  String toJson() => toJson$Enum$SecurityAdvisorySeverity(this);
+}
 
 String toJson$Enum$SecurityAdvisorySeverity(Enum$SecurityAdvisorySeverity e) {
   switch (e) {
@@ -70428,7 +71746,15 @@ Enum$SecurityAdvisorySeverity fromJson$Enum$SecurityAdvisorySeverity(
   }
 }
 
-enum Enum$SecurityVulnerabilityOrderField { UPDATED_AT, $unknown }
+enum Enum$SecurityVulnerabilityOrderField {
+  UPDATED_AT,
+  $unknown;
+
+  factory Enum$SecurityVulnerabilityOrderField.fromJson(String value) =>
+      fromJson$Enum$SecurityVulnerabilityOrderField(value);
+
+  String toJson() => toJson$Enum$SecurityVulnerabilityOrderField(this);
+}
 
 String toJson$Enum$SecurityVulnerabilityOrderField(
     Enum$SecurityVulnerabilityOrderField e) {
@@ -70462,7 +71788,12 @@ enum Enum$SocialAccountProvider {
   TWITCH,
   TWITTER,
   YOUTUBE,
-  $unknown
+  $unknown;
+
+  factory Enum$SocialAccountProvider.fromJson(String value) =>
+      fromJson$Enum$SocialAccountProvider(value);
+
+  String toJson() => toJson$Enum$SocialAccountProvider(this);
 }
 
 String toJson$Enum$SocialAccountProvider(Enum$SocialAccountProvider e) {
@@ -70527,7 +71858,12 @@ enum Enum$SponsorAndLifetimeValueOrderField {
   LIFETIME_VALUE,
   SPONSOR_LOGIN,
   SPONSOR_RELEVANCE,
-  $unknown
+  $unknown;
+
+  factory Enum$SponsorAndLifetimeValueOrderField.fromJson(String value) =>
+      fromJson$Enum$SponsorAndLifetimeValueOrderField(value);
+
+  String toJson() => toJson$Enum$SponsorAndLifetimeValueOrderField(this);
 }
 
 String toJson$Enum$SponsorAndLifetimeValueOrderField(
@@ -70558,7 +71894,16 @@ Enum$SponsorAndLifetimeValueOrderField
   }
 }
 
-enum Enum$SponsorOrderField { LOGIN, RELEVANCE, $unknown }
+enum Enum$SponsorOrderField {
+  LOGIN,
+  RELEVANCE,
+  $unknown;
+
+  factory Enum$SponsorOrderField.fromJson(String value) =>
+      fromJson$Enum$SponsorOrderField(value);
+
+  String toJson() => toJson$Enum$SponsorOrderField(this);
+}
 
 String toJson$Enum$SponsorOrderField(Enum$SponsorOrderField e) {
   switch (e) {
@@ -70582,7 +71927,15 @@ Enum$SponsorOrderField fromJson$Enum$SponsorOrderField(String value) {
   }
 }
 
-enum Enum$SponsorableOrderField { LOGIN, $unknown }
+enum Enum$SponsorableOrderField {
+  LOGIN,
+  $unknown;
+
+  factory Enum$SponsorableOrderField.fromJson(String value) =>
+      fromJson$Enum$SponsorableOrderField(value);
+
+  String toJson() => toJson$Enum$SponsorableOrderField(this);
+}
 
 String toJson$Enum$SponsorableOrderField(Enum$SponsorableOrderField e) {
   switch (e) {
@@ -70609,7 +71962,12 @@ enum Enum$SponsorsActivityAction {
   REFUND,
   SPONSOR_MATCH_DISABLED,
   TIER_CHANGE,
-  $unknown
+  $unknown;
+
+  factory Enum$SponsorsActivityAction.fromJson(String value) =>
+      fromJson$Enum$SponsorsActivityAction(value);
+
+  String toJson() => toJson$Enum$SponsorsActivityAction(this);
 }
 
 String toJson$Enum$SponsorsActivityAction(Enum$SponsorsActivityAction e) {
@@ -70650,7 +72008,15 @@ Enum$SponsorsActivityAction fromJson$Enum$SponsorsActivityAction(String value) {
   }
 }
 
-enum Enum$SponsorsActivityOrderField { TIMESTAMP, $unknown }
+enum Enum$SponsorsActivityOrderField {
+  TIMESTAMP,
+  $unknown;
+
+  factory Enum$SponsorsActivityOrderField.fromJson(String value) =>
+      fromJson$Enum$SponsorsActivityOrderField(value);
+
+  String toJson() => toJson$Enum$SponsorsActivityOrderField(this);
+}
 
 String toJson$Enum$SponsorsActivityOrderField(
     Enum$SponsorsActivityOrderField e) {
@@ -70672,7 +72038,18 @@ Enum$SponsorsActivityOrderField fromJson$Enum$SponsorsActivityOrderField(
   }
 }
 
-enum Enum$SponsorsActivityPeriod { ALL, DAY, MONTH, WEEK, $unknown }
+enum Enum$SponsorsActivityPeriod {
+  ALL,
+  DAY,
+  MONTH,
+  WEEK,
+  $unknown;
+
+  factory Enum$SponsorsActivityPeriod.fromJson(String value) =>
+      fromJson$Enum$SponsorsActivityPeriod(value);
+
+  String toJson() => toJson$Enum$SponsorsActivityPeriod(this);
+}
 
 String toJson$Enum$SponsorsActivityPeriod(Enum$SponsorsActivityPeriod e) {
   switch (e) {
@@ -70951,7 +72328,12 @@ enum Enum$SponsorsCountryOrRegionCode {
   ZA,
   ZM,
   ZW,
-  $unknown
+  $unknown;
+
+  factory Enum$SponsorsCountryOrRegionCode.fromJson(String value) =>
+      fromJson$Enum$SponsorsCountryOrRegionCode(value);
+
+  String toJson() => toJson$Enum$SponsorsCountryOrRegionCode(this);
 }
 
 String toJson$Enum$SponsorsCountryOrRegionCode(
@@ -71957,7 +73339,12 @@ Enum$SponsorsCountryOrRegionCode fromJson$Enum$SponsorsCountryOrRegionCode(
 enum Enum$SponsorsGoalKind {
   MONTHLY_SPONSORSHIP_AMOUNT,
   TOTAL_SPONSORS_COUNT,
-  $unknown
+  $unknown;
+
+  factory Enum$SponsorsGoalKind.fromJson(String value) =>
+      fromJson$Enum$SponsorsGoalKind(value);
+
+  String toJson() => toJson$Enum$SponsorsGoalKind(this);
 }
 
 String toJson$Enum$SponsorsGoalKind(Enum$SponsorsGoalKind e) {
@@ -71985,7 +73372,14 @@ Enum$SponsorsGoalKind fromJson$Enum$SponsorsGoalKind(String value) {
 enum Enum$SponsorsListingFeaturedItemFeatureableType {
   REPOSITORY,
   USER,
-  $unknown
+  $unknown;
+
+  factory Enum$SponsorsListingFeaturedItemFeatureableType.fromJson(
+          String value) =>
+      fromJson$Enum$SponsorsListingFeaturedItemFeatureableType(value);
+
+  String toJson() =>
+      toJson$Enum$SponsorsListingFeaturedItemFeatureableType(this);
 }
 
 String toJson$Enum$SponsorsListingFeaturedItemFeatureableType(
@@ -72015,7 +73409,12 @@ Enum$SponsorsListingFeaturedItemFeatureableType
 enum Enum$SponsorsTierOrderField {
   CREATED_AT,
   MONTHLY_PRICE_IN_CENTS,
-  $unknown
+  $unknown;
+
+  factory Enum$SponsorsTierOrderField.fromJson(String value) =>
+      fromJson$Enum$SponsorsTierOrderField(value);
+
+  String toJson() => toJson$Enum$SponsorsTierOrderField(this);
 }
 
 String toJson$Enum$SponsorsTierOrderField(Enum$SponsorsTierOrderField e) {
@@ -72040,7 +73439,15 @@ Enum$SponsorsTierOrderField fromJson$Enum$SponsorsTierOrderField(String value) {
   }
 }
 
-enum Enum$SponsorshipNewsletterOrderField { CREATED_AT, $unknown }
+enum Enum$SponsorshipNewsletterOrderField {
+  CREATED_AT,
+  $unknown;
+
+  factory Enum$SponsorshipNewsletterOrderField.fromJson(String value) =>
+      fromJson$Enum$SponsorshipNewsletterOrderField(value);
+
+  String toJson() => toJson$Enum$SponsorshipNewsletterOrderField(this);
+}
 
 String toJson$Enum$SponsorshipNewsletterOrderField(
     Enum$SponsorshipNewsletterOrderField e) {
@@ -72062,7 +73469,15 @@ Enum$SponsorshipNewsletterOrderField
   }
 }
 
-enum Enum$SponsorshipOrderField { CREATED_AT, $unknown }
+enum Enum$SponsorshipOrderField {
+  CREATED_AT,
+  $unknown;
+
+  factory Enum$SponsorshipOrderField.fromJson(String value) =>
+      fromJson$Enum$SponsorshipOrderField(value);
+
+  String toJson() => toJson$Enum$SponsorshipOrderField(this);
+}
 
 String toJson$Enum$SponsorshipOrderField(Enum$SponsorshipOrderField e) {
   switch (e) {
@@ -72082,7 +73497,16 @@ Enum$SponsorshipOrderField fromJson$Enum$SponsorshipOrderField(String value) {
   }
 }
 
-enum Enum$SponsorshipPaymentSource { GITHUB, PATREON, $unknown }
+enum Enum$SponsorshipPaymentSource {
+  GITHUB,
+  PATREON,
+  $unknown;
+
+  factory Enum$SponsorshipPaymentSource.fromJson(String value) =>
+      fromJson$Enum$SponsorshipPaymentSource(value);
+
+  String toJson() => toJson$Enum$SponsorshipPaymentSource(this);
+}
 
 String toJson$Enum$SponsorshipPaymentSource(Enum$SponsorshipPaymentSource e) {
   switch (e) {
@@ -72107,7 +73531,16 @@ Enum$SponsorshipPaymentSource fromJson$Enum$SponsorshipPaymentSource(
   }
 }
 
-enum Enum$SponsorshipPrivacy { PRIVATE, PUBLIC, $unknown }
+enum Enum$SponsorshipPrivacy {
+  PRIVATE,
+  PUBLIC,
+  $unknown;
+
+  factory Enum$SponsorshipPrivacy.fromJson(String value) =>
+      fromJson$Enum$SponsorshipPrivacy(value);
+
+  String toJson() => toJson$Enum$SponsorshipPrivacy(this);
+}
 
 String toJson$Enum$SponsorshipPrivacy(Enum$SponsorshipPrivacy e) {
   switch (e) {
@@ -72131,7 +73564,17 @@ Enum$SponsorshipPrivacy fromJson$Enum$SponsorshipPrivacy(String value) {
   }
 }
 
-enum Enum$SquashMergeCommitMessage { BLANK, COMMIT_MESSAGES, PR_BODY, $unknown }
+enum Enum$SquashMergeCommitMessage {
+  BLANK,
+  COMMIT_MESSAGES,
+  PR_BODY,
+  $unknown;
+
+  factory Enum$SquashMergeCommitMessage.fromJson(String value) =>
+      fromJson$Enum$SquashMergeCommitMessage(value);
+
+  String toJson() => toJson$Enum$SquashMergeCommitMessage(this);
+}
 
 String toJson$Enum$SquashMergeCommitMessage(Enum$SquashMergeCommitMessage e) {
   switch (e) {
@@ -72160,7 +73603,16 @@ Enum$SquashMergeCommitMessage fromJson$Enum$SquashMergeCommitMessage(
   }
 }
 
-enum Enum$SquashMergeCommitTitle { COMMIT_OR_PR_TITLE, PR_TITLE, $unknown }
+enum Enum$SquashMergeCommitTitle {
+  COMMIT_OR_PR_TITLE,
+  PR_TITLE,
+  $unknown;
+
+  factory Enum$SquashMergeCommitTitle.fromJson(String value) =>
+      fromJson$Enum$SquashMergeCommitTitle(value);
+
+  String toJson() => toJson$Enum$SquashMergeCommitTitle(this);
+}
 
 String toJson$Enum$SquashMergeCommitTitle(Enum$SquashMergeCommitTitle e) {
   switch (e) {
@@ -72184,7 +73636,15 @@ Enum$SquashMergeCommitTitle fromJson$Enum$SquashMergeCommitTitle(String value) {
   }
 }
 
-enum Enum$StarOrderField { STARRED_AT, $unknown }
+enum Enum$StarOrderField {
+  STARRED_AT,
+  $unknown;
+
+  factory Enum$StarOrderField.fromJson(String value) =>
+      fromJson$Enum$StarOrderField(value);
+
+  String toJson() => toJson$Enum$StarOrderField(this);
+}
 
 String toJson$Enum$StarOrderField(Enum$StarOrderField e) {
   switch (e) {
@@ -72204,7 +73664,19 @@ Enum$StarOrderField fromJson$Enum$StarOrderField(String value) {
   }
 }
 
-enum Enum$StatusState { ERROR, EXPECTED, FAILURE, PENDING, SUCCESS, $unknown }
+enum Enum$StatusState {
+  ERROR,
+  EXPECTED,
+  FAILURE,
+  PENDING,
+  SUCCESS,
+  $unknown;
+
+  factory Enum$StatusState.fromJson(String value) =>
+      fromJson$Enum$StatusState(value);
+
+  String toJson() => toJson$Enum$StatusState(this);
+}
 
 String toJson$Enum$StatusState(Enum$StatusState e) {
   switch (e) {
@@ -72240,7 +73712,17 @@ Enum$StatusState fromJson$Enum$StatusState(String value) {
   }
 }
 
-enum Enum$SubscriptionState { IGNORED, SUBSCRIBED, UNSUBSCRIBED, $unknown }
+enum Enum$SubscriptionState {
+  IGNORED,
+  SUBSCRIBED,
+  UNSUBSCRIBED,
+  $unknown;
+
+  factory Enum$SubscriptionState.fromJson(String value) =>
+      fromJson$Enum$SubscriptionState(value);
+
+  String toJson() => toJson$Enum$SubscriptionState(this);
+}
 
 String toJson$Enum$SubscriptionState(Enum$SubscriptionState e) {
   switch (e) {
@@ -72268,7 +73750,15 @@ Enum$SubscriptionState fromJson$Enum$SubscriptionState(String value) {
   }
 }
 
-enum Enum$TeamDiscussionCommentOrderField { NUMBER, $unknown }
+enum Enum$TeamDiscussionCommentOrderField {
+  NUMBER,
+  $unknown;
+
+  factory Enum$TeamDiscussionCommentOrderField.fromJson(String value) =>
+      fromJson$Enum$TeamDiscussionCommentOrderField(value);
+
+  String toJson() => toJson$Enum$TeamDiscussionCommentOrderField(this);
+}
 
 String toJson$Enum$TeamDiscussionCommentOrderField(
     Enum$TeamDiscussionCommentOrderField e) {
@@ -72290,7 +73780,15 @@ Enum$TeamDiscussionCommentOrderField
   }
 }
 
-enum Enum$TeamDiscussionOrderField { CREATED_AT, $unknown }
+enum Enum$TeamDiscussionOrderField {
+  CREATED_AT,
+  $unknown;
+
+  factory Enum$TeamDiscussionOrderField.fromJson(String value) =>
+      fromJson$Enum$TeamDiscussionOrderField(value);
+
+  String toJson() => toJson$Enum$TeamDiscussionOrderField(this);
+}
 
 String toJson$Enum$TeamDiscussionOrderField(Enum$TeamDiscussionOrderField e) {
   switch (e) {
@@ -72311,7 +73809,16 @@ Enum$TeamDiscussionOrderField fromJson$Enum$TeamDiscussionOrderField(
   }
 }
 
-enum Enum$TeamMemberOrderField { CREATED_AT, LOGIN, $unknown }
+enum Enum$TeamMemberOrderField {
+  CREATED_AT,
+  LOGIN,
+  $unknown;
+
+  factory Enum$TeamMemberOrderField.fromJson(String value) =>
+      fromJson$Enum$TeamMemberOrderField(value);
+
+  String toJson() => toJson$Enum$TeamMemberOrderField(this);
+}
 
 String toJson$Enum$TeamMemberOrderField(Enum$TeamMemberOrderField e) {
   switch (e) {
@@ -72335,7 +73842,16 @@ Enum$TeamMemberOrderField fromJson$Enum$TeamMemberOrderField(String value) {
   }
 }
 
-enum Enum$TeamMemberRole { MAINTAINER, MEMBER, $unknown }
+enum Enum$TeamMemberRole {
+  MAINTAINER,
+  MEMBER,
+  $unknown;
+
+  factory Enum$TeamMemberRole.fromJson(String value) =>
+      fromJson$Enum$TeamMemberRole(value);
+
+  String toJson() => toJson$Enum$TeamMemberRole(this);
+}
 
 String toJson$Enum$TeamMemberRole(Enum$TeamMemberRole e) {
   switch (e) {
@@ -72359,7 +73875,17 @@ Enum$TeamMemberRole fromJson$Enum$TeamMemberRole(String value) {
   }
 }
 
-enum Enum$TeamMembershipType { ALL, CHILD_TEAM, IMMEDIATE, $unknown }
+enum Enum$TeamMembershipType {
+  ALL,
+  CHILD_TEAM,
+  IMMEDIATE,
+  $unknown;
+
+  factory Enum$TeamMembershipType.fromJson(String value) =>
+      fromJson$Enum$TeamMembershipType(value);
+
+  String toJson() => toJson$Enum$TeamMembershipType(this);
+}
 
 String toJson$Enum$TeamMembershipType(Enum$TeamMembershipType e) {
   switch (e) {
@@ -72390,7 +73916,12 @@ Enum$TeamMembershipType fromJson$Enum$TeamMembershipType(String value) {
 enum Enum$TeamNotificationSetting {
   NOTIFICATIONS_DISABLED,
   NOTIFICATIONS_ENABLED,
-  $unknown
+  $unknown;
+
+  factory Enum$TeamNotificationSetting.fromJson(String value) =>
+      fromJson$Enum$TeamNotificationSetting(value);
+
+  String toJson() => toJson$Enum$TeamNotificationSetting(this);
 }
 
 String toJson$Enum$TeamNotificationSetting(Enum$TeamNotificationSetting e) {
@@ -72416,7 +73947,15 @@ Enum$TeamNotificationSetting fromJson$Enum$TeamNotificationSetting(
   }
 }
 
-enum Enum$TeamOrderField { NAME, $unknown }
+enum Enum$TeamOrderField {
+  NAME,
+  $unknown;
+
+  factory Enum$TeamOrderField.fromJson(String value) =>
+      fromJson$Enum$TeamOrderField(value);
+
+  String toJson() => toJson$Enum$TeamOrderField(this);
+}
 
 String toJson$Enum$TeamOrderField(Enum$TeamOrderField e) {
   switch (e) {
@@ -72436,7 +73975,16 @@ Enum$TeamOrderField fromJson$Enum$TeamOrderField(String value) {
   }
 }
 
-enum Enum$TeamPrivacy { SECRET, VISIBLE, $unknown }
+enum Enum$TeamPrivacy {
+  SECRET,
+  VISIBLE,
+  $unknown;
+
+  factory Enum$TeamPrivacy.fromJson(String value) =>
+      fromJson$Enum$TeamPrivacy(value);
+
+  String toJson() => toJson$Enum$TeamPrivacy(this);
+}
 
 String toJson$Enum$TeamPrivacy(Enum$TeamPrivacy e) {
   switch (e) {
@@ -72467,7 +74015,12 @@ enum Enum$TeamRepositoryOrderField {
   PUSHED_AT,
   STARGAZERS,
   UPDATED_AT,
-  $unknown
+  $unknown;
+
+  factory Enum$TeamRepositoryOrderField.fromJson(String value) =>
+      fromJson$Enum$TeamRepositoryOrderField(value);
+
+  String toJson() => toJson$Enum$TeamRepositoryOrderField(this);
 }
 
 String toJson$Enum$TeamRepositoryOrderField(Enum$TeamRepositoryOrderField e) {
@@ -72509,7 +74062,16 @@ Enum$TeamRepositoryOrderField fromJson$Enum$TeamRepositoryOrderField(
   }
 }
 
-enum Enum$TeamReviewAssignmentAlgorithm { LOAD_BALANCE, ROUND_ROBIN, $unknown }
+enum Enum$TeamReviewAssignmentAlgorithm {
+  LOAD_BALANCE,
+  ROUND_ROBIN,
+  $unknown;
+
+  factory Enum$TeamReviewAssignmentAlgorithm.fromJson(String value) =>
+      fromJson$Enum$TeamReviewAssignmentAlgorithm(value);
+
+  String toJson() => toJson$Enum$TeamReviewAssignmentAlgorithm(this);
+}
 
 String toJson$Enum$TeamReviewAssignmentAlgorithm(
     Enum$TeamReviewAssignmentAlgorithm e) {
@@ -72535,7 +74097,15 @@ Enum$TeamReviewAssignmentAlgorithm fromJson$Enum$TeamReviewAssignmentAlgorithm(
   }
 }
 
-enum Enum$TeamRole { ADMIN, MEMBER, $unknown }
+enum Enum$TeamRole {
+  ADMIN,
+  MEMBER,
+  $unknown;
+
+  factory Enum$TeamRole.fromJson(String value) => fromJson$Enum$TeamRole(value);
+
+  String toJson() => toJson$Enum$TeamRole(this);
+}
 
 String toJson$Enum$TeamRole(Enum$TeamRole e) {
   switch (e) {
@@ -72563,7 +74133,12 @@ enum Enum$ThreadSubscriptionFormAction {
   NONE,
   SUBSCRIBE,
   UNSUBSCRIBE,
-  $unknown
+  $unknown;
+
+  factory Enum$ThreadSubscriptionFormAction.fromJson(String value) =>
+      fromJson$Enum$ThreadSubscriptionFormAction(value);
+
+  String toJson() => toJson$Enum$ThreadSubscriptionFormAction(this);
 }
 
 String toJson$Enum$ThreadSubscriptionFormAction(
@@ -72604,7 +74179,12 @@ enum Enum$ThreadSubscriptionState {
   SUBSCRIBED_TO_THREAD_EVENTS,
   SUBSCRIBED_TO_THREAD_TYPE,
   UNAVAILABLE,
-  $unknown
+  $unknown;
+
+  factory Enum$ThreadSubscriptionState.fromJson(String value) =>
+      fromJson$Enum$ThreadSubscriptionState(value);
+
+  String toJson() => toJson$Enum$ThreadSubscriptionState(this);
 }
 
 String toJson$Enum$ThreadSubscriptionState(Enum$ThreadSubscriptionState e) {
@@ -72671,7 +74251,12 @@ enum Enum$TopicSuggestionDeclineReason {
   @Deprecated(
       'Suggested topics are no longer supported Removal on 2024-04-01 UTC.')
   TOO_SPECIFIC,
-  $unknown
+  $unknown;
+
+  factory Enum$TopicSuggestionDeclineReason.fromJson(String value) =>
+      fromJson$Enum$TopicSuggestionDeclineReason(value);
+
+  String toJson() => toJson$Enum$TopicSuggestionDeclineReason(this);
 }
 
 String toJson$Enum$TopicSuggestionDeclineReason(
@@ -72706,7 +74291,16 @@ Enum$TopicSuggestionDeclineReason fromJson$Enum$TopicSuggestionDeclineReason(
   }
 }
 
-enum Enum$TrackedIssueStates { CLOSED, OPEN, $unknown }
+enum Enum$TrackedIssueStates {
+  CLOSED,
+  OPEN,
+  $unknown;
+
+  factory Enum$TrackedIssueStates.fromJson(String value) =>
+      fromJson$Enum$TrackedIssueStates(value);
+
+  String toJson() => toJson$Enum$TrackedIssueStates(this);
+}
 
 String toJson$Enum$TrackedIssueStates(Enum$TrackedIssueStates e) {
   switch (e) {
@@ -72736,7 +74330,12 @@ enum Enum$UserBlockDuration {
   ONE_WEEK,
   PERMANENT,
   THREE_DAYS,
-  $unknown
+  $unknown;
+
+  factory Enum$UserBlockDuration.fromJson(String value) =>
+      fromJson$Enum$UserBlockDuration(value);
+
+  String toJson() => toJson$Enum$UserBlockDuration(this);
 }
 
 String toJson$Enum$UserBlockDuration(Enum$UserBlockDuration e) {
@@ -72773,7 +74372,15 @@ Enum$UserBlockDuration fromJson$Enum$UserBlockDuration(String value) {
   }
 }
 
-enum Enum$UserStatusOrderField { UPDATED_AT, $unknown }
+enum Enum$UserStatusOrderField {
+  UPDATED_AT,
+  $unknown;
+
+  factory Enum$UserStatusOrderField.fromJson(String value) =>
+      fromJson$Enum$UserStatusOrderField(value);
+
+  String toJson() => toJson$Enum$UserStatusOrderField(this);
+}
 
 String toJson$Enum$UserStatusOrderField(Enum$UserStatusOrderField e) {
   switch (e) {
@@ -72793,7 +74400,16 @@ Enum$UserStatusOrderField fromJson$Enum$UserStatusOrderField(String value) {
   }
 }
 
-enum Enum$VerifiableDomainOrderField { CREATED_AT, DOMAIN, $unknown }
+enum Enum$VerifiableDomainOrderField {
+  CREATED_AT,
+  DOMAIN,
+  $unknown;
+
+  factory Enum$VerifiableDomainOrderField.fromJson(String value) =>
+      fromJson$Enum$VerifiableDomainOrderField(value);
+
+  String toJson() => toJson$Enum$VerifiableDomainOrderField(this);
+}
 
 String toJson$Enum$VerifiableDomainOrderField(
     Enum$VerifiableDomainOrderField e) {
@@ -72819,7 +74435,15 @@ Enum$VerifiableDomainOrderField fromJson$Enum$VerifiableDomainOrderField(
   }
 }
 
-enum Enum$WorkflowRunOrderField { CREATED_AT, $unknown }
+enum Enum$WorkflowRunOrderField {
+  CREATED_AT,
+  $unknown;
+
+  factory Enum$WorkflowRunOrderField.fromJson(String value) =>
+      fromJson$Enum$WorkflowRunOrderField(value);
+
+  String toJson() => toJson$Enum$WorkflowRunOrderField(this);
+}
 
 String toJson$Enum$WorkflowRunOrderField(Enum$WorkflowRunOrderField e) {
   switch (e) {
@@ -72845,7 +74469,12 @@ enum Enum$WorkflowState {
   DISABLED_FORK,
   DISABLED_INACTIVITY,
   DISABLED_MANUALLY,
-  $unknown
+  $unknown;
+
+  factory Enum$WorkflowState.fromJson(String value) =>
+      fromJson$Enum$WorkflowState(value);
+
+  String toJson() => toJson$Enum$WorkflowState(this);
 }
 
 String toJson$Enum$WorkflowState(Enum$WorkflowState e) {
@@ -72891,7 +74520,12 @@ enum Enum$__TypeKind {
   INPUT_OBJECT,
   LIST,
   NON_NULL,
-  $unknown
+  $unknown;
+
+  factory Enum$__TypeKind.fromJson(String value) =>
+      fromJson$Enum$__TypeKind(value);
+
+  String toJson() => toJson$Enum$__TypeKind(this);
 }
 
 String toJson$Enum$__TypeKind(Enum$__TypeKind e) {
@@ -72960,7 +74594,12 @@ enum Enum$__DirectiveLocation {
   ENUM_VALUE,
   INPUT_OBJECT,
   INPUT_FIELD_DEFINITION,
-  $unknown
+  $unknown;
+
+  factory Enum$__DirectiveLocation.fromJson(String value) =>
+      fromJson$Enum$__DirectiveLocation(value);
+
+  String toJson() => toJson$Enum$__DirectiveLocation(this);
 }
 
 String toJson$Enum$__DirectiveLocation(Enum$__DirectiveLocation e) {

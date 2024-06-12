@@ -6,6 +6,7 @@ import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
 import 'package:pwd/common/presentation/dialogs/show_error_dialog_mixin.dart';
 import 'package:pwd/common/presentation/shimmer/common_shimmer.dart';
 import 'package:di_storage/di_storage.dart';
+import 'package:pwd/l10n/gen_l10n/localization.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
 import 'package:pwd/notes/domain/usecases/notes_provider_usecase.dart';
 import 'package:pwd/notes/presentation/common/widgets/note_list_item_widget.dart';
@@ -64,6 +65,7 @@ final class NotesListScreen extends StatelessWidget with ShowErrorDialogMixin {
             body: state is InitialState
                 ? const _LoadingShimmer()
                 : _NotesList(
+                    isLoading: state is SyncLoadingState,
                     notes: state.data.notes,
                     onRefresh: _onPullToRefresh,
                     onEdit: _onEdit,
@@ -82,10 +84,9 @@ final class NotesListScreen extends StatelessWidget with ShowErrorDialogMixin {
       case InitialState():
       case CommonState():
       case LoadingState():
+      case SyncLoadingState():
         break;
       case FilesListState():
-        // print('Files:');
-        // print(state.files.map((e) => '${e.name}\n'));
         break;
       case ErrorState(e: final e):
         showError(
@@ -112,7 +113,7 @@ final class NotesListScreen extends StatelessWidget with ShowErrorDialogMixin {
   }) {
     onRoute(
       context,
-      NotePageRoute.onEdit(noteItem: note),
+      NotePageRoute.onEdit(config: configuration, noteItem: note),
     ).then(
       (result) {
         if (result is NotePageShouldSync) {
@@ -130,19 +131,21 @@ final class NotesListScreen extends StatelessWidget with ShowErrorDialogMixin {
   }) =>
       onRoute(
         context,
-        NotePageRoute.onDetails(noteItem: note),
+        NotePageRoute.onDetails(config: configuration, noteItem: note),
       );
 }
 
 // Notes List
 
 final class _NotesList extends StatelessWidget {
+  final bool isLoading;
   final List<NoteItem> notes;
   final Future Function(BuildContext) onRefresh;
   final void Function(BuildContext, {required NoteItem note}) onEdit;
   final void Function(BuildContext, {required NoteItem note}) onDetails;
 
   const _NotesList({
+    required this.isLoading,
     required this.notes,
     required this.onRefresh,
     required this.onEdit,
@@ -151,21 +154,38 @@ final class _NotesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: () => onRefresh(context),
-      child: ListView.separated(
-        itemCount: notes.length,
-        itemBuilder: (context, index) {
-          return NoteListItemWidget(
-            note: notes[index],
-            onDetailsButton: onDetails,
-            onEditButton: onEdit,
-          );
-        },
-        separatorBuilder: (_, __) => const Divider(
-          height: CommonSize.thickness,
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Visibility(
+          visible: isLoading,
+          replacement: const SizedBox(
+            height: CommonSize.thickness,
+          ),
+          child: const LinearProgressIndicator(
+            minHeight: CommonSize.thickness,
+          ),
         ),
-      ),
+        Expanded(
+          child: RefreshIndicator(
+            onRefresh: () => onRefresh(context),
+            child: ListView.separated(
+              itemCount: notes.length,
+              itemBuilder: (context, index) {
+                final note = notes[index];
+                return NoteListItemWidget(
+                  note: notes[index],
+                  onDetailsButtonTap: () => onDetails(context, note: note),
+                  onEditButtonTap: () => onEdit(context, note: note),
+                );
+              },
+              separatorBuilder: (_, __) => const Divider(
+                height: CommonSize.thickness,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -198,5 +218,6 @@ final class _LoadingShimmer extends StatelessWidget {
 
 // Private
 extension on BuildContext {
-  String get pageTitle => 'Note';
+  Localization get localization => Localization.of(this)!;
+  String get pageTitle => localization.notesListScreenTitle;
 }

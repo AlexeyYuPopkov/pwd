@@ -1,6 +1,6 @@
 import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
 
-final class HomeTabbarScreenTestKey {
+final class HomeScreenTestHelper {
   static const configurationUndefinedTabIcon =
       'ConfigurationUndefined.TabIcon.TestKey';
   // static const gitTabIcon = 'Git.TabIcon.TestKey';

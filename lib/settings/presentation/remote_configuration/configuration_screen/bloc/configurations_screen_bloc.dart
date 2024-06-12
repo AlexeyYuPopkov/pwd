@@ -7,7 +7,7 @@ import 'package:pwd/settings/presentation/remote_configuration/configuration_scr
 import 'configurations_screen_data.dart';
 import 'configurations_screen_event.dart';
 
-class ConfigurationsScreenBloc
+final class ConfigurationsScreenBloc
     extends Bloc<ConfigurationsScreenEvent, ConfigurationsScreenState> {
   final RemoteConfigurationProvider remoteStorageConfigurationProvider;
   final ReorderConfigurationsUsecase reorderConfigurationsUsecase;
@@ -36,11 +36,13 @@ class ConfigurationsScreenBloc
   void _subscribeToStreams() {
     configurationSubscription =
         remoteStorageConfigurationProvider.configuration.listen(
-      (e) => add(
-        ConfigurationsScreenEvent.didChange(
-          configurations: e.configurations,
-        ),
-      ),
+      (e) {
+        add(
+          ConfigurationsScreenEvent.didChange(
+            configurations: e.configurations,
+          ),
+        );
+      },
     );
   }
 

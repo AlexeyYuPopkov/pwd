@@ -28,7 +28,8 @@ final class ClocksWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      final preferredWidth = constraints.maxWidth ~/ 3;
+      const separatorWidth = CommonSize.indent;
+      final preferredWidth = (constraints.maxWidth ~/ 3) - 2.0 * separatorWidth;
       const minWidth = 90.0;
       const maxWidth = 190.0;
 
@@ -47,37 +48,40 @@ final class ClocksWidget extends StatelessWidget {
 
             return SizedBox(
               height: constraints.maxHeight,
-              child: Align(
-                alignment: Alignment.center,
-                child: SizedBox(
-                  width: length * itemWidth,
-                  child: ListView.separated(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: length,
-                    cacheExtent: itemWidth,
-                    itemBuilder: (context, index) {
-                      final clock = state.data.clocks[index];
-                      return SizedBox(
-                        width: itemWidth,
-                        child: ClockItemWidget(
-                          key: Key(
-                            ClocksWidgetTestHelper.clockItemKey(index),
-                          ),
-                          clock: clock,
-                          formatter: formatter,
-                          timerStream: clockTimerUsecase.timerStream,
-                          onEdit: () => _onEditClock(context, clock: clock),
-                          onAppend: () => _onEditClock(context, clock: null),
-                          onDelete: () => _onDelete(
-                            context,
-                            clock: clock,
-                          ),
-                        ),
-                      );
-                    },
-                    separatorBuilder: (context, index) => const SizedBox(
-                      width: CommonSize.indent,
-                    ),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minWidth: constraints.maxWidth),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          for (int index = 0; index < length; index++)
+                            SizedBox(
+                              width: itemWidth,
+                              child: ClockItemWidget(
+                                key: Key(
+                                  ClocksWidgetTestHelper.clockItemKey(index),
+                                ),
+                                clock: state.data.clocks[index],
+                                formatter: formatter,
+                                timerStream: clockTimerUsecase.timerStream,
+                                onEdit: () => _onEditClock(context,
+                                    clock: state.data.clocks[index]),
+                                onAppend: () =>
+                                    _onEditClock(context, clock: null),
+                                onDelete: () => _onDelete(
+                                  context,
+                                  clock: state.data.clocks[index],
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
               ),

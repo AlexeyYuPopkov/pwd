@@ -8,11 +8,11 @@ import 'package:pwd/common/domain/model/clock_model.dart';
 import 'package:pwd/common/domain/time_formatter/time_formatter.dart';
 import 'package:pwd/common/domain/usecases/clock_timer_usecase.dart';
 import 'package:pwd/common/domain/usecases/clock_usecase.dart';
-import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
 import 'package:pwd/common/presentation/clock/clocks_widget/bloc/clocks_widget_bloc.dart';
 import 'package:pwd/common/presentation/clock/clocks_widget/clocks_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../test_tools/test_tools.dart';
 import 'clocks_widget_finders.dart';
 
 class ClockTimerUsecaseMock implements ClockTimerUsecase {
@@ -62,16 +62,17 @@ void main() {
 
     Future<void> setupAndShowScreen(WidgetTester tester) async {
       await tester.pumpWidget(
-        MaterialApp(
-          home: BlockingLoadingIndicator(
-            child: SizedBox(
-              width: 400.0,
-              height: 600.0,
-              child: ClocksWidget(
-                formatter: formatter,
-              ),
-            ),
+        CreateApp.createMaterialApp(
+          child: ClocksWidget(
+            formatter: formatter,
           ),
+          // child: SizedBox(
+          //   width: 400.0,
+          //   height: 600.0,
+          //   child: ClocksWidget(
+          //     formatter: formatter,
+          //   ),
+          // ),
         ),
       );
     }
@@ -79,12 +80,10 @@ void main() {
     testWidgets('Initial state', (tester) async {
       await setupAndShowScreen(tester);
       expect(finders.blocBuilder, findsOneWidget);
-      expect(finders.list, findsOneWidget);
+
       expect(finders.clockItem(0), findsNothing);
 
       await tester.pumpAndSettle(Durations.extralong1);
-
-      await tester.ensureVisible(finders.list);
 
       final now = DateTime.now();
 
@@ -106,9 +105,6 @@ void main() {
       );
 
       expect(finders.clockItem(0), findsOneWidget);
-
-      // await tester.pumpWidget(Container());
-      // await tester.pumpAndSettle(const Duration(seconds: 1));
     });
 
     testWidgets('Long tap and show menu', (tester) async {
@@ -224,7 +220,13 @@ void main() {
 
       await tester.longPress(finders.clockItem(1));
 
-      expect(finders.menu, findsOneWidget);
+      await tester.pumpAndSettle();
+
+      expect(
+        finders.menu,
+        findsOneWidget,
+        reason: 'Can`t find the menu widget',
+      );
 
       await tester.tap(finders.menuDeleteButton);
 

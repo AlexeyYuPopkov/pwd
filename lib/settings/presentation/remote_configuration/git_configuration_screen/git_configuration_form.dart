@@ -242,26 +242,25 @@ final class _GitConfigurationFormState extends State<GitConfigurationForm>
 }
 
 extension on BuildContext {
-  String get description =>
-      'Enter repository details and file name for synchronization';
-
-  String get tokenTextFieldHint => 'Token';
-  String get tokenTooltip => 'Go to your GitHub account '
-      '(Settings -> Developer settings -> Tokens -> Generate new token) '
-      'than create access token ang paste there';
-
-  String get repoTextFieldHint => 'Repo';
-  String get repoTooltip => 'Create GitHub repo than paste repo name';
-  String get ownerTextFieldHint => 'Owner';
-  String get ownerTooltip => 'Paste your GitHub user name';
-  String get branchTextFieldHint => 'Branch';
-  String get branchTooltip =>
-      'Create branch in your `repo` than paste branch name';
-  String get fileNameTextFieldHint => 'File name';
-  String get fileTooltip => 'Create {your repo}/{your brunch}/{file_name} '
-      'then paste {file_name}.';
-
-  String get confirmationMessageDeleteTitle => 'Warning';
+  Localization get localization => Localization.of(this)!;
+  String get description => localization.gitConfigurationFormFormDescription;
+  String get tokenTextFieldHint =>
+      localization.gitConfigurationFormTokenTextField;
+  String get tokenTooltip => localization.gitConfigurationFormTokenTooltip;
+  String get repoTextFieldHint =>
+      localization.gitConfigurationFormRepoTextFieldHint;
+  String get repoTooltip => localization.gitConfigurationFormRepoTooltip;
+  String get ownerTextFieldHint =>
+      localization.gitConfigurationFormOwnerTextFieldHint;
+  String get ownerTooltip => localization.gitConfigurationFormOwnerTooltip;
+  String get branchTextFieldHint =>
+      localization.gitConfigurationFormBranchTextFieldHint;
+  String get branchTooltip => localization.gitConfigurationFormBranchTooltip;
+  String get fileNameTextFieldHint =>
+      localization.gitConfigurationFormFileNameTextFieldHint;
+  String get fileTooltip => localization.gitConfigurationFormFileTooltip;
+  String get confirmationMessageDeleteTitle =>
+      localization.gitConfigurationFormConfirmationMessageDeleteTitle;
   String get confirmationMessageDeleteMessage =>
-      'Are you sure you want delete configuration from the device?';
+      localization.gitConfigurationFormConfirmationMessageDeleteMessage;
 }

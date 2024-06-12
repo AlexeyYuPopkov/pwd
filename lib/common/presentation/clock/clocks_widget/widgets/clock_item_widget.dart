@@ -5,11 +5,14 @@ import 'package:pwd/common/domain/time_formatter/time_formatter.dart';
 import 'package:pwd/common/presentation/clock/clock_widget.dart';
 import 'package:pwd/common/presentation/clock/clock_widget24.dart';
 import 'package:pwd/common/presentation/clock/clocks_widget/clocks_widget_test_helper.dart';
+import 'package:pwd/l10n/gen_l10n/localization.dart';
 import 'package:pwd/theme/common_size.dart';
+import 'package:pwd/theme/common_theme.dart';
 
-class ClockItemWidget extends StatelessWidget {
+final class ClockItemWidget extends StatefulWidget {
+  static const horizontalPadding = CommonSize.indent2x;
+
   final ClockModel clock;
-
   final TimeFormatter formatter;
   final Stream<DateTime> timerStream;
   final VoidCallback onEdit;
@@ -27,46 +30,62 @@ class ClockItemWidget extends StatelessWidget {
   });
 
   @override
+  State<ClockItemWidget> createState() => _ClockItemWidgetState();
+}
+
+final class _ClockItemWidgetState extends State<ClockItemWidget> {
+  late final _overlayKey = GlobalKey<_ClockItemOwerlayMenuState>();
+
+  void _tooggleOverlay() {
+    _overlayKey.currentState?.toggleOverLay();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: CommonSize.indent2x,
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            clock.label.isNotEmpty
-                ? clock.label
-                : formatter.formattedTimeZoneOffsetOffset(
-                    offset: clock.timeZoneOffset,
-                  ),
-          ),
-          const SizedBox(height: CommonSize.indent),
-          Stack(
-            children: [
-              ClockWidget(
-                formatter: formatter,
-                parameters: clock,
-                timerStream: timerStream,
-                onLongTap: null,
-              ),
-              Positioned.fill(
-                child: ClockItemOwerlayMenu(
-                  onEdit: onEdit,
-                  onAppend: onAppend,
-                  onDelete: onDelete,
+    return GestureDetector(
+      onLongPress: _tooggleOverlay,
+      onDoubleTap: _tooggleOverlay,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: ClockItemWidget.horizontalPadding,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              widget.clock.label.isNotEmpty
+                  ? widget.clock.label
+                  : widget.formatter.formattedTimeZoneOffsetOffset(
+                      offset: widget.clock.timeZoneOffset,
+                    ),
+            ),
+            const SizedBox(height: CommonSize.indent),
+            Stack(
+              children: [
+                ClockWidget(
+                  formatter: widget.formatter,
+                  parameters: widget.clock,
+                  timerStream: widget.timerStream,
+                  onLongTap: null,
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: CommonSize.indent),
-          ClockWidget24(
-            formatter: formatter,
-            parameters: clock,
-            timerStream: timerStream,
-          ),
-        ],
+                Positioned.fill(
+                  child: ClockItemOwerlayMenu(
+                    key: _overlayKey,
+                    onEdit: widget.onEdit,
+                    onAppend: widget.onAppend,
+                    onDelete: widget.onDelete,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: CommonSize.indent),
+            ClockWidget24(
+              formatter: widget.formatter,
+              parameters: widget.clock,
+              timerStream: widget.timerStream,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -88,7 +107,8 @@ final class ClockItemOwerlayMenu extends StatefulWidget {
   State<ClockItemOwerlayMenu> createState() => _ClockItemOwerlayMenuState();
 }
 
-class _ClockItemOwerlayMenuState extends State<ClockItemOwerlayMenu> {
+final class _ClockItemOwerlayMenuState extends State<ClockItemOwerlayMenu> {
+  static const menuWidth = 200.0;
   OverlayEntry? overlayEntry;
   final layerLink = LayerLink();
   Size? _widgetSize;
@@ -108,49 +128,50 @@ class _ClockItemOwerlayMenuState extends State<ClockItemOwerlayMenu> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onLongPress: toggleOverLay,
-      onDoubleTap: toggleOverLay,
-      child: ColoredBox(
-        color: Colors.transparent,
-        child: LayoutBuilder(builder: (context, constraints) {
-          setWidgetSize(
-            Size(constraints.minWidth, constraints.maxHeight),
-          );
-          return CompositedTransformTarget(
-            link: layerLink,
-            child: const SizedBox(),
-          );
-        }),
-      ),
+    return ColoredBox(
+      color: Colors.transparent,
+      child: LayoutBuilder(builder: (context, constraints) {
+        setWidgetSize(
+          Size(constraints.minWidth, constraints.maxHeight),
+        );
+        return CompositedTransformTarget(
+          link: layerLink,
+          child: const SizedBox(),
+        );
+      }),
     );
   }
 
   void showOverlay() {
     hideOverLay();
     final renderBox = context.findRenderObject() as RenderBox;
-    final size = renderBox.size;
-    final offset = renderBox.localToGlobal(Offset.zero);
+
+    final size = Size(
+      menuWidth,
+      renderBox.size.height + CommonSize.indent4x,
+    );
 
     final entry = OverlayEntry(
       builder: (context) {
-        final maskColor =
-            Theme.of(context).colorScheme.surface.withOpacity(0.5);
+        final maskColor = CommonTheme.of(context).maskColor;
+        final menuOffsetX = _calculateMenuxOffset(
+          context,
+          renderBox: renderBox,
+        );
+
         return Stack(
           children: [
             Positioned.fill(
               child: GestureDetector(
-                onTap: () => hideOverLay(),
+                onTap: hideOverLay,
                 child: Container(color: maskColor),
               ),
             ),
-            Positioned(
-              left: offset.dx,
-              top: offset.dy + size.height,
-              width: size.width,
-              child: CompositedTransformFollower(
-                link: layerLink,
-                offset: Offset(0, size.height),
+            CompositedTransformFollower(
+              link: layerLink,
+              offset: Offset(menuOffsetX, size.height),
+              child: SizedBox(
+                width: menuWidth,
                 child: ClockItemOwerlayMenuContent(
                   onEdit: () {
                     widget.onEdit();
@@ -185,6 +206,24 @@ class _ClockItemOwerlayMenuState extends State<ClockItemOwerlayMenu> {
     overlayEntry?.dispose();
     overlayEntry = null;
   }
+
+  double _calculateMenuxOffset(
+    BuildContext context, {
+    required RenderBox renderBox,
+  }) {
+    // final screenSize = MediaQuery.sizeOf(context);
+    // final globalMenuOffset = renderBox.localToGlobal(Offset.zero);
+
+    var menuOffsetX = -(menuWidth - renderBox.size.width) / 2.0;
+
+    // menuOffsetX = globalMenuOffset.dx > screenSize.width - menuWidth
+    //     ? renderBox.size.width - menuWidth
+    //     : menuOffsetX;
+
+    // menuOffsetX = globalMenuOffset.dx <= -menuOffsetX ? 0.0 : menuOffsetX;
+
+    return menuOffsetX;
+  }
 }
 
 final class ClockItemOwerlayMenuContent extends StatelessWidget {
@@ -201,67 +240,35 @@ final class ClockItemOwerlayMenuContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const rowHeight = CommonSize.indent4x;
     final theme = Theme.of(context);
-    final textStyle = theme.textTheme.bodyMedium?.copyWith(
-      color: theme.colorScheme.primary,
-    );
+
     return DecoratedBox(
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
-        borderRadius:
-            const BorderRadius.all(Radius.circular(CommonSize.cornerRadius)),
+        borderRadius: const BorderRadius.all(
+          Radius.circular(CommonSize.cornerRadius),
+        ),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          CupertinoButton(
+          _ButtonWidget(
             key: Key(ClocksWidgetTestHelper.clockWidgetEditButtonKey),
-            padding: EdgeInsets.zero,
-            onPressed: onEdit,
-            child: SizedBox(
-              height: rowHeight,
-              child: Center(
-                child: Text(
-                  context.editButtonText,
-                  style: textStyle,
-                ),
-              ),
-            ),
+            title: context.editButtonText,
+            onTap: onEdit,
           ),
-          const Divider(
-            height: CommonSize.thickness,
-          ),
-          CupertinoButton(
+          const Divider(height: CommonSize.thickness),
+          _ButtonWidget(
             key: Key(ClocksWidgetTestHelper.clockWidgetAddButtonKey),
-            padding: EdgeInsets.zero,
-            onPressed: onAppend,
-            child: SizedBox(
-              height: rowHeight,
-              child: Center(
-                child: Text(
-                  context.appendButtonText,
-                  style: textStyle,
-                ),
-              ),
-            ),
+            title: context.appendButtonText,
+            onTap: onAppend,
           ),
-          const Divider(
-            height: CommonSize.thickness,
-          ),
-          CupertinoButton(
+          const Divider(height: CommonSize.thickness),
+          _ButtonWidget(
             key: Key(ClocksWidgetTestHelper.clockWidgetDeleteButtonKey),
-            padding: EdgeInsets.zero,
-            onPressed: onDelete,
-            child: SizedBox(
-              height: rowHeight,
-              child: Center(
-                child: Text(
-                  context.deleteButtonText,
-                  style: textStyle?.copyWith(color: theme.colorScheme.error),
-                ),
-              ),
-            ),
+            title: context.deleteButtonText,
+            errorStyle: true,
+            onTap: onDelete,
           ),
         ],
       ),
@@ -269,8 +276,46 @@ final class ClockItemOwerlayMenuContent extends StatelessWidget {
   }
 }
 
+final class _ButtonWidget extends StatelessWidget {
+  final String title;
+  final VoidCallback? onTap;
+  final bool errorStyle;
+
+  const _ButtonWidget({
+    super.key,
+    required this.title,
+    this.errorStyle = false,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final textStyle = errorStyle
+        ? theme.textTheme.bodyMedium?.copyWith(
+            color: theme.colorScheme.error,
+          )
+        : theme.textTheme.bodyMedium?.copyWith(
+            color: theme.colorScheme.primary,
+          );
+
+    return CupertinoButton(
+      padding: const EdgeInsets.symmetric(horizontal: CommonSize.indent),
+      onPressed: onTap,
+      child: Text(
+        title,
+        style: textStyle,
+        overflow: TextOverflow.ellipsis,
+        textAlign: TextAlign.center,
+        maxLines: 1,
+      ),
+    );
+  }
+}
+
 extension on BuildContext {
-  String get editButtonText => 'Edit';
-  String get appendButtonText => 'Append';
-  String get deleteButtonText => 'Delete';
+  Localization get localization => Localization.of(this)!;
+  String get editButtonText => localization.commonEdit;
+  String get appendButtonText => localization.commonAppend;
+  String get deleteButtonText => localization.commonDelete;
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pwd/l10n/gen_l10n/localization.dart';
 
 import 'package:pwd/settings/presentation/remote_configuration/set_configuration_bloc/set_configuration_bloc_data.dart';
 import 'package:pwd/theme/common_size.dart';
@@ -31,12 +32,14 @@ final class ConfigurationFormNextButtomWidget extends StatelessWidget {
 
 // Localization
 extension on BuildContext {
+  Localization get localization => Localization.of(this)!;
+
   String nextButtonTitle({required SetConfigurationBlocMode mode}) {
     switch (mode) {
       case SetConfigurationBlocMode.newConfiguration:
-        return 'Save';
+        return localization.commonSave;
       case SetConfigurationBlocMode.editConfiguration:
-        return 'Delete';
+        return localization.commonDelete;
     }
   }
 }

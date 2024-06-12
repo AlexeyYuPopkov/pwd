@@ -32,10 +32,20 @@ final class HomeTabbarBloc
       _onDidChangeEvent,
       // transformer: sequential(),
     );
+
+    on<ShouldChangeSelectedTabEvent>(
+      _onShouldChangeSelectedTabEvent,
+      // transformer: sequential(),
+    );
+    on<ShouldChangeSelectedTabIndexEvent>(
+      _onShouldChangeSelectedTabIndexEvent,
+      // transformer: sequential(),
+    );
   }
 
   void _subscribeToStreams() {
     configurationSubscription = remoteConfigurationsProvider.configuration
+        .skip(1)
         .debounceTime(Durations.short1)
         .distinct()
         .listen(
@@ -56,23 +66,47 @@ final class HomeTabbarBloc
   void _onDidChangeEvent(
     DidChangeEvent event,
     Emitter<HomeTabbarBlocState> emit,
-  ) async {
-    try {
-      final tabs = <HomeTabbarTabModel>[
-        if (event.configurations.isEmpty)
-          const ConfigurationUndefinedTab()
-        else
-          ...event.configurations.map(
-            (e) => NotesTab(configuration: e),
-          ),
-        const SettingsTab(),
-      ];
+  ) {
+    final tabs = <HomeTabbarTabModel>[
+      if (event.configurations.isEmpty)
+        const ConfigurationUndefinedTab()
+      else
+        ...event.configurations.map(
+          (e) => NotesTab(configuration: e),
+        ),
+      const SettingsTab(),
+    ];
 
+    emit(
+      HomeTabbarBlocState.common(data: data.copyWith(tabs: tabs)),
+    );
+  }
+
+  void _onShouldChangeSelectedTabEvent(
+    ShouldChangeSelectedTabEvent event,
+    Emitter<HomeTabbarBlocState> emit,
+  ) {
+    final index = data.tabs.indexWhere((tab) {
+      return tab == event.tab;
+    });
+
+    add(
+      HomeTabbarBlocEvent.shouldChangeSelectedTabIndex(index: index),
+    );
+  }
+
+  void _onShouldChangeSelectedTabIndexEvent(
+    ShouldChangeSelectedTabIndexEvent event,
+    Emitter<HomeTabbarBlocState> emit,
+  ) {
+    if (event.index >= 0 &&
+        event.index < data.tabs.length &&
+        event.index != data.index) {
       emit(
-        HomeTabbarBlocState.common(data: data.copyWith(tabs: tabs)),
+        HomeTabbarBlocState.common(
+          data: data.copyWith(index: event.index),
+        ),
       );
-    } catch (e) {
-      emit(HomeTabbarBlocState.error(e: e, data: data));
     }
   }
 }

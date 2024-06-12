@@ -1,3 +1,8 @@
+import 'dart:io';
+
+import 'package:flutter/material.dart';
+import 'package:pwd/theme/common_size.dart';
+import 'package:pwd/theme/common_theme.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -53,12 +58,20 @@ class BlockingLoadingIndicatorWidget extends StatelessWidget {
               final isLoading = snapshot.data ??
                   BlockingLoadingIndicator.of(context).isLoading;
 
+              final color = isLoading
+                  ? CommonTheme.of(context).maskColor ??
+                      Colors.black.withOpacity(0.1)
+                  : Colors.transparent;
+
               return Visibility(
                 visible: isLoading,
-                child: const AbsorbPointer(
-                  child: Center(
-                    child: RepaintBoundary(
-                      child: CupertinoActivityIndicator(),
+                child: AbsorbPointer(
+                  child: ColoredBox(
+                    color: color,
+                    child: const Center(
+                      child: RepaintBoundary(
+                        child: DefaultBlockingLoadingIndicator(),
+                      ),
                     ),
                   ),
                 ),
@@ -67,4 +80,29 @@ class BlockingLoadingIndicatorWidget extends StatelessWidget {
           ),
         ],
       );
+}
+
+final class DefaultBlockingLoadingIndicator extends StatelessWidget {
+  const DefaultBlockingLoadingIndicator({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        borderRadius: const BorderRadius.all(
+          Radius.circular(CommonSize.cornerRadius),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(CommonSize.indent4x),
+        child: Platform.isIOS || Platform.isMacOS
+            ? const CupertinoActivityIndicator()
+            : const CircularProgressIndicator(
+                strokeWidth: 2.0,
+              ),
+      ),
+    );
+  }
 }

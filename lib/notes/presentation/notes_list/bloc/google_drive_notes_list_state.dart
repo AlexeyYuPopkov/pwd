@@ -18,25 +18,33 @@ sealed class GoogleDriveNotesListState extends Equatable {
     required GoogleDriveNotesListData data,
   }) = LoadingState;
 
+  const factory GoogleDriveNotesListState.syncLoading({
+    required GoogleDriveNotesListData data,
+  }) = SyncLoadingState;
+
   const factory GoogleDriveNotesListState.error({
     required GoogleDriveNotesListData data,
     required Object e,
   }) = ErrorState;
 }
 
-class InitialState extends GoogleDriveNotesListState {
+final class InitialState extends GoogleDriveNotesListState {
   const InitialState({required super.data});
 }
 
-class CommonState extends GoogleDriveNotesListState {
+final class CommonState extends GoogleDriveNotesListState {
   const CommonState({required super.data});
 }
 
-class LoadingState extends GoogleDriveNotesListState {
+final class LoadingState extends GoogleDriveNotesListState {
   const LoadingState({required super.data});
 }
 
-class ErrorState extends GoogleDriveNotesListState {
+final class SyncLoadingState extends GoogleDriveNotesListState {
+  const SyncLoadingState({required super.data});
+}
+
+final class ErrorState extends GoogleDriveNotesListState {
   final Object e;
   const ErrorState({
     required super.data,

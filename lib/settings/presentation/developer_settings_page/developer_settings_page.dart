@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pwd/common/domain/model/app_configuration.dart';
 import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
 import 'package:pwd/common/presentation/dialogs/show_error_dialog_mixin.dart';
+import 'package:pwd/l10n/gen_l10n/localization.dart';
 import 'package:pwd/theme/common_size.dart';
 
 import 'bloc/developer_settings_page_bloc.dart';
@@ -11,9 +12,9 @@ import 'developer_settings_proxy_form.dart';
 
 final class DeveloperSettingsPage extends StatelessWidget
     with ShowErrorDialogMixin {
-  final formKey = GlobalKey<DeveloperSettingsProxyFormState>();
+  static final formKey = GlobalKey<DeveloperSettingsProxyFormState>();
 
-  DeveloperSettingsPage({super.key});
+  const DeveloperSettingsPage({super.key});
 
   void _listener(BuildContext context, DeveloperSettingsPageState state) {
     BlockingLoadingIndicator.of(context).isLoading = state is LoadingState;
@@ -45,7 +46,7 @@ final class DeveloperSettingsPage extends StatelessWidget
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        appBar: AppBar(title: Text(context.pageTitle)),
+        appBar: AppBar(title: Text(context.screenTitle)),
         body: BlocProvider(
           create: (_) => DeveloperSettingsPageBloc(
             appConfigurationProvider: di.resolve(),
@@ -227,14 +228,14 @@ final class _Container extends StatelessWidget {
 
 // Localization
 extension on BuildContext {
-  String get pageTitle => 'Developer settings';
-
-  String get proxySectionLabelTitle => 'Proxy';
-  String get otherLabelTitle => 'Other';
-
-  String get showRawErrorsSectionLabelTitle => 'Show raw errors';
+  Localization get localization => Localization.of(this)!;
+  String get screenTitle => localization.developerSettingsScreenTitle;
+  String get proxySectionLabelTitle =>
+      localization.developerSettingsScreenProxyLabel;
+  String get otherLabelTitle => localization.developerSettingsScreenOtherLabel;
+  String get showRawErrorsSectionLabelTitle =>
+      localization.developerSettingsScreenOshowRawErrorsLabel;
   String get showRawErrorsSectionLabelDescription =>
-      'If `true` ugly but informative errors will be shown';
-
-  String get saveButtonTitle => 'Save';
+      localization.developerSettingsScreenOshowRawErrorsDescription;
+  String get saveButtonTitle => localization.commonSave;
 }

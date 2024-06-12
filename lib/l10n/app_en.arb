@@ -1,0 +1,92 @@
+{
+    "commonOk": "OK",
+    "commonCancel": "Cancel",
+    "commonSave": "Save",
+    "commonEdit": "Edit",
+    "commonAppend": "Append",
+    "commonDelete": "Delete",
+    "commonContinue": "Continue",
+
+    "commonFieldValidatorMessageNotEmpty": "The field should not be empty",
+    "commonFieldValidatorMessageWrongFormat": "Invalid characters found",
+    "commonFieldValidatorMessageMinLength": "Incorrect length",
+    "commonFieldValidatorMessageMaxLength": "Incorrect length",
+    "remoteConfigurationsErrorMaxCount": "Max count of possible configurations is 4",
+    "remoteConfigurationsErrorFilenemeDublicate": "A configuration with the same name already exists",
+
+    "localStorageErrorPinDoesntMatch": "Pin does not match",
+    "syncDataErrorUnkhown": "Error when sync data",
+
+    "clocksWidgetAddClockDialogTimeZoneOffsetLabel": "Time zone offset: {hours}",
+    "@clocksWidgetAddClockDialogTimeZoneOffsetLabel": {
+        "placeholders": {
+            "hours": {
+                "format": "String",
+                "type": "String"
+            }
+        }
+    },
+    "clocksWidgetAddClockDialogSaveClockLabel": "Save clock",
+
+    "pinScreenEnterPinFormLabelPin": "Pin",
+    "pinScreenEnterPinFormButtonLogin": "Login",
+
+    "homeScreenTabbarHome": "Home",
+    "homeScreenTabbarSettings": "Settings",
+
+    "configurationUndefinedScreenLabel": "Synchronization methods are not defined",
+    "configurationUndefinedScreenButton": "Setup synchronization",
+
+    "editNoteScreenScreenTitle": "Add/Edit note",
+    "editNoteScreenTitleField": "Title",
+    "editNoteScreenDescriptionField": "Description",
+    "editNoteScreenContentField": "Content",
+    "editNoteScreenDeleteConfirmationMessage": "Do you really whant to delete the entry?",
+
+    "noteDetailsScreenTitle": "Details",
+    "noteDetailsScreenTooltipMessage": "Copied",
+
+    "notesListScreenTitle": "Notes",
+
+    "configurationsScreenHeaderText": "Sync. method",
+    "configurationsScreenActionSheetHeaderTitle": "Synchronisation methods",
+    "configurationsScreenActionSheetCancelButtonTitle": "Cancel",
+    "configurationsScreenNoDataPlaceholder": "Setup synchronization method",
+    "configurationsScreenNoDataButtonTitle": "Continue",
+    "configurationsScreenItemLabelGit": "Git",
+    "configurationsScreenItemLabelGoogleDrive": "Google Drive",
+
+    "gitConfigurationScreenTitle": "Setup synchronization",
+    "gitConfigurationFormFormDescription": "Enter repository details and file name for synchronization",
+    "gitConfigurationFormTokenTextField": "Token",
+    "gitConfigurationFormTokenTooltip": "Go to your GitHub account (Settings -> Developer settings -> Tokens -> Generate new token) and create access token and enter it here",
+    "gitConfigurationFormRepoTextFieldHint": "Repository",
+    "gitConfigurationFormRepoTooltip": "Create GitHub repository than enter it name here",
+    "gitConfigurationFormOwnerTextFieldHint": "Owner",
+    "gitConfigurationFormOwnerTooltip": "Enter your GitHub username",
+    "gitConfigurationFormBranchTextFieldHint": "Branch",
+    "gitConfigurationFormBranchTooltip": "Create branch in your repository and enter branch name here",
+    "gitConfigurationFormFileNameTextFieldHint": "File name",
+    "gitConfigurationFormFileTooltip": "Create [your repo]/[your brunch]/[file_name ] and enter [file_name]",
+    "gitConfigurationFormConfirmationMessageDeleteTitle": "Warning",
+    "gitConfigurationFormConfirmationMessageDeleteMessage": "Are you sure you want delete configuration from the device?",
+    "googleDriveConfigurationScreenTitle": "Setup synchronization",
+    "googleDriveConfigurationScreenDescription": "Fill form to setup synchronization via Google drive API",
+    "googleDriveConfigurationScreenFileNameTextFieldHint": "File Name",
+    "googleDriveConfigurationScreenFileNameTooltip": "Name of file for synchronization",
+    "googleDriveConfigurationScreenConfirmationMessageDeleteTitle": "Warning",
+    "googleDriveConfigurationScreenConfirmationMessageDeleteMessage": "Setup synchronization",
+
+    "settingsScreenTitle": "Settings",
+    "settingsScreenRemoteConfigurationItem": "Synchronisation settings",
+    "settingsScreenDeveloperSettingsItem": "Developer settings",
+    "settingsScreenLogoutItem": "Logout",
+    "developerSettingsScreenTitle": "Developer settings",
+    "developerSettingsScreenProxyLabel": "Proxy",
+    "developerSettingsScreenOtherLabel": "Other",
+    "developerSettingsScreenOshowRawErrorsLabel": "Show raw errors",
+    "developerSettingsScreenOshowRawErrorsDescription": "If `true` ugly but informative errors will be shown",
+    "developerSettingsScreenProxyFormProxyLabel": "Proxy:",
+    "developerSettingsScreenProxyFormPortLabel": "Proxy port:"
+}
+

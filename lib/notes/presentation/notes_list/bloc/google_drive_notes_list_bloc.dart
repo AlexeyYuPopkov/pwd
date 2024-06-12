@@ -65,7 +65,7 @@ final class GoogleDriveNotesListBloc
   ) async {
     try {
       if (data.notes.isNotEmpty) {
-        emit(GoogleDriveNotesListState.loading(data: data));
+        emit(GoogleDriveNotesListState.syncLoading(data: data));
       }
 
       await syncUsecase.execute(

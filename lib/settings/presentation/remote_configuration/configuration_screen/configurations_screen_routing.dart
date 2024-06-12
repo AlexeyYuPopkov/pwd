@@ -19,7 +19,3 @@ final class OnSetupConfigurationRoute extends ConfigurationScreenRoute {
     required this.configuration,
   });
 }
-
-final class MaybePopRoute extends ConfigurationScreenRoute {
-  const MaybePopRoute();
-}

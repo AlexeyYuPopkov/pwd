@@ -1,0 +1,89 @@
+{
+    "commonOk": "ОК",
+    "commonCancel": "Отмена",
+    "commonSave": "Сохранить",
+    "commonEdit": "Редактировать",
+    "commonAppend": "Добавить",
+    "commonDelete": "Удалить",
+    "commonContinue": "Продолжить",
+
+    "commonFieldValidatorMessageNotEmpty": "Поле не должно быть пустым",
+    "commonFieldValidatorMessageWrongFormat": "Найдены не",
+    "commonFieldValidatorMessageMinLength": "Неправильная длина",
+    "commonFieldValidatorMessageMaxLength": "Неправильная длина",
+    "remoteConfigurationsErrorMaxCount": "Максимальное кол-во конфигураций - 4",
+    "remoteConfigurationsErrorFilenemeDublicate": "Конфигурация с таким-же именем уже существует",
+
+    "localStorageErrorPinDoesntMatch": "Неверный пин",
+    "syncDataErrorUnkhown": "Ошибка синхронизации данных",
+
+    "clocksWidgetAddClockDialogTimeZoneOffsetLabel": "Часовой пояс: {hours}",
+    "@clocksWidgetAddClockDialogTimeZoneOffsetLabel": {
+        "placeholders": {
+            "hours": {
+                "format": "String",
+                "type": "String"
+            }
+        }
+    },
+    "clocksWidgetAddClockDialogSaveClockLabel": "Сохранить",
+
+    "pinScreenEnterPinFormLabelPin": "Пин",
+    "pinScreenEnterPinFormButtonLogin": "Вход",
+
+    "homeScreenTabbarHome": "Дом",
+    "homeScreenTabbarSettings": "Настройки",
+
+    "configurationUndefinedScreenLabel": "Методы синхронизации не определены",
+    "configurationUndefinedScreenButton": "Настройка синхронизации",
+
+    "editNoteScreenScreenTitle": "Добавить/изменить заметку",
+    "editNoteScreenTitleField": "Заголовок",
+    "editNoteScreenDescriptionField": "Описание",
+    "editNoteScreenContentField": "Содержание",
+    "editNoteScreenDeleteConfirmationMessage": "Вы действительно хотите удалить запись?",
+
+    "noteDetailsScreenTitle": "Детали",
+    "noteDetailsScreenTooltipMessage": "Скопировано",
+
+    "notesListScreenTitle": "Заметки",
+
+    "configurationsScreenHeaderText": "Метод синхронизации",
+    "configurationsScreenActionSheetHeaderTitle": "Методы синхронизации",
+    "configurationsScreenNoDataPlaceholder": "Setup synchronization method",
+    "configurationsScreenItemLabelGit": "Git",
+    "configurationsScreenItemLabelGoogleDrive": "Google Drive",
+
+    "gitConfigurationScreenTitle": "Настройка синхронизации",
+    "gitConfigurationFormFormDescription": "Введите данные репозитория и имя файла для синхронизации",
+    "gitConfigurationFormTokenTextField": "Токен",
+    "gitConfigurationFormTokenTooltip": "Перейдите в свою учетную запись GitHub (Settings -> Developer settings -> Tokens -> Generate new token) и создайте токен доступа и введите его здесь",
+    "gitConfigurationFormRepoTextFieldHint": "Репозиторий",
+    "gitConfigurationFormRepoTooltip": "Создайте репозиторий GitHub и введите его имя",
+    "gitConfigurationFormOwnerTextFieldHint": "Владелец",
+    "gitConfigurationFormOwnerTooltip": "Введите имя пользователя GitHub",
+    "gitConfigurationFormBranchTextFieldHint": "Ветвь",
+    "gitConfigurationFormBranchTooltip": "Создайте ветку в своем репозитории и введите здесь её имя",
+    "gitConfigurationFormFileNameTextFieldHint": "Имя файла",
+    "gitConfigurationFormFileTooltip": "Создайте [your repo]/[your brunch]/[file_name ] и введите [file_name]",
+    "gitConfigurationFormConfirmationMessageDeleteTitle": "Предупреждение",
+    "gitConfigurationFormConfirmationMessageDeleteMessage": "Вы уверены, что хотите удалить конфигурацию с устройства?",
+    "googleDriveConfigurationScreenTitle": "Настройка синхронизации",
+    "googleDriveConfigurationScreenDescription": "Заполните форму для настройки синхронизации через Google Drive API",
+    "googleDriveConfigurationScreenFileNameTextFieldHint": "Имя файла",
+    "googleDriveConfigurationScreenFileNameTooltip": "Имя файла для синхронизации",
+    "googleDriveConfigurationScreenConfirmationMessageDeleteTitle": "Предупреждение",
+    "googleDriveConfigurationScreenConfirmationMessageDeleteMessage": "Настройка синхронизации",
+
+    "settingsScreenTitle": "Настройки",
+    "settingsScreenRemoteConfigurationItem": "Настройка синхронизации",
+    "settingsScreenDeveloperSettingsItem": "Настройки разработчика",
+    "settingsScreenLogoutItem": "Выход",
+    "developerSettingsScreenTitle": "Настройки разработчика",
+    "developerSettingsScreenProxyLabel": "Прокси",
+    "developerSettingsScreenOtherLabel": "Другое",
+    "developerSettingsScreenOshowRawErrorsLabel": "Показать необработанные ошибки",
+    "developerSettingsScreenOshowRawErrorsDescription": "Если `true`, будут показаны уродливые, но информативные ошибки.",
+    "developerSettingsScreenProxyFormProxyLabel": "Прокси:",
+    "developerSettingsScreenProxyFormPortLabel": "Порт:"
+}

@@ -7,11 +7,13 @@ import 'package:pwd/theme/common_theme.dart';
 import 'configurations_screen_reorder_icon_part.dart';
 
 class ConfigurationScreenConfigItem extends StatelessWidget {
+  final int index;
   final RemoteConfiguration item;
   final ValueChanged<RemoteConfiguration> onTap;
 
   const ConfigurationScreenConfigItem({
     super.key,
+    required this.index,
     required this.item,
     required this.onTap,
   });
@@ -32,7 +34,10 @@ class ConfigurationScreenConfigItem extends StatelessWidget {
                 bottom: CommonSize.indentVariant2x,
                 right: CommonSize.indentVariant2x,
               ),
-              child: ConfigurationsScreenReorderIcon(item: item),
+              child: ReorderableDragStartListener(
+                index: index,
+                child: ConfigurationsScreenReorderIcon(item: item),
+              ),
             ),
             Expanded(
               child: IgnorePointer(

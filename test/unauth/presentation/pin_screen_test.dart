@@ -8,7 +8,6 @@ import 'package:pwd/common/domain/clock_configuration_provider.dart';
 import 'package:pwd/common/domain/errors/app_error.dart';
 import 'package:pwd/common/domain/time_formatter/time_formatter.dart';
 import 'package:pwd/common/domain/usecases/clock_usecase.dart';
-import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
 import 'package:pwd/common/presentation/dialogs/dialog_helper.dart';
 import 'package:pwd/unauth/domain/usecases/login_usecase.dart';
 import 'package:pwd/unauth/presentation/pin_page/bloc/pin_page_bloc.dart';
@@ -17,6 +16,7 @@ import 'package:pwd/unauth/presentation/pin_page/pin_screen_enter_pin_form.dart'
 
 import '../../../integration_test/pages/pin_screen/pin_screen_finders.dart';
 import '../../test_tools/app_configuration_provider_tool.dart';
+import '../../test_tools/test_tools.dart';
 
 class MockLoginUsecase extends Mock implements LoginUsecase {}
 
@@ -179,10 +179,8 @@ final class _Tools {
     required PinScreenFinders finders,
   }) async {
     await tester.pumpWidget(
-      MaterialApp(
-        home: BlockingLoadingIndicator(
-          child: const PinScreen(),
-        ),
+      CreateApp.createMaterialApp(
+        child: const PinScreen(),
       ),
     );
 
