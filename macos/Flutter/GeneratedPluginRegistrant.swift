@@ -11,6 +11,7 @@ import google_sign_in_ios
 import path_provider_foundation
 import realm
 import shared_preferences_foundation
+import window_size
 
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
   FLTFirebaseCorePlugin.register(with: registry.registrar(forPlugin: "FLTFirebaseCorePlugin"))
@@ -19,4 +20,5 @@ func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
   PathProviderPlugin.register(with: registry.registrar(forPlugin: "PathProviderPlugin"))
   RealmPlugin.register(with: registry.registrar(forPlugin: "RealmPlugin"))
   SharedPreferencesPlugin.register(with: registry.registrar(forPlugin: "SharedPreferencesPlugin"))
+  WindowSizePlugin.register(with: registry.registrar(forPlugin: "WindowSizePlugin"))
 }

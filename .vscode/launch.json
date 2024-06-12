@@ -22,30 +22,30 @@
             "type": "dart",
             "flutterMode": "profile",
         },
-        {
-            "name": "PROXY iOS",
-            "request": "launch",
-            "type": "dart",
-            "flutterMode": "debug",
-            "args": [
-                "--dart-define=PROXY_IP=127.0.0.1",
-                "--dart-define=PROXY_PORT=8888",
-                "--dart-define=HOST=ewine.st.by",
-            ]
-        },
-        {
-            "name": "PROXY Android",
-            "request": "launch",
-            "type": "dart",
-            // "flutterMode": "debug",
-            "args": [
-                "--debug",
-                // "--flavor",
-                // "dev",
-                "--dart-define=PROXY_IP=192.168.1.9",
-                "--dart-define=PROXY_PORT=8888",
-                // "--dart-define=HOST=ewine.st.by",
-            ]
-        },
+        // {
+        //     "name": "PROXY iOS",
+        //     "request": "launch",
+        //     "type": "dart",
+        //     "flutterMode": "debug",
+        //     "args": [
+        //         "--dart-define=PROXY_IP=127.0.0.1",
+        //         "--dart-define=PROXY_PORT=8888",
+        //         "--dart-define=HOST=ewine.st.by",
+        //     ]
+        // },
+        // {
+        //     "name": "PROXY Android",
+        //     "request": "launch",
+        //     "type": "dart",
+        //     // "flutterMode": "debug",
+        //     "args": [
+        //         "--debug",
+        //         // "--flavor",
+        //         // "dev",
+        //         "--dart-define=PROXY_IP=192.168.1.9",
+        //         "--dart-define=PROXY_PORT=8888",
+        //         // "--dart-define=HOST=ewine.st.by",
+        //     ]
+        // },
     ]
 }

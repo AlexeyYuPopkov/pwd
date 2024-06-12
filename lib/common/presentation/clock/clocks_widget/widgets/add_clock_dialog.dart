@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:pwd/common/domain/model/clock_model.dart';
+import 'package:pwd/l10n/gen_l10n/localization.dart';
 import 'package:pwd/theme/common_size.dart';
+// app-localization
 
+// import 'package:flutter_gen/gen_l10n/app_localization.dart';
 final class AddClockDialog extends StatefulWidget {
   final ClockModel clock;
   const AddClockDialog({super.key, required this.clock});
@@ -95,6 +98,10 @@ final class _AddClockDialogState extends State<AddClockDialog> {
 }
 
 extension on BuildContext {
-  String timeZoneOffsetLabel(int hours) => 'Time zone offset: $hours';
-  String get saveClock => 'Save clock';
+  Localization get localization => Localization.of(this)!;
+  String timeZoneOffsetLabel(int hours) =>
+      localization.clocksWidgetAddClockDialogTimeZoneOffsetLabel(
+        hours.toString(),
+      );
+  String get saveClock => localization.clocksWidgetAddClockDialogSaveClockLabel;
 }

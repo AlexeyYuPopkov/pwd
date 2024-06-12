@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pwd/l10n/gen_l10n/localization.dart';
 
 import 'common_field_validator.dart';
 
@@ -42,11 +43,13 @@ class CommonFieldValidatorErrorMessages {
 
 // Localization
 extension on BuildContext {
-  String get notEmptyMessage => 'The field should not be empty';
-
-  String get wrongFormatMessage => 'Wrong symbols founded';
-
-  String validationMinLength(int maxLength) => 'Wrong length';
-
-  String validationMaxLength(int maxLength) => 'Wrong length';
+  Localization get localization => Localization.of(this)!;
+  String get notEmptyMessage =>
+      localization.commonFieldValidatorMessageNotEmpty;
+  String get wrongFormatMessage =>
+      localization.commonFieldValidatorMessageWrongFormat;
+  String validationMinLength(int maxLength) =>
+      localization.commonFieldValidatorMessageMinLength;
+  String validationMaxLength(int maxLength) =>
+      localization.commonFieldValidatorMessageMaxLength;
 }

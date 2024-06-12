@@ -10,7 +10,7 @@
 include: package:flutter_lints/flutter.yaml
 
 analyzer:
-  exclude: [lib/**.graphql.dart, lib/**.docs.graphql.dart]
+  exclude: [lib/**.graphql.dart, lib/**.docs.graphql.dart, lib/l10n/**]
 
 linter:
   # The lint rules applied to this project can be customized in the

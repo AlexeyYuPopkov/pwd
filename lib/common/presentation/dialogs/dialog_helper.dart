@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pwd/l10n/gen_l10n/localization.dart';
 import 'package:pwd/theme/common_size.dart';
 
 typedef _TestKey = DialogHelperTestHelper;
@@ -171,8 +172,9 @@ mixin DialogHelper {
 
 // Localization
 extension on BuildContext {
-  String get okButtonTitle => 'OK';
-  String get cancelButtonTitle => 'Cancel';
+  Localization get localization => Localization.of(this)!;
+  String get okButtonTitle => localization.commonOk;
+  String get cancelButtonTitle => localization.commonCancel;
 }
 
 final class DialogHelperTestHelper {

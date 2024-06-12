@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-
 import 'package:pwd/common/domain/time_formatter/time_formatter.dart';
-
 import '../../domain/model/clock_model.dart';
 
 class ClockWidget24 extends StatelessWidget {

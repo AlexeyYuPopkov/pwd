@@ -5,7 +5,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:googleapis/workflowexecutions/v1.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
-import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
 import 'package:pwd/common/presentation/dialogs/dialog_helper.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
 import 'package:pwd/notes/domain/model/note_item_content.dart';
@@ -16,6 +15,7 @@ import 'package:pwd/notes/presentation/edit_note/edit_note_screen.dart';
 
 import '../../../integration_test/pages/edit_note_screen/edit_note_screen_finders.dart';
 import '../../test_tools/app_configuration_provider_tool.dart';
+import '../../test_tools/test_tools.dart';
 
 class MockNotesProviderUsecase extends Mock implements NotesProviderUsecase {}
 
@@ -55,15 +55,13 @@ void main() {
       required BaseNoteItem noteItem,
     }) async {
       await tester.pumpWidget(
-        MaterialApp(
-          home: BlockingLoadingIndicator(
-            child: EditNoteScreen(
-              input: EditNoteScreenInput(
-                configuration: configuration,
-                noteItem: noteItem,
-              ),
-              onRoute: dummyOnRoute,
+        CreateApp.createMaterialApp(
+          child: EditNoteScreen(
+            input: EditNoteScreenInput(
+              configuration: configuration,
+              noteItem: noteItem,
             ),
+            onRoute: dummyOnRoute,
           ),
         ),
       );

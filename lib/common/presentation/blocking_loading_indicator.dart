@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:pwd/theme/common_size.dart';
+import 'package:pwd/theme/common_theme.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -57,13 +58,16 @@ class BlockingLoadingIndicatorWidget extends StatelessWidget {
               final isLoading = snapshot.data ??
                   BlockingLoadingIndicator.of(context).isLoading;
 
+              final color = isLoading
+                  ? CommonTheme.of(context).maskColor ??
+                      Colors.black.withOpacity(0.1)
+                  : Colors.transparent;
+
               return Visibility(
                 visible: isLoading,
                 child: AbsorbPointer(
                   child: ColoredBox(
-                    color: isLoading
-                        ? Colors.black.withOpacity(0.1)
-                        : Colors.transparent,
+                    color: color,
                     child: const Center(
                       child: RepaintBoundary(
                         child: DefaultBlockingLoadingIndicator(),

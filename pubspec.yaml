@@ -23,17 +23,19 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.19.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.6
   # flutter_platform_widgets: ^6.0.2
 
-  intl: ^0.19.0
+
   # timezone: ^0.9.1
 
-  flutter_bloc: ^8.1.4
+  flutter_bloc: ^8.1.6
   bloc_concurrency: ^0.2.5
   go_router: ^14.1.4
   equatable: ^2.0.5
@@ -71,6 +73,11 @@ dependencies:
   
   graphql: ^5.2.0-beta.8
 
+  window_size:
+    git:
+      url: https://github.com/google/flutter-desktop-embedding.git
+      path: plugins/window_size
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -92,7 +99,7 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-
+  generate: true
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

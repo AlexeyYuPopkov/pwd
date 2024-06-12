@@ -4,17 +4,15 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-
 import 'package:pwd/common/data/remote_configuration_provider_impl.dart';
 import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
 import 'package:pwd/common/domain/model/remote_configuration/remote_configurations.dart';
 import 'package:pwd/common/domain/remote_configuration_provider.dart';
-import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
 import 'package:pwd/settings/domain/reorder_configurations_usecase.dart';
 import 'package:pwd/settings/presentation/remote_configuration/configuration_screen/configurations_screen.dart';
-import 'package:pwd/theme/theme_data.dart';
 
 import '../../../test_tools/app_configuration_provider_tool.dart';
+import '../../../test_tools/test_tools.dart';
 import 'configurations_screen_finders.dart';
 
 class MockSecureStorage extends Mock implements SecureStorageBox {}
@@ -78,12 +76,9 @@ void main() {
     required ConfigurationsScreenFinders finders,
   }) async {
     await tester.pumpWidget(
-      MaterialApp(
-        theme: lightThemeData,
-        home: BlockingLoadingIndicator(
-          child: ConfigurationsScreen(
-            onRoute: mockRouter.dummyOnRoute,
-          ),
+      CreateApp.createMaterialApp(
+        child: ConfigurationsScreen(
+          onRoute: mockRouter.dummyOnRoute,
         ),
       ),
     );

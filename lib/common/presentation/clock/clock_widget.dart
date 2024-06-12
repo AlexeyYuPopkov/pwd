@@ -7,7 +7,7 @@ import 'package:pwd/common/domain/time_formatter/time_formatter.dart';
 
 import '../../domain/model/clock_model.dart';
 
-class ClockWidget extends StatelessWidget {
+final class ClockWidget extends StatelessWidget {
   final Color foregroundColor;
   final Color backgroundColor;
 

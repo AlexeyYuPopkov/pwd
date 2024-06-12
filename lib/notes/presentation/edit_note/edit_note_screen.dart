@@ -1,6 +1,7 @@
 import 'package:di_storage/di_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pwd/l10n/gen_l10n/localization.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
 import 'package:pwd/notes/domain/usecases/notes_provider_usecase.dart';
@@ -82,7 +83,7 @@ final class EditNoteScreen extends StatelessWidget
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         appBar: AppBar(
-          title: Text(context.pageTitle),
+          title: Text(context.screenTitle),
         ),
         body: BlocProvider(
           create: (context) => EditNoteBloc(
@@ -294,15 +295,16 @@ class _FormState extends State<_Form> {
 
 // Localization
 extension on BuildContext {
-  String get pageTitle => 'Add/Edit note';
+  Localization get localization => Localization.of(this)!;
 
-  String get titleTextFieldTitle => 'Title';
-  String get descriptionTextFieldTitle => 'Description';
-  String get contentTextFieldTitle => 'Content';
-
-  String get saveButtonTitle => 'Save';
-  String get deleteButtonTitle => 'Delete';
-
+  String get screenTitle => localization.editNoteScreenScreenTitle;
+  String get titleTextFieldTitle => localization.editNoteScreenTitleField;
+  String get descriptionTextFieldTitle =>
+      localization.editNoteScreenDescriptionField;
+  String get contentTextFieldTitle =>
+      localization.editNoteScreenDescriptionField;
+  String get saveButtonTitle => localization.commonSave;
+  String get deleteButtonTitle => localization.commonDelete;
   String get deleteConfirmationMessage =>
-      'Do you really whant to delete the entry?';
+      localization.editNoteScreenDeleteConfirmationMessage;
 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pwd/common/domain/time_formatter/time_formatter.dart';
 import 'package:pwd/common/presentation/clock/clocks_widget/clocks_widget.dart';
+import 'package:pwd/l10n/gen_l10n/localization.dart';
 import 'package:pwd/theme/common_size.dart';
 
 import 'bloc/pin_page_bloc.dart';
@@ -36,41 +37,43 @@ final class PinScreenEnterPinFormState extends State<PinScreenEnterPinForm> {
   @override
   Widget build(BuildContext context) {
     const textFieldTopPadding = 60.0;
-    return Padding(
-      padding: const EdgeInsets.all(CommonSize.indent2x),
-      child: Form(
-        key: formKey,
-        child: LayoutBuilder(builder: (context, constraints) {
-          final topSpace = max(
-            constraints.maxHeight / 3.0,
-            ClocksWidget.minClocksContainerHeight,
-          ).round().toDouble();
+    return Form(
+      key: formKey,
+      child: LayoutBuilder(builder: (context, constraints) {
+        final topSpace = max(
+          constraints.maxHeight / 3.0,
+          ClocksWidget.minClocksContainerHeight,
+        ).round().toDouble();
 
-          final textFieldWidth = min(
-            constraints.maxWidth,
-            PinScreenEnterPinForm.maxWidth,
-          );
+        final textFieldWidth = min(
+          constraints.maxWidth,
+          PinScreenEnterPinForm.maxWidth,
+        );
 
-          return CustomScrollView(
-            slivers: [
-              SliverToBoxAdapter(
-                child: SizedBox(
-                    height: topSpace,
-                    child: ClocksWidget(
-                      formatter: widget.timeFormatter,
-                    )),
+        return CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: SizedBox(
+                height: topSpace,
+                child: ClocksWidget(
+                  formatter: widget.timeFormatter,
+                ),
               ),
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                    top: textFieldTopPadding,
-                    bottom: CommonSize.indent2x,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        width: textFieldWidth,
+            ),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  top: textFieldTopPadding,
+                  bottom: CommonSize.indent2x,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: textFieldWidth,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: CommonSize.indent2x),
                         child: TextFormField(
                           key: const Key(PinScreenTestHelper.pinTextField),
                           controller: pinController,
@@ -96,36 +99,36 @@ final class PinScreenEnterPinFormState extends State<PinScreenEnterPinForm> {
                           obscureText: !isPinVisible,
                         ),
                       ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    left: CommonSize.indent2x,
+                    right: CommonSize.indent2x,
+                    bottom: CommonSize.indent4x,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      OutlinedButton(
+                        key: const Key(PinScreenTestHelper.nextButton),
+                        onPressed: () => _onLogin(context),
+                        child: Text(context.saveButtonTitle),
+                      ),
                     ],
                   ),
                 ),
               ),
-              SliverFillRemaining(
-                hasScrollBody: false,
-                child: SafeArea(
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      left: CommonSize.indent2x,
-                      right: CommonSize.indent2x,
-                      bottom: CommonSize.indent4x,
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        OutlinedButton(
-                          key: const Key(PinScreenTestHelper.nextButton),
-                          onPressed: () => _onLogin(context),
-                          child: Text(context.saveButtonTitle),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          );
-        }),
-      ),
+            ),
+          ],
+        );
+      }),
     );
   }
 
@@ -143,68 +146,8 @@ final class PinScreenEnterPinFormState extends State<PinScreenEnterPinForm> {
   }
 }
 
-// final class PinForm extends StatefulWidget {
-//   const PinForm({super.key});
-
-//   @override
-//   State<PinForm> createState() => _PinFormState();
-// }
-
-// final class _PinFormState extends State<PinForm> {
-//   late final formKey = GlobalKey<FormState>();
-//   late final pinController = TextEditingController();
-//   bool isPinVisible = false;
-
-//   @override
-//   void dispose() {
-//     pinController.dispose();
-
-//     super.dispose();
-//   }
-
-//   String get text => pinController.text;
-
-//   bool validate() {
-//     final String pin = pinController.text;
-//     if (formKey.currentState?.validate() == true && pin.isNotEmpty) {
-//       formKey.currentState?.save();
-//       return true;
-//     } else {
-//       return false;
-//     }
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Form(
-//       key: formKey,
-//       child: TextFormField(
-//         key: const Key(PinScreenTestHelper.pinTextField),
-//         controller: pinController,
-//         decoration: InputDecoration(
-//           suffixIcon: IconButton(
-//             key: const Key(
-//               PinScreenTestHelper.pinVisibilityButtonKey,
-//             ),
-//             icon: Icon(
-//               isPinVisible ? Icons.visibility_off_outlined : Icons.visibility,
-//             ),
-//             onPressed: () {
-//               setState(() {
-//                 isPinVisible = !isPinVisible;
-//               });
-//             },
-//           ),
-//           labelText: context.pinTextFieldTitle,
-//         ),
-//         keyboardType: TextInputType.visiblePassword,
-//         obscureText: !isPinVisible,
-//       ),
-//     );
-//   }
-// }
-
 extension on BuildContext {
-  String get pinTextFieldTitle => 'Pin';
-  String get saveButtonTitle => 'Login';
+  Localization get localization => Localization.of(this)!;
+  String get pinTextFieldTitle => localization.pinScreenEnterPinFormLabelPin;
+  String get saveButtonTitle => localization.pinScreenEnterPinFormButtonLogin;
 }

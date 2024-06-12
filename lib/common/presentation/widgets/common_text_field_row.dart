@@ -40,6 +40,9 @@ class CommonTextFieldRow extends StatelessWidget {
           ),
         ),
         Tooltip(
+          margin: const EdgeInsets.symmetric(
+            horizontal: CommonSize.indentVariant,
+          ),
           message: tooltipMessage,
           child: const Icon(
             Icons.help,

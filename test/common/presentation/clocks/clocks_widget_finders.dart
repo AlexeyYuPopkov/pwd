@@ -11,7 +11,6 @@ import 'package:pwd/common/presentation/clock/clocks_widget/widgets/clock_item_w
 final class ClocksWidgetFinders {
   final blocBuilder =
       find.byType(BlocBuilder<ClocksWidgetBloc, ClocksWidgetState>);
-  final list = find.byType(ListView);
 
   Finder clockItem(int index) => find.byKey(
         Key(ClocksWidgetTestHelper.clockItemKey(index)),

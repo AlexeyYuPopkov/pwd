@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 class CommonTheme extends ThemeExtension<CommonTheme> {
   final Color? primaryTextColor;
   final Color? highlightColor;
+  final Color? maskColor;
   final ButtonStyle? iconButtonStyle;
 
   const CommonTheme({
     this.primaryTextColor,
     this.highlightColor,
+    this.maskColor,
     this.iconButtonStyle,
   });
 
@@ -20,6 +22,7 @@ class CommonTheme extends ThemeExtension<CommonTheme> {
     return CommonTheme(
       primaryTextColor: primaryTextColor,
       highlightColor: const Color(0xeeD8E7CC),
+      maskColor: Colors.black87.withOpacity(0.1),
       iconButtonStyle: ButtonStyle(
         elevation: WidgetStateProperty.all(0.0),
         backgroundColor: WidgetStateProperty.all<Color>(Colors.transparent),
@@ -51,6 +54,16 @@ class CommonTheme extends ThemeExtension<CommonTheme> {
         other.primaryTextColor,
         t,
       ),
+      highlightColor: Color.lerp(
+        highlightColor,
+        other.highlightColor,
+        t,
+      ),
+      maskColor: Color.lerp(
+        maskColor,
+        other.maskColor,
+        t,
+      ),
       iconButtonStyle: ButtonStyle.lerp(
         iconButtonStyle,
         other.iconButtonStyle,
@@ -62,10 +75,14 @@ class CommonTheme extends ThemeExtension<CommonTheme> {
   @override
   CommonTheme copyWith({
     Color? primaryTextColor,
+    Color? highlightColor,
+    Color? maskColor,
     ButtonStyle? iconButtonStyle,
   }) {
     return CommonTheme(
       primaryTextColor: primaryTextColor ?? this.primaryTextColor,
+      highlightColor: highlightColor ?? this.highlightColor,
+      maskColor: maskColor ?? this.maskColor,
       iconButtonStyle: iconButtonStyle ?? this.iconButtonStyle,
     );
   }

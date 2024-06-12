@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pwd/common/presentation/common_highlighted_row.dart';
 
+import 'test_tools/test_tools.dart';
+
 void main() {
   testWidgets('CommonHighlightedRow', (WidgetTester tester) async {
     final List<String> log = <String>[];
 
-    final testWidget = MaterialApp(
-      home: CommonHighlightedRow(
+    final testWidget = CreateApp.createMaterialApp(
+      child: CommonHighlightedRow(
         child: const Text('123'),
         onTap: () => log.add('tap'),
       ),

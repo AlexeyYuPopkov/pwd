@@ -1,18 +1,22 @@
 import 'dart:async';
-
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:di_storage/di_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pwd/common/domain/base_pin.dart';
 import 'package:pwd/common/domain/usecases/pin_usecase.dart';
 import 'package:pwd/home/presentation/home_tabbar/home_router_helper.dart';
+import 'package:pwd/l10n/localization_helper.dart';
 import 'package:pwd/theme/theme_data.dart';
 import 'package:pwd/common/presentation/di/app_di_modules.dart';
 import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
+import 'package:window_size/window_size.dart';
 import 'unauth/presentation/router/root_router_helper.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
+// import './gen_l10n/localization.dart';
 void main() async {
   // debugRepaintRainbowEnabled = true;
   // debugPaintLayerBordersEnabled = true;
@@ -25,6 +29,11 @@ void main() async {
   Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  if (!kIsWeb && (Platform.isWindows || Platform.isLinux || Platform.isMacOS)) {
+    setWindowMinSize(const Size(375.0, 480.0));
+    setWindowMaxSize(Size.infinite);
+  }
 
   runApp(const MyApp());
 }
@@ -45,6 +54,8 @@ final class MyApp extends StatelessWidget {
       showSemanticsDebugger: false,
       // debugShowMaterialGrid: false,
       // checkerboardRasterCacheImages: true,
+      localizationsDelegates: LocalizationHelper.localizationsDelegates,
+      supportedLocales: LocalizationHelper.supportedLocales,
       home: BlockingLoadingIndicator(
         child: const RouterWidget(),
       ),

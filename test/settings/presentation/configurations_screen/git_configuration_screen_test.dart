@@ -4,7 +4,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:pwd/common/domain/errors/app_error.dart';
 import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
 import 'package:pwd/common/domain/model/remote_configuration/remote_configurations.dart';
-import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
 import 'package:pwd/common/presentation/dialogs/dialog_helper.dart';
 import 'package:pwd/settings/domain/add_configurations_usecase.dart';
 import 'package:pwd/settings/domain/remove_configurations_usecase.dart';
@@ -14,6 +13,7 @@ import 'package:pwd/settings/presentation/remote_configuration/set_configuration
 
 import '../../../test_tools/app_configuration_provider_tool.dart';
 
+import '../../../test_tools/test_tools.dart';
 import 'git_configuration_screen_finders.dart';
 import 'mock_usecases.dart';
 
@@ -62,12 +62,9 @@ void main() {
     required GitConfiguration? initial,
   }) async {
     await tester.pumpWidget(
-      MaterialApp(
-        // theme: lightThemeData,
-        home: BlockingLoadingIndicator(
-          child: GitConfigurationScreen(
-            initial: initial,
-          ),
+      CreateApp.createMaterialApp(
+        child: GitConfigurationScreen(
+          initial: initial,
         ),
       ),
     );

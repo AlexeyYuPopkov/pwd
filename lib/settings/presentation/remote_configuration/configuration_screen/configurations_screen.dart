@@ -6,6 +6,7 @@ import 'package:pwd/common/presentation/app_bar_button.dart';
 import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
 import 'package:pwd/common/presentation/dialogs/action_sheet.dart';
 import 'package:pwd/common/presentation/dialogs/show_error_dialog_mixin.dart';
+import 'package:pwd/l10n/gen_l10n/localization.dart';
 import 'package:pwd/settings/presentation/remote_configuration/configuration_screen/bloc/configurations_screen_event.dart';
 import 'package:pwd/settings/presentation/remote_configuration/configuration_screen/widgets/configuration_screen_config_item.dart';
 import 'package:pwd/theme/common_size.dart';
@@ -190,13 +191,21 @@ final class _NoDataPlaceholder extends StatelessWidget {
 
 // Localization
 extension on BuildContext {
-  String get headerText => 'Sync. method';
-  String get actionSheetHeaderTitle => 'Synchronisation methods';
-  String get actionSheetCancelButtonTitle => 'Cancel';
+  Localization get localization => Localization.of(this)!;
+
+  String get headerText => localization.configurationsScreenHeaderText;
+  String get actionSheetHeaderTitle =>
+      localization.configurationsScreenActionSheetHeaderTitle;
+  String get actionSheetCancelButtonTitle => localization.commonCancel;
 
 // TODO:
-  String get noDataPlaceholder => 'Setup synchronization method';
-  String get noDataButtonTitle => 'Continue';
+  String get noDataPlaceholder =>
+      localization.configurationsScreenNoDataPlaceholder;
+  String get noDataButtonTitle => localization.commonContinue;
+
+  String get itemLabelGit => localization.configurationsScreenItemLabelGit;
+  String get itemLabelGoogleDrive =>
+      localization.configurationsScreenItemLabelGoogleDrive;
 }
 
 // Tools
@@ -204,9 +213,9 @@ extension on ConfigurationType {
   String itemTitle(BuildContext context) {
     switch (this) {
       case ConfigurationType.git:
-        return 'Git';
+        return context.itemLabelGit;
       case ConfigurationType.googleDrive:
-        return 'Google Drive';
+        return context.itemLabelGoogleDrive;
     }
   }
 }
