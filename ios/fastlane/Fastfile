@@ -21,10 +21,12 @@ firebase_cli_token = "1//09DnggYObEsRQCgYIARAAGAkSNwF-L9IrtKBPd0em6aq_llHbzy0eTu
 platform :ios do
   desc "Upload iOS to Firebase"
     lane :upload_ios_beta_app do
+        # sh("pod", "deintegrate")
         Dir.chdir "../.." do
           sh("flutter", "clean")
           sh("flutter", "pub", "get")
           sh("dart run build_runner build --delete-conflicting-outputs")
+          
           sh("flutter test --coverage")
           sh("flutter", "build", "ipa", "--export-method", "development")
         end

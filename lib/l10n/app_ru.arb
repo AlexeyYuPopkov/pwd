@@ -50,7 +50,9 @@
 
     "configurationsScreenHeaderText": "Метод синхронизации",
     "configurationsScreenActionSheetHeaderTitle": "Методы синхронизации",
-    "configurationsScreenNoDataPlaceholder": "Setup synchronization method",
+    "configurationsScreenActionSheetCancelButtonTitle": "Отмена",
+    "configurationsScreenNoDataPlaceholder": "Настройка метода синхронизации",
+    "configurationsScreenNoDataButtonTitle": "Продолжить",
     "configurationsScreenItemLabelGit": "Git",
     "configurationsScreenItemLabelGoogleDrive": "Google Drive",
 
