@@ -217,6 +217,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.6"
+  decimal:
+    dependency: transitive
+    description:
+      name: decimal
+      sha256: "4140a688f9e443e2f4de3a1162387bf25e1ac6d51e24c9da263f245210f41440"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.2"
   di_storage:
     dependency: "direct main"
     description:
@@ -900,38 +908,46 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.0"
+  rational:
+    dependency: transitive
+    description:
+      name: rational
+      sha256: cb808fb6f1a839e6fc5f7d8cb3b0a10e1db48b3be102de73938c627f0b636336
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.3"
   realm:
     dependency: "direct main"
     description:
       name: realm
-      sha256: "053b7a7adf3533cc9f507529d6b9ff948bc0270060dd58c502a9029413fcd2d6"
+      sha256: "1d750c7ba72a311f3241779b47c0590c486b0080014f4e6b45d0a34fcc998a3a"
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.0"
+    version: "3.0.0"
   realm_common:
     dependency: transitive
     description:
       name: realm_common
-      sha256: "1f36a224f35fd089691b631c0c9c92af274e00d524258203a937706d7d5e9d0c"
+      sha256: "6db42e97d88a2866521467faa409aca3b92605071e1eb56c9afee78518ed0721"
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.0"
+    version: "3.0.0"
   realm_dart:
     dependency: transitive
     description:
       name: realm_dart
-      sha256: ce2bd5dfb5eee142998fc7f395df34e349e1c179b78582d6d84bb4003c556c81
+      sha256: "1b5783b5ef88f7b7e34fe67ab7641ba1d0939052b5ad2c9391b0b2a9171a2a49"
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.0"
+    version: "3.0.0"
   realm_generator:
     dependency: transitive
     description:
       name: realm_generator
-      sha256: "183257f345ac5b01b424261dd6e3c400d414bec725d33d390b5b6942274f5a80"
+      sha256: "99e056fb6dab76679e9de8928bc7b87e95f162e4cbc569dca09727066d96d63a"
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.0"
+    version: "3.0.0"
   recase:
     dependency: transitive
     description:
