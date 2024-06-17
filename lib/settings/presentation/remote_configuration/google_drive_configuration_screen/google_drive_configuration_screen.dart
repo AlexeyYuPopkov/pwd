@@ -7,7 +7,7 @@ import 'package:pwd/common/presentation/dialogs/dialog_helper.dart';
 import 'package:pwd/common/presentation/dialogs/show_error_dialog_mixin.dart';
 import 'package:pwd/common/presentation/validators/remote_settings_field_validator/file_name_validator.dart';
 import 'package:pwd/common/presentation/widgets/common_text_field_row.dart';
-import 'package:pwd/l10n/gen_l10n/localization.dart';
+import 'package:pwd/l10n/localization_helper.dart';
 import 'package:pwd/settings/presentation/remote_configuration/error_message_providers/remote_configurations_error_message_provider.dart';
 import 'package:pwd/settings/presentation/remote_configuration/set_configuration_bloc/set_configuration_bloc.dart';
 import 'package:pwd/settings/presentation/remote_configuration/set_configuration_bloc/set_configuration_bloc_data.dart';
@@ -217,7 +217,6 @@ final class __FormState extends State<_Form> with DialogHelper {
 
 // Localization
 extension on BuildContext {
-  Localization get localization => Localization.of(this)!;
   String get screenTitle => localization.googleDriveConfigurationScreenTitle;
   String get description =>
       localization.googleDriveConfigurationScreenDescription;

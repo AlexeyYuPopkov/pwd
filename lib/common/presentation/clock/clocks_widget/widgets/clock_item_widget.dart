@@ -5,7 +5,7 @@ import 'package:pwd/common/domain/time_formatter/time_formatter.dart';
 import 'package:pwd/common/presentation/clock/clock_widget.dart';
 import 'package:pwd/common/presentation/clock/clock_widget24.dart';
 import 'package:pwd/common/presentation/clock/clocks_widget/clocks_widget_test_helper.dart';
-import 'package:pwd/l10n/gen_l10n/localization.dart';
+import 'package:pwd/l10n/localization_helper.dart';
 import 'package:pwd/theme/common_size.dart';
 import 'package:pwd/theme/common_theme.dart';
 
@@ -314,7 +314,6 @@ final class _ButtonWidget extends StatelessWidget {
 }
 
 extension on BuildContext {
-  Localization get localization => Localization.of(this)!;
   String get editButtonText => localization.commonEdit;
   String get appendButtonText => localization.commonAppend;
   String get deleteButtonText => localization.commonDelete;

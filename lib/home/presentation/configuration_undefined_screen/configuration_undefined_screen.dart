@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pwd/l10n/gen_l10n/localization.dart';
+import 'package:pwd/l10n/localization_helper.dart';
 import 'package:pwd/theme/common_size.dart';
 
 sealed class ConfigurationUndefinedScreensRoute {
@@ -45,7 +45,6 @@ final class ConfigurationUndefinedScreen extends StatelessWidget {
 }
 
 extension on BuildContext {
-  Localization get localization => Localization.of(this)!;
   String get labelText => localization.configurationUndefinedScreenLabel;
   String get buttonTitle => localization.configurationUndefinedScreenButton;
 }

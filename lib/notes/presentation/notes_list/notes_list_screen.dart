@@ -6,7 +6,7 @@ import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
 import 'package:pwd/common/presentation/dialogs/show_error_dialog_mixin.dart';
 import 'package:pwd/common/presentation/shimmer/common_shimmer.dart';
 import 'package:di_storage/di_storage.dart';
-import 'package:pwd/l10n/gen_l10n/localization.dart';
+import 'package:pwd/l10n/localization_helper.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
 import 'package:pwd/notes/domain/usecases/notes_provider_usecase.dart';
 import 'package:pwd/notes/presentation/common/widgets/note_list_item_widget.dart';
@@ -218,6 +218,5 @@ final class _LoadingShimmer extends StatelessWidget {
 
 // Private
 extension on BuildContext {
-  Localization get localization => Localization.of(this)!;
   String get pageTitle => localization.notesListScreenTitle;
 }

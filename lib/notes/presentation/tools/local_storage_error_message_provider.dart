@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pwd/common/presentation/dialogs/show_error_dialog_mixin.dart';
-import 'package:pwd/l10n/gen_l10n/localization.dart';
+import 'package:pwd/l10n/localization_helper.dart';
 import 'package:pwd/notes/domain/model/local_storage_error.dart';
 
 final class LocalStorageErrorMessageProvider {
@@ -24,6 +24,5 @@ final class LocalStorageErrorMessageProvider {
 }
 
 extension on BuildContext {
-  Localization get localization => Localization.of(this)!;
   String get pinDoesNotMatch => localization.localStorageErrorPinDoesntMatch;
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:pwd/l10n/gen_l10n/localization.dart';
+import 'package:flutter_gen/gen_l10n/localization.dart' as localization;
+
+typedef Localization = localization.Localization;
 
 final class LocalizationHelper {
   static Iterable<LocalizationsDelegate<dynamic>>? get localizationsDelegates =>
@@ -18,4 +20,8 @@ final class LocalizationHelper {
         /// Russian
         Locale('ru'),
       ];
+}
+
+extension LocalizationGetter on BuildContext {
+  Localization get localization => (Localization.of(this))!;
 }

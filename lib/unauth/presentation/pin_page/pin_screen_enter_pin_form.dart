@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pwd/common/domain/time_formatter/time_formatter.dart';
 import 'package:pwd/common/presentation/clock/clocks_widget/clocks_widget.dart';
-import 'package:pwd/l10n/gen_l10n/localization.dart';
+import 'package:pwd/l10n/localization_helper.dart';
 import 'package:pwd/theme/common_size.dart';
 
 import 'bloc/pin_page_bloc.dart';
@@ -147,7 +147,6 @@ final class PinScreenEnterPinFormState extends State<PinScreenEnterPinForm> {
 }
 
 extension on BuildContext {
-  Localization get localization => Localization.of(this)!;
   String get pinTextFieldTitle => localization.pinScreenEnterPinFormLabelPin;
   String get saveButtonTitle => localization.pinScreenEnterPinFormButtonLogin;
 }

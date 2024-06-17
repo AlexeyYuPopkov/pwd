@@ -1,7 +1,7 @@
 import 'package:di_storage/di_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pwd/l10n/gen_l10n/localization.dart';
+import 'package:pwd/l10n/localization_helper.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
 import 'package:pwd/notes/domain/usecases/notes_provider_usecase.dart';
@@ -295,8 +295,6 @@ class _FormState extends State<_Form> {
 
 // Localization
 extension on BuildContext {
-  Localization get localization => Localization.of(this)!;
-
   String get screenTitle => localization.editNoteScreenScreenTitle;
   String get titleTextFieldTitle => localization.editNoteScreenTitleField;
   String get descriptionTextFieldTitle =>

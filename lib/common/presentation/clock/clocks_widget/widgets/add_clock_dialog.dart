@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pwd/common/domain/model/clock_model.dart';
-import 'package:pwd/l10n/gen_l10n/localization.dart';
+import 'package:pwd/l10n/localization_helper.dart';
 import 'package:pwd/theme/common_size.dart';
 // app-localization
 
@@ -98,7 +98,6 @@ final class _AddClockDialogState extends State<AddClockDialog> {
 }
 
 extension on BuildContext {
-  Localization get localization => Localization.of(this)!;
   String timeZoneOffsetLabel(int hours) =>
       localization.clocksWidgetAddClockDialogTimeZoneOffsetLabel(
         hours.toString(),

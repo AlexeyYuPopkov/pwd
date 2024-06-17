@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
-import 'package:pwd/l10n/gen_l10n/localization.dart';
+import 'package:pwd/l10n/localization_helper.dart';
 
 import 'package:pwd/theme/common_size.dart';
 
@@ -172,7 +172,6 @@ final class SettingsTab extends HomeTabbarTabModel {
 
 // Localization
 extension on BuildContext {
-  Localization get localization => Localization.of(this)!;
   String get configurationUndefinedTabName => localization.homeScreenTabbarHome;
   String get settingsTabName => localization.homeScreenTabbarSettings;
 }

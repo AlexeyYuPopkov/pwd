@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
 import 'package:pwd/common/presentation/common_highlighted_row.dart';
 import 'package:pwd/common/presentation/dialogs/show_error_dialog_mixin.dart';
-import 'package:pwd/l10n/gen_l10n/localization.dart';
+import 'package:pwd/l10n/localization_helper.dart';
 import 'package:pwd/theme/common_size.dart';
 import 'package:pwd/theme/common_theme.dart';
 
@@ -142,7 +142,6 @@ class _Item extends StatelessWidget {
 
 // Localization
 extension on BuildContext {
-  Localization get localization => Localization.of(this)!;
   String get pageTitle => localization.settingsScreenTitle;
   String get remoteConfigurationPageButtonTitle =>
       localization.settingsScreenRemoteConfigurationItem;

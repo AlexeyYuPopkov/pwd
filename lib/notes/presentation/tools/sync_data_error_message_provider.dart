@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pwd/common/presentation/dialogs/show_error_dialog_mixin.dart';
-import 'package:pwd/l10n/gen_l10n/localization.dart';
+import 'package:pwd/l10n/localization_helper.dart';
 import 'package:pwd/notes/domain/usecases/sync_data_usecases_errors.dart';
 
 final class SyncDataErrorMessageProvider {
@@ -22,6 +22,5 @@ final class SyncDataErrorMessageProvider {
 }
 
 extension on BuildContext {
-  Localization get localization => Localization.of(this)!;
   String get unkhown => localization.syncDataErrorUnkhown;
 }
