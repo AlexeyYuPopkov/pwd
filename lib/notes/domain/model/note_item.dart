@@ -11,6 +11,8 @@ sealed class BaseNoteItem extends Equatable {
   String get description;
   NoteContentInterface get content;
   int get updated;
+
+  /// [deletedTimestamp] deprecated
   int? get deletedTimestamp;
 
   factory BaseNoteItem.newItem() => UpdatedNoteItem.empty();
@@ -44,6 +46,8 @@ class NoteItem extends BaseNoteItem {
   final NoteContentInterface content;
   @override
   final int updated;
+
+  /// [deletedTimestamp] deprecated
   @override
   final int? deletedTimestamp;
 
@@ -132,6 +136,8 @@ final class UpdatedNoteItem extends BaseNoteItem {
       description: '',
       content: NoteStringContent(str: ''),
       updated: 0,
+
+      /// [deletedTimestamp] deprecated
       deletedTimestamp: null,
     );
   }

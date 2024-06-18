@@ -2,13 +2,13 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:pwd/common/domain/model/remote_configuration/local_storage_target.dart';
 import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
+import 'package:pwd/notes/data/datasource/realm_datasource/realm_provider/realm_provider.dart';
 import 'package:pwd/notes/data/mappers/note_realm_mapper.dart';
 import 'package:pwd/notes/data/realm_model/note_item_realm.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
 import 'package:pwd/notes/domain/realm_local_repository.dart';
 
 import 'realm_error_mapper.dart';
-import 'realm_provider_impl.dart';
 
 const _validTillDuration = Duration(days: 120);
 
@@ -26,7 +26,7 @@ final class RealmLocalRepositoryImpl implements RealmLocalRepository {
 
     try {
       final obj = realm.find<NoteItemRealm>(id);
-
+// final obj1 = realm.query('deletedTimestamp != nil');
       if (obj != null) {
         final now = DateTime.now();
         realm.write(() {
@@ -94,7 +94,7 @@ final class RealmLocalRepositoryImpl implements RealmLocalRepository {
   Future<void> deleteCacheFile({
     required CacheTarget target,
   }) async =>
-      await realmProvider.deleteCacheFile(
+      await realmProvider.deleteCacheFileIfPresent(
         target: target,
       );
 
@@ -214,6 +214,8 @@ extension _Migration on RealmLocalRepositoryImpl {
     required Uint8List bytes,
     required LocalStorageTarget target,
   }) async {
+    await realmProvider.deleteTempFolderIfPresent(target: target);
+
     final realm = await realmProvider.getRealm(target: target);
     assert(realm.config.path.isNotEmpty);
     final tempRealm = await realmProvider.getTempRealm(
@@ -222,28 +224,28 @@ extension _Migration on RealmLocalRepositoryImpl {
     );
 
     try {
-      final toAdd = tempRealm.all<NoteItemRealm>().map(
-        (tempItem) {
-          final localItem = realm.find<NoteItemRealm>(tempItem.id);
-
-          if (localItem != null && localItem.updated >= tempItem.updated) {
-            return localItem;
-          } else {
-            return NoteItemRealm(
-              tempItem.id,
-              tempItem.title,
-              tempItem.description,
-              tempItem.updated,
-              deletedTimestamp: tempItem.deletedTimestamp,
-              content:
-                  tempItem.content.map((e) => NoteItemContentRealm(e.text)),
-            );
-          }
-        },
-      );
-
       await realm.writeAsync(
         () {
+          final toAdd = tempRealm.all<NoteItemRealm>().map(
+            (tempItem) {
+              final localItem = realm.find<NoteItemRealm>(tempItem.id);
+
+              if (localItem != null && localItem.updated >= tempItem.updated) {
+                return localItem;
+              } else {
+                return NoteItemRealm(
+                  tempItem.id,
+                  tempItem.title,
+                  tempItem.description,
+                  tempItem.updated,
+                  deletedTimestamp: tempItem.deletedTimestamp,
+                  content:
+                      tempItem.content.map((e) => NoteItemContentRealm(e.text)),
+                );
+              }
+            },
+          );
+
           realm.addAll<NoteItemRealm>(
             toAdd,
             update: true,
@@ -255,7 +257,7 @@ extension _Migration on RealmLocalRepositoryImpl {
     } finally {
       tempRealm.close();
       realm.close();
-      await realmProvider.deleteTempFile(target: target);
+      await realmProvider.deleteTempFolderIfPresent(target: target);
     }
   }
 }

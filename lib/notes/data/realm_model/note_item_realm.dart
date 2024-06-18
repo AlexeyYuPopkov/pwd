@@ -10,6 +10,9 @@ class _NoteItemRealm {
   late List<_NoteItemContentRealm> content;
   late int updated;
   late int? deletedTimestamp;
+
+  // late String body;
+  // late bool? idDeleted;
 }
 
 @RealmModel(ObjectType.embeddedObject)
