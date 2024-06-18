@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
@@ -27,10 +28,18 @@ abstract interface class RealmProvider {
   });
 }
 
-final class RealmProviderImpl implements RealmProvider {
-  RealmProviderImpl();
-
+final class StorageDirectoryPathProvider {
   String? _appDirPath;
+
+  FutureOr<String> getAppDirPath() async =>
+      _appDirPath ??
+      await getApplicationDocumentsDirectory().then((e) => e.path);
+}
+
+final class RealmProviderImpl implements RealmProvider {
+  final storage = StorageDirectoryPathProvider();
+
+  RealmProviderImpl();
 
   @override
   Future<Realm> getRealm({
@@ -81,7 +90,8 @@ final class RealmProviderImpl implements RealmProvider {
   Future<String> _getRealmFilePath({
     required CacheTarget target,
   }) async {
-    final path = await getAppDirPath();
+    final path = await storage.getAppDirPath();
+
     return '$path/${target.fileName}';
   }
 
@@ -95,7 +105,7 @@ final class RealmProviderImpl implements RealmProvider {
   Future<String> _getRealmTempFileFolderPath({
     required CacheTarget target,
   }) async {
-    final path = await getApplicationDocumentsDirectory().then((e) => e.path);
+    final path = await storage.getAppDirPath();
     return '$path/${target.cacheTmpFileName}';
   }
 }
@@ -180,11 +190,4 @@ extension on RealmProviderImpl {
       throw RealmErrorMapper.toDomain(e);
     }
   }
-}
-
-// Get app dir path
-extension on RealmProviderImpl {
-  Future<String> getAppDirPath() async =>
-      _appDirPath ??
-      await getApplicationDocumentsDirectory().then((e) => e.path);
 }
