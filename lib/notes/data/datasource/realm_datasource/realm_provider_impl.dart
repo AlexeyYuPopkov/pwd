@@ -1,5 +1,6 @@
 import 'dart:async';
-import 'dart:io';
+import 'package:file/file.dart';
+import 'package:file/local.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pwd/common/domain/model/remote_configuration/local_storage_target.dart';
@@ -31,33 +32,39 @@ abstract interface class RealmProvider {
 final class StorageDirectoryPathProvider {
   String? _appDirPath;
 
-  FutureOr<String> getAppDirPath() async =>
-      _appDirPath ??
-      await getApplicationDocumentsDirectory().then((e) => e.path);
+  Future<String> getAppDirPath() async {
+    return _appDirPath ??
+        await getApplicationDocumentsDirectory().then((e) {
+          return e.path;
+        });
+  }
 }
 
 final class RealmProviderImpl implements RealmProvider {
+  final FileSystem fileSystem;
   final storage = StorageDirectoryPathProvider();
 
-  RealmProviderImpl();
+  RealmProviderImpl([
+    this.fileSystem = const LocalFileSystem(),
+  ]);
 
   @override
   Future<Realm> getRealm({
     required LocalStorageTarget target,
   }) async =>
-      _createRealm(
-        target: target,
-        path: await _getRealmFilePath(target: target),
+      createRealm(
+        parameters: CreateRealmConfigParameters.cache(target: target),
       );
 
   @override
   Future<Realm> getTempRealm({
     required LocalStorageTarget target,
     required Uint8List bytes,
-  }) async {
-    final tempFile = await _createTempFile(bytes: bytes, target: target);
-    return _createRealm(target: target, path: tempFile.path, isReadOnly: true);
-  }
+  }) async =>
+      createRealm(
+        parameters:
+            CreateRealmConfigParameters.tmp(target: target, bytes: bytes),
+      );
 
   @override
   Future<void> deleteCacheFile({
@@ -65,7 +72,7 @@ final class RealmProviderImpl implements RealmProvider {
   }) async {
     try {
       final path = await _getRealmFilePath(target: target);
-      final file = File(path);
+      final file = fileSystem.file(path);
       if (await file.exists()) {
         await file.delete();
       }
@@ -78,7 +85,7 @@ final class RealmProviderImpl implements RealmProvider {
   Future<void> deleteTempFile({required CacheTarget target}) async {
     try {
       final folderPath = await _getRealmTempFileFolderPath(target: target);
-      final folder = Directory(folderPath);
+      final folder = fileSystem.directory(folderPath);
       if (await folder.exists()) {
         await folder.delete(recursive: true);
       }
@@ -91,7 +98,6 @@ final class RealmProviderImpl implements RealmProvider {
     required CacheTarget target,
   }) async {
     final path = await storage.getAppDirPath();
-
     return '$path/${target.fileName}';
   }
 
@@ -130,7 +136,7 @@ extension on RealmProviderImpl {
     try {
       final tempRealmDirPath =
           await _getRealmTempFileFolderPath(target: target);
-      final dir = Directory(tempRealmDirPath);
+      final dir = fileSystem.directory(tempRealmDirPath);
 
       if (await dir.exists()) {
         dir.delete(recursive: true);
@@ -140,10 +146,70 @@ extension on RealmProviderImpl {
 
       final tempRealmPath = await _getRealmTempFilePath(target: target);
 
-      final result = await File(tempRealmPath).writeAsBytes(
-        bytes,
-        mode: FileMode.writeOnly,
-      );
+      final result = await fileSystem.file(tempRealmPath).writeAsBytes(
+            bytes,
+            mode: FileMode.writeOnly,
+          );
+
+      return result;
+    } catch (e) {
+      throw RealmErrorMapper.toDomain(e);
+    }
+  }
+}
+
+extension CreateRealmConfig on RealmProviderImpl {
+  Future<String> _createRealmConfigPath({
+    required CreateRealmConfigParameters parameters,
+  }) {
+    switch (parameters) {
+      case CreateRealmConfigParametersCache():
+        return _getRealmFilePath(target: parameters.target);
+      case CreateRealmConfigParametersTemp():
+        return _createTempFile(
+                bytes: parameters.bytes, target: parameters.target)
+            .then(
+          (e) => e.path,
+        );
+    }
+  }
+
+  Future<Configuration> _createRealmConfig({
+    required CreateRealmConfigParameters parameters,
+  }) async {
+    try {
+      const int schemaVersion = 5;
+
+      final path = await _createRealmConfigPath(parameters: parameters);
+
+      final notInMemory = fileSystem is LocalFileSystem;
+
+      final List<SchemaObject> schemaObjects = [
+        NoteItemRealm.schema,
+        NoteItemContentRealm.schema,
+      ];
+
+      final result = notInMemory
+          ? Configuration.local(
+              schemaObjects,
+              encryptionKey: parameters.target.key,
+              path: path,
+              schemaVersion: schemaVersion,
+              migrationCallback: (migration, oldSchemaVersion) {
+                if (schemaVersion == oldSchemaVersion) {
+                  return;
+                }
+                if (schemaVersion == 5) {
+                  _migration5(migration, oldSchemaVersion);
+                } else {
+                  return;
+                }
+              },
+            )
+          : Configuration.inMemory(
+              schemaObjects,
+              path: path,
+            );
 
       return result;
     } catch (e) {
@@ -151,34 +217,11 @@ extension on RealmProviderImpl {
     }
   }
 
-  Realm _createRealm({
-    required LocalStorageTarget target,
-    required String path,
-    bool isReadOnly = false,
-  }) {
+  Future<Realm> createRealm({
+    required CreateRealmConfigParameters parameters,
+  }) async {
     try {
-      const int schemaVersion = 5;
-
-      final config = Configuration.local(
-        [
-          NoteItemRealm.schema,
-          NoteItemContentRealm.schema,
-        ],
-        encryptionKey: target.key,
-        path: path,
-        // isReadOnly: isReadOnly,
-        schemaVersion: schemaVersion,
-        migrationCallback: (migration, oldSchemaVersion) {
-          if (schemaVersion == oldSchemaVersion) {
-            return;
-          }
-          if (schemaVersion == 5) {
-            _migration5(migration, oldSchemaVersion);
-          } else {
-            return;
-          }
-        },
-      );
+      final config = await _createRealmConfig(parameters: parameters);
 
       final realm = Realm(config);
 
@@ -190,4 +233,49 @@ extension on RealmProviderImpl {
       throw RealmErrorMapper.toDomain(e);
     }
   }
+}
+
+// CreateRealmConfigParameters
+sealed class CreateRealmConfigParameters {
+  const CreateRealmConfigParameters();
+  bool get isReadOnly;
+  LocalStorageTarget get target;
+
+  const factory CreateRealmConfigParameters.cache({
+    required LocalStorageTarget target,
+  }) = CreateRealmConfigParametersCache._;
+
+  factory CreateRealmConfigParameters.tmp({
+    required LocalStorageTarget target,
+    required Uint8List bytes,
+  }) = CreateRealmConfigParametersTemp._;
+}
+
+final class CreateRealmConfigParametersCache
+    extends CreateRealmConfigParameters {
+  const CreateRealmConfigParametersCache._({required this.target});
+
+  @override
+  final LocalStorageTarget target;
+
+  @override
+  bool get isReadOnly => false;
+}
+
+final class CreateRealmConfigParametersTemp
+    extends CreateRealmConfigParameters {
+  @override
+  final LocalStorageTarget target;
+
+  final Uint8List bytes;
+
+  CreateRealmConfigParametersTemp._({
+    required this.target,
+    required this.bytes,
+  }) {
+    assert(bytes.isNotEmpty);
+  }
+
+  @override
+  bool get isReadOnly => true;
 }
