@@ -8,10 +8,11 @@ import 'package:pwd/notes/domain/google_repository.dart';
 import 'package:pwd/notes/data/datasource/google_repository_impl.dart';
 import 'package:pwd/notes/domain/realm_local_repository.dart';
 import 'package:pwd/notes/domain/usecases/delete_note_usecase.dart';
-import 'package:pwd/notes/domain/usecases/notes_provider_usecase.dart';
+import 'package:pwd/notes/domain/usecases/read_notes_usecase.dart';
 import 'package:pwd/notes/domain/usecases/sync_google_drive_item_usecase.dart';
 import 'package:pwd/notes/domain/usecases/sync_usecase.dart';
 import 'package:pwd/notes/domain/usecases/sync_usecase_locator.dart';
+import 'package:pwd/notes/domain/usecases/update_note_usecase.dart';
 
 final class GoogleAndRealmDi extends DiScope {
   @override
@@ -21,6 +22,7 @@ final class GoogleAndRealmDi extends DiScope {
       () => RealmLocalRepositoryImpl(
         realmProvider: RealmProviderImpl(),
       ),
+      lifeTime: const LifeTime.single(),
     );
 
     di.bind<GoogleRepository>(
@@ -63,12 +65,23 @@ final class GoogleAndRealmDi extends DiScope {
       ),
     );
 
-    di.bind<NotesProviderUsecase>(
+    di.bind<ReadNotesUsecase>(
       module: this,
-      () => NotesProviderUsecase(
+      () => ReadNotesUsecase(
         repository: di.resolve(),
         pinUsecase: di.resolve(),
         checksumChecker: di.resolve(),
+      ),
+      lifeTime: const LifeTime.single(),
+    );
+
+    di.bind<UpdateNoteUsecase>(
+      module: this,
+      () => UpdateNoteUsecase(
+        repository: di.resolve(),
+        pinUsecase: di.resolve(),
+        checksumChecker: di.resolve(),
+        syncUsecase: di.resolve(),
       ),
       lifeTime: const LifeTime.single(),
     );

@@ -38,8 +38,6 @@
     "configurationUndefinedScreenButton": "Настройка синхронизации",
 
     "editNoteScreenScreenTitle": "Добавить/изменить заметку",
-    "editNoteScreenTitleField": "Заголовок",
-    "editNoteScreenDescriptionField": "Описание",
     "editNoteScreenContentField": "Содержание",
     "editNoteScreenDeleteConfirmationMessage": "Вы действительно хотите удалить запись?",
 
@@ -57,6 +55,9 @@
     "configurationsScreenItemLabelGoogleDrive": "Google Drive",
 
     "gitConfigurationScreenTitle": "Настройка синхронизации",
+    "configurationScreenConfigItemDescriptionGit": "Синхронизация при помощи Git API",
+    "configurationScreenConfigItemDescriptionGoogleDrive": "Синхронизация при помощи Google Drive API",
+
     "gitConfigurationFormFormDescription": "Введите данные репозитория и имя файла для синхронизации",
     "gitConfigurationFormTokenTextField": "Токен",
     "gitConfigurationFormTokenTooltip": "Перейдите в свою учетную запись GitHub (Settings -> Developer settings -> Tokens -> Generate new token) и создайте токен доступа и введите его здесь",
@@ -75,7 +76,7 @@
     "googleDriveConfigurationScreenFileNameTextFieldHint": "Имя файла",
     "googleDriveConfigurationScreenFileNameTooltip": "Имя файла для синхронизации",
     "googleDriveConfigurationScreenConfirmationMessageDeleteTitle": "Предупреждение",
-    "googleDriveConfigurationScreenConfirmationMessageDeleteMessage": "Настройка синхронизации",
+    "googleDriveConfigurationScreenConfirmationMessageDeleteMessage": "Вы уверены, что хотите удалить конфигурацию с устройства?",
 
     "settingsScreenTitle": "Настройки",
     "settingsScreenRemoteConfigurationItem": "Настройка синхронизации",

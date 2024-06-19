@@ -5,18 +5,23 @@ import 'package:pwd/notes/domain/usecases/sync_google_drive_item_usecase.dart';
 import 'package:pwd/notes/domain/usecases/sync_usecase.dart';
 
 final class SyncUsecaseLocator implements SyncUsecase {
-  SyncUsecase getSyncUsecase({required RemoteConfiguration configuration}) {
-    switch (configuration) {
+  @override
+  Future<void> execute({
+    required RemoteConfiguration configuration,
+    required bool force,
+  }) =>
+      configuration
+          .getSyncUsecase()
+          .execute(configuration: configuration, force: force);
+}
+
+extension on RemoteConfiguration {
+  SyncUsecase getSyncUsecase() {
+    switch (this) {
       case GoogleDriveConfiguration():
         return DiStorage.shared.resolve<SyncGoogleDriveItemUsecase>();
       case GitConfiguration():
         return DiStorage.shared.resolve<SyncGitItemUsecase>();
     }
   }
-
-  @override
-  Future<void> execute(
-          {required RemoteConfiguration configuration, required bool force}) =>
-      getSyncUsecase(configuration: configuration)
-          .execute(configuration: configuration, force: force);
 }

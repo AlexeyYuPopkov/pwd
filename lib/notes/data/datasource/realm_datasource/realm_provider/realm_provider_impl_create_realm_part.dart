@@ -21,7 +21,7 @@ extension RealmProviderCreateRealmConfigPath on RealmProviderImpl {
     required CreateRealmConfigParameters parameters,
   }) async {
     try {
-      const int schemaVersion = 5;
+      const int schemaVersion = 6;
 
       final path = await createRealmConfigPath(parameters: parameters);
 
@@ -42,11 +42,18 @@ extension RealmProviderCreateRealmConfigPath on RealmProviderImpl {
                 if (schemaVersion == oldSchemaVersion) {
                   return;
                 }
+
                 if (schemaVersion == 5) {
                   _migration5(migration, oldSchemaVersion);
-                } else {
-                  return;
                 }
+
+                if (oldSchemaVersion < 6) {
+                  _migration6(migration, oldSchemaVersion);
+                }
+
+                //   if (oldSchemaVersion < 7) {
+                //   _migration7(migration, oldSchemaVersion);
+                // }
               },
             )
           : Configuration.inMemory(

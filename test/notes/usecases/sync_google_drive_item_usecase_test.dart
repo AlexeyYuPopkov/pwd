@@ -47,10 +47,6 @@ void main() {
     pinSha512: [],
   );
 
-  final target = configuration.getTarget(
-    pin: pin,
-  );
-
   final realmDatabaseAsBytes = Uint8List.fromList([]);
 
   final googleDriveFile = GoogleDriveFile(
@@ -254,12 +250,6 @@ void main() {
             ),
           ).thenAnswer((_) => Future.value());
 
-          when(
-            () => repository.creanDeletedIfNeeded(
-              target: configuration.getTarget(pin: pin),
-            ),
-          ).thenAnswer((_) => Future.value());
-
           when(() => pinUsecase.getPinOrThrow()).thenReturn(pin);
 
           when(() => repository.readAsBytes(
@@ -292,7 +282,7 @@ void main() {
 
           await usecase.execute(configuration: configuration, force: false);
 
-          final verification = verifyInOrder(
+          verifyInOrder(
             [
               () => googleRepository.getFile(target: configuration),
               () => checksumChecker.getChecksum(
@@ -302,9 +292,6 @@ void main() {
               () => pinUsecase.getPinOrThrow(),
               () => repository.mergeWithDatabasePath(
                     bytes: realmDatabaseAsBytes,
-                    target: configuration.getTarget(pin: pin),
-                  ),
-              () => repository.creanDeletedIfNeeded(
                     target: configuration.getTarget(pin: pin),
                   ),
               () => pinUsecase.getPinOrThrow(),
@@ -322,8 +309,6 @@ void main() {
                   ),
             ],
           );
-
-          expect(verification.length, 11);
         },
       );
       test(
@@ -363,12 +348,6 @@ void main() {
           ).thenAnswer(
             (_) async => {},
           );
-
-          when(
-            () => repository.creanDeletedIfNeeded(
-              target: configuration.getTarget(pin: pin),
-            ),
-          ).thenAnswer((_) => Future.value());
 
           when(() => pinUsecase.getPinOrThrow()).thenReturn(pin);
 
@@ -419,7 +398,6 @@ void main() {
                         bytes: realmDatabaseAsBytes,
                         target: configuration.getTarget(pin: pin),
                       ),
-                  () => repository.creanDeletedIfNeeded(target: target),
                   () => pinUsecase.getPinOrThrow(),
                   () => repository.readAsBytes(
                         target: configuration.getTarget(pin: pin),

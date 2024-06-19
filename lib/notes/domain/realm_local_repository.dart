@@ -4,8 +4,8 @@ import 'package:pwd/common/domain/model/remote_configuration/remote_configuratio
 import 'package:pwd/notes/domain/model/note_item.dart';
 
 abstract interface class RealmLocalRepository {
+  Stream<RealmLocalRepositoryNotification?> getChangesStream();
   Future<void> markDeleted(String id, {required LocalStorageTarget target});
-  Future<void> creanDeletedIfNeeded({required LocalStorageTarget target});
   Future<void> deleteAll({required LocalStorageTarget target});
 
   Future<void> saveNotes({
@@ -23,7 +23,12 @@ abstract interface class RealmLocalRepository {
   });
 
   Future<void> updateNote(
-    BaseNoteItem noteItem, {
+    UpdatedNoteItem noteItem, {
+    required LocalStorageTarget target,
+  });
+
+  Future<void> createNote(
+    NewNoteItem noteItem, {
     required LocalStorageTarget target,
   });
 
@@ -39,4 +44,10 @@ abstract interface class RealmLocalRepository {
   Future<void> deleteCacheFile({
     required CacheTarget target,
   });
+}
+
+final class RealmLocalRepositoryNotification {
+  final LocalStorageTarget target;
+
+  const RealmLocalRepositoryNotification({required this.target});
 }

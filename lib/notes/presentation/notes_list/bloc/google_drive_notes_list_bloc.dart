@@ -1,8 +1,12 @@
+import 'dart:async';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
-import 'package:pwd/notes/domain/usecases/notes_provider_usecase.dart';
+import 'package:pwd/notes/domain/realm_local_repository.dart';
+import 'package:pwd/notes/domain/usecases/read_notes_usecase.dart';
 
 import 'package:pwd/notes/domain/usecases/sync_usecase.dart';
+import 'package:rxdart/rxdart.dart';
 
 import 'google_drive_notes_list_data.dart';
 import 'google_drive_notes_list_event.dart';
@@ -13,12 +17,15 @@ final class GoogleDriveNotesListBloc
   GoogleDriveNotesListData get data => state.data;
 
   final RemoteConfiguration configuration;
-  final NotesProviderUsecase notesProviderUsecase;
+  final ReadNotesUsecase readNotesUsecase;
   final SyncUsecase syncUsecase;
+
+  late final StreamSubscription<RealmLocalRepositoryNotification?>
+      changesSubscription;
 
   GoogleDriveNotesListBloc({
     required this.configuration,
-    required this.notesProviderUsecase,
+    required this.readNotesUsecase,
     required this.syncUsecase,
   }) : super(
           InitialState(
@@ -26,6 +33,7 @@ final class GoogleDriveNotesListBloc
           ),
         ) {
     _setupHandlers();
+    _createSubscriptions();
 
     add(const GoogleDriveNotesListEvent.initial());
   }
@@ -36,12 +44,35 @@ final class GoogleDriveNotesListBloc
     on<ReloadLocallyEvent>(_onReloadLocallyEvent);
   }
 
+  void _createSubscriptions() {
+    changesSubscription = readNotesUsecase
+        .getChangesStream()
+        .debounceTime(
+          Durations.extralong1,
+        )
+        .listen(
+      (e) {
+        if (e != null) {
+          add(
+            const GoogleDriveNotesListEvent.reloadLocally(),
+          );
+        }
+      },
+    );
+  }
+
+  @override
+  Future<void> close() {
+    changesSubscription.cancel();
+    return super.close();
+  }
+
   void _onInitialEvent(
     InitialEvent event,
     Emitter<GoogleDriveNotesListState> emit,
   ) async {
     try {
-      final notes = await notesProviderUsecase.readNotes(
+      final notes = await readNotesUsecase.execute(
         configuration: configuration,
       );
 
@@ -70,7 +101,7 @@ final class GoogleDriveNotesListBloc
 
       await syncUsecase.execute(
           configuration: configuration, force: event.force);
-      final notes = await notesProviderUsecase.readNotes(
+      final notes = await readNotesUsecase.execute(
         configuration: configuration,
       );
 
@@ -91,7 +122,7 @@ final class GoogleDriveNotesListBloc
     try {
       emit(GoogleDriveNotesListState.loading(data: data));
 
-      final notes = await notesProviderUsecase.readNotes(
+      final notes = await readNotesUsecase.execute(
         configuration: configuration,
       );
 

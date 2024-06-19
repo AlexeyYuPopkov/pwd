@@ -6,6 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:pwd/common/domain/model/remote_configuration/local_storage_target.dart';
 import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
 import 'package:pwd/notes/data/datasource/realm_datasource/realm_error_mapper.dart';
+import 'package:pwd/notes/data/mappers/note_realm_mapper.dart';
 import 'package:pwd/notes/data/realm_model/note_item_realm.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
 import 'package:realm/realm.dart';

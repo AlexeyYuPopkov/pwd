@@ -5,16 +5,12 @@ part 'note_item_realm.realm.dart';
 class _NoteItemRealm {
   @PrimaryKey()
   late String id;
-  late String title;
-  late String description;
-  late List<_NoteItemContentRealm> content;
   late int updated;
-  late int? deletedTimestamp;
-
-  // late String body;
-  // late bool? idDeleted;
+  late String body;
+  late bool? isDeleted;
 }
 
+// TODO: delete class [_NoteItemContentRealm]
 @RealmModel(ObjectType.embeddedObject)
 class _NoteItemContentRealm {
   late String text;
@@ -23,15 +19,12 @@ class _NoteItemContentRealm {
 extension MarkDeleted on NoteItemRealm {
   NoteItemRealm deletedCopy({
     required int timestamp,
-    required int? deletedTimestamp,
   }) {
     return NoteItemRealm(
       id,
-      '',
-      '',
       timestamp,
-      deletedTimestamp: deletedTimestamp,
-      content: [],
+      '',
+      isDeleted: true,
     );
   }
 }

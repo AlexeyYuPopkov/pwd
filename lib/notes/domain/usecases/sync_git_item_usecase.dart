@@ -175,7 +175,5 @@ extension on SyncGitItemUsecase {
       bytes: Uint8List.fromList(bytes),
       target: target,
     );
-
-    return realmRepository.creanDeletedIfNeeded(target: target);
   }
 }

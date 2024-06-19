@@ -110,8 +110,6 @@ final class SyncGoogleDriveItemUsecase with SyncHelper implements SyncUsecase {
         bytes: bytes,
         target: target,
       );
-
-      return realmRepository.creanDeletedIfNeeded(target: target);
     }
   }
 

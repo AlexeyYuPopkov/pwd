@@ -16,12 +16,7 @@ final class EditNoteScreenFinders {
   final deleteButton = find.byKey(
     const Key(EditNoteScreenTestHelper.deleteButtonKey),
   );
-  final titleTextField = find.byKey(
-    const Key(EditNoteScreenTestHelper.titleTextFieldKey),
-  );
-  final subtitleTextField = find.byKey(
-    const Key(EditNoteScreenTestHelper.subtitleTextFieldKey),
-  );
+
   final contentTextField = find.byKey(
     const Key(EditNoteScreenTestHelper.contentTextFieldKey),
   );

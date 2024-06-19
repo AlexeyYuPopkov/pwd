@@ -41,6 +41,9 @@ void main() {
   const googleDriveConfiguration =
       GoogleDriveConfiguration(fileName: 'fileName2');
 
+  const googleDriveAnotherConfiguration =
+      GoogleDriveConfiguration(fileName: 'fileNameAnother');
+
   final usecase = RemoveConfigurationsUsecase(
     remoteStorageConfigurationProvider: remoteStorageConfigurationProvider,
     pinUsecase: pinUsecase,
@@ -50,7 +53,7 @@ void main() {
   );
 
   group('RemoveConfigurationsUsecase', () {
-    test('remove config', () async {
+    test('remove googleDrive and logout', () async {
       final oldConfigurations = RemoteConfigurations.createOrThrow(
         configurations: const [
           gitConfiguration,
@@ -109,6 +112,71 @@ void main() {
                 configuration: googleDriveConfiguration,
               ),
           () => googleRepository.logout(),
+          () => remoteStorageConfigurationProvider.setConfigurations(
+                newConfigurations,
+              ),
+        ],
+      );
+    });
+
+    test('remove googleDrive and don`t logout', () async {
+      final oldConfigurations = RemoteConfigurations.createOrThrow(
+        configurations: const [
+          googleDriveConfiguration,
+          googleDriveAnotherConfiguration,
+        ],
+      );
+
+      final newConfigurations = RemoteConfigurations.createOrThrow(
+        configurations: const [
+          googleDriveAnotherConfiguration,
+        ],
+      );
+
+      when(
+        () => remoteStorageConfigurationProvider.currentConfiguration,
+      ).thenReturn(oldConfigurations);
+
+      const pin = Pin(pinSha512: []);
+
+      when(
+        () => pinUsecase.getPinOrThrow(),
+      ).thenReturn(pin);
+
+      when(
+        () => localRepository.deleteAll(
+          target: googleDriveConfiguration.getTarget(pin: pin),
+        ),
+      ).thenAnswer((_) async {});
+
+      when(
+        () => checksumChecker.dropChecksum(
+          configuration: googleDriveConfiguration,
+        ),
+      ).thenAnswer((_) async {});
+
+      when(
+        () => googleRepository.logout(),
+      ).thenAnswer((_) async {});
+
+      when(
+        () => remoteStorageConfigurationProvider.setConfigurations(
+          newConfigurations,
+        ),
+      ).thenAnswer((_) => Future.value());
+
+      await usecase.execute(googleDriveConfiguration);
+
+      verifyInOrder(
+        [
+          () => remoteStorageConfigurationProvider.currentConfiguration,
+          () => pinUsecase.getPinOrThrow(),
+          () => localRepository.deleteAll(
+                target: googleDriveConfiguration.getTarget(pin: pin),
+              ),
+          () => checksumChecker.dropChecksum(
+                configuration: googleDriveConfiguration,
+              ),
           () => remoteStorageConfigurationProvider.setConfigurations(
                 newConfigurations,
               ),

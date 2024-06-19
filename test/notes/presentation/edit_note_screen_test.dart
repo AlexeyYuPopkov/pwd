@@ -9,7 +9,8 @@ import 'package:pwd/common/presentation/dialogs/dialog_helper.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
 import 'package:pwd/notes/domain/model/note_item_content.dart';
 import 'package:pwd/notes/domain/usecases/delete_note_usecase.dart';
-import 'package:pwd/notes/domain/usecases/notes_provider_usecase.dart';
+import 'package:pwd/notes/domain/usecases/read_notes_usecase.dart';
+import 'package:pwd/notes/domain/usecases/update_note_usecase.dart';
 import 'package:pwd/notes/presentation/edit_note/bloc/edit_note_bloc.dart';
 import 'package:pwd/notes/presentation/edit_note/edit_note_screen.dart';
 
@@ -17,7 +18,9 @@ import '../../../integration_test/pages/edit_note_screen/edit_note_screen_finder
 import '../../test_tools/app_configuration_provider_tool.dart';
 import '../../test_tools/test_tools.dart';
 
-class MockNotesProviderUsecase extends Mock implements NotesProviderUsecase {}
+class MockReadNotesUsecase extends Mock implements ReadNotesUsecase {}
+
+class MockUpdateNoteUsecase extends Mock implements UpdateNoteUsecase {}
 
 class MockDeleteNoteUsecase extends Mock implements DeleteNoteUsecase {}
 
@@ -27,9 +30,15 @@ void main() {
   setUpAll(() {
     final di = DiStorage.shared;
 
-    di.bind<NotesProviderUsecase>(
+    di.bind<ReadNotesUsecase>(
       module: null,
-      () => MockNotesProviderUsecase(),
+      () => MockReadNotesUsecase(),
+      lifeTime: const LifeTime.single(),
+    );
+
+    di.bind<UpdateNoteUsecase>(
+      module: null,
+      () => MockUpdateNoteUsecase(),
       lifeTime: const LifeTime.single(),
     );
 
@@ -72,9 +81,6 @@ void main() {
       expect(finders.blocConsumer, findsOneWidget);
       expect(finders.saveButton, findsOneWidget);
       expect(finders.deleteButton, findsOneWidget);
-
-      expect(finders.titleTextField, findsOneWidget);
-      expect(finders.subtitleTextField, findsOneWidget);
       expect(finders.contentTextField, findsOneWidget);
 
       expect(
@@ -101,7 +107,7 @@ void main() {
 
       expect(
         widgetTester.widget<EditNoteScreen>(finders.screen).input.noteItem,
-        isA<UpdatedNoteItem>(),
+        isA<NewNoteItem>(),
       );
 
       expect(
@@ -113,13 +119,10 @@ void main() {
     testWidgets('check initial state for editing', (widgetTester) async {
       final finders = EditNoteScreenFinders();
 
-      const noteItem = NoteItem(
+      final noteItem = NoteItem(
         id: '',
-        title: 'title',
-        description: 'description',
-        content: NoteStringContent(str: '1\n2\n3'),
+        content: NoteContent.fromText('1\n2\n3'),
         updated: 0,
-        deletedTimestamp: null,
       );
 
       await setupAndShowScreen(
@@ -142,13 +145,10 @@ void main() {
     testWidgets('delete', (widgetTester) async {
       final finders = EditNoteScreenFinders();
 
-      const noteItem = NoteItem(
+      final noteItem = NoteItem(
         id: '123',
-        title: 'title',
-        description: 'description',
-        content: NoteStringContent(str: '1\n2\n3'),
+        content: NoteContent.fromText('1\n2\n3'),
         updated: 0,
-        deletedTimestamp: null,
       );
 
       await setupAndShowScreen(
@@ -193,13 +193,10 @@ void main() {
     testWidgets('delete with error', (widgetTester) async {
       final finders = EditNoteScreenFinders();
 
-      const noteItem = NoteItem(
+      final noteItem = NoteItem(
         id: '123',
-        title: 'title',
-        description: 'description',
-        content: NoteStringContent(str: '1\n2\n3'),
+        content: NoteContent.fromText('1\n2\n3'),
         updated: 0,
-        deletedTimestamp: null,
       );
 
       await setupAndShowScreen(

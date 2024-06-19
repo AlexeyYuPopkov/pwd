@@ -38,8 +38,6 @@
     "configurationUndefinedScreenButton": "Setup synchronization",
 
     "editNoteScreenScreenTitle": "Add/Edit note",
-    "editNoteScreenTitleField": "Title",
-    "editNoteScreenDescriptionField": "Description",
     "editNoteScreenContentField": "Content",
     "editNoteScreenDeleteConfirmationMessage": "Do you really whant to delete the entry?",
 
@@ -57,6 +55,9 @@
     "configurationsScreenItemLabelGoogleDrive": "Google Drive",
 
     "gitConfigurationScreenTitle": "Setup synchronization",
+    "configurationScreenConfigItemDescriptionGit": "Synchronization with Git API",
+    "configurationScreenConfigItemDescriptionGoogleDrive": "Synchronization with Google Drive API",
+    
     "gitConfigurationFormFormDescription": "Enter repository details and file name for synchronization",
     "gitConfigurationFormTokenTextField": "Token",
     "gitConfigurationFormTokenTooltip": "Go to your GitHub account (Settings -> Developer settings -> Tokens -> Generate new token) and create access token and enter it here",
@@ -75,7 +76,7 @@
     "googleDriveConfigurationScreenFileNameTextFieldHint": "File Name",
     "googleDriveConfigurationScreenFileNameTooltip": "Name of file for synchronization",
     "googleDriveConfigurationScreenConfirmationMessageDeleteTitle": "Warning",
-    "googleDriveConfigurationScreenConfirmationMessageDeleteMessage": "Setup synchronization",
+    "googleDriveConfigurationScreenConfirmationMessageDeleteMessage": "Are you sure you want delete configuration from the device?",
 
     "settingsScreenTitle": "Settings",
     "settingsScreenRemoteConfigurationItem": "Synchronisation settings",

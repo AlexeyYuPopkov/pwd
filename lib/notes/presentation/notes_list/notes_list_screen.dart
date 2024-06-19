@@ -8,7 +8,6 @@ import 'package:pwd/common/presentation/shimmer/common_shimmer.dart';
 import 'package:di_storage/di_storage.dart';
 import 'package:pwd/l10n/localization_helper.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
-import 'package:pwd/notes/domain/usecases/notes_provider_usecase.dart';
 import 'package:pwd/notes/presentation/common/widgets/note_list_item_widget.dart';
 import 'package:pwd/notes/presentation/tools/local_storage_error_message_provider.dart';
 import 'package:pwd/notes/presentation/tools/sync_data_error_message_provider.dart';
@@ -36,7 +35,7 @@ final class NotesListScreen extends StatelessWidget with ShowErrorDialogMixin {
     return BlocProvider(
       create: (_) => GoogleDriveNotesListBloc(
         configuration: configuration,
-        notesProviderUsecase: di.resolve<NotesProviderUsecase>(),
+        readNotesUsecase: di.resolve(),
         syncUsecase: di.resolve(),
       ),
       child: BlocConsumer<GoogleDriveNotesListBloc, GoogleDriveNotesListState>(

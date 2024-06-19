@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
 import 'package:pwd/common/presentation/common_highlighted_row.dart';
+import 'package:pwd/l10n/localization_helper.dart';
 import 'package:pwd/theme/common_size.dart';
 import 'package:pwd/theme/common_theme.dart';
 
@@ -80,9 +81,10 @@ extension on RemoteConfiguration {
   String itemDescription(BuildContext context) {
     switch (type) {
       case ConfigurationType.git:
-        return 'Synchronization with Git API';
+        return context.localization.configurationScreenConfigItemDescriptionGit;
       case ConfigurationType.googleDrive:
-        return 'Synchronization with Google Drive API';
+        return context
+            .localization.configurationScreenConfigItemDescriptionGoogleDrive;
     }
   }
 }
