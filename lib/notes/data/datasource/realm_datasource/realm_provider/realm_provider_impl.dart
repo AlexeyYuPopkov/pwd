@@ -20,12 +20,11 @@ part 'realm_provider_impl_migrations_part.dart';
 final class StorageDirectoryPathProvider {
   String? _appDirPath;
 
-  Future<String> getAppDirPath() async {
-    return _appDirPath ??
-        await getApplicationDocumentsDirectory().then((e) {
-          return e.path;
-        });
-  }
+  Future<String> getAppDirPath() async =>
+      _appDirPath ??
+      await getApplicationDocumentsDirectory().then((e) {
+        return e.path;
+      });
 }
 
 final class RealmProviderImpl implements RealmProvider {
@@ -80,6 +79,22 @@ final class RealmProviderImpl implements RealmProvider {
       if (await folder.exists()) {
         await folder.delete(recursive: true);
       }
+    } catch (e) {
+      throw RealmErrorMapper.toDomain(e);
+    }
+  }
+
+  @override
+  Future<Uint8List> readAsBytes({
+    required LocalStorageTarget target,
+  }) async {
+    try {
+      final config = await _createRealmConfig(
+        parameters: CreateRealmConfigParameters.cache(target: target),
+      );
+      Realm.compact(config);
+
+      return fileSystem.file(config.path).readAsBytes();
     } catch (e) {
       throw RealmErrorMapper.toDomain(e);
     }

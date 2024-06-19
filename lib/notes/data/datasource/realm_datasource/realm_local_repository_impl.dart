@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:pwd/common/domain/model/remote_configuration/local_storage_target.dart';
 import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
@@ -170,8 +169,8 @@ final class RealmLocalRepositoryImpl implements RealmLocalRepository {
     try {
       realm.write(
         () {
-          final deleted =
-              realm.query<NoteItemRealm>('isDeleted == true').firstOrNull;
+          const queryStr = 'isDeleted == true';
+          final deleted = realm.query<NoteItemRealm>(queryStr).firstOrNull;
 
           final updated = deleted == null
               ? NoteRealmMapper.toData(noteItem)
@@ -198,18 +197,8 @@ final class RealmLocalRepositoryImpl implements RealmLocalRepository {
   @override
   Future<Uint8List> readAsBytes({
     required LocalStorageTarget target,
-  }) async {
-    final realm = await realmProvider.getRealm(target: target).then(
-          (e) => e.freeze(),
-        );
-    try {
-      return File(realm.config.path).readAsBytes();
-    } catch (e) {
-      throw RealmErrorMapper.toDomain(e);
-    } finally {
-      realm.close();
-    }
-  }
+  }) =>
+      realmProvider.readAsBytes(target: target);
 
   @override
   Future<void> mergeWithDatabasePath({

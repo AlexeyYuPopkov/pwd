@@ -83,6 +83,23 @@ extension RealmProviderCreateRealmConfigPath on RealmProviderImpl {
       throw RealmErrorMapper.toDomain(e);
     }
   }
+
+  // Future<Realm> createCompactedRealm({
+  //   required CreateRealmConfigParameters parameters,
+  // }) async {
+  //   try {
+  //     final config = await _createRealmConfig(parameters: parameters);
+  //     Realm.compact(config);
+  //     final realm = Realm(config);
+
+  //     if (kDebugMode) {
+  //       print('Realm.config.path: ${realm.config.path}');
+  //     }
+  //     return realm;
+  //   } catch (e) {
+  //     throw RealmErrorMapper.toDomain(e);
+  //   }
+  // }
 }
 
 // Private

@@ -21,4 +21,8 @@ abstract interface class RealmProvider {
   Future<void> deleteTempFolderIfPresent({
     required CacheTarget target,
   });
+
+  Future<Uint8List> readAsBytes({
+    required LocalStorageTarget target,
+  });
 }
