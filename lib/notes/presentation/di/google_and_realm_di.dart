@@ -5,7 +5,7 @@ import 'package:pwd/notes/data/datasource/realm_datasource/realm_provider/realm_
 import 'package:pwd/notes/domain/checksum_checker.dart';
 import 'package:pwd/notes/domain/google_repository.dart';
 
-import 'package:pwd/notes/data/datasource/google_repository_impl.dart';
+import 'package:pwd/notes/data/datasource/google_repository_impl/google_repository_impl.dart';
 import 'package:pwd/notes/domain/realm_local_repository.dart';
 import 'package:pwd/notes/domain/usecases/delete_note_usecase.dart';
 import 'package:pwd/notes/domain/usecases/read_notes_usecase.dart';

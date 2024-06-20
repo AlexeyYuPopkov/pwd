@@ -1,6 +1,8 @@
 part of 'remote_configuration.dart';
 
 final class GoogleDriveConfiguration extends RemoteConfiguration {
+  String get folderName => 'KeyMemo';
+
   @override
   final type = ConfigurationType.googleDrive;
 

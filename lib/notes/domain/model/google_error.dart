@@ -9,6 +9,9 @@ sealed class GoogleError extends AppError {
 
   const factory GoogleError.canNotCreateFile() = GoogleCanNotCreateFileError;
 
+  factory GoogleError.canNotFindOrCreateFileInFolder({Object? parentError}) =>
+      GoogleCanNotFindOrCreateFileInFolderError(parentError: parentError);
+
   const factory GoogleError.unspecified({
     String message,
     Object? parentError,
@@ -29,4 +32,9 @@ final class GoogleCanNotCreateFileError extends GoogleError {
 
 final class GoogleUnspecifiedError extends GoogleError {
   const GoogleUnspecifiedError({super.message = '', super.parentError});
+}
+
+final class GoogleCanNotFindOrCreateFileInFolderError extends GoogleError {
+  const GoogleCanNotFindOrCreateFileInFolderError({super.parentError})
+      : super(message: '');
 }
