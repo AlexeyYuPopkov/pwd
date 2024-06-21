@@ -6,7 +6,7 @@ import 'package:pwd/common/presentation/app_bar_button.dart';
 import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
 import 'package:pwd/common/presentation/dialogs/action_sheet.dart';
 import 'package:pwd/common/presentation/dialogs/show_error_dialog_mixin.dart';
-import 'package:pwd/l10n/gen_l10n/localization.dart';
+import 'package:pwd/l10n/localization_helper.dart';
 import 'package:pwd/settings/presentation/remote_configuration/configuration_screen/bloc/configurations_screen_event.dart';
 import 'package:pwd/settings/presentation/remote_configuration/configuration_screen/widgets/configuration_screen_config_item.dart';
 import 'package:pwd/theme/common_size.dart';
@@ -191,8 +191,6 @@ final class _NoDataPlaceholder extends StatelessWidget {
 
 // Localization
 extension on BuildContext {
-  Localization get localization => Localization.of(this)!;
-
   String get headerText => localization.configurationsScreenHeaderText;
   String get actionSheetHeaderTitle =>
       localization.configurationsScreenActionSheetHeaderTitle;

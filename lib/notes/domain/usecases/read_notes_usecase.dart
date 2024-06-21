@@ -4,18 +4,18 @@ import 'package:pwd/notes/domain/checksum_checker.dart';
 import 'package:pwd/notes/domain/realm_local_repository.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
 
-class NotesProviderUsecase {
+class ReadNotesUsecase {
   final RealmLocalRepository repository;
   final PinUsecase pinUsecase;
   final ChecksumChecker checksumChecker;
 
-  NotesProviderUsecase({
+  const ReadNotesUsecase({
     required this.repository,
     required this.pinUsecase,
     required this.checksumChecker,
   });
 
-  Future<List<NoteItem>> readNotes({
+  Future<List<NoteItem>> execute({
     required RemoteConfiguration configuration,
   }) async {
     final pin = pinUsecase.getPinOrThrow();
@@ -26,19 +26,6 @@ class NotesProviderUsecase {
     return notes;
   }
 
-  Future<void> updateNoteItem(
-    BaseNoteItem noteItem, {
-    required RemoteConfiguration configuration,
-  }) async {
-    final pin = pinUsecase.getPinOrThrow();
-
-    await repository.updateNote(
-      noteItem,
-      target: configuration.getTarget(pin: pin),
-    );
-    await checksumChecker.dropChecksum(
-      configuration: configuration,
-    );
-    readNotes(configuration: configuration);
-  }
+  Stream<RealmLocalRepositoryNotification?> getChangesStream() =>
+      repository.getChangesStream();
 }

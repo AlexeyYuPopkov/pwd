@@ -1,11 +1,9 @@
 import 'package:di_storage/di_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pwd/l10n/gen_l10n/localization.dart';
+import 'package:pwd/l10n/localization_helper.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
-import 'package:pwd/notes/domain/usecases/notes_provider_usecase.dart';
-
 import 'package:pwd/common/presentation/dialogs/dialog_helper.dart';
 import 'package:pwd/common/presentation/dialogs/show_error_dialog_mixin.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
@@ -88,8 +86,8 @@ final class EditNoteScreen extends StatelessWidget
         body: BlocProvider(
           create: (context) => EditNoteBloc(
             configuration: input.configuration,
-            notesProviderUsecase:
-                DiStorage.shared.resolve<NotesProviderUsecase>(),
+            readNotesUsecase: DiStorage.shared.resolve(),
+            updateNoteUsecase: DiStorage.shared.resolve(),
             deleteNoteUsecase: DiStorage.shared.resolve(),
             noteItem: input.noteItem,
           ),
@@ -144,7 +142,7 @@ final class EditNoteScreen extends StatelessWidget
                                   key: const Key(
                                     _TestHelper.deleteButtonKey,
                                   ),
-                                  onPressed: input.noteItem is UpdatedNoteItem
+                                  onPressed: input.noteItem is NewNoteItem
                                       ? null
                                       : () => _onDelete(context),
                                   child: Text(context.deleteButtonTitle),
@@ -170,16 +168,12 @@ final class EditNoteScreen extends StatelessWidget
 
     if (formState != null &&
         formState.formKey.currentState?.validate() == true) {
-      final String title = formState.titleController.text;
-      final String description = formState.descriptionController.text;
       final String content = formState.contentController.text;
 
-      if (title.isNotEmpty || description.isNotEmpty || content.isNotEmpty) {
+      if (content.isNotEmpty) {
         formState.formKey.currentState?.save();
         context.read<EditNoteBloc>().add(
               EditNoteEvent.save(
-                title: title,
-                description: description,
                 content: content,
               ),
             );
@@ -217,20 +211,13 @@ class _Form extends StatefulWidget {
 
 class _FormState extends State<_Form> {
   late final formKey = GlobalKey<FormState>();
-  late final titleController = TextEditingController(
-    text: widget.noteItem.title,
-  );
-  late final descriptionController = TextEditingController(
-    text: widget.noteItem.description,
-  );
+
   late final contentController = TextEditingController(
     text: widget.noteItem.content.str,
   );
 
   @override
   void dispose() {
-    titleController.dispose();
-    descriptionController.dispose();
     contentController.dispose();
     super.dispose();
   }
@@ -244,22 +231,6 @@ class _FormState extends State<_Form> {
         onChanged: _shouldChangeSubmitEnabledStatusIfNeeded,
         child: Column(
           children: [
-            const SizedBox(height: CommonSize.indent2x),
-            TextFormField(
-              key: const Key(_TestHelper.titleTextFieldKey),
-              controller: titleController,
-              decoration: InputDecoration(
-                labelText: context.titleTextFieldTitle,
-              ),
-            ),
-            const SizedBox(height: CommonSize.indent2x),
-            TextFormField(
-              key: const Key(_TestHelper.subtitleTextFieldKey),
-              controller: descriptionController,
-              decoration: InputDecoration(
-                labelText: context.descriptionTextFieldTitle,
-              ),
-            ),
             const SizedBox(height: CommonSize.indent2x),
             TextFormField(
               key: const Key(_TestHelper.contentTextFieldKey),
@@ -286,8 +257,6 @@ class _FormState extends State<_Form> {
   }
 
   bool checkIsSubmitEnabled() =>
-      widget.noteItem.title != titleController.text ||
-      widget.noteItem.description != descriptionController.text ||
       widget.noteItem.content.str != contentController.text;
 
   int get calculatedMaxLines => contentController.text.split('\n').length;
@@ -295,14 +264,8 @@ class _FormState extends State<_Form> {
 
 // Localization
 extension on BuildContext {
-  Localization get localization => Localization.of(this)!;
-
   String get screenTitle => localization.editNoteScreenScreenTitle;
-  String get titleTextFieldTitle => localization.editNoteScreenTitleField;
-  String get descriptionTextFieldTitle =>
-      localization.editNoteScreenDescriptionField;
-  String get contentTextFieldTitle =>
-      localization.editNoteScreenDescriptionField;
+  String get contentTextFieldTitle => localization.editNoteScreenContentField;
   String get saveButtonTitle => localization.commonSave;
   String get deleteButtonTitle => localization.commonDelete;
   String get deleteConfirmationMessage =>

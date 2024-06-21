@@ -15,15 +15,11 @@ final class EditNoteScreenRobot {
     await tester.pumpAndSettle();
 
     await Future.wait([
-      tester.ensureVisible(_finders.titleTextField),
-      tester.ensureVisible(_finders.subtitleTextField),
       tester.ensureVisible(_finders.contentTextField),
       tester.ensureVisible(_finders.deleteButton),
       tester.ensureVisible(_finders.saveButton),
     ]);
 
-    expect(_finders.titleTextField, findsOneWidget);
-    expect(_finders.subtitleTextField, findsOneWidget);
     expect(_finders.contentTextField, findsOneWidget);
     expect(_finders.deleteButton, findsOneWidget);
     expect(_finders.saveButton, findsOneWidget);
@@ -41,12 +37,6 @@ final class EditNoteScreenRobot {
   }
 
   Future<void> fillFormAndSave(WidgetTester tester) async {
-    await tester.tap(_finders.titleTextField);
-    await tester.enterText(_finders.titleTextField, titleText);
-
-    await tester.tap(_finders.subtitleTextField);
-    await tester.enterText(_finders.subtitleTextField, descriptionText);
-
     await tester.tap(_finders.contentTextField);
     await tester.enterText(_finders.contentTextField, contentText);
 

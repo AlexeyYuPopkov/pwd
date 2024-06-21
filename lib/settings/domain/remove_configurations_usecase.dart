@@ -1,4 +1,5 @@
 import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
+import 'package:pwd/common/domain/model/remote_configuration/remote_configurations.dart';
 import 'package:pwd/common/domain/remote_configuration_provider.dart';
 import 'package:pwd/common/domain/usecases/pin_usecase.dart';
 import 'package:pwd/notes/domain/checksum_checker.dart';
@@ -28,15 +29,22 @@ class RemoveConfigurationsUsecase {
 
   Future<void> execute(RemoteConfiguration configuration) async {
     final old = _remoteStorageConfigurationProvider.currentConfiguration;
-
-    await _cleanRelatedData(configuration);
-
-    await _remoteStorageConfigurationProvider.setConfigurations(
-      old.removeAndCopy(configuration),
-    );
+    final newConfig = old.removeAndCopy(configuration);
+    try {
+      await _cleanRelatedData(configuration, newConfig);
+    } catch (e) {
+      rethrow;
+    } finally {
+      await _remoteStorageConfigurationProvider.setConfigurations(
+        newConfig,
+      );
+    }
   }
 
-  Future<void> _cleanRelatedData(RemoteConfiguration configuration) async {
+  Future<void> _cleanRelatedData(
+    RemoteConfiguration configuration,
+    RemoteConfigurations newConfig,
+  ) async {
     try {
       final pin = _pinUsecase.getPinOrThrow();
       await _localRepository.deleteAll(
@@ -57,7 +65,13 @@ class RemoveConfigurationsUsecase {
         case ConfigurationType.git:
           break;
         case ConfigurationType.googleDrive:
-          await _googleRepository.logout();
+          final stillHasGoogleDriveConfigs = newConfig.hasOfType(
+            ConfigurationType.googleDrive,
+          );
+
+          if (!stillHasGoogleDriveConfigs) {
+            await _googleRepository.logout();
+          }
           break;
       }
     }

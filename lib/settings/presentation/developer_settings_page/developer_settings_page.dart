@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pwd/common/domain/model/app_configuration.dart';
 import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
 import 'package:pwd/common/presentation/dialogs/show_error_dialog_mixin.dart';
-import 'package:pwd/l10n/gen_l10n/localization.dart';
+import 'package:pwd/l10n/localization_helper.dart';
 import 'package:pwd/theme/common_size.dart';
 
 import 'bloc/developer_settings_page_bloc.dart';
@@ -228,7 +228,6 @@ final class _Container extends StatelessWidget {
 
 // Localization
 extension on BuildContext {
-  Localization get localization => Localization.of(this)!;
   String get screenTitle => localization.developerSettingsScreenTitle;
   String get proxySectionLabelTitle =>
       localization.developerSettingsScreenProxyLabel;

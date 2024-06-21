@@ -272,12 +272,6 @@ void main() {
             ),
           ).thenAnswer((_) => Future.value());
 
-          when(
-            () => repository.creanDeletedIfNeeded(
-              target: configuration.getTarget(pin: pin),
-            ),
-          ).thenAnswer((_) => Future.value());
-
           when(() => pinUsecase.getPinOrThrow()).thenReturn(pin);
 
           when(() => repository.readAsBytes(
@@ -330,9 +324,6 @@ void main() {
                     bytes: realmDatabaseAsBytes,
                     target: configuration.getTarget(pin: pin),
                   ),
-              () => repository.creanDeletedIfNeeded(
-                    target: configuration.getTarget(pin: pin),
-                  ),
               () => pinUsecase.getPinOrThrow(),
               () => repository.readAsBytes(
                     target: configuration.getTarget(pin: pin),
@@ -379,12 +370,6 @@ void main() {
           when(
             () => repository.mergeWithDatabasePath(
               bytes: realmDatabaseAsBytes,
-              target: configuration.getTarget(pin: pin),
-            ),
-          ).thenAnswer((_) => Future.value());
-
-          when(
-            () => repository.creanDeletedIfNeeded(
               target: configuration.getTarget(pin: pin),
             ),
           ).thenAnswer((_) => Future.value());

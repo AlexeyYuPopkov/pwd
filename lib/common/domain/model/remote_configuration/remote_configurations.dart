@@ -74,6 +74,9 @@ final class RemoteConfigurations extends Equatable {
       return configurations[index];
     }
   }
+
+  bool hasOfType(ConfigurationType type) =>
+      configurations.where((e) => e.type == type).isNotEmpty;
 }
 
 sealed class RemoteConfigurationsError extends AppError {

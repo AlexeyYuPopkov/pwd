@@ -242,7 +242,6 @@ final class _GitConfigurationFormState extends State<GitConfigurationForm>
 }
 
 extension on BuildContext {
-  Localization get localization => Localization.of(this)!;
   String get description => localization.gitConfigurationFormFormDescription;
   String get tokenTextFieldHint =>
       localization.gitConfigurationFormTokenTextField;

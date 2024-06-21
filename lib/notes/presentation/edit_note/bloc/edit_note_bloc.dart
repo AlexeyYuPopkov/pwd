@@ -4,20 +4,23 @@ import 'package:pwd/common/domain/model/remote_configuration/remote_configuratio
 import 'package:pwd/notes/domain/model/note_item.dart';
 import 'package:pwd/notes/domain/model/note_item_content.dart';
 import 'package:pwd/notes/domain/usecases/delete_note_usecase.dart';
-import 'package:pwd/notes/domain/usecases/notes_provider_usecase.dart';
+import 'package:pwd/notes/domain/usecases/read_notes_usecase.dart';
+import 'package:pwd/notes/domain/usecases/update_note_usecase.dart';
 
 part 'edit_note_state.dart';
 part 'edit_note_event.dart';
 
 final class EditNoteBloc extends Bloc<EditNoteEvent, EditNoteState> {
   final RemoteConfiguration configuration;
-  final NotesProviderUsecase notesProviderUsecase;
+  final ReadNotesUsecase readNotesUsecase;
+  final UpdateNoteUsecase updateNoteUsecase;
   final DeleteNoteUsecase deleteNoteUsecase;
   EditNotePageData get data => state.data;
 
   EditNoteBloc({
     required this.configuration,
-    required this.notesProviderUsecase,
+    required this.readNotesUsecase,
+    required this.updateNoteUsecase,
     required this.deleteNoteUsecase,
     required BaseNoteItem noteItem,
   }) : super(
@@ -40,14 +43,11 @@ final class EditNoteBloc extends Bloc<EditNoteEvent, EditNoteState> {
     try {
       emit(EditNoteState.loading(data: data));
 
-      final noteItem = BaseNoteItem.updatedItem(
-        id: data.noteItem.id,
-        title: event.title,
-        description: event.description,
-        content: NoteStringContent(str: event.content),
+      final noteItem = data.noteItem.copyWith(
+        content: NoteContent.fromText(event.content),
       );
 
-      await notesProviderUsecase.updateNoteItem(
+      await updateNoteUsecase.execute(
         noteItem,
         configuration: configuration,
       );

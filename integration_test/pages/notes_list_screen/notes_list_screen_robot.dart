@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-
 import 'notes_list_screen_finders.dart';
 
 final class NotesListScreenRobot {

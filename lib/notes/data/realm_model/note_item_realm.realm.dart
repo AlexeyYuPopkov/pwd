@@ -11,19 +11,14 @@ class NoteItemRealm extends _NoteItemRealm
     with RealmEntity, RealmObjectBase, RealmObject {
   NoteItemRealm(
     String id,
-    String title,
-    String description,
-    int updated, {
-    Iterable<NoteItemContentRealm> content = const [],
-    int? deletedTimestamp,
+    int updated,
+    String body, {
+    bool? isDeleted,
   }) {
     RealmObjectBase.set(this, 'id', id);
-    RealmObjectBase.set(this, 'title', title);
-    RealmObjectBase.set(this, 'description', description);
-    RealmObjectBase.set<RealmList<NoteItemContentRealm>>(
-        this, 'content', RealmList<NoteItemContentRealm>(content));
     RealmObjectBase.set(this, 'updated', updated);
-    RealmObjectBase.set(this, 'deletedTimestamp', deletedTimestamp);
+    RealmObjectBase.set(this, 'body', body);
+    RealmObjectBase.set(this, 'isDeleted', isDeleted);
   }
 
   NoteItemRealm._();
@@ -34,36 +29,19 @@ class NoteItemRealm extends _NoteItemRealm
   set id(String value) => RealmObjectBase.set(this, 'id', value);
 
   @override
-  String get title => RealmObjectBase.get<String>(this, 'title') as String;
-  @override
-  set title(String value) => RealmObjectBase.set(this, 'title', value);
-
-  @override
-  String get description =>
-      RealmObjectBase.get<String>(this, 'description') as String;
-  @override
-  set description(String value) =>
-      RealmObjectBase.set(this, 'description', value);
-
-  @override
-  RealmList<NoteItemContentRealm> get content =>
-      RealmObjectBase.get<NoteItemContentRealm>(this, 'content')
-          as RealmList<NoteItemContentRealm>;
-  @override
-  set content(covariant RealmList<NoteItemContentRealm> value) =>
-      throw RealmUnsupportedSetError();
-
-  @override
   int get updated => RealmObjectBase.get<int>(this, 'updated') as int;
   @override
   set updated(int value) => RealmObjectBase.set(this, 'updated', value);
 
   @override
-  int? get deletedTimestamp =>
-      RealmObjectBase.get<int>(this, 'deletedTimestamp') as int?;
+  String get body => RealmObjectBase.get<String>(this, 'body') as String;
   @override
-  set deletedTimestamp(int? value) =>
-      RealmObjectBase.set(this, 'deletedTimestamp', value);
+  set body(String value) => RealmObjectBase.set(this, 'body', value);
+
+  @override
+  bool? get isDeleted => RealmObjectBase.get<bool>(this, 'isDeleted') as bool?;
+  @override
+  set isDeleted(bool? value) => RealmObjectBase.set(this, 'isDeleted', value);
 
   @override
   Stream<RealmObjectChanges<NoteItemRealm>> get changes =>
@@ -80,11 +58,9 @@ class NoteItemRealm extends _NoteItemRealm
   EJsonValue toEJson() {
     return <String, dynamic>{
       'id': id.toEJson(),
-      'title': title.toEJson(),
-      'description': description.toEJson(),
-      'content': content.toEJson(),
       'updated': updated.toEJson(),
-      'deletedTimestamp': deletedTimestamp.toEJson(),
+      'body': body.toEJson(),
+      'isDeleted': isDeleted.toEJson(),
     };
   }
 
@@ -93,19 +69,15 @@ class NoteItemRealm extends _NoteItemRealm
     return switch (ejson) {
       {
         'id': EJsonValue id,
-        'title': EJsonValue title,
-        'description': EJsonValue description,
-        'content': EJsonValue content,
         'updated': EJsonValue updated,
-        'deletedTimestamp': EJsonValue deletedTimestamp,
+        'body': EJsonValue body,
+        'isDeleted': EJsonValue isDeleted,
       } =>
         NoteItemRealm(
           fromEJson(id),
-          fromEJson(title),
-          fromEJson(description),
           fromEJson(updated),
-          content: fromEJson(content),
-          deletedTimestamp: fromEJson(deletedTimestamp),
+          fromEJson(body),
+          isDeleted: fromEJson(isDeleted),
         ),
       _ => raiseInvalidEJson(ejson),
     };
@@ -117,13 +89,9 @@ class NoteItemRealm extends _NoteItemRealm
     return SchemaObject(
         ObjectType.realmObject, NoteItemRealm, 'NoteItemRealm', [
       SchemaProperty('id', RealmPropertyType.string, primaryKey: true),
-      SchemaProperty('title', RealmPropertyType.string),
-      SchemaProperty('description', RealmPropertyType.string),
-      SchemaProperty('content', RealmPropertyType.object,
-          linkTarget: 'NoteItemContentRealm',
-          collectionType: RealmCollectionType.list),
       SchemaProperty('updated', RealmPropertyType.int),
-      SchemaProperty('deletedTimestamp', RealmPropertyType.int, optional: true),
+      SchemaProperty('body', RealmPropertyType.string),
+      SchemaProperty('isDeleted', RealmPropertyType.bool, optional: true),
     ]);
   }();
 

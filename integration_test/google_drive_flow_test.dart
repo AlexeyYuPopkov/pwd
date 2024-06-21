@@ -12,7 +12,7 @@ import 'package:pwd/common/domain/usecases/pin_usecase.dart';
 import 'package:pwd/home/presentation/home_tabbar/home_screen.dart';
 import 'package:pwd/main.dart' as app;
 import 'package:pwd/notes/data/datasource/realm_datasource/realm_local_repository_impl.dart';
-import 'package:pwd/notes/data/datasource/realm_datasource/realm_provider_impl.dart';
+import 'package:pwd/notes/data/datasource/realm_datasource/realm_provider/realm_provider_impl.dart';
 import 'package:pwd/notes/domain/google_repository.dart';
 import 'package:pwd/notes/presentation/di/google_and_realm_di.dart';
 import 'package:pwd/notes/presentation/edit_note/edit_note_screen.dart';

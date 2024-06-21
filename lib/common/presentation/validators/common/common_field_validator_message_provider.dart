@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pwd/l10n/gen_l10n/localization.dart';
+import 'package:pwd/l10n/localization_helper.dart';
 
 import 'common_field_validator.dart';
 
@@ -43,7 +43,6 @@ class CommonFieldValidatorErrorMessages {
 
 // Localization
 extension on BuildContext {
-  Localization get localization => Localization.of(this)!;
   String get notEmptyMessage =>
       localization.commonFieldValidatorMessageNotEmpty;
   String get wrongFormatMessage =>

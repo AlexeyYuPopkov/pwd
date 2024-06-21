@@ -1,35 +1,19 @@
-abstract base class NoteContentInterface {
-  String get str;
-  List<NoteContentItem> get items;
-
-  const NoteContentInterface();
-
-  operator [](int i) => items[i];
-}
-
-final class NoteStringContent extends NoteContentInterface {
-  @override
-  final String str;
-
-  @override
-  List<NoteContentItem> get items => str
-      .split('\n')
-      .map(
-        (e) => NoteContentItem(text: e.trim()),
-      )
-      .toList();
-
-  const NoteStringContent({required this.str});
-}
-
-final class NoteContent extends NoteContentInterface {
-  @override
+final class NoteContent {
   String get str => items.map((e) => e.text).join('\n');
 
-  @override
   final List<NoteContentItem> items;
 
   const NoteContent({required this.items});
+
+  factory NoteContent.fromText(String str) {
+    return NoteContent(
+        items: str
+            .split('\n')
+            .map(
+              (e) => NoteContentItem(text: e.trim()),
+            )
+            .toList());
+  }
 }
 
 final class NoteContentItem {
