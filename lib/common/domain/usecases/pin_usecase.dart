@@ -17,28 +17,15 @@ abstract class PinUsecase {
 
 final class PinUsecaseImpl implements PinUsecase {
   final PinRepository repository;
-  final Duration validDuration;
 
-  PinUsecaseImpl({required this.validDuration, required this.repository});
+  PinUsecaseImpl({required this.repository});
 
   late final _pinStream = BehaviorSubject<BasePin>.seeded(repository.getPin());
 
-  late final _timerStream = Stream.periodic(validDuration).asBroadcastStream();
-
   @override
-  Stream<BasePin> get pinStream => Rx.merge(
-        [
-          _pinStream,
-          _timerStream
-              .map(
-                (e) => const BasePin.empty(),
-              )
-              .distinct((_, __) => repository.getPin() is EmptyPin),
-        ],
-      ).distinct().doOnData(
-            (e) => repository.setPin(e),
-          );
-  // .asBroadcastStream();
+  Stream<BasePin> get pinStream => _pinStream.distinct().doOnData(
+        (e) => repository.setPin(e),
+      );
 
   @override
   Future<void> dropPin() async {

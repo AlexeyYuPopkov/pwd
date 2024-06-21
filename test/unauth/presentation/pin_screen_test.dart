@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:di_storage/di_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,8 +8,10 @@ import 'package:mocktail/mocktail.dart';
 import 'package:pwd/common/data/clock_configuration_provider_impl.dart';
 import 'package:pwd/common/domain/clock_configuration_provider.dart';
 import 'package:pwd/common/domain/errors/app_error.dart';
+import 'package:pwd/common/domain/model/app_settings.dart';
 import 'package:pwd/common/domain/time_formatter/time_formatter.dart';
 import 'package:pwd/common/domain/usecases/clock_usecase.dart';
+import 'package:pwd/common/domain/usecases/get_settings_usecase.dart';
 import 'package:pwd/common/presentation/dialogs/dialog_helper.dart';
 import 'package:pwd/unauth/domain/usecases/login_usecase.dart';
 import 'package:pwd/unauth/presentation/pin_page/bloc/pin_page_bloc.dart';
@@ -20,7 +24,18 @@ import '../../test_tools/test_tools.dart';
 
 class MockLoginUsecase extends Mock implements LoginUsecase {}
 
+class MockGetSettingsUsecase implements GetSettingsUsecase {
+  @override
+  FutureOr<AppSettings> execute() {
+    return AppSettings(
+      enterPinKeyboardType: EnterPinKeyboardType.number,
+    );
+  }
+}
+
 void main() {
+  final finders = PinScreenFinders();
+
   group('PinScreen - UI', () {
     setUpAll(() {
       final di = DiStorage.shared;
@@ -52,6 +67,12 @@ void main() {
         module: null,
         lifeTime: const LifeTime.single(),
       );
+
+      di.bind<GetSettingsUsecase>(
+        () => MockGetSettingsUsecase(),
+        module: null,
+        lifeTime: const LifeTime.single(),
+      );
     });
 
     tearDownAll(() {
@@ -61,8 +82,6 @@ void main() {
     testWidgets(
       'PinScreen: enter pin and login',
       (tester) async {
-        final finders = PinScreenFinders();
-
         await _Tools.setupAndShowScreen(tester, finders: finders);
 
         final testField = find.descendant(
@@ -115,8 +134,6 @@ void main() {
     testWidgets(
       'PinScreen: enter pin and login with error',
       (tester) async {
-        final finders = PinScreenFinders();
-
         await _Tools.setupAndShowScreen(tester, finders: finders);
 
         final testField = find.descendant(
@@ -168,6 +185,23 @@ void main() {
         expect(find.text(TestException.messageText), findsOneWidget);
 
         verify(() => usecase.execute('1234'));
+      },
+    );
+
+    testWidgets(
+      'PinScreen: test keyboard type',
+      (tester) async {
+        await _Tools.setupAndShowScreen(tester, finders: finders);
+
+        expect(
+          tester
+              .element(finders.form)
+              .read<PinPageBloc>()
+              .state
+              .data
+              .enterPinKeyboardType,
+          EnterPinKeyboardType.number,
+        );
       },
     );
   });

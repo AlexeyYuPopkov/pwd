@@ -34,8 +34,9 @@ final class PinScreen extends StatelessWidget with ShowErrorDialogMixin {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         body: BlocProvider(
-          create: (context) => PinPageBloc(
+          create: (_) => PinPageBloc(
             loginUsecase: DiStorage.shared.resolve(),
+            settingsUsecase: DiStorage.shared.resolve(),
           ),
           child: BlocConsumer<PinPageBloc, PinPageBlocState>(
             key: const Key(PinScreenTestHelper.blocConsumer),

@@ -2,6 +2,7 @@ import 'dart:math' show max, min;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pwd/common/domain/model/app_settings.dart';
 import 'package:pwd/common/domain/time_formatter/time_formatter.dart';
 import 'package:pwd/common/presentation/clock/clocks_widget/clocks_widget.dart';
 import 'package:pwd/l10n/localization_helper.dart';
@@ -74,29 +75,37 @@ final class PinScreenEnterPinFormState extends State<PinScreenEnterPinForm> {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: CommonSize.indent2x),
-                        child: TextFormField(
-                          key: const Key(PinScreenTestHelper.pinTextField),
-                          controller: pinController,
-                          decoration: InputDecoration(
-                            suffixIcon: IconButton(
-                              key: const Key(
-                                PinScreenTestHelper.pinVisibilityButtonKey,
+                        child: BlocBuilder<PinPageBloc, PinPageBlocState>(
+                          buildWhen: (one, other) =>
+                              one.data.enterPinKeyboardType !=
+                              other.data.enterPinKeyboardType,
+                          builder: (context, state) {
+                            return TextFormField(
+                              key: const Key(PinScreenTestHelper.pinTextField),
+                              controller: pinController,
+                              decoration: InputDecoration(
+                                suffixIcon: IconButton(
+                                  key: const Key(
+                                    PinScreenTestHelper.pinVisibilityButtonKey,
+                                  ),
+                                  icon: Icon(
+                                    isPinVisible
+                                        ? Icons.visibility_off_outlined
+                                        : Icons.visibility,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      isPinVisible = !isPinVisible;
+                                    });
+                                  },
+                                ),
+                                labelText: context.pinTextFieldTitle,
                               ),
-                              icon: Icon(
-                                isPinVisible
-                                    ? Icons.visibility_off_outlined
-                                    : Icons.visibility,
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  isPinVisible = !isPinVisible;
-                                });
-                              },
-                            ),
-                            labelText: context.pinTextFieldTitle,
-                          ),
-                          keyboardType: TextInputType.visiblePassword,
-                          obscureText: !isPinVisible,
+                              keyboardType:
+                                  state.data.enterPinKeyboardType.textInputType,
+                              obscureText: !isPinVisible,
+                            );
+                          },
                         ),
                       ),
                     ),
@@ -142,6 +151,17 @@ final class PinScreenEnterPinFormState extends State<PinScreenEnterPinForm> {
               PinPageBlocEvent.login(pin: pin),
             );
       }
+    }
+  }
+}
+
+extension on EnterPinKeyboardType {
+  TextInputType get textInputType {
+    switch (this) {
+      case EnterPinKeyboardType.number:
+        return TextInputType.number;
+      case EnterPinKeyboardType.password:
+        return TextInputType.visiblePassword;
     }
   }
 }

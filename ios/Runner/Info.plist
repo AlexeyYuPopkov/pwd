@@ -58,5 +58,7 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSFaceIDUsageDescription</key>
+	<string>We use Face ID to quickly and securely verify your identity, ensuring that only you can access your personal data in the app.</string>
 </dict>
 </plist>

@@ -44,9 +44,22 @@ class ErrorState extends PinPageBlocState {
 }
 
 // Data
-class PinPageBlocData extends Equatable {
-  const PinPageBlocData();
+final class PinPageBlocData extends Equatable {
+  final EnterPinKeyboardType enterPinKeyboardType;
+
+  const PinPageBlocData._({
+    this.enterPinKeyboardType = AppSettings.defaultKeyboardTyupe,
+  });
+
+  const factory PinPageBlocData.initial() = PinPageBlocData._;
 
   @override
-  List<Object?> get props => const [];
+  List<Object?> get props => [enterPinKeyboardType];
+
+  PinPageBlocData copyWith({
+    EnterPinKeyboardType? enterPinKeyboardType,
+  }) =>
+      PinPageBlocData._(
+        enterPinKeyboardType: enterPinKeyboardType ?? this.enterPinKeyboardType,
+      );
 }

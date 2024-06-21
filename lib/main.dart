@@ -6,6 +6,7 @@ import 'package:di_storage/di_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pwd/common/domain/base_pin.dart';
 import 'package:pwd/common/domain/usecases/pin_usecase.dart';
+import 'package:pwd/common/presentation/blur_widget/verification_widget.dart';
 import 'package:pwd/home/presentation/home_tabbar/home_router_helper.dart';
 import 'package:pwd/l10n/localization_helper.dart';
 import 'package:pwd/theme/theme_data.dart';
@@ -57,7 +58,9 @@ final class MyApp extends StatelessWidget {
       localizationsDelegates: LocalizationHelper.localizationsDelegates,
       supportedLocales: LocalizationHelper.supportedLocales,
       home: BlockingLoadingIndicator(
-        child: const RouterWidget(),
+        child: const VerificationWidget(
+          child: RouterWidget(),
+        ),
       ),
     );
   }
@@ -89,6 +92,7 @@ final class _RouterWidgetState extends State<RouterWidget> {
   @override
   void dispose() {
     pinSubscription.cancel();
+
     super.dispose();
   }
 

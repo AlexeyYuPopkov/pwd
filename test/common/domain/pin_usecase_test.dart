@@ -4,14 +4,14 @@ import 'package:pwd/common/domain/base_pin.dart';
 import 'package:pwd/common/domain/usecases/pin_usecase.dart';
 
 void main() {
-  const validDuration = Duration(seconds: 10);
+  // const validDuration = Duration(seconds: 10);
 
   late PinUsecaseImpl usecase;
 
   setUp(
     () {
       usecase = PinUsecaseImpl(
-        validDuration: validDuration,
+        // validDuration: validDuration,
         repository: PinRepositoryImpl(),
       );
     },
