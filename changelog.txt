@@ -1,4 +1,4 @@
 - updated pubs 
-- switched to go_router
-- fixed reorder item widget
-- add localization
+- refactor local cache, compact realm
+- google drive: move files to folders
+- add blur
