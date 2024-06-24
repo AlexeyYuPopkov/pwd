@@ -49,5 +49,7 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>GIDClientID</key>
+	<string>133915072936-ap6bfbjng5qr9hcgvvs4h2fdcdssj5mc.apps.googleusercontent.com</string>
 </dict>
 </plist>

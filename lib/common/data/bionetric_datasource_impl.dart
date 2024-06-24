@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:local_auth/local_auth.dart';
 import 'package:pwd/common/domain/biometric_repository.dart';
@@ -8,6 +9,10 @@ final class BionetricDatasourceImpl implements BiometricRepository {
   bool? _canAuthenticate;
 
   FutureOr<bool> canAuthenticate() async {
+    if (Platform.isMacOS) {
+      return true;
+    }
+
     if (_canAuthenticate != null) {
       return _canAuthenticate!;
     }
@@ -26,6 +31,9 @@ final class BionetricDatasourceImpl implements BiometricRepository {
 
   @override
   Future<bool> execute(BiometricRepositoryRequest parameters) async {
+    if (Platform.isMacOS) {
+      return true;
+    }
     try {
       final shouldAuthenticate = await canAuthenticate();
 
