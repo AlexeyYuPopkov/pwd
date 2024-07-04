@@ -10,11 +10,11 @@ import 'package:pwd/theme/common_size.dart';
 import 'bloc/developer_settings_page_bloc.dart';
 import 'developer_settings_proxy_form.dart';
 
-final class DeveloperSettingsPage extends StatelessWidget
+final class DeveloperSettingsScreen extends StatelessWidget
     with ShowErrorDialogMixin {
   static final formKey = GlobalKey<DeveloperSettingsProxyFormState>();
 
-  const DeveloperSettingsPage({super.key});
+  const DeveloperSettingsScreen({super.key});
 
   void _listener(BuildContext context, DeveloperSettingsPageState state) {
     BlockingLoadingIndicator.of(context).isLoading = state is LoadingState;

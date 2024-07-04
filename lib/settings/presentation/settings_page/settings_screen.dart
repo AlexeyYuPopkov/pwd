@@ -10,23 +10,8 @@ import 'package:pwd/theme/common_size.dart';
 import 'package:pwd/theme/common_theme.dart';
 
 import 'bloc/settings_page_bloc.dart';
+import 'settings_screen_routes.dart';
 import 'settings_screen_test_helper.dart';
-
-sealed class SettingsRouteData {
-  const SettingsRouteData();
-
-  factory SettingsRouteData.onRemoteConfiguration() = RemoteConfigurationScreen;
-
-  factory SettingsRouteData.onDeveloperSettingsPage() = OnDeveloperSettingsPage;
-}
-
-final class RemoteConfigurationScreen extends SettingsRouteData {
-  const RemoteConfigurationScreen();
-}
-
-final class OnDeveloperSettingsPage extends SettingsRouteData {
-  const OnDeveloperSettingsPage();
-}
 
 final class SettingsScreen extends StatelessWidget with ShowErrorDialogMixin {
   final Future Function(BuildContext, SettingsRouteData) onRoute;
@@ -78,6 +63,12 @@ final class SettingsScreen extends StatelessWidget with ShowErrorDialogMixin {
                 onTap: () => _onDeveloperSettingsPage(context),
               ),
               const Divider(height: CommonSize.zero),
+              _Item(
+                key: const Key('BleTestScreen.Key'),
+                title: 'Test BLE',
+                onTap: () => _onBleTestScreen(context),
+              ),
+              const Divider(height: CommonSize.zero),
               BlocBuilder<SettingsPageBloc, SettingsPageState>(
                 builder: (context, state) => _Item(
                   key: const Key(SettingsScreenTestHelper.logoutItem),
@@ -97,7 +88,11 @@ final class SettingsScreen extends StatelessWidget with ShowErrorDialogMixin {
   }
 
   void _onDeveloperSettingsPage(BuildContext context) {
-    onRoute(context, SettingsRouteData.onDeveloperSettingsPage());
+    onRoute(context, SettingsRouteData.onDeveloperSettingsScreen());
+  }
+
+  void _onBleTestScreen(BuildContext context) {
+    onRoute(context, SettingsRouteData.onBleTestScreen());
   }
 
   void _onLogout(BuildContext context) => context.read<SettingsPageBloc>().add(
