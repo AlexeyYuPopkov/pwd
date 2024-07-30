@@ -48,6 +48,7 @@ class CommonTheme extends ThemeExtension<CommonTheme> {
     if (other is! CommonTheme) {
       return this;
     }
+
     return CommonTheme(
       primaryTextColor: Color.lerp(
         primaryTextColor,

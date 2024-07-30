@@ -1,6 +1,7 @@
 import 'package:di_storage/di_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pwd/common/presentation/adaptive_layout_helper.dart';
 
 import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
 import 'package:pwd/common/presentation/common_highlighted_row.dart';
@@ -28,7 +29,8 @@ final class OnDeveloperSettingsPage extends SettingsRouteData {
   const OnDeveloperSettingsPage();
 }
 
-final class SettingsScreen extends StatelessWidget with ShowErrorDialogMixin {
+final class SettingsScreen extends StatelessWidget
+    with ShowErrorDialogMixin, AdaptiveLayoutHelper {
   final Future Function(BuildContext, SettingsRouteData) onRoute;
 
   const SettingsScreen({super.key, required this.onRoute});
@@ -87,6 +89,7 @@ final class SettingsScreen extends StatelessWidget with ShowErrorDialogMixin {
               ),
             ],
           ),
+          floatingActionButton: createFab(context),
         ),
       ),
     );

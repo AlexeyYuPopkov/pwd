@@ -23,6 +23,14 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 Archive and distribute macOS app
 
+### mac app_to_dmg
+
+```sh
+[bundle exec] fastlane mac app_to_dmg
+```
+
+Archive and distribute macOS app
+
 ----
 
 This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.

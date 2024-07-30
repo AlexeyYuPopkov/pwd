@@ -19,12 +19,32 @@ platform :mac do
   desc "Archive and distribute macOS app"
   #TODO - check if working
   lane :copy_mac_beta_app do
-    sh("flutter", "build", "macos", "--release")
+    Dir.chdir "../.." do
+      sh("flutter", "clean")
+      sh("flutter", "pub", "get")
+      sh("dart run build_runner build --delete-conflicting-outputs")
+      
+      sh("flutter test --coverage")
+      sh("flutter", "build", "macos", "--release")
+    end
     gym(
       scheme: "Runner", 
       export_method: "development",
       output_directory: "~/Downloads", 
       output_name: "KeyMemo"
     )
+    # https://github.com/advoryanskiy/fastlane-plugin-dmg?tab=readme-ov-file
+    dmg(path: "~/Downloads/KeyMemo",             
+        output_path: "/Downloads/KeyMemo.dmg")     
+  end
+end
+
+platform :mac do
+  desc "Archive and distribute macOS app"
+  #TODO - check if working
+  lane :app_to_dmg do
+    # https://github.com/advoryanskiy/fastlane-plugin-dmg?tab=readme-ov-file
+    dmg(path: "~/Downloads",             
+        output_path: "~/Downloads/KeyMemo.dmg")     
   end
 end

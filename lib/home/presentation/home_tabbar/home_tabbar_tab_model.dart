@@ -31,37 +31,17 @@ sealed class HomeTabbarTabModel extends Equatable {
   static final tabRouterKeys = _TabRouterKeys();
 
   const HomeTabbarTabModel();
-  // Widget buildRoute(BuildContext context);
-
-  BottomNavigationBarItem buildNavigationBarItem(BuildContext context);
 
   NavigationRailDestination buildNavigationRailDestination(
     BuildContext context,
   );
+
+  Widget buildDrawerItemIcon(BuildContext context);
+  String buildDrawerItemName(BuildContext context);
 }
 
 final class ConfigurationUndefinedTab extends HomeTabbarTabModel {
   const ConfigurationUndefinedTab();
-  // @override
-  // Widget buildRoute(BuildContext context) {
-  //   return Router(
-  //     routerDelegate: ConfigurationUndefinedTabRouterDelegate(),
-  //   );
-  // }
-
-  @override
-  BottomNavigationBarItem buildNavigationBarItem(BuildContext context) =>
-      BottomNavigationBarItem(
-        icon: const Icon(
-          Icons.home,
-          key: Key(
-            HomeScreenTestHelper.configurationUndefinedTabIcon,
-          ),
-          size: CommonSize.iconSize,
-        ),
-        label: context.configurationUndefinedTabName,
-      );
-
   @override
   NavigationRailDestination buildNavigationRailDestination(
     BuildContext context,
@@ -81,6 +61,12 @@ final class ConfigurationUndefinedTab extends HomeTabbarTabModel {
 
   @override
   List<Object?> get props => [runtimeType];
+
+  @override
+  Widget buildDrawerItemIcon(BuildContext context) => const SizedBox();
+
+  @override
+  String buildDrawerItemName(BuildContext context) => '';
 }
 
 // Git tab
@@ -88,28 +74,6 @@ final class NotesTab extends HomeTabbarTabModel {
   final RemoteConfiguration configuration;
 
   const NotesTab({required this.configuration});
-
-  // @override
-  // Router buildRoute(BuildContext context) {
-  //   return Router(
-  //     routerDelegate: NotesRouterDelegate(
-  //       navigatorKey: HomeTabbarTabModel.tabRouterKeys.getKey(configuration),
-  //       configuration: configuration,
-  //     ),
-  //   );
-  // }
-
-  @override
-  BottomNavigationBarItem buildNavigationBarItem(BuildContext context) {
-    return BottomNavigationBarItem(
-      icon: Icon(
-        Icons.home,
-        key: Key(HomeScreenTestHelper.notesTabIcon(configuration)),
-        size: CommonSize.iconSize,
-      ),
-      label: configuration.fileName,
-    );
-  }
 
   @override
   NavigationRailDestination buildNavigationRailDestination(
@@ -126,31 +90,20 @@ final class NotesTab extends HomeTabbarTabModel {
 
   @override
   List<Object?> get props => [runtimeType, configuration];
+
+  @override
+  Widget buildDrawerItemIcon(BuildContext context) => const Icon(
+        Icons.source,
+        size: CommonSize.iconSize,
+      );
+
+  @override
+  String buildDrawerItemName(BuildContext context) => configuration.fileName;
 }
 
 // Settings tab
 final class SettingsTab extends HomeTabbarTabModel {
   const SettingsTab();
-  // @override
-  // Router buildRoute(BuildContext context) {
-  //   return Router(
-  //     routerDelegate: SettingsRouterDelegate(
-  //       navigatorKey: HomeTabbarTabModel.settingsRouterKey,
-  //     ),
-  //   );
-  // }
-
-  @override
-  BottomNavigationBarItem buildNavigationBarItem(BuildContext context) {
-    return BottomNavigationBarItem(
-      icon: const Icon(
-        Icons.settings,
-        key: Key(HomeScreenTestHelper.settingsTabIcon),
-        size: CommonSize.iconSize,
-      ),
-      label: context.settingsTabName,
-    );
-  }
 
   @override
   NavigationRailDestination buildNavigationRailDestination(
@@ -168,6 +121,15 @@ final class SettingsTab extends HomeTabbarTabModel {
 
   @override
   List<Object?> get props => [runtimeType];
+
+  @override
+  Widget buildDrawerItemIcon(BuildContext context) => const Icon(
+        Icons.settings,
+        size: CommonSize.iconSize,
+      );
+
+  @override
+  String buildDrawerItemName(BuildContext context) => context.settingsTabName;
 }
 
 // Localization
