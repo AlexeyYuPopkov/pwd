@@ -34,6 +34,8 @@
     "homeScreenTabbarHome": "Дом",
     "homeScreenTabbarSettings": "Настройки",
 
+    "homeScreenDrawerTitle": "Sources",
+
     "configurationUndefinedScreenLabel": "Методы синхронизации не определены",
     "configurationUndefinedScreenButton": "Настройка синхронизации",
 

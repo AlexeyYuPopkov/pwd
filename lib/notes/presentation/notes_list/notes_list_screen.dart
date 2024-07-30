@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
+import 'package:pwd/common/presentation/adaptive_layout_helper.dart';
 import 'package:pwd/common/presentation/app_bar_button.dart';
 import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
 import 'package:pwd/common/presentation/dialogs/show_error_dialog_mixin.dart';
@@ -19,7 +20,8 @@ import 'bloc/google_drive_notes_list_state.dart';
 import 'notes_list_screen_test_helper.dart';
 import 'note_page_route.dart';
 
-final class NotesListScreen extends StatelessWidget with ShowErrorDialogMixin {
+final class NotesListScreen extends StatelessWidget
+    with ShowErrorDialogMixin, AdaptiveLayoutHelper {
   final RemoteConfiguration configuration;
   final Future Function(BuildContext, Object) onRoute;
 
@@ -70,6 +72,7 @@ final class NotesListScreen extends StatelessWidget with ShowErrorDialogMixin {
                     onEdit: _onEdit,
                     onDetails: _onDetails,
                   ),
+            floatingActionButton: createFab(context),
           );
         },
       ),
@@ -153,6 +156,7 @@ final class _NotesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final notesLength = notes.length;
     return Column(
       mainAxisSize: MainAxisSize.max,
       children: [
@@ -169,13 +173,20 @@ final class _NotesList extends StatelessWidget {
           child: RefreshIndicator(
             onRefresh: () => onRefresh(context),
             child: ListView.separated(
-              itemCount: notes.length,
+              itemCount: notesLength,
               itemBuilder: (context, index) {
                 final note = notes[index];
-                return NoteListItemWidget(
-                  note: notes[index],
-                  onDetailsButtonTap: () => onDetails(context, note: note),
-                  onEditButtonTap: () => onEdit(context, note: note),
+                return Padding(
+                  padding: EdgeInsets.only(
+                    bottom: (index < notesLength - 1)
+                        ? CommonSize.zero
+                        : CommonSize.rowHeight + CommonSize.indent,
+                  ),
+                  child: NoteListItemWidget(
+                    note: notes[index],
+                    onDetailsButtonTap: () => onDetails(context, note: note),
+                    onEditButtonTap: () => onEdit(context, note: note),
+                  ),
                 );
               },
               separatorBuilder: (_, __) => const Divider(

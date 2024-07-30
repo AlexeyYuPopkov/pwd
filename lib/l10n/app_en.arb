@@ -34,6 +34,8 @@
     "homeScreenTabbarHome": "Home",
     "homeScreenTabbarSettings": "Settings",
 
+    "homeScreenDrawerTitle": "Sources",
+
     "configurationUndefinedScreenLabel": "Synchronization methods are not defined",
     "configurationUndefinedScreenButton": "Setup synchronization",
 
