@@ -1,3 +1,4 @@
+import 'package:pwd/common/domain/base_pin.dart';
 import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
 import 'package:pwd/common/domain/usecases/pin_usecase.dart';
 import 'package:pwd/notes/domain/checksum_checker.dart';
@@ -18,12 +19,18 @@ class ReadNotesUsecase {
   Future<List<NoteItem>> execute({
     required RemoteConfiguration configuration,
   }) async {
-    final pin = pinUsecase.getPinOrThrow();
-    final notes = await repository.readNotes(
-      target: configuration.getTarget(pin: pin),
-    );
+    final pin = pinUsecase.getPin();
 
-    return notes;
+    switch (pin) {
+      case Pin():
+        final notes = await repository.readNotes(
+          target: configuration.getTarget(pin: pin),
+        );
+
+        return notes;
+      case EmptyPin():
+        return const [];
+    }
   }
 
   Stream<RealmLocalRepositoryNotification?> getChangesStream() =>

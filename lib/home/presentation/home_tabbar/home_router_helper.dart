@@ -5,16 +5,16 @@ import 'package:go_router/go_router.dart';
 import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
 import 'package:pwd/common/domain/remote_configuration_provider.dart';
 import 'package:pwd/home/presentation/configuration_undefined_screen/configuration_undefined_screen.dart';
-import 'package:pwd/home/presentation/home_tabbar/bloc/home_tabbar_bloc.dart';
-import 'package:pwd/home/presentation/home_tabbar/home_tabbar_tab_model.dart';
+import 'package:pwd/home/presentation/home_tabbar/bloc/home_folders_bloc.dart';
+import 'package:pwd/home/presentation/home_tabbar/folder_model.dart';
 import 'package:pwd/notes/presentation/router/notes_router_helper.dart';
 
 import 'package:pwd/settings/presentation/router/settings_router_helper.dart';
 import 'package:pwd/theme/custom_page_transistions_theme.dart';
 import 'package:pwd/unauth/presentation/router/custom_page_route.dart';
 import 'package:pwd/unauth/presentation/router/redirect_to_login_page_helper.dart';
-import 'bloc/home_tabbar_bloc_event.dart';
-import 'bloc/home_tabbar_bloc_state.dart';
+import 'bloc/home_folders_bloc_event.dart';
+import 'bloc/home_folders_bloc_state.dart';
 import 'home_screen.dart';
 
 final class HomeRouterHelper with RedirectToLoginPageHelper {
@@ -23,10 +23,6 @@ final class HomeRouterHelper with RedirectToLoginPageHelper {
 
   RemoteConfigurationProvider get remoteConfigurationsProvider =>
       DiStorage.shared.resolve();
-
-  late final bloc = HomeTabbarBloc(
-    remoteConfigurationsProvider: remoteConfigurationsProvider,
-  );
 
   late final settingsRouterHelper = SettingsRouterHelper(
     isAuthorized: isAuthorized,
@@ -41,32 +37,42 @@ final class HomeRouterHelper with RedirectToLoginPageHelper {
   late final route = [
     ShellRoute(
       builder: (BuildContext context, GoRouterState state, Widget child) {
-        return BlocProvider.value(
+        return BlocProvider(
           key: const Key('HomeTabbarBloc'),
-          value: bloc,
-          child: BlocConsumer<HomeTabbarBloc, HomeTabbarBlocState>(
+          create: (context) => HomeFoldersBloc(
+            remoteConfigurationsProvider: remoteConfigurationsProvider,
+            pinUsecase: DiStorage.shared.resolve(),
+          ),
+          // value: bloc,
+          child: BlocConsumer<HomeFoldersBloc, HomeFoldersBlocState>(
             listener: (context, state) {
-              final tab = state.data.tabs[state.data.index];
+              if (state.data.folders.isEmpty) {
+                context.go(HomeRouterUndefinedTabPath.goPath());
+              } else {
+                final tab = state.data.folders[state.data.index];
 
-              switch (tab) {
-                case ConfigurationUndefinedTab():
-                  context.go(HomeRouterUndefinedTabPath.goPath());
+                switch (tab) {
+                  case ConfigurationUndefinedItem():
+                    context.go(HomeRouterUndefinedTabPath.goPath());
 
-                  break;
-                case NotesTab():
-                  context.go(
-                    HomeRouterNotesTabPath.goPath(
-                      configId: tab.configuration.id,
-                    ),
-                    extra: tab.configuration,
-                  );
-                  break;
-                case SettingsTab():
-                  context.go(HomeRouterSettingsTabPath.goPath());
-                  break;
+                    break;
+                  case NotesItem():
+                    context.go(
+                      HomeRouterNotesTabPath.goPath(
+                        configId: tab.configuration.id,
+                      ),
+                    );
+                    break;
+                  case SettingsItem():
+                    context.go(HomeRouterSettingsTabPath.goPath());
+                    break;
+                  case LogoutItem():
+                    break;
+                }
               }
             },
-            builder: (_, __) => HomeScreen(bloc: bloc, child: child),
+            builder: (context, _) =>
+                HomeScreen(bloc: context.bloc, child: child),
           ),
         );
       },
@@ -131,9 +137,9 @@ final class HomeRouterHelper with RedirectToLoginPageHelper {
     if (action is ConfigurationUndefinedScreensRoute) {
       switch (action) {
         case ToSettingsRoute():
-          bloc.add(
-            const HomeTabbarBlocEvent.shouldChangeSelectedTab(
-              tab: SettingsTab(),
+          context.bloc.add(
+            const HomeFoldersBlocEvent.shouldChangeSelectedTab(
+              tab: SettingsItem(),
             ),
           );
           Future.delayed(Durations.medium2).then((_) {
@@ -178,4 +184,8 @@ final class HomeRouterNotesTabPath {
 final class HomeRouterSettingsTabPath {
   static const shortPath = '/settings';
   static String goPath() => shortPath;
+}
+
+extension on BuildContext {
+  HomeFoldersBloc get bloc => read<HomeFoldersBloc>();
 }

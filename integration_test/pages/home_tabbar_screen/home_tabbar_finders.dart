@@ -5,14 +5,14 @@ import 'package:pwd/home/presentation/home_tabbar/home_screen_test_helper.dart';
 
 final class HomeTabbarFinders {
   final configurationUndefinedItemIcon = find.byKey(
-    const Key(HomeScreenTestHelper.configurationUndefinedTabIcon),
+    const Key(HomeScreenTestHelper.configurationUndefinedFolderIcon),
   );
 
   Finder notesTabIcon(RemoteConfiguration config) => find.byKey(
-        Key(HomeScreenTestHelper.notesTabIcon(config)),
+        Key(HomeScreenTestHelper.notesFolderIcon(config)),
       );
 
   final settingsItemIcon = find.byKey(
-    const Key(HomeScreenTestHelper.settingsTabIcon),
+    const Key(HomeScreenTestHelper.settingsFolderIcon),
   );
 }

@@ -11,20 +11,22 @@ final class RemoteConfigurationProviderImpl
   final SecureStorageBox _storage;
 
   RemoteConfigurationProviderImpl({required SecureStorageBox storage})
-      : _storage = storage; // {}
+      : _storage = storage;
 
   late final BehaviorSubject<RemoteConfigurations> _configuration =
       BehaviorSubject<RemoteConfigurations>.seeded(
     RemoteConfigurations.empty(),
-    onListen: () {
-      _storage.readConfiguration().then(
-            (e) => _configuration.sink.add(e),
-          );
-    },
+    onListen: () => readCurrentConfiguration().then(
+      (e) => _configuration.sink.add(e),
+    ),
   );
 
   @override
   RemoteConfigurations get currentConfiguration => _configuration.value;
+
+  @override
+  Future<RemoteConfigurations> readCurrentConfiguration() =>
+      _storage.readConfiguration();
 
   @override
   Stream<RemoteConfigurations> get configuration => _configuration;
