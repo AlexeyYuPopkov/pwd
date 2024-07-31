@@ -1,10 +1,9 @@
 import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
 
 final class HomeScreenTestHelper {
-  static const configurationUndefinedTabIcon =
-      'ConfigurationUndefined.TabIcon.TestKey';
-  // static const gitTabIcon = 'Git.TabIcon.TestKey';
-  static String notesTabIcon(RemoteConfiguration config) =>
-      'GoogleDrive.TabIcon.${config.id}.TestKey';
-  static const settingsTabIcon = 'Settings.TabIcon.TestKey';
+  static const configurationUndefinedFolderIcon =
+      'ConfigurationUndefined.FolderIcon.TestKey';
+  static String notesFolderIcon(RemoteConfiguration config) =>
+      'GoogleDrive.FolderIcon.${config.id}.TestKey';
+  static const settingsFolderIcon = 'Settings.FolderIcon.TestKey';
 }

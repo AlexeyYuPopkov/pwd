@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
@@ -102,9 +104,12 @@ final class NotesListScreen extends StatelessWidget
     }
   }
 
-  void _onSync(BuildContext context, {required bool force}) => context
-      .read<GoogleDriveNotesListBloc>()
-      .add(GoogleDriveNotesListEvent.sync(force: force));
+  Future<void> _onSync(BuildContext context, {required bool force}) async {
+    debugger();
+    context
+        .read<GoogleDriveNotesListBloc>()
+        .add(GoogleDriveNotesListEvent.sync(force: force));
+  }
 
   Future<void> _onPullToRefresh(BuildContext context) async =>
       _onSync(context, force: true);

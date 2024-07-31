@@ -33,8 +33,9 @@
 
     "homeScreenTabbarHome": "Дом",
     "homeScreenTabbarSettings": "Настройки",
+    "homeScreenLogoutItem": "Выход",
 
-    "homeScreenDrawerTitle": "Sources",
+    "homeScreenDrawerTitle": "Источники",
 
     "configurationUndefinedScreenLabel": "Методы синхронизации не определены",
     "configurationUndefinedScreenButton": "Настройка синхронизации",
