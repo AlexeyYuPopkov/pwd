@@ -57,9 +57,12 @@ final class NotesListRealmMapper {
     required RealmResults<NoteItemRealm> realmResults,
     required bool Function(NoteItemRealm) filter,
   }) async {
-    final items = realmResults.where(filter).map(
+    final items = realmResults
+        .where(filter)
+        .map(
           (e) => _NoteItemRealm(id: e.id, body: e.body, updated: e.updated),
-        );
+        )
+        .toList();
 
     final task = ReusableIsolateTask.sync(
       params: items,
