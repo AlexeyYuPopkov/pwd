@@ -55,8 +55,10 @@ final class SyncGitItemUsecase with SyncHelper implements SyncUsecase {
   });
 
   @override
-  Future<void> execute(
-      {required RemoteConfiguration configuration, required bool force}) async {
+  Future<void> execute({
+    required RemoteConfiguration configuration,
+    required bool force,
+  }) async {
     try {
       await _sync(configuration: configuration, force: force);
     } catch (e) {

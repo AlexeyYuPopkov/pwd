@@ -125,13 +125,14 @@ final class RealmLocalRepositoryImpl implements RealmLocalRepository {
   }) async {
     final realm = await realmProvider.getRealm(target: target);
     try {
-      return realm
-          .all<NoteItemRealm>()
-          .where((e) {
-            return e.isDeleted == null || e.isDeleted == false;
-          })
-          .map((e) => NoteRealmMapper.toDomain(e))
-          .toList();
+      final result = await NotesListRealmMapper.toDomainIsolated(
+        realmResults: realm.all<NoteItemRealm>(),
+        filter: (e) {
+          return e.isDeleted == null || e.isDeleted == false;
+        },
+      );
+
+      return result;
     } catch (e) {
       throw RealmErrorMapper.toDomain(e);
     } finally {

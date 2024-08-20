@@ -1,7 +1,9 @@
 import 'package:di_storage/di_storage.dart';
 import 'package:pwd/common/presentation/di/network_di.dart';
+import 'package:pwd/common/tools/reusable_isolate/reusable_isolate.dart';
 import 'package:pwd/notes/presentation/di/git_relatedl_di.dart';
 import 'package:pwd/notes/presentation/di/google_and_realm_di.dart';
+import 'package:pwd/notes/presentation/di/storage_di.dart';
 import 'package:pwd/settings/presentation/di/settings_di.dart';
 
 import 'unauth_di_module.dart';
@@ -17,11 +19,14 @@ final class AppDiModules {
 
   /// Bind auth DI modules
   static void bindAuthModules() {
+    ReusableIsolate.disposeIfPresent();
+
     final di = DiStorage.shared;
 
     dropAuthModules();
 
     NetworkDiModule().bind(di);
+    StorageDi().bind(di);
     GoogleAndRealmDi().bind(di);
     GitRelatedlDi().bind(di);
 
@@ -35,6 +40,9 @@ final class AppDiModules {
     di.removeScope<NetworkDiModule>();
     di.removeScope<GoogleAndRealmDi>();
     di.removeScope<GitRelatedlDi>();
+    di.removeScope<StorageDi>();
     di.removeScope<SettingsDi>();
+
+    ReusableIsolate.disposeIfPresent();
   }
 }
