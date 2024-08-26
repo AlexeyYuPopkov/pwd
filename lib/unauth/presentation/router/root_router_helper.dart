@@ -21,6 +21,7 @@ final class RootRouterHelper with RedirectToLoginPageHelper {
 
   late final router = GoRouter(
     navigatorKey: navigatorKey,
+    debugLogDiagnostics: true,
     routes: [
       GoRoute(
         path: RootRouterUnauthPath.shortPath,
@@ -30,7 +31,7 @@ final class RootRouterHelper with RedirectToLoginPageHelper {
           return CustomPage(
             key: state.pageKey,
             theme: theme.fade,
-            builder: (context) => const PinScreen(),
+            builder: (_) => const PinScreen(),
           );
         },
       ),

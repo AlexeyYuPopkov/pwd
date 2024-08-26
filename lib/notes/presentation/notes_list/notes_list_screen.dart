@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
 import 'package:pwd/common/presentation/adaptive_layout_helper.dart';
 import 'package:pwd/common/presentation/app_bar_button.dart';
 import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
@@ -14,33 +13,34 @@ import 'package:pwd/notes/presentation/tools/local_storage_error_message_provide
 import 'package:pwd/notes/presentation/tools/sync_data_error_message_provider.dart';
 import 'package:pwd/theme/common_size.dart';
 
-import 'bloc/google_drive_notes_list_bloc.dart';
-import 'bloc/google_drive_notes_list_event.dart';
-import 'bloc/google_drive_notes_list_state.dart';
+import 'bloc/notes_list_event.dart';
+import 'bloc/notes_list_state.dart';
+import 'bloc/notes_list_bloc.dart';
 import 'notes_list_screen_test_helper.dart';
 import 'note_page_route.dart';
 
 final class NotesListScreen extends StatelessWidget
     with ShowErrorDialogMixin, AdaptiveLayoutHelper {
-  final RemoteConfiguration configuration;
+  final String? _configId;
   final Future Function(BuildContext, Object) onRoute;
 
   const NotesListScreen({
     super.key,
-    required this.configuration,
+    required String? configId,
     required this.onRoute,
-  });
+  }) : _configId = configId;
 
   @override
   Widget build(BuildContext context) {
     final di = DiStorage.shared;
     return BlocProvider(
-      create: (_) => GoogleDriveNotesListBloc(
-        configuration: configuration,
+      create: (_) => NotesListBloc(
+        configId: _configId,
+        remoteConfigurationProvider: di.resolve(),
         readNotesUsecase: di.resolve(),
         syncUsecase: di.resolve(),
       ),
-      child: BlocConsumer<GoogleDriveNotesListBloc, GoogleDriveNotesListState>(
+      child: BlocConsumer<NotesListBloc, NotesListState>(
         listener: _listener,
         builder: (context, state) {
           return Scaffold(
@@ -56,10 +56,7 @@ final class NotesListScreen extends StatelessWidget
                     NotesListScreenTestHelper.addNoteButtonKey,
                   ),
                   iconData: Icons.add,
-                  onPressed: () => _onEdit(
-                    context,
-                    note: BaseNoteItem.newItem(),
-                  ),
+                  onPressed: () => _onCreate(context),
                 ),
               ],
             ),
@@ -69,7 +66,7 @@ final class NotesListScreen extends StatelessWidget
                     isLoading: state is SyncLoadingState,
                     notes: state.data.notes,
                     onRefresh: _onPullToRefresh,
-                    onEdit: _onEdit,
+                    onEdit: _onUpdate,
                     onDetails: _onDetails,
                   ),
             floatingActionButton: createFab(context),
@@ -79,7 +76,7 @@ final class NotesListScreen extends StatelessWidget
     );
   }
 
-  void _listener(BuildContext context, GoogleDriveNotesListState state) {
+  void _listener(BuildContext context, NotesListState state) {
     BlockingLoadingIndicator.of(context).isLoading = state is LoadingState;
 
     switch (state) {
@@ -103,26 +100,59 @@ final class NotesListScreen extends StatelessWidget
   }
 
   Future<void> _onSync(BuildContext context, {required bool force}) async {
-    context
-        .read<GoogleDriveNotesListBloc>()
-        .add(GoogleDriveNotesListEvent.sync(force: force));
+    context.read<NotesListBloc>().add(NotesListEvent.sync(force: force));
   }
 
   Future<void> _onPullToRefresh(BuildContext context) async =>
       _onSync(context, force: true);
 
-  void _onEdit(
+  void _onUpdate(
     BuildContext context, {
     required BaseNoteItem note,
   }) {
+    final config = context.read<NotesListBloc>().data.configBox.data;
+
+    assert(config != null);
+
+    if (config == null) {
+      return;
+    }
+
+    onRoute(
+        context,
+        NotePageRoute.onUpdate(
+          configId: config.id,
+          noteId: note.id,
+        )).then(
+      (result) {
+        if (result is NotePageShouldSync) {
+          context.read<NotesListBloc>().add(
+                const NotesListEvent.reloadLocally(),
+              );
+        }
+      },
+    );
+  }
+
+  void _onCreate(BuildContext context) {
+    final config = context.read<NotesListBloc>().data.configBox.data;
+
+    assert(config != null);
+
+    if (config == null) {
+      return;
+    }
+
     onRoute(
       context,
-      NotePageRoute.onEdit(config: configuration, noteItem: note),
+      NotePageRoute.onCreate(
+        configId: config.id,
+      ),
     ).then(
       (result) {
         if (result is NotePageShouldSync) {
-          context.read<GoogleDriveNotesListBloc>().add(
-                const GoogleDriveNotesListEvent.reloadLocally(),
+          context.read<NotesListBloc>().add(
+                const NotesListEvent.reloadLocally(),
               );
         }
       },
@@ -132,11 +162,20 @@ final class NotesListScreen extends StatelessWidget
   void _onDetails(
     BuildContext context, {
     required NoteItem note,
-  }) =>
-      onRoute(
-        context,
-        NotePageRoute.onDetails(config: configuration, noteItem: note),
-      );
+  }) {
+    final config = context.read<NotesListBloc>().data.configBox.data;
+
+    assert(config != null);
+
+    if (config == null) {
+      return;
+    }
+
+    onRoute(
+      context,
+      NotePageRoute.onDetails(config: config, noteItem: note),
+    );
+  }
 }
 
 // Notes List
@@ -210,9 +249,10 @@ final class _LoadingShimmer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const itemsCount = 10;
-
+    const cacheExtent = CommonSize.indentVariant + CommonSize.rowHeight;
     return ListView.builder(
       itemCount: itemsCount,
+      cacheExtent: cacheExtent,
       itemBuilder: (context, _) {
         return const Padding(
           padding: EdgeInsets.symmetric(

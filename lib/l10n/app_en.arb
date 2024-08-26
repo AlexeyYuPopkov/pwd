@@ -16,6 +16,7 @@
 
     "localStorageErrorPinDoesntMatch": "Pin does not match",
     "syncDataErrorUnkhown": "Error when sync data",
+    "readNoteUsecaseErrorInputParametersAreWrong": "No data",
 
     "clocksWidgetAddClockDialogTimeZoneOffsetLabel": "Time zone offset: {hours}",
     "@clocksWidgetAddClockDialogTimeZoneOffsetLabel": {

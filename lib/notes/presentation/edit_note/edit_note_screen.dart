@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pwd/l10n/localization_helper.dart';
 import 'package:rxdart/subjects.dart';
-import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
+
 import 'package:pwd/common/presentation/dialogs/dialog_helper.dart';
 import 'package:pwd/common/presentation/dialogs/show_error_dialog_mixin.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
@@ -12,19 +12,10 @@ import 'package:pwd/notes/presentation/tools/sync_data_error_message_provider.da
 import 'package:pwd/theme/common_size.dart';
 
 import 'bloc/edit_note_bloc.dart';
+import 'bloc/edit_note_page_data.dart';
 import 'edit_note_screen_test_helper.dart';
 
 part 'edit_note_page_results_part.dart';
-
-final class EditNoteScreenInput {
-  final BaseNoteItem noteItem;
-  final RemoteConfiguration configuration;
-
-  const EditNoteScreenInput({
-    required this.noteItem,
-    required this.configuration,
-  });
-}
 
 final class EditNoteScreen extends StatelessWidget
     with ShowErrorDialogMixin, DialogHelper {
@@ -50,10 +41,16 @@ final class EditNoteScreen extends StatelessWidget
       case CommonState():
         break;
       case DidSaveState():
+        final note = state.data.note.data;
+        assert(note != null);
+
+        if (note == null) {
+          return;
+        }
         await onRoute(
           context,
           EditNotePagePopResult.didUpdate(
-            noteItem: state.data.noteItem,
+            noteItem: note,
           ),
         );
       case DidDeleteState():
@@ -85,78 +82,85 @@ final class EditNoteScreen extends StatelessWidget
         ),
         body: BlocProvider(
           create: (context) => EditNoteBloc(
-            configuration: input.configuration,
+            input: input,
+            readNoteUsecase: DiStorage.shared.resolve(),
             readNotesUsecase: DiStorage.shared.resolve(),
             updateNoteUsecase: DiStorage.shared.resolve(),
             deleteNoteUsecase: DiStorage.shared.resolve(),
-            noteItem: input.noteItem,
           ),
           child: BlocConsumer<EditNoteBloc, EditNoteState>(
             key: const Key(_TestHelper.blocConsumerKey),
             listener: _listener,
-            builder: (context, state) => CustomScrollView(
-              slivers: [
-                SliverToBoxAdapter(
-                  child: _Form(
-                    key: formKey,
-                    noteItem: state.data.noteItem,
-                    isSaveEnabledStream: isSubmitEnabledStream,
-                  ),
-                ),
-                SliverFillRemaining(
-                  hasScrollBody: false,
-                  child: SafeArea(
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                        left: CommonSize.indent2x,
-                        right: CommonSize.indent2x,
-                        bottom: CommonSize.indent2x,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Row(
-                            children: [
-                              Flexible(
-                                fit: FlexFit.tight,
-                                child: StreamBuilder<bool>(
-                                    initialData: false,
-                                    stream: isSubmitEnabledStream,
-                                    builder: (context, snapshot) {
-                                      return OutlinedButton(
-                                        key: const Key(
-                                          _TestHelper.saveButtonKey,
-                                        ),
-                                        onPressed: snapshot.data ?? false
-                                            ? () => _onSave(context)
-                                            : null,
-                                        child: Text(context.saveButtonTitle),
-                                      );
-                                    }),
-                              ),
-                              const SizedBox(width: CommonSize.indent2x),
-                              Flexible(
-                                fit: FlexFit.tight,
-                                child: OutlinedButton(
-                                  key: const Key(
-                                    _TestHelper.deleteButtonKey,
-                                  ),
-                                  onPressed: input.noteItem is NewNoteItem
-                                      ? null
-                                      : () => _onDelete(context),
-                                  child: Text(context.deleteButtonTitle),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+            builder: (context, state) {
+              final noteItem = state.data.note.data;
+
+              if (noteItem == null) {
+                return const SizedBox();
+              }
+              return CustomScrollView(
+                slivers: [
+                  SliverToBoxAdapter(
+                    child: _Form(
+                      key: formKey,
+                      noteItem: noteItem,
+                      isSaveEnabledStream: isSubmitEnabledStream,
                     ),
                   ),
-                )
-              ],
-            ),
+                  SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: SafeArea(
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                          left: CommonSize.indent2x,
+                          right: CommonSize.indent2x,
+                          bottom: CommonSize.indent2x,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Row(
+                              children: [
+                                Flexible(
+                                  fit: FlexFit.tight,
+                                  child: StreamBuilder<bool>(
+                                      initialData: false,
+                                      stream: isSubmitEnabledStream,
+                                      builder: (context, snapshot) {
+                                        return OutlinedButton(
+                                          key: const Key(
+                                            _TestHelper.saveButtonKey,
+                                          ),
+                                          onPressed: snapshot.data ?? false
+                                              ? () => _onSave(context)
+                                              : null,
+                                          child: Text(context.saveButtonTitle),
+                                        );
+                                      }),
+                                ),
+                                const SizedBox(width: CommonSize.indent2x),
+                                Flexible(
+                                  fit: FlexFit.tight,
+                                  child: OutlinedButton(
+                                    key: const Key(
+                                      _TestHelper.deleteButtonKey,
+                                    ),
+                                    onPressed: noteItem is NewNoteItem
+                                        ? null
+                                        : () => _onDelete(context),
+                                    child: Text(context.deleteButtonTitle),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              );
+            },
           ),
         ),
       ),
@@ -220,6 +224,14 @@ class _FormState extends State<_Form> {
   void dispose() {
     contentController.dispose();
     super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(covariant _Form oldWidget) {
+    if (oldWidget.noteItem != widget.noteItem) {
+      contentController.text = widget.noteItem.content.str;
+    }
+    super.didUpdateWidget(oldWidget);
   }
 
   @override

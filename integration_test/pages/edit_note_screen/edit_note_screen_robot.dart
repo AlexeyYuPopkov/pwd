@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pwd/common/presentation/dialogs/dialog_helper.dart';
 
-import 'edit_note_screen_finders.dart';
+import '../../../test/notes/presentation/edit_note_screen_finders.dart';
 
 final class EditNoteScreenRobot {
   late final _finders = EditNoteScreenFinders();

@@ -14,11 +14,6 @@ sealed class BaseNoteItem extends Equatable {
 
   factory BaseNoteItem.newItem() = NewNoteItem;
 
-  factory BaseNoteItem.updatedItem({
-    required String id,
-    required NoteContent content,
-  }) = UpdatedNoteItem;
-
   @override
   List<Object?> get props => [
         id,
@@ -43,57 +38,12 @@ final class NoteItem extends BaseNoteItem {
     required this.updated,
   });
 
-  BaseNoteItem copyToUpdatedWith({
-    String? title,
-    String? description,
-    NoteContent? content,
-  }) {
-    return BaseNoteItem.updatedItem(
+  @override
+  NoteItem copyWith({NoteContent? content}) {
+    return NoteItem(
       id: id,
       content: content ?? this.content,
-    );
-  }
-
-  @override
-  UpdatedNoteItem copyWith({NoteContent? content}) {
-    return BaseNoteItem.updatedItem(
-      id: id,
-      content: content ?? this.content,
-    ) as UpdatedNoteItem;
-  }
-}
-
-final class UpdatedNoteItem extends BaseNoteItem {
-  @override
-  final String id;
-  @override
-  final NoteContent content;
-  @override
-  final int updated;
-
-  const UpdatedNoteItem._({
-    required this.id,
-    required this.content,
-    required this.updated,
-  });
-
-  factory UpdatedNoteItem({
-    required String id,
-    required NoteContent content,
-  }) {
-    return UpdatedNoteItem._(
-      id: id.isEmpty ? const Uuid().v4() : id,
-      content: content,
       updated: TimestampHelper.timestampForDate(DateTime.now()),
-    );
-  }
-
-  @override
-  UpdatedNoteItem copyWith({NoteContent? content}) {
-    return UpdatedNoteItem._(
-      id: id,
-      content: content ?? this.content,
-      updated: updated,
     );
   }
 }

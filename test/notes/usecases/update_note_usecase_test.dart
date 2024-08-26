@@ -2,6 +2,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:pwd/common/domain/base_pin.dart';
 import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
+import 'package:pwd/common/domain/model/remote_configuration/remote_configurations.dart';
+import 'package:pwd/common/domain/remote_configuration_provider.dart';
 import 'package:pwd/common/domain/usecases/pin_usecase.dart';
 import 'package:pwd/notes/domain/checksum_checker.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
@@ -9,6 +11,9 @@ import 'package:pwd/notes/domain/model/note_item_content.dart';
 import 'package:pwd/notes/domain/realm_local_repository.dart';
 import 'package:pwd/notes/domain/usecases/sync_usecase.dart';
 import 'package:pwd/notes/domain/usecases/update_note_usecase.dart';
+
+class MockRemoteConfigurationProvider extends Mock
+    implements RemoteConfigurationProvider {}
 
 class MockRealmLocalRepository extends Mock implements RealmLocalRepository {}
 
@@ -19,6 +24,7 @@ class MockChecksumChecker extends Mock implements ChecksumChecker {}
 class MockSyncUsecase extends Mock implements SyncUsecase {}
 
 void main() {
+  late RemoteConfigurationProvider configProvider;
   late RealmLocalRepository realmLocalRepository;
   late PinUsecase pinUsecase;
   late ChecksumChecker checksumChecker;
@@ -30,12 +36,14 @@ void main() {
   const pin = Pin(pinSha512: []);
 
   setUp(() {
+    configProvider = MockRemoteConfigurationProvider();
     realmLocalRepository = MockRealmLocalRepository();
     pinUsecase = MockPinUsecase();
     checksumChecker = MockChecksumChecker();
     syncUsecase = MockSyncUsecase();
 
     sut = UpdateNoteUsecase(
+      remoteConfigurationProvider: configProvider,
       repository: realmLocalRepository,
       pinUsecase: pinUsecase,
       checksumChecker: checksumChecker,
@@ -47,6 +55,17 @@ void main() {
     test(
       'New note',
       () async {
+        when(() => pinUsecase.getPinOrThrow()).thenReturn(pin);
+
+        const expectedConfig = RemoteConfiguration.google(fileName: 'fileName');
+        final expectedConfigs = RemoteConfigurations.createOrThrow(
+          configurations: const [expectedConfig],
+        );
+
+        when(
+          () => configProvider.currentConfiguration,
+        ).thenReturn(expectedConfigs);
+
         final newNote = BaseNoteItem.newItem();
 
         expect(newNote, isA<NewNoteItem>());
@@ -75,11 +94,12 @@ void main() {
           ),
         ).thenAnswer((_) async {});
 
-        await sut.execute(newNote, configuration: config);
+        await sut.execute(newNote, configurationId: expectedConfig.id);
 
         verifyInOrder(
           [
             () => pinUsecase.getPinOrThrow(),
+            () => configProvider.currentConfiguration,
             () => realmLocalRepository.createNote(
                   newNote as NewNoteItem,
                   target: config.getTarget(pin: pin),
@@ -99,24 +119,32 @@ void main() {
     test(
       'Update note',
       () async {
-        final updatedNote = BaseNoteItem.updatedItem(
+        final note = NoteItem(
           id: '',
-          content: NoteContent(
+          content: const NoteContent(
             items: [
               NoteContentItem(text: 'text'),
             ],
           ),
+          updated: TimestampHelper.timestampForDate(DateTime.now()),
         );
-
-        expect(updatedNote, isA<UpdatedNoteItem>());
 
         when(
           () => pinUsecase.getPinOrThrow(),
         ).thenReturn(pin);
 
+        const expectedConfig = RemoteConfiguration.google(fileName: 'fileName');
+        final expectedConfigs = RemoteConfigurations.createOrThrow(
+          configurations: const [expectedConfig],
+        );
+
+        when(
+          () => configProvider.currentConfiguration,
+        ).thenReturn(expectedConfigs);
+
         when(
           () => realmLocalRepository.updateNote(
-            updatedNote as UpdatedNoteItem,
+            note,
             target: config.getTarget(pin: pin),
           ),
         ).thenAnswer((_) async {});
@@ -134,13 +162,14 @@ void main() {
           ),
         ).thenAnswer((_) async {});
 
-        await sut.execute(updatedNote, configuration: config);
+        await sut.execute(note, configurationId: expectedConfig.id);
 
         verifyInOrder(
           [
             () => pinUsecase.getPinOrThrow(),
+            () => configProvider.currentConfiguration,
             () => realmLocalRepository.updateNote(
-                  updatedNote as UpdatedNoteItem,
+                  note,
                   target: config.getTarget(pin: pin),
                 ),
             () => checksumChecker.dropChecksum(

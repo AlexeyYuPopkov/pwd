@@ -1,39 +1,83 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
+import 'package:pwd/common/support/optional_box.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
 import 'package:pwd/notes/domain/model/note_item_content.dart';
 import 'package:pwd/notes/domain/usecases/delete_note_usecase.dart';
+import 'package:pwd/notes/domain/usecases/read_note_usecase.dart';
 import 'package:pwd/notes/domain/usecases/read_notes_usecase.dart';
 import 'package:pwd/notes/domain/usecases/update_note_usecase.dart';
+import 'package:pwd/notes/presentation/edit_note/bloc/edit_note_page_data.dart';
 
 part 'edit_note_state.dart';
 part 'edit_note_event.dart';
 
 final class EditNoteBloc extends Bloc<EditNoteEvent, EditNoteState> {
-  final RemoteConfiguration configuration;
+  final EditNoteScreenInput input;
+
+  final ReadNoteUsecase readNoteUsecase;
   final ReadNotesUsecase readNotesUsecase;
   final UpdateNoteUsecase updateNoteUsecase;
   final DeleteNoteUsecase deleteNoteUsecase;
   EditNotePageData get data => state.data;
 
   EditNoteBloc({
-    required this.configuration,
+    required this.input,
+    required this.readNoteUsecase,
     required this.readNotesUsecase,
     required this.updateNoteUsecase,
     required this.deleteNoteUsecase,
-    required BaseNoteItem noteItem,
   }) : super(
           EditNoteState.common(
-            data: EditNotePageData(noteItem: noteItem),
+            data: EditNotePageData.initial(),
           ),
         ) {
     _setupHandlers();
+    add(const EditNoteEvent.initial());
   }
 
   void _setupHandlers() {
+    on<InitialEvent>(_onInitialEvent);
     on<SaveEvent>(_onSaveEvent);
     on<DeleteEvent>(_onDeleteEvent);
+  }
+
+  void _onInitialEvent(
+    InitialEvent event,
+    Emitter<EditNoteState> emit,
+  ) async {
+    try {
+      final theInput = input;
+      switch (theInput) {
+        case EditNoteScreenInputCreate():
+          emit(
+            EditNoteState.common(
+              data: data.copyWith(
+                note: OptionalBox(NewNoteItem()),
+              ),
+            ),
+          );
+          break;
+        case EditNoteScreenInputUpdate():
+          emit(EditNoteState.loading(data: data));
+
+          final note = await readNoteUsecase.execute(
+            configId: input.configId,
+            noteId: theInput.noteId,
+          );
+
+          emit(
+            EditNoteState.common(
+              data: data.copyWith(
+                note: OptionalBox(note),
+              ),
+            ),
+          );
+          break;
+      }
+    } catch (e) {
+      emit(EditNoteState.error(e: e, data: data));
+    }
   }
 
   void _onSaveEvent(
@@ -41,20 +85,26 @@ final class EditNoteBloc extends Bloc<EditNoteEvent, EditNoteState> {
     Emitter<EditNoteState> emit,
   ) async {
     try {
-      emit(EditNoteState.loading(data: data));
-
-      final noteItem = data.noteItem.copyWith(
+      final noteItem = data.note.data?.copyWith(
         content: NoteContent.fromText(event.content),
       );
 
+      assert(noteItem != null);
+
+      if (noteItem == null) {
+        return;
+      }
+
+      emit(EditNoteState.loading(data: data));
+
       await updateNoteUsecase.execute(
         noteItem,
-        configuration: configuration,
+        configurationId: input.configId,
       );
 
       emit(
         EditNoteState.didSave(
-          data: data.copyWith(noteItem: noteItem),
+          data: data.copyWith(note: OptionalBox(noteItem)),
         ),
       );
     } catch (e) {
@@ -66,17 +116,24 @@ final class EditNoteBloc extends Bloc<EditNoteEvent, EditNoteState> {
     DeleteEvent event,
     Emitter<EditNoteState> emit,
   ) async {
-    try {
-      emit(EditNoteState.loading(data: data));
+    final theInput = input;
+    switch (theInput) {
+      case EditNoteScreenInputCreate():
+        break;
+      case EditNoteScreenInputUpdate():
+        try {
+          emit(EditNoteState.loading(data: data));
 
-      await deleteNoteUsecase.execute(
-        id: data.noteItem.id,
-        configuration: configuration,
-      );
+          await deleteNoteUsecase.execute(
+            id: theInput.noteId,
+            configurationId: theInput.configId,
+          );
 
-      emit(EditNoteState.didDelete(data: data));
-    } catch (e) {
-      emit(EditNoteState.error(data: state.data, e: e));
+          emit(EditNoteState.didDelete(data: data));
+        } catch (e) {
+          emit(EditNoteState.error(data: state.data, e: e));
+        }
+        break;
     }
   }
 }

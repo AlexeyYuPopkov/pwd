@@ -23,7 +23,7 @@ abstract interface class RealmLocalRepository {
   });
 
   Future<void> updateNote(
-    UpdatedNoteItem noteItem, {
+    NoteItem noteItem, {
     required LocalStorageTarget target,
   });
 

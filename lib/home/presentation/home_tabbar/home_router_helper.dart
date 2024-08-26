@@ -2,16 +2,15 @@ import 'package:di_storage/di_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
 import 'package:pwd/common/domain/remote_configuration_provider.dart';
 import 'package:pwd/home/presentation/configuration_undefined_screen/configuration_undefined_screen.dart';
 import 'package:pwd/home/presentation/home_tabbar/bloc/home_folders_bloc.dart';
 import 'package:pwd/home/presentation/home_tabbar/folder_model.dart';
 import 'package:pwd/notes/presentation/router/notes_router_helper.dart';
-
 import 'package:pwd/settings/presentation/router/settings_router_helper.dart';
 import 'package:pwd/theme/custom_page_transistions_theme.dart';
 import 'package:pwd/unauth/presentation/router/custom_page_route.dart';
+import 'package:pwd/unauth/presentation/router/path_parameters.dart';
 import 'package:pwd/unauth/presentation/router/redirect_to_login_page_helper.dart';
 import 'bloc/home_folders_bloc_event.dart';
 import 'bloc/home_folders_bloc_state.dart';
@@ -43,7 +42,6 @@ final class HomeRouterHelper with RedirectToLoginPageHelper {
             remoteConfigurationsProvider: remoteConfigurationsProvider,
             pinUsecase: DiStorage.shared.resolve(),
           ),
-          // value: bloc,
           child: BlocConsumer<HomeFoldersBloc, HomeFoldersBlocState>(
             listener: (context, state) {
               if (state.data.folders.isEmpty) {
@@ -58,10 +56,12 @@ final class HomeRouterHelper with RedirectToLoginPageHelper {
                     break;
                   case NotesItem():
                     context.go(
-                      HomeRouterNotesTabPath.goPath(
+                      HomeRouterNotesTabPath.namedLocation(
+                        context,
                         configId: tab.configuration.id,
                       ),
                     );
+
                     break;
                   case SettingsItem():
                     context.go(HomeRouterSettingsTabPath.goPath());
@@ -93,20 +93,18 @@ final class HomeRouterHelper with RedirectToLoginPageHelper {
         ),
         GoRoute(
           path: HomeRouterNotesTabPath.shortPath,
+          name: HomeRouterNotesTabPath.name,
           pageBuilder: (context, state) {
             final theme = CustomPageTransistionsTheme.of(context);
             return CustomPage(
               key: HomeRouterNotesTabPath.getValueKey(state),
               theme: theme.fade,
               builder: (context) {
-                final configuration = HomeRouterNotesTabPath.getConfiguration(
-                  state,
-                  remoteConfigurationsProvider: remoteConfigurationsProvider,
-                );
+                final configId = HomeRouterNotesTabPath.getConfigId(state);
 
-                if (configuration is RemoteConfiguration) {
+                if (configId.isNotEmpty) {
                   return notesRouterHelper.getInitialScreen(
-                    configuration: configuration,
+                    configId: configId,
                   );
                 } else {
                   return ConfigurationUndefinedScreen(onRoute: onRoute);
@@ -161,24 +159,29 @@ final class HomeRouterUndefinedTabPath {
 }
 
 final class HomeRouterNotesTabPath {
-  static const shortPath = '/home:id';
-  static String goPath({required String configId}) => '/home:$configId';
+  static const name = 'NotesListScreen';
+  static const shortPath = '/home/:${PathParameters.configId}';
 
-  static String? configId(GoRouterState state) =>
-      state.pathParameters['id']?.substring(1);
-
-  static RemoteConfiguration? getConfiguration(
-    GoRouterState state, {
-    required RemoteConfigurationProvider remoteConfigurationsProvider,
-  }) {
-    final id = configId(state);
-    return id == null
-        ? null
-        : remoteConfigurationsProvider.currentConfiguration.withId(id);
+  static String getConfigId(GoRouterState state) {
+    final result = state.pathParameters[PathParameters.configId];
+    assert(result != null && result.isNotEmpty);
+    return result ?? '';
   }
 
-  static ValueKey getValueKey(GoRouterState state) =>
-      ValueKey(state.pathParameters['id']);
+  static String namedLocation(
+    BuildContext context, {
+    required String configId,
+  }) =>
+      context.namedLocation(
+        name,
+        pathParameters: {
+          PathParameters.configId: configId,
+        },
+      );
+
+  static ValueKey getValueKey(GoRouterState state) => ValueKey(
+        state.pathParameters[PathParameters.configId],
+      );
 }
 
 final class HomeRouterSettingsTabPath {

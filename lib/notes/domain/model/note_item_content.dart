@@ -19,5 +19,5 @@ final class NoteContent {
 final class NoteContentItem {
   final String text;
 
-  NoteContentItem({required this.text});
+  const NoteContentItem({required this.text});
 }

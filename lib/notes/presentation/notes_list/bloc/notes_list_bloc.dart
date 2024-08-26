@@ -2,40 +2,46 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
+import 'package:pwd/common/domain/remote_configuration_provider.dart';
+import 'package:pwd/common/support/optional_box.dart';
+import 'package:pwd/notes/domain/model/db_error.dart';
 import 'package:pwd/notes/domain/realm_local_repository.dart';
 import 'package:pwd/notes/domain/usecases/read_notes_usecase.dart';
 
 import 'package:pwd/notes/domain/usecases/sync_usecase.dart';
 import 'package:rxdart/rxdart.dart';
 
-import 'google_drive_notes_list_data.dart';
-import 'google_drive_notes_list_event.dart';
-import 'google_drive_notes_list_state.dart';
+import 'notes_list_data.dart';
+import 'notes_list_event.dart';
+import 'notes_list_state.dart';
 
-final class GoogleDriveNotesListBloc
-    extends Bloc<GoogleDriveNotesListEvent, GoogleDriveNotesListState> {
-  GoogleDriveNotesListData get data => state.data;
+final class NotesListBloc extends Bloc<NotesListEvent, NotesListState> {
+  NotesListData get data => state.data;
 
-  final RemoteConfiguration configuration;
+  final String? _configId;
+
+  final RemoteConfigurationProvider remoteConfigurationProvider;
   final ReadNotesUsecase readNotesUsecase;
   final SyncUsecase syncUsecase;
 
   late final StreamSubscription<RealmLocalRepositoryNotification?>
       changesSubscription;
 
-  GoogleDriveNotesListBloc({
-    required this.configuration,
+  NotesListBloc({
+    required String? configId,
+    required this.remoteConfigurationProvider,
     required this.readNotesUsecase,
     required this.syncUsecase,
-  }) : super(
+  })  : _configId = configId,
+        super(
           InitialState(
-            data: GoogleDriveNotesListData.initial(),
+            data: NotesListData.initial(),
           ),
         ) {
     _setupHandlers();
     _createSubscriptions();
 
-    add(const GoogleDriveNotesListEvent.initial());
+    add(const NotesListEvent.initial());
   }
 
   void _setupHandlers() {
@@ -54,7 +60,7 @@ final class GoogleDriveNotesListBloc
       (e) {
         if (e != null) {
           add(
-            const GoogleDriveNotesListEvent.reloadLocally(),
+            const NotesListEvent.reloadLocally(),
           );
         }
       },
@@ -69,70 +75,92 @@ final class GoogleDriveNotesListBloc
 
   void _onInitialEvent(
     InitialEvent event,
-    Emitter<GoogleDriveNotesListState> emit,
+    Emitter<NotesListState> emit,
   ) async {
     try {
+      final config = await _getConfigurationOrThrow();
+
       final notes = await readNotesUsecase.execute(
-        configuration: configuration,
+        configuration: config,
       );
 
-      if (notes.isNotEmpty) {
-        emit(
-          GoogleDriveNotesListState.common(
-            data: data.copyWith(notes: notes),
+      emit(
+        NotesListState.common(
+          data: data.copyWith(
+            configBox: OptionalBox(config),
+            notes: notes,
           ),
-        );
-      }
+        ),
+      );
 
-      add(const GoogleDriveNotesListEvent.sync(force: false));
+      add(const NotesListEvent.sync(force: false));
     } catch (e) {
-      emit(GoogleDriveNotesListState.error(data: data, e: e));
+      emit(NotesListState.error(data: data, e: e));
     }
   }
 
   void _onSyncEvent(
     SyncEvent event,
-    Emitter<GoogleDriveNotesListState> emit,
+    Emitter<NotesListState> emit,
   ) async {
     try {
       if (data.notes.isNotEmpty) {
-        emit(GoogleDriveNotesListState.syncLoading(data: data));
+        emit(NotesListState.syncLoading(data: data));
       }
 
+      final config = await _getConfigurationOrThrow();
+
       await syncUsecase.execute(
-          configuration: configuration, force: event.force);
+        configuration: config,
+        force: event.force,
+      );
+
       final notes = await readNotesUsecase.execute(
-        configuration: configuration,
+        configuration: config,
       );
 
       emit(
-        GoogleDriveNotesListState.common(
+        NotesListState.common(
           data: data.copyWith(notes: notes),
         ),
       );
     } catch (e) {
-      emit(GoogleDriveNotesListState.error(data: data, e: e));
+      emit(NotesListState.error(data: data, e: e));
     }
   }
 
   void _onReloadLocallyEvent(
     ReloadLocallyEvent event,
-    Emitter<GoogleDriveNotesListState> emit,
+    Emitter<NotesListState> emit,
   ) async {
     try {
-      emit(GoogleDriveNotesListState.loading(data: data));
+      emit(NotesListState.loading(data: data));
+
+      final config = await _getConfigurationOrThrow();
 
       final notes = await readNotesUsecase.execute(
-        configuration: configuration,
+        configuration: config,
       );
 
       emit(
-        GoogleDriveNotesListState.common(
+        NotesListState.common(
           data: data.copyWith(notes: notes),
         ),
       );
     } catch (e) {
-      emit(GoogleDriveNotesListState.error(data: data, e: e));
+      emit(NotesListState.error(data: data, e: e));
+    }
+  }
+
+  Future<RemoteConfiguration> _getConfigurationOrThrow() async {
+    final configs =
+        await remoteConfigurationProvider.readCurrentConfiguration();
+    final config = configs.withId(_configId ?? '');
+
+    if (config == null) {
+      throw const DbError.notFound();
+    } else {
+      return config;
     }
   }
 }

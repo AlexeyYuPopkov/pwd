@@ -16,6 +16,7 @@
 
     "localStorageErrorPinDoesntMatch": "Неверный пин",
     "syncDataErrorUnkhown": "Ошибка синхронизации данных",
+    "readNoteUsecaseErrorInputParametersAreWrong": "Данные отсутствуют",
 
     "clocksWidgetAddClockDialogTimeZoneOffsetLabel": "Часовой пояс: {hours}",
     "@clocksWidgetAddClockDialogTimeZoneOffsetLabel": {

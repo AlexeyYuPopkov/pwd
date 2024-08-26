@@ -8,6 +8,9 @@ class CommonSize {
   /// [thickness = 1.0]
   static const thickness = 1.0;
 
+  /// [thicknessHalf = 0.5]
+  static const thicknessHalf = 0.5;
+
   /// [tinyIndent = 2.0]
   static const tinyIndent = 2.0;
 

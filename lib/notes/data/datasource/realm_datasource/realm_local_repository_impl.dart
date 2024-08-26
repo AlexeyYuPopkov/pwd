@@ -142,7 +142,7 @@ final class RealmLocalRepositoryImpl implements RealmLocalRepository {
 
   @override
   Future<void> updateNote(
-    UpdatedNoteItem noteItem, {
+    NoteItem noteItem, {
     required LocalStorageTarget target,
   }) async {
     final realm = await realmProvider.getRealm(target: target);

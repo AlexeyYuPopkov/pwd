@@ -49,20 +49,3 @@ final class ErrorState extends EditNoteState {
     required this.e,
   });
 }
-
-// Data
-final class EditNotePageData extends Equatable {
-  final BaseNoteItem noteItem;
-
-  const EditNotePageData({required this.noteItem});
-
-  @override
-  List<Object?> get props => [noteItem];
-
-  EditNotePageData copyWith({
-    BaseNoteItem? noteItem,
-  }) =>
-      EditNotePageData(
-        noteItem: noteItem ?? this.noteItem,
-      );
-}
