@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pwd/common/tools/reusable_isolate/reusable_isolate.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
@@ -11,6 +12,7 @@ import '../note_details_screen_list_model.dart';
 
 final class NoteDetailsScreenBloc
     extends Bloc<NoteDetailsScreenEvent, NoteDetailsScreenState> {
+  late final _isTest = Platform.environment.containsKey('FLUTTER_TEST');
   final String _configId;
   final String _noteId;
   final ReadNoteUsecase readNoteUsecase;
@@ -63,15 +65,19 @@ extension on NoteDetailsScreenBloc {
   Future<List<NoteDetailsScreenListModel>> _createModelsAsync(
     BaseNoteItem noteItem,
   ) async {
-    final isolate = await ReusableIsolate.create();
-    return isolate
-        .performTask(
-          ReusableIsolateTask.sync(
-            params: noteItem,
-            computation: _createModels,
-          ),
-        )
-        .then((e) => e as List<NoteDetailsScreenListModel>);
+    if (_isTest) {
+      return _createModels(noteItem) as List<NoteDetailsScreenListModel>;
+    } else {
+      final isolate = await ReusableIsolate.create();
+      return isolate
+          .performTask(
+            ReusableIsolateTask.sync(
+              params: noteItem,
+              computation: _createModels,
+            ),
+          )
+          .then((e) => e as List<NoteDetailsScreenListModel>);
+    }
   }
 
   static dynamic _createModels(dynamic noteItem) => [

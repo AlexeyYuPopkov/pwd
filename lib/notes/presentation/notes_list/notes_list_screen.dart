@@ -10,6 +10,7 @@ import 'package:pwd/l10n/localization_helper.dart';
 import 'package:pwd/notes/domain/model/note_item.dart';
 import 'package:pwd/notes/presentation/common/widgets/note_list_item_widget.dart';
 import 'package:pwd/notes/presentation/tools/local_storage_error_message_provider.dart';
+import 'package:pwd/notes/presentation/tools/read_note_usecase_error_message_provider.dart';
 import 'package:pwd/notes/presentation/tools/sync_data_error_message_provider.dart';
 import 'package:pwd/theme/common_size.dart';
 
@@ -94,6 +95,7 @@ final class NotesListScreen extends StatelessWidget
           errorMessageProviders: [
             const LocalStorageErrorMessageProvider().call,
             const SyncDataErrorMessageProvider().call,
+            const ReadNoteUsecaseErrorMessageProvider().call,
           ],
         );
     }
@@ -179,7 +181,6 @@ final class NotesListScreen extends StatelessWidget
 }
 
 // Notes List
-
 final class _NotesList extends StatelessWidget {
   final bool isLoading;
   final List<NoteItem> notes;

@@ -16,8 +16,8 @@ import 'package:pwd/notes/presentation/edit_note/bloc/edit_note_page_data.dart';
 import 'package:pwd/notes/presentation/edit_note/edit_note_screen.dart';
 
 import 'edit_note_screen_finders.dart';
-import '../../test_tools/app_configuration_provider_tool.dart';
-import '../../test_tools/test_tools.dart';
+import '../../../test_tools/app_configuration_provider_tool.dart';
+import '../../../test_tools/test_tools.dart';
 
 class MockReadNoteUsecase extends Mock implements ReadNoteUsecase {}
 
@@ -27,8 +27,10 @@ class MockUpdateNoteUsecase implements UpdateNoteUsecase {
   List<String> callsParameters = [];
 
   @override
-  Future<void> execute(BaseNoteItem noteItem,
-      {required String configurationId}) {
+  Future<void> execute(
+    BaseNoteItem noteItem, {
+    required String configurationId,
+  }) {
     callsParameters.add('${noteItem.id}, $configurationId');
 
     return Future.delayed(Durations.medium1);

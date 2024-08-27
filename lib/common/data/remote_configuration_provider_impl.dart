@@ -45,9 +45,11 @@ class SecureStorageBox {
   static const String _jsonSharedPreferencesKey =
       'RemoteStorageConfigurationProvider.RemoteStorageConfigurationKey';
 
-  final _storage = const FlutterSecureStorage();
+  final FlutterSecureStorage _storage;
 
-  const SecureStorageBox();
+  const SecureStorageBox([
+    FlutterSecureStorage storage = const FlutterSecureStorage(),
+  ]) : _storage = storage;
 
   Future<RemoteConfigurations> readConfiguration() async {
     final json = await _storage.read(key: _jsonSharedPreferencesKey);

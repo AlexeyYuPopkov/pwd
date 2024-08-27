@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pwd/theme/common_size.dart';
 import 'package:pwd/theme/shimmer_theme.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -19,11 +20,16 @@ final class CommonShimmer extends StatelessWidget {
     final style = this.style ?? ShimmerTheme.of(context);
 
     return isLoading
-        ? Shimmer.fromColors(
-            baseColor: style.baseColor,
-            highlightColor: style.highlightColor,
-            period: const Duration(milliseconds: 1000),
-            child: ColoredBox(color: style.baseColor, child: child),
+        ? ClipRRect(
+            borderRadius: const BorderRadius.all(
+              Radius.circular(CommonSize.borderRadius),
+            ),
+            child: Shimmer.fromColors(
+              baseColor: style.baseColor,
+              highlightColor: style.highlightColor,
+              period: const Duration(milliseconds: 1000),
+              child: ColoredBox(color: style.baseColor, child: child),
+            ),
           )
         : child;
   }

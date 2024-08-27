@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pwd/common/presentation/blocking_loading_indicator.dart';
 import 'package:pwd/common/presentation/dialogs/show_error_dialog_mixin.dart';
+
 import 'package:pwd/l10n/localization_helper.dart';
 import 'package:pwd/notes/presentation/note_details/bloc/note_details_screen_bloc.dart';
 import 'package:pwd/notes/presentation/tools/read_note_usecase_error_message_provider.dart';
@@ -63,6 +64,7 @@ final class NoteDetailsScreen extends StatelessWidget
                 listener: _listener,
                 builder: (context, state) {
                   const cacheExtent = 76.0;
+
                   return state.data.lines.isEmpty
                       ? const SizedBox()
                       : ListView.builder(
