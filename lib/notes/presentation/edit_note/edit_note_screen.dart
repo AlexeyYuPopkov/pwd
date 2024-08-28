@@ -227,7 +227,7 @@ class _FormState extends State<_Form> {
   }
 
   @override
-  void didUpdateWidget(covariant _Form oldWidget) {
+  void didUpdateWidget(_Form oldWidget) {
     if (oldWidget.noteItem != widget.noteItem) {
       contentController.text = widget.noteItem.content.str;
     }

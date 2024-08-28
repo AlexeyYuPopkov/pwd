@@ -4,7 +4,7 @@ import 'package:pwd/common/domain/model/remote_configuration/remote_configuratio
 sealed class SetConfigurationBlocEvent extends Equatable {
   const SetConfigurationBlocEvent();
 
-  // const factory SetConfigurationBlocEvent.initial() = InitialEvent;
+  const factory SetConfigurationBlocEvent.initial() = InitialEvent;
 
   const factory SetConfigurationBlocEvent.newConfiguration({
     required RemoteConfiguration configuration,
@@ -15,6 +15,10 @@ sealed class SetConfigurationBlocEvent extends Equatable {
 
   @override
   List<Object?> get props => const [];
+}
+
+final class InitialEvent extends SetConfigurationBlocEvent {
+  const InitialEvent();
 }
 
 final class NewConfigurationEvent extends SetConfigurationBlocEvent {

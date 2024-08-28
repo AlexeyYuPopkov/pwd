@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:pwd/common/domain/errors/app_error.dart';
 import 'package:pwd/common/domain/model/remote_configuration/remote_configuration.dart';
 import 'package:pwd/common/domain/model/remote_configuration/remote_configurations.dart';
+import 'package:pwd/common/domain/remote_configuration_provider.dart';
 import 'package:pwd/common/presentation/dialogs/dialog_helper.dart';
 import 'package:pwd/settings/domain/add_configurations_usecase.dart';
 import 'package:pwd/settings/domain/remove_configurations_usecase.dart';
@@ -19,6 +20,7 @@ import 'mock_usecases.dart';
 void main() {
   late AddConfigurationsUsecase addConfigurationsUsecase;
   late RemoveConfigurationsUsecase removeConfigurationsUsecase;
+  late MockRemoteConfigurationProvider configProvider;
 
   final finders = GoogleDriveConfigurationScreenFinders();
 
@@ -30,6 +32,12 @@ void main() {
   setUp(
     () {
       AppConfigurationProviderTool.bindAppConfigurationProvider();
+
+      DiStorage.shared.bind<RemoteConfigurationProvider>(
+        module: null,
+        () => MockRemoteConfigurationProvider(),
+        lifeTime: const LifeTime.single(),
+      );
 
       DiStorage.shared.bind<AddConfigurationsUsecase>(
         module: null,
@@ -45,6 +53,8 @@ void main() {
 
       addConfigurationsUsecase = DiStorage.shared.resolve();
       removeConfigurationsUsecase = DiStorage.shared.resolve();
+      configProvider = DiStorage.shared.resolve<RemoteConfigurationProvider>()
+          as MockRemoteConfigurationProvider;
     },
   );
 
@@ -55,12 +65,12 @@ void main() {
   Future<void> setupAndShowScreen(
     WidgetTester tester, {
     required GoogleDriveConfigurationScreenFinders finders,
-    required GoogleDriveConfiguration? initial,
+    required String? configId,
   }) async {
     await tester.pumpWidget(
       CreateApp.createMaterialApp(
         child: GoogleDriveConfigurationScreen(
-          initial: initial,
+          configId: configId,
         ),
       ),
     );
@@ -92,7 +102,7 @@ void main() {
     testWidgets(
       'New configuration',
       (tester) async {
-        await setupAndShowScreen(tester, finders: finders, initial: null);
+        await setupAndShowScreen(tester, finders: finders, configId: null);
 
         expect(finders.filenameTextField, findsOneWidget);
         expect(finders.nextButton, findsOneWidget);
@@ -122,7 +132,7 @@ void main() {
     testWidgets(
       'New configuration file dublicate',
       (tester) async {
-        await setupAndShowScreen(tester, finders: finders, initial: null);
+        await setupAndShowScreen(tester, finders: finders, configId: null);
 
         final usecase =
             addConfigurationsUsecase as MockAddConfigurationsUsecase;
@@ -166,15 +176,35 @@ void main() {
     testWidgets(
       'Existed configuration',
       (tester) async {
+        await configProvider.setConfigurations(
+          RemoteConfigurations.createOrThrow(
+            configurations: const [configuration],
+          ),
+        );
+
         await setupAndShowScreen(
           tester,
           finders: finders,
-          initial: configuration,
+          configId: configuration.id,
         );
+
+        final didSetMockConfig = await tester.runAsync(() {
+          return configProvider.setConfigCompleter.future;
+        });
+
+        final didGetMockConfig = await tester.runAsync(() {
+          return configProvider.getConfigCompleter.future;
+        });
+
+        expect(didSetMockConfig, true);
+        expect(didGetMockConfig, true);
+
+        await tester.pumpAndSettle();
 
         expect(finders.filenameTextField, findsOneWidget);
         expect(finders.nextButton, findsOneWidget);
         expect(finders.nextButtonWidget(tester)?.enabled, true);
+
         expect(
           finders.bloc(tester).data.mode,
           SetConfigurationBlocMode.editConfiguration,
@@ -183,6 +213,7 @@ void main() {
         final textFieldWidget = finders.filenameTextFormFieldWidget(tester);
 
         expect(textFieldWidget!.controller!.text, fileName);
+
         expect(textFieldWidget.readOnly, true);
 
         await tester.tap(finders.nextButton);
@@ -214,11 +245,29 @@ void main() {
         const initialConfiguration = GoogleDriveConfiguration(
           fileName: fileName,
         );
+
+        await configProvider.setConfigurations(
+          RemoteConfigurations.createOrThrow(
+            configurations: const [configuration],
+          ),
+        );
+
         await setupAndShowScreen(
           tester,
           finders: finders,
-          initial: initialConfiguration,
+          configId: initialConfiguration.id,
         );
+
+        final didSetMockConfig = await tester.runAsync(() {
+          return configProvider.setConfigCompleter.future;
+        });
+
+        final didGetMockConfig = await tester.runAsync(() {
+          return configProvider.getConfigCompleter.future;
+        });
+
+        expect(didSetMockConfig, true);
+        expect(didGetMockConfig, true);
 
         await tester.tap(finders.nextButton);
 

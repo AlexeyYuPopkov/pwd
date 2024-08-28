@@ -22,8 +22,12 @@ typedef _TestHelper = GoogleDriveConfigurationScreenTestHelper;
 
 final class GoogleDriveConfigurationScreen extends StatelessWidget
     with ShowErrorDialogMixin {
-  final GoogleDriveConfiguration? initial;
-  const GoogleDriveConfigurationScreen({super.key, required this.initial});
+  final String? _configId;
+
+  const GoogleDriveConfigurationScreen({
+    super.key,
+    required String? configId,
+  }) : _configId = configId;
 
   void _listener(BuildContext context, SetConfigurationBlocState state) {
     BlockingLoadingIndicator.of(context).isLoading = state is LoadingState;
@@ -55,16 +59,22 @@ final class GoogleDriveConfigurationScreen extends StatelessWidget
       ),
       body: BlocProvider(
         create: (_) => SetConfigurationBloc(
-          initialData: initial,
+          configId: _configId,
+          configurationProvider: DiStorage.shared.resolve(),
           addConfigurationsUsecase: DiStorage.shared.resolve(),
           removeConfigurationsUsecase: DiStorage.shared.resolve(),
         ),
         child: BlocConsumer<SetConfigurationBloc, SetConfigurationBlocState>(
           listener: _listener,
-          builder: (_, state) => _Form(
-            initial: initial,
-            mode: state.data.mode,
-          ),
+          builder: (_, state) {
+            final config = state.data.config.data;
+            assert(config == null || config is GoogleDriveConfiguration);
+
+            return _Form(
+              initial: config is GoogleDriveConfiguration ? config : null,
+              mode: state.data.mode,
+            );
+          },
         ),
       ),
     );
@@ -111,6 +121,15 @@ final class __FormState extends State<_Form> with DialogHelper {
   void dispose() {
     filenameController.dispose();
     super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(_Form oldWidget) {
+    if (oldWidget.initial != widget.initial) {
+      filenameController.text = widget.initial?.fileName ?? '';
+    }
+
+    super.didUpdateWidget(oldWidget);
   }
 
   bool checkIfFormValid() => [

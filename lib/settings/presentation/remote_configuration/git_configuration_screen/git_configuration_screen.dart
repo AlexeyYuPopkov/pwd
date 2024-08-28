@@ -25,8 +25,12 @@ part 'git_configuration_form.dart';
 
 final class GitConfigurationScreen extends StatelessWidget
     with ShowErrorDialogMixin {
-  final GitConfiguration? initial;
-  const GitConfigurationScreen({super.key, required this.initial});
+  final String? _configId;
+
+  const GitConfigurationScreen({
+    super.key,
+    required String? configId,
+  }) : _configId = configId;
 
   void _listener(BuildContext context, SetConfigurationBlocState state) {
     BlockingLoadingIndicator.of(context).isLoading = state is LoadingState;
@@ -61,17 +65,23 @@ final class GitConfigurationScreen extends StatelessWidget
         body: SafeArea(
           child: BlocProvider(
             create: (_) => SetConfigurationBloc(
-              initialData: initial,
+              configId: _configId,
+              configurationProvider: DiStorage.shared.resolve(),
               addConfigurationsUsecase: DiStorage.shared.resolve(),
               removeConfigurationsUsecase: DiStorage.shared.resolve(),
             ),
             child:
                 BlocConsumer<SetConfigurationBloc, SetConfigurationBlocState>(
               listener: _listener,
-              builder: (_, state) => GitConfigurationForm(
-                initial: initial,
-                mode: state.data.mode,
-              ),
+              builder: (_, state) {
+                final config = state.data.config.data;
+                assert(config == null || config is GitConfiguration);
+
+                return GitConfigurationForm(
+                  initial: config is GitConfiguration ? config : null,
+                  mode: state.data.mode,
+                );
+              },
             ),
           ),
         ),

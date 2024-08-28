@@ -84,6 +84,19 @@ final class _GitConfigurationFormState extends State<GitConfigurationForm>
     super.dispose();
   }
 
+  @override
+  void didUpdateWidget(GitConfigurationForm oldWidget) {
+    if (oldWidget.initial != widget.initial) {
+      tokenController.text = widget.initial?.token ?? '';
+      repoController.text = widget.initial?.repo ?? '';
+      ownerController.text = widget.initial?.owner ?? '';
+      branchController.text = widget.initial?.branch ?? '';
+      fileNameController.text = widget.initial?.fileName ?? '';
+    }
+
+    super.didUpdateWidget(oldWidget);
+  }
+
   bool checkIfFormValid() => [
         noEmptyValidator(tokenController.text),
         remoteSettingsFieldValidator(repoController.text),
